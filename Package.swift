@@ -42,6 +42,12 @@ let package = Package(
         "SizingLimitClient"
       ]
     ),
+    .testTarget(
+      name: "SizingLimitClientTests",
+      dependencies: [
+        "SizingLimitClientLive"
+      ]
+    ),
     .target(
       name: "swift-manual-s-api",
       dependencies: []

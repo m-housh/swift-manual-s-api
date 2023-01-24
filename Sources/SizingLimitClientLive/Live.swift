@@ -10,9 +10,9 @@ extension SizingLimitClient {
   
 }
 
-extension SizingLimitClient.Request.SizingLimits {
+fileprivate extension SizingLimitClient.Request.SizingLimits {
   
-  fileprivate func run() async throws -> SizingLimitClient.SizingLimits {
+  func run() async throws -> SizingLimitClient.SizingLimits {
     try await systemType.sizingLimits(load: self.houseLoad)
   }
 }
@@ -39,7 +39,7 @@ fileprivate extension SystemType {
     case .furnaceOnly:
       return .init(oversizing: .furnace(), undersizing: .furnace())
     case .boilerOnly:
-      return .init(oversizing: .furnace(), undersizing: .furnace())
+      return .init(oversizing: .boiler(), undersizing: .boiler())
     }
   }
 }

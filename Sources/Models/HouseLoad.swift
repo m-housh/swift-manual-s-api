@@ -52,6 +52,6 @@ extension HouseLoad {
 
 #if DEBUG
 extension HouseLoad {
-  public static let mock = Self.init(heating: 49667, cooling: .init(total: 17872, sensible: 13894))
+  public static let mock = Self.init(heating: 49_667, cooling: .init(total: 17_872, sensible: 13_894))
 }
 #endif

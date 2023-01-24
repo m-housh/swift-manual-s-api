@@ -1,11 +1,13 @@
 import Models
 import XCTestDynamicOverlay
 
+// TODO: Need to fix sizing limit results for furnaces when cooling / heat pumps included.
+
 public struct SizingLimitClient {
   public var sizingLimits: (Request.SizingLimits) async throws -> SizingLimits
  
   public init(
-    sizingLimits: @Sendable @escaping (Request.SizingLimits) async throws -> SizingLimits
+    sizingLimits: @escaping (Request.SizingLimits) async throws -> SizingLimits
   ) {
     self.sizingLimits = sizingLimits
   }
@@ -40,15 +42,17 @@ extension SizingLimitClient {
     }
     
     public enum Oversizing: Codable, Equatable, Sendable {
+      case boiler(Int = 140)
       case cooling(total: Int, latent: Int = 150)
-      case furnace(Int = 200)
       case electricFurnace(Int = 175)
+      case furnace(Int = 140)
     }
     
     public enum Undersizing: Codable, Equatable, Sendable {
+      case boiler(Int = 90)
       case cooling(total: Int = 90, sensible: Int = 90, latent: Int = 90)
-      case furnace(Int = 90)
       case electricFurnace(Int = 90)
+      case furnace(Int = 90)
     }
   }
 }
