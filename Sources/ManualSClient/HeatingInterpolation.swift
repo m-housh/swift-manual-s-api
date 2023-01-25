@@ -18,13 +18,13 @@ extension ManualSClient {
 extension ManualSClient.HeatingInterpolation {
   
   public struct BoilerRequest: Codable, Equatable, Sendable {
-    public var altitudeDeratings: DeratingMultiplier?
+    public var altitudeDeratings: AdjustmentMultiplier?
     public var houseLoad: HouseLoad
     public var input: Int
     public var afue: Double
     
     public init(
-      altitudeDeratings: DeratingMultiplier? = nil,
+      altitudeDeratings: AdjustmentMultiplier? = nil,
       houseLoad: HouseLoad,
       input: Int,
       afue: Double
@@ -37,13 +37,13 @@ extension ManualSClient.HeatingInterpolation {
   }
   
   public struct ElectricRequest: Codable, Equatable, Sendable {
-    public var altitudeDeratings: DeratingMultiplier?
+    public var altitudeDeratings: AdjustmentMultiplier?
     public var heatPumpCapacity: Int?
     public var houseLoad: HouseLoad
     public var inputKW: Double
     
     public init(
-      altitudeDeratings: DeratingMultiplier? = nil,
+      altitudeDeratings: AdjustmentMultiplier? = nil,
       heatPumpCapacity: Int? = nil,
       houseLoad: HouseLoad,
       inputKW: Double
@@ -56,13 +56,13 @@ extension ManualSClient.HeatingInterpolation {
   }
   
   public struct FurnaceRequest: Codable, Equatable, Sendable {
-    public var altitudeDeratings: DeratingMultiplier?
+    public var altitudeDeratings: AdjustmentMultiplier?
     public var houseLoad: HouseLoad
     public var input: Int
     public var afue: Double
     
     public init(
-      altitudeDeratings: DeratingMultiplier? = nil,
+      altitudeDeratings: AdjustmentMultiplier? = nil,
       houseLoad: HouseLoad,
       input: Int,
       afue: Double
@@ -75,13 +75,13 @@ extension ManualSClient.HeatingInterpolation {
   }
   
   public struct HeatPumpRequest: Codable, Equatable, Sendable {
-    public var altitudeDeratings: DeratingMultiplier?
+    public var altitudeDeratings: AdjustmentMultiplier?
     public var capacity: HeatPumpCapacity
     public var designInfo: DesignInfo
     public var houseLoad: HouseLoad
     
     public init(
-      altitudeDeratings: DeratingMultiplier? = nil,
+      altitudeDeratings: AdjustmentMultiplier? = nil,
       capacity: HeatPumpCapacity,
       designInfo: DesignInfo,
       houseLoad: HouseLoad

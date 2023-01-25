@@ -3,7 +3,7 @@ import XCTestDynamicOverlay
 
 public struct ManualSClient {
   
-  public var derating: (DeratingRequest) async throws -> DeratingMultiplier
+  public var derating: (DeratingRequest) async throws -> AdjustmentMultiplier
 //  public var heatingInterpolation: (HeatingInterpolation) async throws -> HeatingInterpolation.Result
   public var interpolate: (InterpolationRequest) async throws -> InterpolationResult
   public var requiredKW: (RequiredKWRequest) async throws -> Double
@@ -11,7 +11,7 @@ public struct ManualSClient {
   
   @inlinable
   public init(
-    derating: @escaping (DeratingRequest) async throws -> DeratingMultiplier,
+    derating: @escaping (DeratingRequest) async throws -> AdjustmentMultiplier,
 //    heatingInterpolation: @escaping (HeatingInterpolation) async throws -> HeatingInterpolation.Result,
     interpolate: @escaping (InterpolationRequest) async throws -> InterpolationResult,
     requiredKW: @escaping (RequiredKWRequest) async throws -> Double,

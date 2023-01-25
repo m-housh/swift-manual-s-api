@@ -7,8 +7,8 @@ extension ManualSClient {
 //    heatingInterpolation: { try await $0.run() },
     interpolate: { request in
       switch request {
-      case .cooling:
-        fatalError()
+      case let .cooling(cooling):
+        return .cooling(try await cooling.run())
       case let .heating(heating):
         return .heating(try await heating.run())
       }

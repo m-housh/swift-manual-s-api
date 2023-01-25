@@ -4,7 +4,7 @@ import Models
 
 extension ManualSClient.DeratingRequest {
   
-  func run() async throws -> DeratingMultiplier {
+  func run() async throws -> AdjustmentMultiplier {
     switch self {
     case let .elevation(system: systemType, elevation: elevation):
       return try await systemType.derating(elevation: elevation)
@@ -14,7 +14,7 @@ extension ManualSClient.DeratingRequest {
 
 fileprivate extension SystemType {
   
-  func derating(elevation: Int) async throws -> DeratingMultiplier {
+  func derating(elevation: Int) async throws -> AdjustmentMultiplier {
     switch self {
     case .airToAir:
       // fix how to distinguish heating for heat pump.
