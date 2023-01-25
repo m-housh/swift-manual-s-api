@@ -1,25 +1,9 @@
 import Foundation
 import Models
-import SizingLimitClient
 
-extension SizingLimitClient {
+extension SystemType {
   
-  public static let live = Self.init(
-    sizingLimits: { try await $0.run() }
-  )
-  
-}
-
-fileprivate extension SizingLimitClient.Request.SizingLimits {
-  
-  func run() async throws -> SizingLimitClient.SizingLimits {
-    try await systemType.sizingLimits(load: self.houseLoad)
-  }
-}
-
-fileprivate extension SystemType {
-  
-  func sizingLimits(load: HouseLoad?) async throws -> SizingLimitClient.SizingLimits {
+  func sizingLimits(load: HouseLoad?) async throws -> SizingLimits {
     switch self {
     case let .airToAir(type: _, compressor: compressor, climate: climate):
       let coolingTotal: Int

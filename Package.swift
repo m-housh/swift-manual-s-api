@@ -8,15 +8,29 @@ let package = Package(
   products: [
     .library(name: "swift-manual-s-api", targets: ["swift-manual-s-api"]),
     .library(name: "Models", targets: ["Models"]),
+    .library(name: "ManaulSClient", targets: ["ManualSClient"]),
     .library(name: "Requests", targets: ["Requests"]),
     .library(name: "Router", targets: ["Router"]),
-    .library(name: "SizingLimitClient", targets: ["SizingLimitClient"]),
-    .library(name: "SizingLimitClientLive", targets: ["SizingLimitClientLive"]),
+//    .library(name: "SizingLimitClient", targets: ["SizingLimitClient"]),
+//    .library(name: "SizingLimitClientLive", targets: ["SizingLimitClientLive"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
   ],
   targets: [
+    .target(
+      name: "ManualSClient",
+      dependencies: [
+        "Models",
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
+      name: "ManualSClientLive",
+      dependencies: [
+        "ManualSClient",
+      ]
+    ),
     .target(
       name: "Models",
       dependencies: []
@@ -29,23 +43,23 @@ let package = Package(
       name: "Router",
       dependencies: []
     ),
-    .target(
-      name: "SizingLimitClient",
-      dependencies: [
-        "Models",
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
-      ]
-    ),
-    .target(
-      name: "SizingLimitClientLive",
-      dependencies: [
-        "SizingLimitClient"
-      ]
-    ),
+//    .target(
+//      name: "SizingLimitClient",
+//      dependencies: [
+//        "Models",
+//        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+//      ]
+//    ),
+//    .target(
+//      name: "SizingLimitClientLive",
+//      dependencies: [
+//        "SizingLimitClient"
+//      ]
+//    ),
     .testTarget(
-      name: "SizingLimitClientTests",
+      name: "ManualSClientTests",
       dependencies: [
-        "SizingLimitClientLive"
+        "ManualSClientLive"
       ]
     ),
     .target(
