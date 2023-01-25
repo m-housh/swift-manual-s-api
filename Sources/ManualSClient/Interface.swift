@@ -4,17 +4,23 @@ import XCTestDynamicOverlay
 public struct ManualSClient {
   
   public var derating: (DeratingRequest) async throws -> DeratingMultiplier
+  public var heatingInterpolation: (HeatingInterpolation) async throws -> HeatingInterpolation.Result
   public var interpolate: (ManualSClient, InterpolationRequest) async throws -> InterpolationResult
+  public var requiredKW: (RequiredKWRequest) async throws -> Double
   public var sizingLimits: (SystemType, HouseLoad?) async throws -> SizingLimits
   
   @inlinable
   public init(
     derating: @escaping (DeratingRequest) async throws -> DeratingMultiplier,
+    heatingInterpolation: @escaping (HeatingInterpolation) async throws -> HeatingInterpolation.Result,
     interpolate: @escaping (ManualSClient, InterpolationRequest) async throws -> InterpolationResult,
+    requiredKW: @escaping (RequiredKWRequest) async throws -> Double,
     sizingLimits: @escaping (SystemType, HouseLoad?) async throws -> SizingLimits
   ) {
     self.derating = derating
+    self.heatingInterpolation = heatingInterpolation
     self.interpolate = interpolate
+    self.requiredKW = requiredKW
     self.sizingLimits = sizingLimits
   }
   
@@ -28,9 +34,30 @@ public struct ManualSClient {
     try await self.interpolate(self, request)
   }
   
+  @inlinable
+  public func requiredKW(
+    houseLoad: HouseLoad,
+    capacityAtDesign: Int = 0
+  ) async throws -> Double {
+    try await self.requiredKW(.init(houseLoad: houseLoad, capacityAtDesign: capacityAtDesign))
+  }
+  
 }
 
 extension ManualSClient {
+  
+  public struct RequiredKWRequest: Codable, Equatable, Sendable {
+    public var houseLoad: HouseLoad
+    public var capacityAtDesign: Int
+    
+    public init(
+      houseLoad: HouseLoad,
+      capacityAtDesign: Int = 0
+    ) {
+      self.houseLoad = houseLoad
+      self.capacityAtDesign = capacityAtDesign
+    }
+  }
   
   public enum DeratingRequest {
     case elevation(system: SystemType, elevation: Int)
@@ -71,20 +98,20 @@ extension ManualSClient {
       public var capacity: CoolingCapacityEnvelope
       public var designInfo: DesignInfo
       public var houseLoad: HouseLoad
-      public var manufacturerDerating: DeratingMultiplier?
+      public var manufacturerAdjustments: DeratingMultiplier?
       public var systemType: SystemType
       
       public init(
         capacity: CoolingCapacityEnvelope,
         designInfo: DesignInfo,
         houseLoad: HouseLoad,
-        manufacturerDerating: DeratingMultiplier?,
+        manufacturerAdjustments: DeratingMultiplier?,
         systemType: SystemType
       ) {
         self.capacity = capacity
         self.designInfo = designInfo
         self.houseLoad = houseLoad
-        self.manufacturerDerating = manufacturerDerating
+        self.manufacturerAdjustments = manufacturerAdjustments
         self.systemType = systemType
       }
     }
@@ -94,7 +121,9 @@ extension ManualSClient {
 extension ManualSClient {
   public static let noop = Self.init(
     derating: unimplemented("\(Self.self).derating"),
+    heatingInterpolation: unimplemented("\(Self.self).heatingInterpolation"),
     interpolate: unimplemented("\(Self.self).interpolate"),
+    requiredKW: unimplemented("\(Self.self).requiredKW"),
     sizingLimits: unimplemented("\(Self.self).sizingLimits")
   )
 }
