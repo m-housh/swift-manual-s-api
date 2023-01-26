@@ -7,7 +7,8 @@ let package = Package(
   platforms: [.macOS(.v10_15)],
   products: [
     .library(name: "Models", targets: ["Models"]),
-    .library(name: "ManaulSClient", targets: ["ManualSClient"]),
+    .library(name: "ManualSClient", targets: ["ManualSClient"]),
+    .library(name: "ManualSClientLive", targets: ["ManualSClientLive"]),
     .library(name: "Router", targets: ["Router"]),
   ],
   dependencies: [

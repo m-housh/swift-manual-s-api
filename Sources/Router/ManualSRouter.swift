@@ -2,9 +2,10 @@ import ManualSClient
 import Models
 import URLRouting
 
-public enum ManualSRouter: Equatable {
+public enum ManualSRoute: Equatable {
   
   case api(Api)
+  case home
   
   public enum Api: Equatable {
     case derating(ManualSClient.DeratingRequest)
@@ -16,21 +17,21 @@ public enum ManualSRouter: Equatable {
 
 
 let apiRouter = OneOf {
-  Route(.case(ManualSRouter.Api.derating)) {
+  Route(.case(ManualSRoute.Api.derating)) {
     Method.post
     Path { "derating" }
     Body(.json(ManualSClient.DeratingRequest.self))
   }
   
-  Route(.case(ManualSRouter.Api.interpolate)) {
+  Route(.case(ManualSRoute.Api.interpolate)) {
     Method.post
     Path { "interpolate" }
     Body(.json(ManualSClient.InterpolationRequest.self))
   }
   
-  Route(.case(ManualSRouter.Api.requiredKW)) {
+  Route(.case(ManualSRoute.Api.requiredKW)) {
     Method.post
-    Path { "required-kw" }
+    Path { "requiredKw" }
     Body(.json(ManualSClient.RequiredKWRequest.self))
   }
   
@@ -42,7 +43,10 @@ let apiRouter = OneOf {
 }
 
 public let manualSRouter = OneOf {
-  Route(.case(ManualSRouter.api)) {
+  // root
+  Route(.case(ManualSRoute.home))
+  
+  Route(.case(ManualSRoute.api)) {
     Path { "api" }
     apiRouter
   }
