@@ -51,7 +51,7 @@ extension ManualSClient {
     }
   }
   
-  public enum DeratingRequest {
+  public enum DeratingRequest: Codable, Equatable, Sendable {
     case elevation(system: SystemType, elevation: Int)
   }
   
@@ -69,7 +69,6 @@ extension ManualSClient {
 extension ManualSClient {
   public static let noop = Self.init(
     derating: unimplemented("\(Self.self).derating"),
-//    heatingInterpolation: unimplemented("\(Self.self).heatingInterpolation"),
     interpolate: unimplemented("\(Self.self).interpolate"),
     requiredKW: unimplemented("\(Self.self).requiredKW"),
     sizingLimits: unimplemented("\(Self.self).sizingLimits")
