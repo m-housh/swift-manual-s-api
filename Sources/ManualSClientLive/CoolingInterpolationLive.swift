@@ -1,18 +1,19 @@
 import ManualSClient
 import Models
+import UtilsClient
 
 extension ManualSClient.CoolingInterpolation {
   
-  func run() async throws -> Self.Result {
+  func run(utils: UtilsClient) async throws -> Self.Result {
     switch self {
     case let .noInterpolation(noInterpolation):
-      return try await interpolate(noInterpolation: noInterpolation)
+      return try await interpolate(noInterpolation: noInterpolation, utils: utils)
     case let .oneWayIndoor(oneWayIndoor):
-      return try await interpolate(oneWayIndoor: oneWayIndoor)
+      return try await interpolate(oneWayIndoor: oneWayIndoor, utils: utils)
     case let .oneWayOutdoor(oneWayOutdoor):
-      return try await interpolate(oneWayOutdoor: oneWayOutdoor)
+      return try await interpolate(oneWayOutdoor: oneWayOutdoor, utils: utils)
     case let .twoWay(twoWay):
-      return try await interpolate(twoWay: twoWay)
+      return try await interpolate(twoWay: twoWay, utils: utils)
     }
   }
 }
@@ -144,41 +145,50 @@ fileprivate extension ManualSClient.CoolingInterpolation.NoInterpolationRequest 
 
 fileprivate extension ManualSClient.CoolingInterpolation {
   
-  func interpolate(noInterpolation: NoInterpolationRequest) async throws -> Self.Result {
+  func interpolate(noInterpolation: NoInterpolationRequest, utils: UtilsClient) async throws -> Self.Result {
     try await noInterpolation.validate()
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: noInterpolation.capacity.capacity,
-      request: noInterpolation
+      request: noInterpolation,
+      utils: utils
     )
     return .init(request: .noInterpolation(noInterpolation), envelope: envelope)
   }
   
-  func interpolate(oneWayOutdoor: OneWayRequest) async throws -> Self.Result {
+  func interpolate(oneWayOutdoor: OneWayRequest, utils: UtilsClient) async throws -> Self.Result {
     try await oneWayOutdoor.validateOneWayOutdoor()
     let inerpolatedCapacity = await oneWayOutdoor.interpolated(for: .outdoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: inerpolatedCapacity,
-      request: oneWayOutdoor
+      request: oneWayOutdoor,
+      utils: utils
     )
     return .init(request: .oneWayOutdoor(oneWayOutdoor), envelope: envelope)
   }
   
-  func interpolate(oneWayIndoor: OneWayRequest) async throws -> Self.Result {
+  func interpolate(oneWayIndoor: OneWayRequest, utils: UtilsClient) async throws -> Self.Result {
     try await oneWayIndoor.validateOneWayIndoor()
     let interpolatedCapacity = await oneWayIndoor.interpolated(for: .indoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: interpolatedCapacity,
-      request: oneWayIndoor
+      request: oneWayIndoor,
+      utils: utils
     )
     return .init(request: .oneWayIndoor(oneWayIndoor), envelope: envelope)
   }
   
-  func interpolate(twoWay: TwoWayRequest) async throws -> Self.Result {
+  func interpolate(twoWay: TwoWayRequest, utils: UtilsClient) async throws -> Self.Result {
     try await twoWay.validate()
-    let aboveIndoorResult = try await interpolate(oneWayIndoor: twoWay.aboveDesign.oneWayIndoorRequest(twoWay))
-    let belowIndoorResult = try await interpolate(oneWayIndoor: twoWay.belowDesign.oneWayIndoorRequest(twoWay))
+    let aboveIndoorResult = try await interpolate(
+      oneWayIndoor: twoWay.aboveDesign.oneWayIndoorRequest(twoWay),
+      utils: utils
+    )
+    let belowIndoorResult = try await interpolate(
+      oneWayIndoor: twoWay.belowDesign.oneWayIndoorRequest(twoWay),
+      utils: utils
+    )
     let outdoorRequest = twoWay.outdoorRequest(above: aboveIndoorResult, below: belowIndoorResult)
-    let outdoorResult = try await interpolate(oneWayOutdoor: outdoorRequest)
+    let outdoorResult = try await interpolate(oneWayOutdoor: outdoorRequest, utils: utils)
     return outdoorResult.result(request: .twoWay(twoWay))
   }
 }
@@ -220,7 +230,8 @@ fileprivate struct CoolingInterpolationEnvelope {
   
   init(
     interpolatedCapacity: CoolingCapacity,
-    request: any CoolingInterpolationRequest
+    request: any CoolingInterpolationRequest,
+    utils: UtilsClient
   ) async throws {
     
     let excessLatent = await request.excessLatent(interpolatedCapacity: interpolatedCapacity)
@@ -230,7 +241,7 @@ fileprivate struct CoolingInterpolationEnvelope {
     if let manufactererAdjustments = request.manufacturerAdjustments {
       await finalCapacity.apply(multiplier: manufactererAdjustments)
     }
-    let altitudeDeratings = try await request.altitudeDerating()
+    let altitudeDeratings = try await request.altitudeDerating(utils: utils)
     await finalCapacity.apply(multiplier: altitudeDeratings)
     
     self.interpolatedCapacity = interpolatedCapacity
@@ -248,12 +259,8 @@ fileprivate extension CoolingInterpolationRequest {
     (interpolatedCapacity.latent - houseLoad.cooling.latent) / 2
   }
   
-  // Fix
-  func altitudeDerating() async throws -> AdjustmentMultiplier {
-    return .airToAir(total: 1, sensible: 1, heating: 1)
-//    fatalError()
-//    let request = ManualSClient.DeratingRequest.elevation(system: systemType, elevation: designInfo.elevation)
-//    return try await request.run()
+  func altitudeDerating(utils: UtilsClient) async throws -> AdjustmentMultiplier {
+    return try await utils.derating(.init(systemType: systemType, elevation: designInfo.elevation))
   }
 }
 
