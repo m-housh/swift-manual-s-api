@@ -7,12 +7,12 @@ extension ManualSClient.CoolingInterpolation {
     switch self {
     case let .noInterpolation(noInterpolation):
       return try await interpolate(noInterpolation: noInterpolation)
-    case .oneWayIndoor:
-      throw ValidationError("Fix me.")
+    case let .oneWayIndoor(oneWayIndoor):
+      return try await interpolate(oneWayIndoor: oneWayIndoor)
     case let .oneWayOutdoor(oneWayOutdoor):
       return try await interpolate(oneWayOutdoor: oneWayOutdoor)
-    case .twoWay:
-      throw ValidationError("Fix me.")
+    case let .twoWay(twoWay):
+      return try await interpolate(twoWay: twoWay)
     }
   }
 }
@@ -33,6 +33,50 @@ fileprivate extension ManualSClient.CoolingInterpolation.CoolingCapacityEnvelope
     guard self.indoorTemperature >= 0 else {
       throw ValidationError("Indoor temperature should be greater than 0")
     }
+  }
+}
+
+fileprivate extension ManualSClient.CoolingInterpolation.TwoWayRequest.CapacityEnvelope {
+  
+  func validate() async throws {
+    guard above.cfm == below.cfm else {
+      throw ValidationError("Above cfm should match below cfm.")
+    }
+    guard above.indoorTemperature == below.indoorTemperature else {
+      throw ValidationError("Above indoor temperature should match below indoor temperature.")
+    }
+    guard above.indoorWetBulb > below.indoorWetBulb else {
+      throw ValidationError("Above indoor wet-bulb should be greater than below indoor wet-bulb.")
+    }
+    guard above.indoorWetBulb > 63 else {
+      throw ValidationError("Above indoor wet-bulb should be greater than 63°.")
+    }
+    guard below.indoorWetBulb < 63 else {
+      throw ValidationError("Below indoor wet-bulb should be less than 63°.")
+    }
+    
+    try await above.validate()
+    try await below.validate()
+  }
+}
+
+fileprivate extension ManualSClient.CoolingInterpolation.TwoWayRequest {
+  
+  func validate() async throws {
+    guard belowDesign.below.outdoorTemperature < designInfo.summer.outdoorTemperature else {
+      throw ValidationError("Below design, below outdoor temperature should be less than design outdoor temperature.")
+    }
+    guard aboveDesign.below.cfm == belowDesign.below.cfm else {
+      throw ValidationError("Above design, below cfm should match below design, below cfm.")
+    }
+    guard belowDesign.below.indoorTemperature == designInfo.summer.indoorTemperature else {
+      throw ValidationError("Below design, below indoor temperature should match design indoor temperature.")
+    }
+    guard aboveDesign.below.indoorTemperature == designInfo.summer.indoorTemperature else {
+      throw ValidationError("Above design, below indoor temperature should match design indoor temperature.")
+    }
+    try await aboveDesign.validate()
+    try await belowDesign.validate()
   }
 }
 
@@ -58,6 +102,27 @@ fileprivate extension ManualSClient.CoolingInterpolation.OneWayRequest {
     try await aboveDesign.validate()
     try await belowDesign.validate()
   }
+  
+  func validateOneWayIndoor() async throws {
+    guard aboveDesign.cfm == belowDesign.cfm else {
+      throw ValidationError("Above design CFM and below design CFM")
+    }
+    guard aboveDesign.outdoorTemperature == belowDesign.outdoorTemperature else {
+      throw ValidationError("Above design and below design outdoor temperatures should match.")
+    }
+    guard aboveDesign.indoorTemperature == belowDesign.indoorTemperature else {
+      throw ValidationError("Above design and below design indoor temperatures should match.")
+    }
+    guard belowDesign.indoorWetBulb < 63 else {
+      throw ValidationError("Below design indoor wet-bulb should be below 63°.")
+    }
+    guard aboveDesign.indoorWetBulb > 63 else {
+      throw ValidationError("Above design indoor wet-bulb should be above 63°.")
+    }
+    
+    try await aboveDesign.validate()
+    try await belowDesign.validate()
+  }
 }
 
 fileprivate extension ManualSClient.CoolingInterpolation.NoInterpolationRequest {
@@ -75,11 +140,9 @@ fileprivate extension ManualSClient.CoolingInterpolation.NoInterpolationRequest 
 
 }
 
+// MARK: - Interpolations
+
 fileprivate extension ManualSClient.CoolingInterpolation {
-  
-//  func excessLatent(interpolatedCapacity: CoolingCapacity, houseLoad: HouseLoad) async -> Int {
-//    (interpolatedCapacity.latent - houseLoad.cooling.latent) / 2
-//  }
   
   func interpolate(noInterpolation: NoInterpolationRequest) async throws -> Self.Result {
     try await noInterpolation.validate()
@@ -92,7 +155,7 @@ fileprivate extension ManualSClient.CoolingInterpolation {
   
   func interpolate(oneWayOutdoor: OneWayRequest) async throws -> Self.Result {
     try await oneWayOutdoor.validateOneWayOutdoor()
-    let inerpolatedCapacity = await oneWayOutdoor.interpolatedCapacity()
+    let inerpolatedCapacity = await oneWayOutdoor.interpolated(for: .outdoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: inerpolatedCapacity,
       request: oneWayOutdoor
@@ -100,7 +163,27 @@ fileprivate extension ManualSClient.CoolingInterpolation {
     return .init(request: .oneWayOutdoor(oneWayOutdoor), envelope: envelope)
   }
   
+  func interpolate(oneWayIndoor: OneWayRequest) async throws -> Self.Result {
+    try await oneWayIndoor.validateOneWayIndoor()
+    let interpolatedCapacity = await oneWayIndoor.interpolated(for: .indoor)
+    let envelope = try await CoolingInterpolationEnvelope(
+      interpolatedCapacity: interpolatedCapacity,
+      request: oneWayIndoor
+    )
+    return .init(request: .oneWayIndoor(oneWayIndoor), envelope: envelope)
+  }
+  
+  func interpolate(twoWay: TwoWayRequest) async throws -> Self.Result {
+    try await twoWay.validate()
+    let aboveIndoorResult = try await interpolate(oneWayIndoor: twoWay.aboveDesign.oneWayIndoorRequest(twoWay))
+    let belowIndoorResult = try await interpolate(oneWayIndoor: twoWay.belowDesign.oneWayIndoorRequest(twoWay))
+    let outdoorRequest = twoWay.outdoorRequest(above: aboveIndoorResult, below: belowIndoorResult)
+    let outdoorResult = try await interpolate(oneWayOutdoor: outdoorRequest)
+    return outdoorResult.result(request: .twoWay(twoWay))
+  }
 }
+
+// MARK: - Helpers
 
 fileprivate extension ManualSClient.CoolingInterpolation.Result {
   
@@ -112,6 +195,17 @@ fileprivate extension ManualSClient.CoolingInterpolation.Result {
       finalCapacityAtDesign: envelope.finalCapacity,
       altitudeDerating: envelope.altitudeDerating,
       capacityAsPercentOfLoad: envelope.capacityAsPercentOfLoad
+    )
+  }
+  
+  func result(request: ManualSClient.CoolingInterpolation) -> Self {
+    .init(
+      request: request,
+      interpolatedCapacity: interpolatedCapacity,
+      excessLatent: excessLatent,
+      finalCapacityAtDesign: finalCapacityAtDesign,
+      altitudeDerating: altitudeDerating,
+      capacityAsPercentOfLoad: capacityAsPercentOfLoad
     )
   }
 }
@@ -160,15 +254,85 @@ fileprivate extension CoolingInterpolationRequest {
   }
 }
 
-extension ManualSClient.CoolingInterpolation.OneWayRequest {
+fileprivate extension ManualSClient.CoolingInterpolation.TwoWayRequest.CapacityEnvelope {
+  
+  func oneWayIndoorRequest(_ request: any CoolingInterpolationRequest) -> ManualSClient.CoolingInterpolation.OneWayRequest {
+    .init(
+      aboveDesign: above,
+      belowDesign: below,
+      designInfo: request.designInfo,
+      houseLoad: request.houseLoad,
+      systemType: request.systemType
+    )
+  }
+}
 
-  func interpolatedCapacity() async -> CoolingCapacity {
-    let total = await interpolateCapacity(
+fileprivate extension ManualSClient.CoolingInterpolation.TwoWayRequest {
+  func outdoorRequest(
+    above: ManualSClient.CoolingInterpolation.Result,
+    below: ManualSClient.CoolingInterpolation.Result
+  ) -> ManualSClient.CoolingInterpolation.OneWayRequest {
+    .init(
+      aboveDesign: .init(
+        cfm: aboveDesign.above.cfm,
+        indoorTemperature: aboveDesign.above.indoorTemperature,
+        indoorWetBulb: 63,
+        outdoorTemperature: aboveDesign.above.outdoorTemperature,
+        capacity: above.interpolatedCapacity
+      ),
+      belowDesign: .init(
+        cfm: belowDesign.above.cfm,
+        indoorTemperature: belowDesign.above.indoorTemperature,
+        indoorWetBulb: 63,
+        outdoorTemperature: belowDesign.below.outdoorTemperature,
+        capacity: below.interpolatedCapacity
+      ),
+      designInfo: designInfo,
+      houseLoad: houseLoad,
+      systemType: systemType
+    )
+  }
+}
+
+fileprivate extension ManualSClient.CoolingInterpolation.OneWayRequest {
+  
+  enum InterpolationType {
+    case indoor
+    case outdoor
+  }
+  
+  func interpolated(for location: InterpolationType) async -> CoolingCapacity {
+    switch location {
+    case .indoor:
+      return await _interpolatedIndoorCapacity()
+    case .outdoor:
+      return await _interpolatedOutdoorCapacity()
+    }
+  }
+  
+  private func _interpolatedIndoorCapacity() async -> CoolingCapacity {
+    let total = belowDesign.capacity.total
+    + ((aboveDesign.capacity.total - belowDesign.capacity.total) / (aboveDesign.indoorWetBulb - belowDesign.indoorWetBulb))
+      * (63 - belowDesign.indoorWetBulb)
+    
+    // This one gives improper results when it does not use Doubles.
+    let sensible = Int(
+      Double(belowDesign.capacity.sensible)
+      + ((Double(aboveDesign.capacity.sensible) - Double(belowDesign.capacity.sensible))
+      / (Double(belowDesign.capacity.total) - Double(aboveDesign.capacity.total)))
+      * (Double(belowDesign.capacity.total) - Double(total))
+    )
+    
+    return .init(total: total, sensible: sensible)
+  }
+
+  private func _interpolatedOutdoorCapacity() async -> CoolingCapacity {
+    let total = await OneWayOutdoorEnvelope.interpolateCapacity(
       outdoorDesignTemperature: designInfo.summer.outdoorTemperature,
       below: .total(belowDesign),
       above: .total(aboveDesign)
     )
-    let sensible = await interpolateCapacity(
+    let sensible = await OneWayOutdoorEnvelope.interpolateCapacity(
       outdoorDesignTemperature: designInfo.summer.outdoorTemperature,
       below: .sensible(belowDesign),
       above: .sensible(aboveDesign)
@@ -178,7 +342,7 @@ extension ManualSClient.CoolingInterpolation.OneWayRequest {
   }
 }
 
-fileprivate struct OneWayEnvelope {
+fileprivate struct OneWayOutdoorEnvelope {
   let outdoorTemperature: Int
   let capacity: Int
   
@@ -189,16 +353,16 @@ fileprivate struct OneWayEnvelope {
   static func sensible(_ capacity: ManualSClient.CoolingInterpolation.CoolingCapacityEnvelope) -> Self {
     .init(outdoorTemperature: capacity.outdoorTemperature, capacity: capacity.capacity.sensible)
   }
-}
-
-fileprivate func interpolateCapacity(
-  outdoorDesignTemperature: Int,
-  below: OneWayEnvelope,
-  above: OneWayEnvelope
-) async -> Int {
-  below.capacity
-  - (outdoorDesignTemperature - below.outdoorTemperature)
-  * ((below.capacity - above.capacity) / (above.outdoorTemperature - below.outdoorTemperature))
+  
+  static func interpolateCapacity(
+    outdoorDesignTemperature: Int,
+    below: OneWayOutdoorEnvelope,
+    above: OneWayOutdoorEnvelope
+  ) async -> Int {
+    below.capacity
+    - (outdoorDesignTemperature - below.outdoorTemperature)
+    * ((below.capacity - above.capacity) / (above.outdoorTemperature - below.outdoorTemperature))
+  }
 }
 
 fileprivate extension CoolingCapacity {

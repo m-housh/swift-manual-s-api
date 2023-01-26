@@ -45,8 +45,8 @@ extension ManualSClient.CoolingInterpolation {
     public init(
       aboveDesign: CapacityEnvelope,
       belowDesign: CapacityEnvelope,
-      designInfo: DesignInfo
-      , houseLoad: HouseLoad,
+      designInfo: DesignInfo,
+      houseLoad: HouseLoad,
       manufacturerAdjustments: AdjustmentMultiplier? = nil,
       systemType: SystemType
     ) {
