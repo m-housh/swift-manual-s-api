@@ -10,6 +10,8 @@ let package = Package(
     .library(name: "ManualSClient", targets: ["ManualSClient"]),
     .library(name: "ManualSClientLive", targets: ["ManualSClientLive"]),
     .library(name: "Router", targets: ["Router"]),
+    .library(name: "UtilsClient", targets: ["UtilsClient"]),
+    .library(name: "UtilsClientLive", targets: ["UtilsClientLive"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
@@ -28,12 +30,14 @@ let package = Package(
       name: "ManualSClientLive",
       dependencies: [
         "ManualSClient",
+        "UtilsClient"
       ]
     ),
     .testTarget(
       name: "ManualSClientTests",
       dependencies: [
         "ManualSClientLive",
+        "UtilsClientLive",
         .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
@@ -52,6 +56,25 @@ let package = Package(
       name: "RouterTests",
       dependencies: [
         "Router"
+      ]
+    ),
+    .target(
+      name: "UtilsClient",
+      dependencies: [
+        "Models",
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
+      name: "UtilsClientLive",
+      dependencies: [
+        "UtilsClient",
+      ]
+    ),
+    .testTarget(
+      name: "UtilsClientTests",
+      dependencies: [
+        "UtilsClientLive",
       ]
     ),
   ]

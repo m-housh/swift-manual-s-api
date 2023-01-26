@@ -248,9 +248,12 @@ fileprivate extension CoolingInterpolationRequest {
     (interpolatedCapacity.latent - houseLoad.cooling.latent) / 2
   }
   
+  // Fix
   func altitudeDerating() async throws -> AdjustmentMultiplier {
-    let request = ManualSClient.DeratingRequest.elevation(system: systemType, elevation: designInfo.elevation)
-    return try await request.run()
+    return .airToAir(total: 1, sensible: 1, heating: 1)
+//    fatalError()
+//    let request = ManualSClient.DeratingRequest.elevation(system: systemType, elevation: designInfo.elevation)
+//    return try await request.run()
   }
 }
 

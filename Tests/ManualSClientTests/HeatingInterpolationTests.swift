@@ -1,10 +1,12 @@
 import XCTest
 import ManualSClient
 import ManualSClientLive
+import UtilsClientLive
+import CustomDump
 
 final class HeatingInterpolationTests: XCTestCase {
   
-  let client = ManualSClient.live
+  let client = ManualSClient.live(utils: .live)
   
   func test_furnace() async throws {
     let request = ManualSClient.HeatingInterpolation.FurnaceRequest(
@@ -14,7 +16,7 @@ final class HeatingInterpolationTests: XCTestCase {
       afue: 96
     )
     let sut = try await client.interpolate(.heating(.furnace(request)))
-    XCTAssertEqual(sut, .heating(.furnace(.init(request: request, outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116))))
+    XCTAssertNoDifference(sut, .heating(.furnace(.init(request: request, outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116))))
   }
   
   func test_furnace_fails() async {
@@ -37,7 +39,7 @@ final class HeatingInterpolationTests: XCTestCase {
       afue: 96
     )
     let sut = try await client.interpolate(.heating(.boiler(request)))
-    XCTAssertEqual(sut, .heating(.boiler(.init(request: request, outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116))))
+    XCTAssertNoDifference(sut, .heating(.boiler(.init(request: request, outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116))))
   }
   
   func test_electric_no_heatPump() async throws {
@@ -47,7 +49,7 @@ final class HeatingInterpolationTests: XCTestCase {
       inputKW: 15
     )
     let sut = try await client.interpolate(.heating(.electric(request)))
-    XCTAssertEqual(sut, .heating(.electric(.init(request: request, requiredKW: 14.55, percentOfLoad: 103.1))))
+    XCTAssertNoDifference(sut, .heating(.electric(.init(request: request, requiredKW: 14.55, percentOfLoad: 103.1))))
   }
   
   func test_electric_fails() async {
@@ -62,7 +64,7 @@ final class HeatingInterpolationTests: XCTestCase {
       houseLoad: .mock
     )
     let sut = try await client.interpolate(.heating(.heatPump(request)))
-    XCTAssertEqual(sut, .heating(.heatPump(.init(request: request, finalCapacity: .mock, capacityAtDesign: 11_308, balancePointTemperature: 38.5, requiredKW: 11.24))))
+    XCTAssertNoDifference(sut, .heating(.heatPump(.init(request: request, finalCapacity: .mock, capacityAtDesign: 11_308, balancePointTemperature: 38.5, requiredKW: 11.24))))
   }
 }
 

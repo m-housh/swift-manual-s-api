@@ -2,11 +2,12 @@ import XCTest
 import Models
 import ManualSClient
 import ManualSClientLive
+import UtilsClient
 import CustomDump
 
 final class CoolingInterpolationTests: XCTestCase {
   
-  let client = ManualSClient.live
+  let client = ManualSClient.live(utils: .live)
   
   func test_noInterpolation() async throws {
     let request = ManualSClient.CoolingInterpolation.NoInterpolationRequest(

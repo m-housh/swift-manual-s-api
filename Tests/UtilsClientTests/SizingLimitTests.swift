@@ -1,11 +1,10 @@
 import Models
-import ManualSClientLive
-import ManualSClient
 import XCTest
+import UtilsClientLive
 
 final class SizingLimitTests: XCTestCase {
   
-  let client = ManualSClient.live
+  let client = UtilsClient.live
   
   func test_cooling_mildWinterOrLatentLoad() async throws {
     let suts: [(SystemType, SizingLimits)] = [
@@ -37,7 +36,7 @@ final class SizingLimitTests: XCTestCase {
     
     // MARK: Test
     for (systemType, expected) in suts {
-      let sut = try await client.sizingLimits(systemType: systemType)
+      let sut = try await client.sizingLimits(.init(systemType: systemType))
       XCTAssertEqual(sut, expected)
     }
   }
@@ -72,7 +71,8 @@ final class SizingLimitTests: XCTestCase {
 
     // MARK: Test
     for (systemType, expected) in suts {
-      let sut = try await client.sizingLimits(systemType, .mock)
+//      let sut = try await client.sizingLimits(systemType, .mock)
+      let sut = try await client.sizingLimits(.init(systemType: systemType, houseLoad: .mock))
       XCTAssertEqual(sut, expected)
     }
   }
@@ -80,10 +80,10 @@ final class SizingLimitTests: XCTestCase {
   func test_cooling_coldWinterOrNoLatentLoad_throws_error() async throws {
     
     do {
-      _ = try await client.sizingLimits(
-        .airToAir(type: .airConditioner, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad),
-        nil
-      )
+      _ = try await client.sizingLimits(.init(
+        systemType: .airToAir(type: .airConditioner, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad),
+        houseLoad: nil
+      ))
       XCTFail()
     } catch {
       XCTAssertTrue(true)
@@ -92,13 +92,13 @@ final class SizingLimitTests: XCTestCase {
   }
   
   func test_furnace() async throws {
-    let sut = try await client.sizingLimits(.furnaceOnly, nil)
+    let sut = try await client.sizingLimits(.init(systemType: .furnaceOnly))
     XCTAssertEqual(sut, .init(oversizing: .furnace(140), undersizing: .furnace(90)))
   }
   
   
   func test_boiler() async throws {
-    let sut = try await client.sizingLimits(.boilerOnly, nil)
+    let sut = try await client.sizingLimits(.init(systemType: .boilerOnly))
     XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
   }
 }

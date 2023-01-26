@@ -1,18 +1,19 @@
 import Foundation
-import ManualSClient
+import UtilsClient
 import Models
 
-extension ManualSClient.DeratingRequest {
-  
-  func run() async throws -> AdjustmentMultiplier {
-    switch self {
-    case let .elevation(system: systemType, elevation: elevation):
-      return try await systemType.derating(elevation: elevation)
-    }
-  }
-}
+//extension UtilsClient.DeratingRequest {
+//
+//  func run() async throws -> AdjustmentMultiplier {
+//    try await systemType.derating(elevation: elevation)
+////    switch self {
+////    case let .elevation(system: systemType, elevation: elevation):
+////      return try await systemType.derating(elevation: elevation)
+////    }
+//  }
+//}
 
-fileprivate extension SystemType {
+extension SystemType {
   
   func derating(elevation: Int) async throws -> AdjustmentMultiplier {
     switch self {

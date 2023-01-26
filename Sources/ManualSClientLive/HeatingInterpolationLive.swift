@@ -1,19 +1,20 @@
 import Foundation
 import ManualSClient
 import Models
+import UtilsClient
 
 extension ManualSClient.HeatingInterpolation {
   
-  func run() async throws -> ManualSClient.HeatingInterpolation.Result {
+  func run(utils: UtilsClient) async throws -> ManualSClient.HeatingInterpolation.Result {
     switch self {
     case let .boiler(boiler):
       return try await interpolate(furnace: boiler.furnaceRequest).boilerResult()
     case let .electric(electric):
-      return try await interpolate(electric: electric)
+      return try await interpolate(electric: electric, utils: utils)
     case let .furnace(furnace):
       return try await interpolate(furnace: furnace)
     case let .heatPump(heatPump):
-      return try await interpolate(heatPump: heatPump)
+      return try await interpolate(heatPump: heatPump, utils: utils)
     }
   }
   
@@ -71,12 +72,14 @@ fileprivate extension ManualSClient.HeatingInterpolation {
     ))
   }
   
-  func interpolate(electric: ElectricRequest) async throws -> Self.Result {
+  // Fix.
+  func interpolate(electric: ElectricRequest, utils: UtilsClient) async throws -> Self.Result {
     try await validate(input: electric.inputKW)
-    let requiredKW = try await ManualSClient.RequiredKWRequest(
+//    let requiredKW = 1.0
+    let requiredKW = try await utils.requiredKW(.init(
       houseLoad: electric.houseLoad,
       capacityAtDesign: electric.heatPumpCapacity ?? 0
-    ).run()
+    )).requiredKW
     
     let percentOfLoad = electric.inputKW / requiredKW
     
@@ -87,7 +90,8 @@ fileprivate extension ManualSClient.HeatingInterpolation {
     ))
   }
   
-  func interpolate(heatPump: HeatPumpRequest) async throws -> Self.Result {
+  // Fix.
+  func interpolate(heatPump: HeatPumpRequest, utils: UtilsClient) async throws -> Self.Result {
     try await validate(capacity: heatPump.capacity)
     
     var finalCapacity = heatPump.capacity
@@ -101,10 +105,11 @@ fileprivate extension ManualSClient.HeatingInterpolation {
     let capacityAtDesign = Int(
       await finalCapacity.capacity(at: heatPump.designInfo.winter.outdoorTemperature)
     )
-    let requiredKW = try await ManualSClient.RequiredKWRequest(
+    let requiredKW = try await utils.requiredKW(.init(
       houseLoad: heatPump.houseLoad,
       capacityAtDesign: capacityAtDesign
-    ).run()
+    )).requiredKW
+//    let requiredKW = 1.0
     
     return .heatPump(.init(
       request: heatPump,
