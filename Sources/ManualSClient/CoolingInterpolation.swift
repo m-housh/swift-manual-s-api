@@ -117,12 +117,6 @@ extension ManualSClient.CoolingInterpolation {
   }
 }
 
-public protocol CoolingInterpolationRequest: Codable, Equatable, Sendable {
-  var designInfo: DesignInfo { get }
-  var houseLoad: HouseLoad { get }
-  var manufacturerAdjustments: AdjustmentMultiplier? { get }
-  var systemType: SystemType { get }
-}
 
 // MARK: - Results
 extension ManualSClient.CoolingInterpolation {

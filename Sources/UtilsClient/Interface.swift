@@ -2,15 +2,18 @@ import Models
 import XCTestDynamicOverlay
 
 public struct UtilsClient {
-  public var derating: (DeratingRequest) async throws -> AdjustmentMultiplier
-  public var requiredKW: (RequiredKWRequest) async throws -> RequiredKWResponse
-  public var sizingLimits: (SizingLimitRequest) async throws -> SizingLimits
+  public var balancePoint: @Sendable (BalancePointRequest) async throws -> BalancePointResponse
+  public var derating: @Sendable (DeratingRequest) async throws -> AdjustmentMultiplier
+  public var requiredKW: @Sendable (RequiredKWRequest) async throws -> RequiredKWResponse
+  public var sizingLimits: @Sendable (SizingLimitRequest) async throws -> SizingLimits
   
   public init(
-    derating: @escaping (DeratingRequest) async throws -> AdjustmentMultiplier,
-    requiredKW: @escaping (RequiredKWRequest) async throws -> RequiredKWResponse,
-    sizingLimits: @escaping (SizingLimitRequest) async throws -> SizingLimits
+    balancePoint: @escaping @Sendable (BalancePointRequest) async throws -> BalancePointResponse,
+    derating: @escaping @Sendable (DeratingRequest) async throws -> AdjustmentMultiplier,
+    requiredKW: @escaping @Sendable (RequiredKWRequest) async throws -> RequiredKWResponse,
+    sizingLimits: @escaping @Sendable (SizingLimitRequest) async throws -> SizingLimits
   ) {
+    self.balancePoint = balancePoint
     self.derating = derating
     self.requiredKW = requiredKW
     self.sizingLimits = sizingLimits
@@ -19,6 +22,35 @@ public struct UtilsClient {
 
 // MARK: - Requests
 extension UtilsClient {
+  
+  public enum BalancePointRequest: Codable, Equatable, Sendable {
+    case thermal(ThermalBalancePointRequest)
+//    case economic
+    
+    public struct ThermalBalancePointRequest: Codable, Equatable, Sendable {
+      public var heatLoss: Double
+      public var heatPumpCapacity: HeatPumpCapacity
+      public var winterDesignTemperature: Double
+      
+      public init(
+        heatLoss: Double,
+        heatPumpCapacity: HeatPumpCapacity,
+        winterDesignTemperature: Double
+      ) {
+        self.heatLoss = heatLoss
+        self.heatPumpCapacity = heatPumpCapacity
+        self.winterDesignTemperature = winterDesignTemperature
+      }
+    }
+    
+//    public enum EconomicBalancePointRequest: Codable, Equatable, Sendable {
+//      case naturalGas
+//
+//      public struct NaturalGasRequest: Codable, Equatable, Sendable {
+//        public let c
+//      }
+//    }
+  }
   
   public struct DeratingRequest: Codable, Equatable, Sendable {
     public var systemType: SystemType
@@ -57,6 +89,14 @@ extension UtilsClient {
 // MARK: - Responses
 extension UtilsClient {
   
+  public struct BalancePointResponse: Codable, Equatable, Sendable {
+    public let balancePoint: Double
+    
+    public init(balancePoint: Double) {
+      self.balancePoint = balancePoint
+    }
+  }
+  
   public struct RequiredKWResponse: Codable, Equatable, Sendable {
     public let requiredKW: Double
     
@@ -70,6 +110,7 @@ extension UtilsClient {
 extension UtilsClient {
   
   public static let failing = Self.init(
+    balancePoint: unimplemented("\(Self.self).balancePoint"),
     derating: unimplemented("\(Self.self).derating"),
     requiredKW: unimplemented("\(Self.self).requiredKW"),
     sizingLimits: unimplemented("\(Self.self).sizingLimits")

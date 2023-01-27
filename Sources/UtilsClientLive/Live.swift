@@ -3,6 +3,9 @@
 extension UtilsClient {
   
   public static let live = Self.init(
+    balancePoint: { request in
+      try await request.run()
+    },
     derating: { request in
       try await request.systemType.derating(elevation: request.elevation)
     },

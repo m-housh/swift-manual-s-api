@@ -30,3 +30,25 @@ public struct CoolingCapacity: Codable, Equatable, Sendable {
   }
   
 }
+
+public struct CoolingCapacityEnvelope: Codable, Equatable, Sendable {
+  public var cfm: Int
+  public var indoorTemperature: Int
+  public var indoorWetBulb: Int
+  public var outdoorTemperature: Int
+  public var capacity: CoolingCapacity
+  
+  public init(
+    cfm: Int,
+    indoorTemperature: Int,
+    indoorWetBulb: Int,
+    outdoorTemperature: Int,
+    capacity: CoolingCapacity
+  ) {
+    self.cfm = cfm
+    self.indoorTemperature = indoorTemperature
+    self.indoorWetBulb = indoorWetBulb
+    self.outdoorTemperature = outdoorTemperature
+    self.capacity = capacity
+  }
+}

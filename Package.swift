@@ -55,7 +55,8 @@ let package = Package(
     .testTarget(
       name: "RouterTests",
       dependencies: [
-        "Router"
+        "Router",
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
     .target(

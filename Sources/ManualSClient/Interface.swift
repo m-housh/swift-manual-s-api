@@ -8,10 +8,8 @@ public struct ManualSClient {
   @inlinable
   public init(
     interpolate: @escaping (InterpolationRequest) async throws -> InterpolationResult
-
   ) {
     self.interpolate = interpolate
-
   }
 }
 
