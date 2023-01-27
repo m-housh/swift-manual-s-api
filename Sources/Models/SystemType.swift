@@ -25,7 +25,7 @@ public enum SystemType: Codable, Equatable, Sendable {
 
 extension SystemType {
   
-  public enum ClimateType: Codable, Equatable, CaseIterable, CustomStringConvertible, Sendable {
+  public enum ClimateType: String, Codable, Equatable, CaseIterable, CustomStringConvertible, Sendable {
     case mildWinterOrLatentLoad
     case coldWinterOrNoLatentLoad
     
@@ -37,7 +37,7 @@ extension SystemType {
     }
   }
   
-   public enum CompressorType: Codable, Equatable, CaseIterable, CustomStringConvertible, Sendable {
+   public enum CompressorType: String, Codable, Equatable, CaseIterable, CustomStringConvertible, Sendable {
     case singleSpeed
     case multiSpeed
     case variableSpeed
@@ -51,7 +51,7 @@ extension SystemType {
     }
   }
   
-  public enum EquipmentType: Codable, Equatable, CaseIterable, CustomStringConvertible, Sendable {
+  public enum EquipmentType: String, Codable, Equatable, CaseIterable, CustomStringConvertible, Sendable {
     case airConditioner
     case heatPump
     
