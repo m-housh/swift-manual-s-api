@@ -1,7 +1,14 @@
 import Foundation
 import Models
 
-extension SystemType {
+extension ServerRoute.Api.Route.SizingLimitRequest {
+  
+  func respond() async throws -> SizingLimits {
+    try await self.systemType.sizingLimits(load: self.houseLoad)
+  }
+}
+
+fileprivate extension SystemType {
   
   func sizingLimits(load: HouseLoad?) async throws -> SizingLimits {
     switch self {
@@ -16,6 +23,7 @@ extension SystemType {
         coolingTotal = 130
       default:
         guard let load = load else { throw SizingLimitError() }
+        try await load.validate()
         let decimal = Double(load.cooling.total + 15_000) / Double(load.cooling.total)
         coolingTotal = Int(round(decimal * 100))
       }
@@ -24,6 +32,14 @@ extension SystemType {
       return .init(oversizing: .furnace(), undersizing: .furnace())
     case .boilerOnly:
       return .init(oversizing: .boiler(), undersizing: .boiler())
+    }
+  }
+}
+
+fileprivate extension HouseLoad {
+  func validate() async throws {
+    guard cooling.total > 0 else {
+      throw ValidationError("Cooling total should be greater than 0.")
     }
   }
 }

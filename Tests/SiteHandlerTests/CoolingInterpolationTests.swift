@@ -1,16 +1,15 @@
 import XCTest
 import Models
-import ManualSClient
-import ManualSClientLive
-import UtilsClient
+import SiteHandler
+import SiteHandlerLive
 import CustomDump
 
 final class CoolingInterpolationTests: XCTestCase {
   
-  let client = ManualSClient.live(utils: .live)
+  let client = SiteHandler.live
   
   func test_noInterpolation() async throws {
-    let request = ManualSClient.CoolingInterpolation.NoInterpolationRequest(
+    let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest(
       capacity: .init(
         cfm: 800,
         indoorTemperature: 75,
@@ -24,20 +23,19 @@ final class CoolingInterpolationTests: XCTestCase {
       systemType: .default
     )
     
-    let sut = try await client.interpolate(.cooling(.noInterpolation(request)))
+    let sut = try await client.api.interpolate(.cooling(.noInterpolation(request)))
     
-    XCTAssertEqual(sut, .cooling(.init(
-      request: .noInterpolation(request),
+    XCTAssertNoDifference(sut, .cooling(.init(result: .init(
       interpolatedCapacity: request.capacity.capacity,
       excessLatent: 886,
       finalCapacityAtDesign: .init(total: 22_600, sensible: 17_736),
       altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
       capacityAsPercentOfLoad: .init(total: 126.5, sensible: 127.7, latent: 122.3)))
-    )
+    ))
   }
   
   func test_oneWayOutdoor() async throws {
-    let request = ManualSClient.CoolingInterpolation.OneWayRequest(
+    let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
       aboveDesign: .init(
         cfm: 800,
         indoorTemperature: 75,
@@ -56,20 +54,19 @@ final class CoolingInterpolationTests: XCTestCase {
       houseLoad: .mock,
       systemType: .default
     )
-    
-    let sut = try await client.interpolate(.cooling(.oneWayOutdoor(request)))
-    XCTAssertEqual(sut, .cooling(.init(
-      request: .oneWayOutdoor(request),
+
+    let sut = try await client.api.interpolate(.cooling(.oneWayOutdoor(request)))
+    XCTAssertEqual(sut, .cooling(.init(result: .init(
       interpolatedCapacity: .init(total: 22_600, sensible: 16_850),
       excessLatent: 886,
       finalCapacityAtDesign: .init(total: 22_600, sensible: 17_736),
       altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
       capacityAsPercentOfLoad: .init(total: 126.5, sensible: 127.7, latent: 122.3)))
-    )
+    ))
   }
-  
+
   func test_oneWayIndoor() async throws {
-    let request = ManualSClient.CoolingInterpolation.OneWayRequest(
+    let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
       aboveDesign: .init(
         cfm: 800,
         indoorTemperature: 75,
@@ -88,21 +85,19 @@ final class CoolingInterpolationTests: XCTestCase {
       houseLoad: .mock,
       systemType: .default
     )
-    
-    let sut = try await client.interpolate(.cooling(.oneWayIndoor(request)))
-    XCTAssertEqual(sut, .cooling(.init(
-      request: .oneWayIndoor(request),
+
+    let sut = try await client.api.interpolate(.cooling(.oneWayIndoor(request)))
+    XCTAssertNoDifference(sut, .cooling(.init(result: .init(
       interpolatedCapacity: .init(total: 23_402, sensible: 18_450),
       excessLatent: 487,
       finalCapacityAtDesign: .init(total: 23_402, sensible: 18_937),
       altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
       capacityAsPercentOfLoad: .init(total: 130.9, sensible: 136.3, latent: 112.2)))
-    )
-    
+    ))
   }
-  
+
   func test_twoWay() async throws {
-    let request = ManualSClient.CoolingInterpolation.TwoWayRequest(
+    let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest(
       aboveDesign: .init(
         above: .init(
           cfm: 800,
@@ -139,16 +134,15 @@ final class CoolingInterpolationTests: XCTestCase {
       houseLoad: .mock,
       systemType: .default
     )
-    
-    let sut = try await client.interpolate(.cooling(.twoWay(request)))
-    XCTAssertNoDifference(sut, .cooling(.init(
-      request: .twoWay(request),
+
+    let sut = try await client.api.interpolate(.cooling(.twoWay(request)))
+    XCTAssertNoDifference(sut, .cooling(.init(result: .init(
       interpolatedCapacity: .init(total: 23_915, sensible: 18_700),
       excessLatent: 618,
       finalCapacityAtDesign: .init(total: 23_915, sensible: 19_318),
       altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
       capacityAsPercentOfLoad: .init(total: 133.8, sensible: 139.0, latent: 115.6)))
-    )
+    ))
   }
 }
 

@@ -40,10 +40,10 @@ extension ServerRoute {
       }
       
       public struct RequiredKW: Codable, Equatable, Sendable {
-        public var capacityAtDesign: Int
-        public var heatLoss: Int
+        public var capacityAtDesign: Double
+        public var heatLoss: Double
         
-        public init(capacityAtDesign: Int, heatLoss: Int) {
+        public init(capacityAtDesign: Double, heatLoss: Double) {
           self.capacityAtDesign = capacityAtDesign
           self.heatLoss = heatLoss
         }

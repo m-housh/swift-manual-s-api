@@ -1,19 +1,14 @@
 import Foundation
-import UtilsClient
+//import UtilsClient
 import Models
 
-//extension UtilsClient.DeratingRequest {
-//
-//  func run() async throws -> AdjustmentMultiplier {
-//    try await systemType.derating(elevation: elevation)
-////    switch self {
-////    case let .elevation(system: systemType, elevation: elevation):
-////      return try await systemType.derating(elevation: elevation)
-////    }
-//  }
-//}
+extension ServerRoute.Api.Route.Derating {
+  func respond() async throws -> AdjustmentMultiplier {
+    try await self.systemType.derating(elevation: self.elevation)
+  }
+}
 
-extension SystemType {
+fileprivate extension SystemType {
   
   func derating(elevation: Int) async throws -> AdjustmentMultiplier {
     switch self {

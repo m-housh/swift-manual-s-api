@@ -7,12 +7,9 @@ let package = Package(
   platforms: [.macOS(.v10_15)],
   products: [
     .library(name: "Models", targets: ["Models"]),
-    .library(name: "ManualSClient", targets: ["ManualSClient"]),
-    .library(name: "ManualSClientLive", targets: ["ManualSClientLive"]),
     .library(name: "Router", targets: ["Router"]),
     .library(name: "SiteHandler", targets: ["SiteHandler"]),
-    .library(name: "UtilsClient", targets: ["UtilsClient"]),
-    .library(name: "UtilsClientLive", targets: ["UtilsClientLive"]),
+    .library(name: "SiteHandlerLive", targets: ["SiteHandlerLive"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
@@ -21,35 +18,13 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "ManualSClient",
-      dependencies: [
-        "Models",
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
-      ]
-    ),
-    .target(
-      name: "ManualSClientLive",
-      dependencies: [
-        "ManualSClient",
-        "UtilsClient"
-      ]
-    ),
-    .testTarget(
-      name: "ManualSClientTests",
-      dependencies: [
-        "ManualSClientLive",
-        "UtilsClientLive",
-        .product(name: "CustomDump", package: "swift-custom-dump")
-      ]
-    ),
-    .target(
       name: "Models",
       dependencies: []
     ),
     .target(
       name: "Router",
       dependencies: [
-        "ManualSClient",
+        "Models",
         .product(name: "URLRouting", package: "swift-url-routing"),
       ]
     ),
@@ -64,25 +39,20 @@ let package = Package(
       name: "SiteHandler",
       dependencies: [
         "Models",
-      ]
-    ),
-    .target(
-      name: "UtilsClient",
-      dependencies: [
-        "Models",
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
       ]
     ),
     .target(
-      name: "UtilsClientLive",
+      name: "SiteHandlerLive",
       dependencies: [
-        "UtilsClient",
+        "SiteHandler",
       ]
     ),
     .testTarget(
-      name: "UtilsClientTests",
+      name: "SiteHandlerTests",
       dependencies: [
-        "UtilsClientLive",
+        "SiteHandlerLive",
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
   ]

@@ -1,10 +1,10 @@
 import Models
 import XCTest
-import UtilsClientLive
+import SiteHandlerLive
 
 final class SizingLimitTests: XCTestCase {
   
-  let client = UtilsClient.live
+  let client = SiteHandler.live
   
   func test_cooling_mildWinterOrLatentLoad() async throws {
     let suts: [(SystemType, SizingLimits)] = [
@@ -36,7 +36,7 @@ final class SizingLimitTests: XCTestCase {
     
     // MARK: Test
     for (systemType, expected) in suts {
-      let sut = try await client.sizingLimits(.init(systemType: systemType))
+      let sut = try await client.api.sizingLimits(.init(systemType: systemType))
       XCTAssertEqual(sut, expected)
     }
   }
@@ -72,7 +72,7 @@ final class SizingLimitTests: XCTestCase {
     // MARK: Test
     for (systemType, expected) in suts {
 //      let sut = try await client.sizingLimits(systemType, .mock)
-      let sut = try await client.sizingLimits(.init(systemType: systemType, houseLoad: .mock))
+      let sut = try await client.api.sizingLimits(.init(systemType: systemType, houseLoad: .mock))
       XCTAssertEqual(sut, expected)
     }
   }
@@ -80,7 +80,7 @@ final class SizingLimitTests: XCTestCase {
   func test_cooling_coldWinterOrNoLatentLoad_throws_error() async throws {
     
     do {
-      _ = try await client.sizingLimits(.init(
+      _ = try await client.api.sizingLimits(.init(
         systemType: .airToAir(type: .airConditioner, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad),
         houseLoad: nil
       ))
@@ -92,13 +92,13 @@ final class SizingLimitTests: XCTestCase {
   }
   
   func test_furnace() async throws {
-    let sut = try await client.sizingLimits(.init(systemType: .furnaceOnly))
+    let sut = try await client.api.sizingLimits(.init(systemType: .furnaceOnly))
     XCTAssertEqual(sut, .init(oversizing: .furnace(140), undersizing: .furnace(90)))
   }
   
   
   func test_boiler() async throws {
-    let sut = try await client.sizingLimits(.init(systemType: .boilerOnly))
+    let sut = try await client.api.sizingLimits(.init(systemType: .boilerOnly))
     XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
   }
 }

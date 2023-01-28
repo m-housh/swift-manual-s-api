@@ -1,26 +1,26 @@
 import Foundation
-import ManualSClient
 import Models
-import UtilsClient
 
-extension ManualSClient.HeatingInterpolation {
+extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
-  func run(utils: UtilsClient) async throws -> ManualSClient.HeatingInterpolation.Result {
+  func respond() async throws -> InterpolationResponse.Heating {
+    let result: InterpolationResponse.Heating.Result
     switch self {
     case let .boiler(boiler):
-      return try await interpolate(furnace: boiler.furnaceRequest).boilerResult()
+      result = try await interpolate(furnace: boiler.furnaceRequest).boilerResult()
     case let .electric(electric):
-      return try await interpolate(electric: electric, utils: utils)
+      result = try await interpolate(electric: electric)
     case let .furnace(furnace):
-      return try await interpolate(furnace: furnace)
+      result = try await interpolate(furnace: furnace)
     case let .heatPump(heatPump):
-      return try await interpolate(heatPump: heatPump, utils: utils)
+      result = try await interpolate(heatPump: heatPump)
     }
+    return .init(result: result)
   }
   
 }
 
-fileprivate extension ManualSClient.HeatingInterpolation {
+fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
   func validate(input: Int) async throws {
     guard input > 0 else {
@@ -52,7 +52,7 @@ fileprivate extension ManualSClient.HeatingInterpolation {
     }
   }
   
-  func interpolate(furnace: FurnaceRequest) async throws -> Self.Result {
+  func interpolate(furnace: FurnaceRequest) async throws -> InterpolationResponse.Heating.Result {
     try await validate(input: furnace.input)
     try await validate(afue: furnace.afue)
     
@@ -65,7 +65,6 @@ fileprivate extension ManualSClient.HeatingInterpolation {
     let percentOfLoad =  finalCapacity / Double(furnace.houseLoad.heating)
     
     return .furnace(.init(
-      request: furnace,
       outputCapacity: Int(output),
       finalCapacity: Int(finalCapacity),
       percentOfLoad: .normalizePercentage(percentOfLoad)
@@ -73,48 +72,46 @@ fileprivate extension ManualSClient.HeatingInterpolation {
   }
   
   // Fix.
-  func interpolate(electric: ElectricRequest, utils: UtilsClient) async throws -> Self.Result {
+  func interpolate(electric: ElectricRequest) async throws -> InterpolationResponse.Heating.Result {
     try await validate(input: electric.inputKW)
-//    let requiredKW = 1.0
-    let requiredKW = try await utils.requiredKW(.init(
-      houseLoad: electric.houseLoad,
-      capacityAtDesign: electric.heatPumpCapacity ?? 0
-    )).requiredKW
-    
+    let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
+      capacityAtDesign: Double(electric.heatPumpCapacity ?? 0),
+      heatLoss: Double(electric.houseLoad.heating)
+    )
+    let requiredKW = try await requredKWRequest.respond().requiredKW
+   
     let percentOfLoad = electric.inputKW / requiredKW
     
     return .electric(.init(
-      request: electric,
       requiredKW: requiredKW,
       percentOfLoad: .normalizePercentage(percentOfLoad)
     ))
   }
   
   // Fix.
-  func interpolate(heatPump: HeatPumpRequest, utils: UtilsClient) async throws -> Self.Result {
+  func interpolate(heatPump: HeatPumpRequest) async throws -> InterpolationResponse.Heating.Result {
     try await validate(capacity: heatPump.capacity)
     
     var finalCapacity = heatPump.capacity
     if case let .airToAir(total: _, sensible: _, heating: derating) = heatPump.altitudeDeratings {
       finalCapacity = await heatPump.capacity.derate(derating)
     }
-    let balancePoint = await finalCapacity.balancePoint(
-      outdoorTemperature: heatPump.designInfo.winter.outdoorTemperature,
-      designLoad: heatPump.houseLoad.heating
+    let balancePointRequest = ServerRoute.Api.Route.BalancePointRequest.thermal(
+      designTemperature: Double(heatPump.designInfo.winter.outdoorTemperature),
+      heatLoss: Double(heatPump.houseLoad.heating),
+      capacity: finalCapacity
     )
-    let capacityAtDesign = Int(
-      await finalCapacity.capacity(at: heatPump.designInfo.winter.outdoorTemperature)
-    )
-    let requiredKW = try await utils.requiredKW(.init(
-      houseLoad: heatPump.houseLoad,
-      capacityAtDesign: capacityAtDesign
-    )).requiredKW
-//    let requiredKW = 1.0
-    
-    return .heatPump(.init(
-      request: heatPump,
-      finalCapacity: finalCapacity,
+    let balancePoint = try await balancePointRequest.respond().balancePoint
+    let capacityAtDesign = await finalCapacity.capacity(at: heatPump.designInfo.winter.outdoorTemperature)
+    let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
       capacityAtDesign: capacityAtDesign,
+      heatLoss: Double(heatPump.houseLoad.heating)
+    )
+    let requiredKW = try await requredKWRequest.respond().requiredKW
+   
+    return .heatPump(.init(
+      finalCapacity: finalCapacity,
+      capacityAtDesign: Int(capacityAtDesign),
       balancePointTemperature: balancePoint,
       requiredKW: requiredKW
     ))
@@ -129,18 +126,6 @@ fileprivate extension HeatPumpCapacity {
     return .init(at47: Int(at47), at17: Int(at17))
   }
   
-  func balancePoint(outdoorTemperature: Int, designLoad: Int) async -> Double {
-    let outdoorTemperature = Double(outdoorTemperature)
-    let designLoad = Double(designLoad)
-    let at17 = Double(at17)
-    let at47 = Double(at47)
-    let result = (30 * (((outdoorTemperature - 65) * at47) + (65 * designLoad))
-                  - ((outdoorTemperature - 65) * (at47 - at17) * 47))
-    / ((30 * designLoad) - ((outdoorTemperature - 65) * (at47 - at17)))
-    
-    return round(result * 10.0) / 10.0
-  }
-  
   func capacity(at outdoorTemperature: Int) async -> Double {
     let outdoorTemperature = Double(outdoorTemperature)
     let x = Double((at47 - at17) / 30)
@@ -150,8 +135,8 @@ fileprivate extension HeatPumpCapacity {
   }
 }
 
-fileprivate extension ManualSClient.HeatingInterpolation.BoilerRequest {
-  var furnaceRequest: ManualSClient.HeatingInterpolation.FurnaceRequest {
+fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
+  var furnaceRequest: ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest {
     .init(
       altitudeDeratings: self.altitudeDeratings,
       houseLoad: self.houseLoad,
@@ -161,19 +146,12 @@ fileprivate extension ManualSClient.HeatingInterpolation.BoilerRequest {
   }
 }
 
-fileprivate extension ManualSClient.HeatingInterpolation.FurnaceRequest {
-  var boilerRequest: ManualSClient.HeatingInterpolation.BoilerRequest {
-    .init(altitudeDeratings: self.altitudeDeratings, houseLoad: self.houseLoad, input: self.input, afue: self.afue)
-  }
-}
-
-fileprivate extension ManualSClient.HeatingInterpolation.Result {
+fileprivate extension InterpolationResponse.Heating.Result {
   
   func boilerResult() async throws -> Self {
     switch self {
     case let .furnace(furnace):
       return .boiler(.init(
-        request: furnace.request.boilerRequest,
         outputCapacity: furnace.outputCapacity,
         finalCapacity: furnace.finalCapacity,
         percentOfLoad: furnace.percentOfLoad
@@ -184,8 +162,3 @@ fileprivate extension ManualSClient.HeatingInterpolation.Result {
   }
 }
 
-extension Double {
-  static func normalizePercentage(_ value: Double) -> Double {
-    (value * 1_000.0).rounded() / 10.0
-  }
-}

@@ -1,10 +1,10 @@
 import XCTest
 import Models
-import UtilsClientLive
+import SiteHandlerLive
 
 final class DeratingClientTests: XCTestCase {
   
-  let client = UtilsClient.live
+  let client = SiteHandler.live
   
   func testFurnaceDerating() async throws {
     var elevation = 1
@@ -26,15 +26,15 @@ final class DeratingClientTests: XCTestCase {
     ]
     
     while iteration < expected.count {
-      let sut = try await client.derating(.init(systemType: .furnaceOnly, elevation: elevation))
-      let sut2 = try await client.derating(.init(systemType: .boilerOnly, elevation: elevation))
+      let sut = try await client.api.derating(.init(elevation: elevation, systemType: .furnaceOnly))
+      let sut2 = try await client.api.derating(.init(elevation: elevation, systemType: .boilerOnly))
       XCTAssertEqual(sut, .heating(expected[iteration]))
       XCTAssertEqual(sut2, .heating(expected[iteration]))
       iteration += 1
       elevation += 1000
     }
     
-    let belowZero = try await client.derating(.init(systemType: .furnaceOnly, elevation: -1))
+    let belowZero = try await client.api.derating(.init(elevation: -1, systemType: .furnaceOnly))
     XCTAssertEqual(belowZero, .heating(1))
   }
   
@@ -93,13 +93,13 @@ final class DeratingClientTests: XCTestCase {
     }
 
     while iteration < expectedTotal.count {
-      let sut = try await client.derating(.init(systemType: .default, elevation: elevation))
+      let sut = try await client.api.derating(.init(elevation: elevation, systemType: .default))
       XCTAssertEqual(sut, .airToAir(total: expectedTotal[iteration], sensible: expectedSensible[iteration], heating: expectedHeating[iteration]))
       iteration += 1
       elevation += 1000
     }
     
-    let belowZero = try await client.derating(.init(systemType: .default, elevation: -1))
+    let belowZero = try await client.api.derating(.init(elevation: -1, systemType: .default))
     XCTAssertEqual(belowZero, .airToAir(total: 1, sensible: 1, heating: 1))
 
   }
