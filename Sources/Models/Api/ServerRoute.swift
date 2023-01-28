@@ -7,8 +7,8 @@ public enum ServerRoute: Equatable {
 
 extension ServerRoute {
   public struct Api: Equatable {
-    let isDebug: Bool
-    let route: Route
+    public let isDebug: Bool
+    public let route: Route
     
     public init(
       isDebug: Bool,

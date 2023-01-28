@@ -103,5 +103,13 @@ final class DeratingClientTests: XCTestCase {
     XCTAssertEqual(belowZero, .airToAir(total: 1, sensible: 1, heating: 1))
 
   }
+  
+  func test_anyEncodable_response() async throws {
+    let request = ServerRoute.Api.Route.derating(.init(elevation: 0, systemType: .default))
+    let expected = AdjustmentMultiplier.airToAir(total: 1, sensible: 1, heating: 1)
+    let sut = try await client.api.respond(.init(isDebug: true, route: request))
+    XCTAssertNotNil(sut.value as? AdjustmentMultiplier)
+    XCTAssertEqual(sut.value as? AdjustmentMultiplier, expected)
+  }
 
 }

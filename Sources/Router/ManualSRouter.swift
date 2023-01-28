@@ -202,7 +202,6 @@ public struct ServerRouter: ParserPrinter {
     
   }
   
-  
   public func print(_ output: Models.ServerRoute, into input: inout URLRouting.URLRequestData) throws {
     try self.body.print(output, into: &input)
   }

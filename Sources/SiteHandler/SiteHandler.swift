@@ -9,6 +9,15 @@ public struct SiteHandler {
   public init(api: ApiHandler) {
     self.api = api
   }
+  
+  public func respond(_ request: ServerRoute) async throws -> AnyEncodable {
+    switch request {
+    case let .api(apiRequest):
+      return try await api.respond(apiRequest)
+    case .home:
+      return "\(request)".eraseToAnyEncodable() // fix
+    }
+  }
 }
 
 public struct ApiHandler {
@@ -31,6 +40,21 @@ public struct ApiHandler {
     self.interpolate = interpolate
     self.requiredKW = requiredKW
     self.sizingLimits = sizingLimits
+  }
+  
+  public func respond(_ request: ServerRoute.Api) async throws -> AnyEncodable {
+    switch request.route {
+    case let .balancePoint(balancePointRequest):
+      return try await balancePoint(balancePointRequest).eraseToAnyEncodable()
+    case let .derating(deratingRequest):
+      return try await derating(deratingRequest).eraseToAnyEncodable()
+    case let .interpolate(interpolationRequest):
+      return try await self.interpolate(interpolationRequest).eraseToAnyEncodable()
+    case let .requiredKW(requiredKWRequest):
+      return try await self.requiredKW(requiredKWRequest).eraseToAnyEncodable()
+    case let .sizingLimits(sizingLimitRequest):
+      return try await self.sizingLimits(sizingLimitRequest).eraseToAnyEncodable()
+    }
   }
 
 }
