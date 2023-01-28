@@ -23,6 +23,7 @@ extension ServerRoute {
       case derating(Derating)
       case interpolate(InterpolationRequest)
       case requiredKW(RequiredKW)
+      case sizingLimits(SizingLimitRequest)
       
       public enum BalancePointRequest: Codable, Equatable, Sendable {
         case thermal(designTemperature: Double, heatLoss: Double, capacity: HeatPumpCapacity)
@@ -45,6 +46,16 @@ extension ServerRoute {
         public init(capacityAtDesign: Int, heatLoss: Int) {
           self.capacityAtDesign = capacityAtDesign
           self.heatLoss = heatLoss
+        }
+      }
+      
+      public struct SizingLimitRequest: Codable, Equatable, Sendable {
+        public var systemType: SystemType
+        public var houseLoad: HouseLoad?
+        
+        public init(systemType: SystemType, houseLoad: HouseLoad? = nil) {
+          self.systemType = systemType
+          self.houseLoad = houseLoad
         }
       }
       

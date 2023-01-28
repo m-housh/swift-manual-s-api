@@ -10,6 +10,7 @@ let package = Package(
     .library(name: "ManualSClient", targets: ["ManualSClient"]),
     .library(name: "ManualSClientLive", targets: ["ManualSClientLive"]),
     .library(name: "Router", targets: ["Router"]),
+    .library(name: "SiteHandler", targets: ["SiteHandler"]),
     .library(name: "UtilsClient", targets: ["UtilsClient"]),
     .library(name: "UtilsClientLive", targets: ["UtilsClientLive"]),
   ],
@@ -57,6 +58,12 @@ let package = Package(
       dependencies: [
         "Router",
         .product(name: "CustomDump", package: "swift-custom-dump")
+      ]
+    ),
+    .target(
+      name: "SiteHandler",
+      dependencies: [
+        "Models",
       ]
     ),
     .target(
