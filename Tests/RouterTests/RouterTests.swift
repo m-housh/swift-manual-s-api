@@ -5,6 +5,10 @@ import CustomDump
 import Models
 @testable import Router
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 final class RouterTests: XCTestCase {
   
   let router = ServerRouter.test

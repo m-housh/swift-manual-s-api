@@ -10,12 +10,12 @@ let package = Package(
     .library(name: "Router", targets: ["Router"]),
     .library(name: "SiteHandler", targets: ["SiteHandler"]),
     .library(name: "SiteHandlerLive", targets: ["SiteHandlerLive"]),
-    .library(name: "Validations", targets: ["Validations"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
     .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", .upToNextMajor(from: "0.6.1")),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.4.0"),
+    .package(url: "https://github.com/m-housh/swift-validation-builder.git", from: "0.1.0"),
   ],
   targets: [
     .target(
@@ -47,7 +47,7 @@ let package = Package(
       name: "SiteHandlerLive",
       dependencies: [
         "SiteHandler",
-        "Validations",
+        .product(name: "Validations", package: "swift-validation-builder"),
       ]
     ),
     .testTarget(
@@ -57,6 +57,5 @@ let package = Package(
         .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
-    .target(name: "Validations"),
   ]
 )

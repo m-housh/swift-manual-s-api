@@ -35,12 +35,10 @@ fileprivate func thermalBalancePoint(
   / ((30.0 * heatLoss) - ((designTemperature - 65.0) * (at47  - at17)))
 }
 
-extension ServerRoute.Api.Route.BalancePointRequest.Thermal: Validatable {
+extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
 
-  public typealias Value = Self
-
-  public var body: some Validator<Self> {
-    ValidatorOf<Self> {
+  public var body: some AsyncValidator<Self> {
+    AsyncValidation {
       GreaterThan(\.heatLoss, 0)
       Validate(\.capacity)
     }

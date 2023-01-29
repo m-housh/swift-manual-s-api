@@ -39,10 +39,10 @@ fileprivate extension SystemType {
   }
 }
 
-struct SizingLimitValidator: Validatable {
+struct SizingLimitValidator: AsyncValidatable {
   let load: HouseLoad
   
-  var body: some Validator<Self> {
-    GreaterThan(\.load.cooling.total, 0)
+  var body: some AsyncValidator<Self> {
+    GreaterThan(\.load.cooling.total, 0).async
   }
 }

@@ -51,9 +51,9 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.Capac
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
+extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
+  public var body: some AsyncValidator<Self> {
+    AsyncValidation {
       Validate(\.aboveDesign)
       Validate(\.belowDesign)
       Not(GreaterThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
@@ -64,14 +64,14 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: Vali
   }
 }
 
-fileprivate enum OneWayRequestValidation: Validatable {
+fileprivate enum OneWayRequestValidation: AsyncValidatable {
   
   typealias OneWayRequest = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest
   case indoor(OneWayRequest)
   case outdoor(OneWayRequest)
   
-  var outdoorValidator: any Validator<OneWayRequest> {
-    Validation {
+  var outdoorAsyncValidator: any AsyncValidator<OneWayRequest> {
+    AsyncValidation {
       Validate(\.aboveDesign)
       Validate(\.belowDesign)
       Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
@@ -82,8 +82,8 @@ fileprivate enum OneWayRequestValidation: Validatable {
     }
   }
   
-  var indoorValidator: any Validator<OneWayRequest> {
-    Validation {
+  var indoorAsyncValidator: any AsyncValidator<OneWayRequest> {
+    AsyncValidation {
       Validate(\.aboveDesign)
       Validate(\.belowDesign)
       Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
@@ -96,16 +96,16 @@ fileprivate enum OneWayRequestValidation: Validatable {
   func validate(_ value: Self) async throws {
     switch value {
     case let .indoor(indoorRequest):
-      return try await indoorValidator.validate(indoorRequest)
+      return try await indoorAsyncValidator.validate(indoorRequest)
     case let .outdoor(outdoorRequest):
-      return try await outdoorValidator.validate(outdoorRequest)
+      return try await outdoorAsyncValidator.validate(outdoorRequest)
     }
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
+extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest: AsyncValidatable {
+  public var body: some AsyncValidator<Self> {
+    AsyncValidation {
       Validate(\.capacity)
       Equals(\.capacity.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
       Equals(\.capacity.indoorTemperature, \.designInfo.summer.indoorTemperature)

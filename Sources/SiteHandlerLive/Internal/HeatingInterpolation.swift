@@ -22,11 +22,10 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 }
 
 // MARK: - Validations
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: Validatable {
-  public typealias Value = Self
+extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
   
-  public var body: some Validator<Self> {
-    Validation {
+  public var body: some AsyncValidator<Self> {
+    AsyncValidation {
       Validate(\.afue) {
         GreaterThan(0)
         Not(GreaterThan(100))
@@ -36,11 +35,10 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: Val
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: Validatable {
-  public typealias Value = Self
+extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
   
-  public var body: some Validator<Self> {
-    Validation {
+  public var body: some AsyncValidator<Self> {
+    AsyncValidation {
       GreaterThan(\.inputKW, 0)
       GreaterThan(\.houseLoad.heating, 0)
     }
