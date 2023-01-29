@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  mac:
+    name: macOS
+    runs-on: macOS-12
+    steps:
+    - uses: actions/checkout@v3
+    - name: Select Xcode 14.2
+      run: sudo xcode-select -s /Applications/Xcode_14.2.app
+    - name: Run Tests
+      run: make test-swift
+
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: 5.7
+    - uses: actions/checkout@v3
+    - name: Run Tests
+      run: make test-linux
