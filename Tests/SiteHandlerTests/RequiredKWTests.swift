@@ -1,6 +1,7 @@
 import XCTest
 import Models
 import SiteHandlerLive
+import SiteRouteValidationsLive
 
 final class RequiredKWTests: XCTestCase {
   
@@ -16,13 +17,13 @@ final class RequiredKWTests: XCTestCase {
   
   func test_requiredKW_validations() async {
     await XCTAssertThrowsError(
-      try await ServerRoute.Api.Route.RequiredKW(
+      try await ServerRoute.Api.Route.RequiredKWRequest(
         capacityAtDesign: 0,
         heatLoss: 0
       ).validate()
     )
     await XCTAssertThrowsError(
-      try await ServerRoute.Api.Route.RequiredKW(
+      try await ServerRoute.Api.Route.RequiredKWRequest(
         capacityAtDesign: -1,
         heatLoss: 1234
       ).validate()

@@ -1,8 +1,10 @@
 import XCTest
+import Dependencies
 import CustomDump
 import Models
 import SiteHandler
 import SiteHandlerLive
+import SiteRouteValidationsLive
 
 final class HeatingInterpolationTests: XCTestCase {
   
@@ -31,14 +33,21 @@ final class HeatingInterpolationTests: XCTestCase {
   }
   
   func test_furnace_fails() async {
-    await XCTAssertThrowsError(try await client.api.interpolate(.heating(.furnace(.init(
-      houseLoad: .mock, input: 0, afue: 96))))
+    let validator = withDependencies({
+      $0.apiRouteValidator = .liveValue
+    }, operation: {
+      @Dependency(\.apiRouteValidator) var validator
+      return validator
+    })
+    
+    await XCTAssertThrowsError(try await validator.validate(.interpolate(.heating(.furnace(.init(
+      houseLoad: .mock, input: 0, afue: 96)))))
     )
-    await XCTAssertThrowsError(try await client.api.interpolate(.heating(.furnace(.init(
-      houseLoad: .mock, input: 10_000, afue: 0))))
+    await XCTAssertThrowsError(try await validator.validate(.interpolate(.heating(.furnace(.init(
+      houseLoad: .mock, input: 10_000, afue: 0)))))
     )
-    await XCTAssertThrowsError(try await client.api.interpolate(.heating(.furnace(.init(
-      houseLoad: .mock, input: 10_000, afue: 101))))
+    await XCTAssertThrowsError(try await validator.validate(.interpolate(.heating(.furnace(.init(
+      houseLoad: .mock, input: 10_000, afue: 101)))))
     )
   }
   
@@ -75,8 +84,20 @@ final class HeatingInterpolationTests: XCTestCase {
     )
   }
   
-  func test_electric_fails() async {
-    await XCTAssertThrowsError(try await client.api.interpolate(.heating(.electric(.init(houseLoad: .mock, inputKW: 0)))))
+  func test_electric_fails() async throws {
+    let validator = try withDependencies({
+      $0.apiRouteValidator = .liveValue
+    }, operation: {
+      @Dependency(\.apiRouteValidator) var apiRouteValidator
+      
+      return apiRouteValidator
+    })
+    
+    await XCTAssertThrowsError(
+      try await validator.validate(
+        .interpolate(.heating(.electric(.Value(altitudeDeratings: nil, houseLoad: .mock, inputKW: 0))))
+      )
+    )
   }
   
   func test_heatPump() async throws {

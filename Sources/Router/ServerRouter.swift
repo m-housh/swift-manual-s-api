@@ -148,7 +148,7 @@ public struct ServerRouter: ParserPrinter {
         Path { "derating" }
         Body(
           .json(
-            ServerRoute.Api.Route.Derating.self,
+            ServerRoute.Api.Route.DeratingRequest.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
@@ -165,7 +165,7 @@ public struct ServerRouter: ParserPrinter {
         Path { "requiredKW" }
         Body(
           .json(
-            ServerRoute.Api.Route.RequiredKW.self,
+            ServerRoute.Api.Route.RequiredKWRequest.self,
             decoder: self.decoder,
             encoder: self.encoder
           )

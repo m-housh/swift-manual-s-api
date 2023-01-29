@@ -26,7 +26,7 @@ fileprivate extension SystemType {
         guard let load = load else {
           throw ValidationError("Must supply a house load.")
         }
-        try await SizingLimitValidator(load: load).validate()
+//        try await SizingLimitValidator(load: load).validate()
         let decimal = Double(load.cooling.total + 15_000) / Double(load.cooling.total)
         coolingTotal = Int(round(decimal * 100))
       }
@@ -39,10 +39,10 @@ fileprivate extension SystemType {
   }
 }
 
-struct SizingLimitValidator: AsyncValidatable {
-  let load: HouseLoad
-  
-  var body: some AsyncValidator<Self> {
-    GreaterThan(\.load.cooling.total, 0).async
-  }
-}
+//struct SizingLimitValidator: AsyncValidatable {
+//  let load: HouseLoad
+//
+//  var body: some AsyncValidator<Self> {
+//    GreaterThan(\.load.cooling.total, 0).async
+//  }
+//}

@@ -20,9 +20,9 @@ extension ServerRoute {
     
     public enum Route: Equatable {
       case balancePoint(BalancePointRequest)
-      case derating(Derating)
+      case derating(DeratingRequest)
       case interpolate(InterpolationRequest)
-      case requiredKW(RequiredKW)
+      case requiredKW(RequiredKWRequest)
       case sizingLimits(SizingLimitRequest)
       
       public enum BalancePointRequest: Codable, Equatable, Sendable {
@@ -41,7 +41,7 @@ extension ServerRoute {
         }
       }
       
-      public struct Derating: Codable, Equatable, Sendable {
+      public struct DeratingRequest: Codable, Equatable, Sendable {
         public var elevation: Int
         public var systemType: SystemType
         
@@ -51,7 +51,7 @@ extension ServerRoute {
         }
       }
       
-      public struct RequiredKW: Codable, Equatable, Sendable {
+      public struct RequiredKWRequest: Codable, Equatable, Sendable {
         public var capacityAtDesign: Double
         public var heatLoss: Double
         

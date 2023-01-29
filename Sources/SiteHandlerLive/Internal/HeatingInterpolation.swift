@@ -21,36 +21,36 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
 }
 
-// MARK: - Validations
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
-  
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.afue) {
-        GreaterThan(0)
-        Not(GreaterThan(100))
-      }
-      GreaterThan(\.input, 0)
-    }
-  }
-}
-
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
-  
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      GreaterThan(\.inputKW, 0)
-      GreaterThan(\.houseLoad.heating, 0)
-    }
-  }
-}
+//// MARK: - Validations
+//extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
+//
+//  public var body: some AsyncValidator<Self> {
+//    AsyncValidation {
+//      Validate(\.afue) {
+//        GreaterThan(0)
+//        Not(GreaterThan(100))
+//      }
+//      GreaterThan(\.input, 0)
+//    }
+//  }
+//}
+//
+//extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
+//
+//  public var body: some AsyncValidator<Self> {
+//    AsyncValidation {
+//      GreaterThan(\.inputKW, 0)
+//      GreaterThan(\.houseLoad.heating, 0)
+//    }
+//  }
+//}
 
 // MARK: - Interpolations
 
 fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
   func interpolate(furnace: FurnaceRequest) async throws -> InterpolationResponse.Heating.Result {
-    try await furnace.validate()
+//    try await furnace.validate()
     
     let output = Double(furnace.input) * (furnace.afue / 100)
     var finalCapacity = output
@@ -68,8 +68,8 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   }
   
   func interpolate(electric: ElectricRequest) async throws -> InterpolationResponse.Heating.Result {
-    try await electric.validate()
-    let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
+//    try await electric.validate()
+    let requredKWRequest = ServerRoute.Api.Route.RequiredKWRequest(
       capacityAtDesign: Double(electric.heatPumpCapacity ?? 0),
       heatLoss: Double(electric.houseLoad.heating)
     )
@@ -84,7 +84,7 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   }
   
   func interpolate(heatPump: HeatPumpRequest) async throws -> InterpolationResponse.Heating.Result {
-    try await heatPump.capacity.validate()
+//    try await heatPump.capacity.validate()
     
     var finalCapacity = heatPump.capacity
     if case let .airToAir(total: _, sensible: _, heating: derating) = heatPump.altitudeDeratings {
@@ -97,7 +97,7 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
     ))
     let balancePoint = try await balancePointRequest.respond().balancePoint
     let capacityAtDesign = await finalCapacity.capacity(at: heatPump.designInfo.winter.outdoorTemperature)
-    let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
+    let requredKWRequest = ServerRoute.Api.Route.RequiredKWRequest(
       capacityAtDesign: capacityAtDesign,
       heatLoss: Double(heatPump.houseLoad.heating)
     )

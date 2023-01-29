@@ -18,107 +18,107 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling {
 }
 
 // MARK: - Validations
-extension CoolingCapacity: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
-      GreaterThan(\.total, 0)
-      GreaterThan(\.sensible, 0)
-    }
-  }
-}
-
-extension CoolingCapacityEnvelope: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
-      GreaterThan(\.cfm, 0)
-      Validate(\.capacity)
-      GreaterThan(\.indoorTemperature, 0)
-    }
-  }
-}
-
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.CapacityEnvelope: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
-      Validate(\.above)
-      Validate(\.below)
-      Equals(\.above.cfm, \.below.cfm)
-      Equals(\.above.indoorTemperature, \.below.indoorTemperature)
-      GreaterThan(\.above.indoorWetBulb, \.below.indoorWetBulb)
-      GreaterThan(\.above.indoorWetBulb, 63)
-      Not(GreaterThan(\.below.indoorWetBulb, 63))
-    }
-  }
-}
-
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.aboveDesign)
-      Validate(\.belowDesign)
-      Not(GreaterThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
-      Equals(\.aboveDesign.below.cfm, \.belowDesign.below.cfm)
-      Equals(\.belowDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
-      Equals(\.aboveDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
-    }
-  }
-}
-
-fileprivate enum OneWayRequestValidation: AsyncValidatable {
-  
-  typealias OneWayRequest = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest
-  case indoor(OneWayRequest)
-  case outdoor(OneWayRequest)
-  
-  var outdoorAsyncValidator: any AsyncValidator<OneWayRequest> {
-    AsyncValidation {
-      Validate(\.aboveDesign)
-      Validate(\.belowDesign)
-      Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
-      Equals(\.aboveDesign.indoorWetBulb, 63)
-      Equals(\.belowDesign.indoorWetBulb, 63)
-      Not(GreaterThan(\.belowDesign.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
-      GreaterThan(\.aboveDesign.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
-    }
-  }
-  
-  var indoorAsyncValidator: any AsyncValidator<OneWayRequest> {
-    AsyncValidation {
-      Validate(\.aboveDesign)
-      Validate(\.belowDesign)
-      Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
-      Equals(\.aboveDesign.indoorTemperature, \.belowDesign.indoorTemperature)
-      Not(GreaterThan(\.belowDesign.indoorWetBulb, 63))
-      GreaterThan(\.aboveDesign.indoorWetBulb, 63)
-    }
-  }
-  
-  func validate(_ value: Self) async throws {
-    switch value {
-    case let .indoor(indoorRequest):
-      return try await indoorAsyncValidator.validate(indoorRequest)
-    case let .outdoor(outdoorRequest):
-      return try await outdoorAsyncValidator.validate(outdoorRequest)
-    }
-  }
-}
-
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest: AsyncValidatable {
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.capacity)
-      Equals(\.capacity.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
-      Equals(\.capacity.indoorTemperature, \.designInfo.summer.indoorTemperature)
-    }
-  }
-}
+//extension CoolingCapacity: Validatable {
+//  public var body: some Validator<Self> {
+//    Validation {
+//      GreaterThan(\.total, 0)
+//      GreaterThan(\.sensible, 0)
+//    }
+//  }
+//}
+//
+//extension CoolingCapacityEnvelope: Validatable {
+//  public var body: some Validator<Self> {
+//    Validation {
+//      GreaterThan(\.cfm, 0)
+//      Validate(\.capacity)
+//      GreaterThan(\.indoorTemperature, 0)
+//    }
+//  }
+//}
+//
+//extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.CapacityEnvelope: Validatable {
+//  public var body: some Validator<Self> {
+//    Validation {
+//      Validate(\.above)
+//      Validate(\.below)
+//      Equals(\.above.cfm, \.below.cfm)
+//      Equals(\.above.indoorTemperature, \.below.indoorTemperature)
+//      GreaterThan(\.above.indoorWetBulb, \.below.indoorWetBulb)
+//      GreaterThan(\.above.indoorWetBulb, 63)
+//      Not(GreaterThan(\.below.indoorWetBulb, 63))
+//    }
+//  }
+//}
+//
+//extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
+//  public var body: some AsyncValidator<Self> {
+//    AsyncValidation {
+//      Validate(\.aboveDesign)
+//      Validate(\.belowDesign)
+//      Not(GreaterThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
+//      Equals(\.aboveDesign.below.cfm, \.belowDesign.below.cfm)
+//      Equals(\.belowDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
+//      Equals(\.aboveDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
+//    }
+//  }
+//}
+//
+//fileprivate enum OneWayRequestValidation: AsyncValidatable {
+//
+//  typealias OneWayRequest = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest
+//  case indoor(OneWayRequest)
+//  case outdoor(OneWayRequest)
+//
+//  var outdoorAsyncValidator: any AsyncValidator<OneWayRequest> {
+//    AsyncValidation {
+//      Validate(\.aboveDesign)
+//      Validate(\.belowDesign)
+//      Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
+//      Equals(\.aboveDesign.indoorWetBulb, 63)
+//      Equals(\.belowDesign.indoorWetBulb, 63)
+//      Not(GreaterThan(\.belowDesign.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
+//      GreaterThan(\.aboveDesign.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
+//    }
+//  }
+//
+//  var indoorAsyncValidator: any AsyncValidator<OneWayRequest> {
+//    AsyncValidation {
+//      Validate(\.aboveDesign)
+//      Validate(\.belowDesign)
+//      Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
+//      Equals(\.aboveDesign.indoorTemperature, \.belowDesign.indoorTemperature)
+//      Not(GreaterThan(\.belowDesign.indoorWetBulb, 63))
+//      GreaterThan(\.aboveDesign.indoorWetBulb, 63)
+//    }
+//  }
+//
+//  func validate(_ value: Self) async throws {
+//    switch value {
+//    case let .indoor(indoorRequest):
+//      return try await indoorAsyncValidator.validate(indoorRequest)
+//    case let .outdoor(outdoorRequest):
+//      return try await outdoorAsyncValidator.validate(outdoorRequest)
+//    }
+//  }
+//}
+//
+//extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest: AsyncValidatable {
+//  public var body: some AsyncValidator<Self> {
+//    AsyncValidation {
+//      Validate(\.capacity)
+//      Equals(\.capacity.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
+//      Equals(\.capacity.indoorTemperature, \.designInfo.summer.indoorTemperature)
+//    }
+//  }
+//}
 
 // MARK: - Interpolations
 
 fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Cooling {
   
   func interpolate(noInterpolation: NoInterpolationRequest) async throws -> InterpolationResponse.Cooling {
-    try await noInterpolation.validate()
+//    try await noInterpolation.validate()
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: noInterpolation.capacity.capacity,
       request: noInterpolation
@@ -127,7 +127,7 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Cooling {
   }
   
   func interpolate(oneWayOutdoor: OneWayRequest) async throws -> InterpolationResponse.Cooling {
-    try await OneWayRequestValidation.outdoor(oneWayOutdoor).validate()
+//    try await OneWayRequestValidation.outdoor(oneWayOutdoor).validate()
     let inerpolatedCapacity = await oneWayOutdoor.interpolated(for: .outdoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: inerpolatedCapacity,
@@ -137,7 +137,7 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Cooling {
   }
   
   func interpolate(oneWayIndoor: OneWayRequest) async throws -> InterpolationResponse.Cooling {
-    try await OneWayRequestValidation.indoor(oneWayIndoor).validate()
+//    try await OneWayRequestValidation.indoor(oneWayIndoor).validate()
     let interpolatedCapacity = await oneWayIndoor.interpolated(for: .indoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: interpolatedCapacity,
@@ -147,7 +147,7 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Cooling {
   }
   
   func interpolate(twoWay: TwoWayRequest) async throws -> InterpolationResponse.Cooling {
-    try await twoWay.validate()
+//    try await twoWay.validate()
     let aboveIndoorResult = try await interpolate(
       oneWayIndoor: twoWay.aboveDesign.oneWayIndoorRequest(twoWay)
     )
@@ -221,7 +221,7 @@ fileprivate extension CoolingInterpolationRequest {
   }
   
   func altitudeDerating() async throws -> AdjustmentMultiplier {
-    let deratingRequest = ServerRoute.Api.Route.Derating(
+    let deratingRequest = ServerRoute.Api.Route.DeratingRequest(
       elevation: designInfo.elevation,
       systemType: systemType
     )

@@ -1,6 +1,8 @@
 import Models
 import XCTest
+import Dependencies
 @testable import SiteHandlerLive
+@testable import SiteRouteValidationsLive
 
 final class SizingLimitTests: XCTestCase {
   
@@ -102,7 +104,24 @@ final class SizingLimitTests: XCTestCase {
     XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
   }
   
-  func test_sizingLimits_validations() async {
+  func test_sizingLimits_validations() async throws {
+    let validator = withDependencies({
+      $0.apiRouteValidator = .liveValue
+    },
+    operation: {
+      @Dependency(\.apiRouteValidator) var validator
+      return validator
+    })
+    
+    await XCTAssertThrowsError(
+      try await validator.validate(
+        .sizingLimits(.init(
+          systemType: .airToAir(type: .heatPump, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad),
+          houseLoad: nil
+        ))
+      )
+    )
+    
     await XCTAssertThrowsError(
       try await SizingLimitValidator(
         load: .init(heating: 0, cooling: .init(total: 0, sensible: 123))

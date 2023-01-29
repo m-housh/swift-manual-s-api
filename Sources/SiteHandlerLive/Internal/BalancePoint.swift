@@ -7,7 +7,7 @@ extension ServerRoute.Api.Route.BalancePointRequest {
   func respond() async throws -> BalancePointResponse {
     switch self {
     case let .thermal(thermalRequest):
-      try await thermalRequest.validate()
+//      try await thermalRequest.validate()
       
       let balancePoint = await thermalBalancePoint(
         heatLoss: thermalRequest.heatLoss,
@@ -35,12 +35,12 @@ fileprivate func thermalBalancePoint(
   / ((30.0 * heatLoss) - ((designTemperature - 65.0) * (at47  - at17)))
 }
 
-extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
-
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      GreaterThan(\.heatLoss, 0)
-      Validate(\.capacity)
-    }
-  }
-}
+//extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
+//
+//  public var body: some AsyncValidator<Self> {
+//    AsyncValidation {
+//      GreaterThan(\.heatLoss, 0)
+//      Validate(\.capacity)
+//    }
+//  }
+//}
