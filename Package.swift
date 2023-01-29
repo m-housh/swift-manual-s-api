@@ -10,6 +10,7 @@ let package = Package(
     .library(name: "Router", targets: ["Router"]),
     .library(name: "SiteHandler", targets: ["SiteHandler"]),
     .library(name: "SiteHandlerLive", targets: ["SiteHandlerLive"]),
+    .library(name: "Validations", targets: ["Validations"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
@@ -46,6 +47,7 @@ let package = Package(
       name: "SiteHandlerLive",
       dependencies: [
         "SiteHandler",
+        "Validations",
       ]
     ),
     .testTarget(
@@ -55,5 +57,6 @@ let package = Package(
         .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
+    .target(name: "Validations"),
   ]
 )

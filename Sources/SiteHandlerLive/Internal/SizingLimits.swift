@@ -1,5 +1,6 @@
 import Foundation
 import Models
+import Validations
 
 extension ServerRoute.Api.Route.SizingLimitRequest {
   
@@ -22,8 +23,10 @@ fileprivate extension SystemType {
       case (.variableSpeed, .mildWinterOrLatentLoad):
         coolingTotal = 130
       default:
-        guard let load = load else { throw SizingLimitError() }
-        try await load.validate()
+        guard let load = load else {
+          throw ValidationError("Must supply a house load.")
+        }
+        try await SizingLimitValidator(load: load).validate()
         let decimal = Double(load.cooling.total + 15_000) / Double(load.cooling.total)
         coolingTotal = Int(round(decimal * 100))
       }
@@ -36,14 +39,10 @@ fileprivate extension SystemType {
   }
 }
 
-fileprivate extension HouseLoad {
-  func validate() async throws {
-    guard cooling.total > 0 else {
-      throw ValidationError("Cooling total should be greater than 0.")
-    }
+struct SizingLimitValidator: Validatable {
+  let load: HouseLoad
+  
+  var body: some Validator<Self> {
+    GreaterThan(\.load.cooling.total, 0)
   }
-}
-
-public struct SizingLimitError: Error {
-  public init() { }
 }

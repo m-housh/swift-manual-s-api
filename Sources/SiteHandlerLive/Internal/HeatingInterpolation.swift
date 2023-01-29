@@ -1,5 +1,6 @@
 import Foundation
 import Models
+import Validations
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
@@ -20,41 +21,38 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
 }
 
+// MARK: - Validations
+extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: Validatable {
+  public typealias Value = Self
+  
+  public var body: some Validator<Self> {
+    Validation {
+      Validate(\.afue) {
+        GreaterThan(0)
+        Not(GreaterThan(100))
+      }
+      GreaterThan(\.input, 0)
+    }
+  }
+}
+
+extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: Validatable {
+  public typealias Value = Self
+  
+  public var body: some Validator<Self> {
+    Validation {
+      GreaterThan(\.inputKW, 0)
+      GreaterThan(\.houseLoad.heating, 0)
+    }
+  }
+}
+
+// MARK: - Interpolations
+
 fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   
-  func validate(input: Int) async throws {
-    guard input > 0 else {
-      throw ValidationError("Input should be greater than zero.")
-    }
-  }
-  
-  func validate(input: Double) async throws {
-    guard input > 0 else {
-      throw ValidationError("Input should be greater than zero.")
-    }
-  }
-  
-  func validate(afue: Double) async throws {
-    guard afue > 0 else {
-      throw ValidationError("AFUE should be greater than zero.")
-    }
-    guard afue < 100 else {
-      throw ValidationError("AFUE should be less than 100.")
-    }
-  }
-  
-  func validate(capacity: HeatPumpCapacity) async throws {
-    guard capacity.at17 > 0 else {
-      throw ValidationError("Capacity @17° should be greater than zero.")
-    }
-    guard capacity.at47 > 0 else {
-      throw ValidationError("Capacity @47° should be greater than zero.")
-    }
-  }
-  
   func interpolate(furnace: FurnaceRequest) async throws -> InterpolationResponse.Heating.Result {
-    try await validate(input: furnace.input)
-    try await validate(afue: furnace.afue)
+    try await furnace.validate()
     
     let output = Double(furnace.input) * (furnace.afue / 100)
     var finalCapacity = output
@@ -71,9 +69,8 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
     ))
   }
   
-  // Fix.
   func interpolate(electric: ElectricRequest) async throws -> InterpolationResponse.Heating.Result {
-    try await validate(input: electric.inputKW)
+    try await electric.validate()
     let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
       capacityAtDesign: Double(electric.heatPumpCapacity ?? 0),
       heatLoss: Double(electric.houseLoad.heating)
@@ -88,19 +85,18 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
     ))
   }
   
-  // Fix.
   func interpolate(heatPump: HeatPumpRequest) async throws -> InterpolationResponse.Heating.Result {
-    try await validate(capacity: heatPump.capacity)
+    try await heatPump.capacity.validate()
     
     var finalCapacity = heatPump.capacity
     if case let .airToAir(total: _, sensible: _, heating: derating) = heatPump.altitudeDeratings {
       finalCapacity = await heatPump.capacity.derate(derating)
     }
-    let balancePointRequest = ServerRoute.Api.Route.BalancePointRequest.thermal(
+    let balancePointRequest = ServerRoute.Api.Route.BalancePointRequest.thermal(.init(
       designTemperature: Double(heatPump.designInfo.winter.outdoorTemperature),
       heatLoss: Double(heatPump.houseLoad.heating),
       capacity: finalCapacity
-    )
+    ))
     let balancePoint = try await balancePointRequest.respond().balancePoint
     let capacityAtDesign = await finalCapacity.capacity(at: heatPump.designInfo.winter.outdoorTemperature)
     let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
@@ -118,6 +114,8 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Heating {
     
   }
 }
+
+// MARK: - Helpers
 
 fileprivate extension HeatPumpCapacity {
   func derate(_ value: Double) async -> Self {
@@ -161,4 +159,3 @@ fileprivate extension InterpolationResponse.Heating.Result {
     }
   }
 }
-

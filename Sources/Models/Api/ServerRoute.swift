@@ -26,7 +26,19 @@ extension ServerRoute {
       case sizingLimits(SizingLimitRequest)
       
       public enum BalancePointRequest: Codable, Equatable, Sendable {
-        case thermal(designTemperature: Double, heatLoss: Double, capacity: HeatPumpCapacity)
+        case thermal(Thermal)
+        
+        public struct Thermal: Codable, Equatable, Sendable {
+          public var designTemperature: Double
+          public var heatLoss: Double
+          public var capacity: HeatPumpCapacity
+          
+          public init(designTemperature: Double, heatLoss: Double, capacity: HeatPumpCapacity) {
+            self.designTemperature = designTemperature
+            self.heatLoss = heatLoss
+            self.capacity = capacity
+          }
+        }
       }
       
       public struct Derating: Codable, Equatable, Sendable {

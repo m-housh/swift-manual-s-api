@@ -1,6 +1,6 @@
 import Models
 import XCTest
-import SiteHandlerLive
+@testable import SiteHandlerLive
 
 final class SizingLimitTests: XCTestCase {
   
@@ -100,5 +100,13 @@ final class SizingLimitTests: XCTestCase {
   func test_boiler() async throws {
     let sut = try await client.api.sizingLimits(.init(systemType: .boilerOnly))
     XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
+  }
+  
+  func test_sizingLimits_validations() async {
+    await XCTAssertThrowsError(
+      try await SizingLimitValidator(
+        load: .init(heating: 0, cooling: .init(total: 0, sensible: 123))
+      ).validate()
+    )
   }
 }
