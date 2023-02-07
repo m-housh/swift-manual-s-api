@@ -48,10 +48,3 @@ public struct ApiRouteValidator: TestDependencyKey {
   
   public static let testValue = Self.init(AsyncValidator.fail())
 }
-
-//extension DependencyValues {
-//  public var apiRouteValidator: ApiRouteValidator {
-//    get { self[ApiRouteValidator.self] }
-//    set { self[ApiRouteValidator.self] = newValue }
-//  }
-//}

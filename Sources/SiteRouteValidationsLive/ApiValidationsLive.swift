@@ -4,71 +4,223 @@ import Validations
 
 // MARK: - Cooling Interpolations
 extension CoolingCapacity: AsyncValidatable {
+  
+  @usableFromInline
+  enum ErrorLabels: String, CustomStringConvertible {
+    case total
+    case sensible
+  }
+  
+  @inlinable
   public var body: some AsyncValidation<Self> {
     AsyncValidator {
       AsyncValidator.validate(\.total, with: .greaterThan(0))
-        .errorLabel("total")
+        .errorLabel(label: ErrorLabels.total, inline: true)
       
       AsyncValidator.validate(\.sensible, with: .greaterThan(0))
-        .errorLabel("sensible")
+        .errorLabel(label: ErrorLabels.sensible, inline: true)
+    }
+  }
+}
+
+@usableFromInline
+struct CoolingCapacityValidationEnvelope: AsyncValidation {
+
+  @usableFromInline
+  typealias Value = CoolingCapacity
+  
+  @usableFromInline
+  let errorLabel: any CustomStringConvertible
+  
+  @usableFromInline
+  init(errorLabel: any CustomStringConvertible) {
+    self.errorLabel = errorLabel
+  }
+  
+  @usableFromInline
+  enum ErrorLabels: String, CustomStringConvertible {
+    case total
+    case sensible
+  }
+  
+  @inlinable
+  public var body: some AsyncValidation<CoolingCapacity> {
+    AsyncValidator {
+      AsyncValidator.validate(\.total, with: .greaterThan(0))
+        .mapError(
+          labels: .nested(errorLabel, ErrorLabels.total),
+          summary: "Total capacity should be greater than 0"
+        )
+      AsyncValidator.validate(\.sensible, with: .greaterThan(0))
+        .mapError(
+          labels: .nested(errorLabel, ErrorLabels.sensible),
+          summary: "Sensible capacity should be greater than 0"
+        )
     }
   }
 }
 
 extension CoolingCapacityEnvelope: AsyncValidatable {
+
+  @usableFromInline
+  enum ErrorLabels: String, CustomStringConvertible {
+    case cfm
+    case capacity
+    case indoorTemperature
+  }
+
+  @inlinable
   public var body: some AsyncValidation<Self> {
-    AsyncValidator.greaterThan(\.cfm, 0)
-      .errorLabel("cfm")
-    AsyncValidator.greaterThan(\.indoorTemperature, 0)
-      .errorLabel("indoor-temperature")
-    AsyncValidator.validate(\.capacity)
-      .errorLabel("capacity")
+    AsyncValidator.accumulating {
+      AsyncValidator.greaterThan(\.cfm, 0)
+        .errorLabel(label: ErrorLabels.cfm, inline: true)
+
+      AsyncValidator.greaterThan(\.indoorTemperature, 0)
+        .errorLabel(label: ErrorLabels.indoorTemperature, inline: true)
+
+      AsyncValidator.validate(\.capacity)
+        .errorLabel(label: ErrorLabels.capacity, inline: true)
+    }
+  }
+}
+
+@usableFromInline
+struct CoolingCapacityEnvelopeValidationEnvelope: AsyncValidation {
+  @usableFromInline
+  typealias Value = CoolingCapacityEnvelope
+  
+  @usableFromInline
+  let errorLabel: any CustomStringConvertible
+  
+  @usableFromInline
+  enum ErrorLabels: String, CustomStringConvertible {
+    case cfm
+    case capacity
+    case indoorTemperature
+  }
+  
+  @inlinable
+  public var body: some AsyncValidation<CoolingCapacityEnvelope> {
+    AsyncValidator.accumulating {
+      AsyncValidator.greaterThan(\.cfm, 0)
+        .errorLabel(
+          nested: errorLabel, ErrorLabels.cfm,
+          inline: true
+        )
+      
+      AsyncValidator.greaterThan(\.indoorTemperature, 0)
+        .errorLabel(
+          nested: errorLabel, ErrorLabels.indoorTemperature,
+          inline: true
+        )
+      
+      AsyncValidator.validate(
+        \.capacity,
+         with: CoolingCapacityValidationEnvelope(errorLabel: CommonErrorLabel.nested(errorLabel, ErrorLabels.capacity))
+      )
+
+    }
   }
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.CapacityEnvelope: AsyncValidatable {
   
+  @usableFromInline
+  enum ErrorLabels: String, CustomStringConvertible {
+    case above
+    case below
+    case cfm
+    case indoorTemperature
+    case indoorWetBulb
+  }
+  
   private var baseValidator: AsyncValidatorOf<Self> {
-    .init {
-      AsyncValidator.validate(\Self.above)
-        .errorLabel("above")
-      AsyncValidator.validate(\Self.below)
-        .errorLabel("below")
+    .accumulating {
+      AsyncValidator.validate(
+        \Self.above,
+         with: CoolingCapacityEnvelopeValidationEnvelope(errorLabel: ErrorLabels.above)
+      )
+      
+      AsyncValidator.validate(
+        \Self.below,
+         with: CoolingCapacityEnvelopeValidationEnvelope(errorLabel: ErrorLabels.below)
+      )
+      
       AsyncValidator.equals(\Self.above.cfm, \Self.below.cfm)
-        .errorLabel("(above, below).cfm")
+        .mapError(
+          parenthesized: [ErrorLabels.above, ErrorLabels.below],
+          nested: [ErrorLabels.cfm],
+          summary: "Above design cfm should equal below design cfm."
+        )
+      
     }
   }
   
   public var body: some AsyncValidation<Self> {
-    AsyncValidator {
+    AsyncValidator.accumulating {
       baseValidator
       AsyncValidator.equals(\Self.above.indoorTemperature, \Self.below.indoorTemperature)
-        .errorLabel("(above, below).indoor-temperature")
-     AsyncValidator.greaterThan(\Self.above.indoorWetBulb, \Self.below.indoorWetBulb)
-        .errorLabel("(above, below).indoor-wet-bulb")
-     AsyncValidator.greaterThan(\Self.above.indoorWetBulb, 63)
-        .errorLabel("above.indoor-wet-bulb")
-     AsyncValidator.lessThan(\Self.below.indoorWetBulb, 63)
-        .errorLabel("below.indoor-wet-bulb")
+        .mapError(
+          parenthesized: [ErrorLabels.above, ErrorLabels.below],
+          nested: [ErrorLabels.indoorTemperature],
+          summary: "Above design indoor temperature should equal below design indoor temperature."
+        )
+      AsyncValidator.greaterThan(\Self.above.indoorWetBulb, \Self.below.indoorWetBulb)
+        .mapError(
+          parenthesized: [ErrorLabels.above, ErrorLabels.below],
+          nested: [ErrorLabels.indoorWetBulb],
+          summary: "Above design indoor wet-bulb should equal below design indoor wet-bulb."
+        )
+      
+      AsyncValidator.greaterThan(\Self.above.indoorWetBulb, 63)
+        .mapError(
+          nested: ErrorLabels.above, ErrorLabels.indoorWetBulb,
+          summary: "Above design indoor wet-bulb should be greater than 63°."
+        )
+      AsyncValidator.lessThan(\Self.below.indoorWetBulb, 63)
+        .errorLabel(
+          nested: ErrorLabels.below, ErrorLabels.indoorWetBulb,
+          inline: true
+        )
     }
   }
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
   public var body: some AsyncValidation<Self> {
-    AsyncValidator {
-      AsyncValidator.validate(\.aboveDesign)
+    AsyncValidator<Self>.accumulating {
+      AsyncValidator.validate(\.aboveDesign) // these errors need fixed.
         .errorLabel("aboveDesign")
-      AsyncValidator.validate(\.belowDesign)
+      AsyncValidator.validate(\.belowDesign) // these errors need fixed.
         .errorLabel("belowDesign")
       AsyncValidator.lessThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
-        .errorLabel("(belowDesign.below.outdoorTemperature, designInfo.summer.outdoorTemperature)")
+        .mapError(
+          parenthesized: ["belowDesign.below.outdoorTemperature", "designInfo.summer.outdoorTemperature"],
+          nested: [],
+          summary: "Below design below.outdoorTemperature should be less than the summer design outdoor temperature."
+        )
+//        .errorLabel("(belowDesign.below.outdoorTemperature, designInfo.summer.outdoorTemperature)")
       AsyncValidator.equals(\.aboveDesign.below.cfm, \.belowDesign.below.cfm)
-        .errorLabel("(aboveDesign.below.cfm, belowDesign.below.cfm)")
+        .mapError(
+          parenthesized: ["aboveDesign.below.cfm", "belowDesign.below.cfm"],
+          nested: [],
+          summary: "Above design below.cfm should equal the below design below.cfm."
+        )
+//        .errorLabel("(aboveDesign.below.cfm, belowDesign.below.cfm)")
       AsyncValidator.equals(\.belowDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
-        .errorLabel("(belowDesign.below.indoorTemperature, designInfo.summer.indoorTemperature)")
+        .mapError(
+          parenthesized: ["belowDesign.below.indoorTemperature", "designInfo.summer.indoorTemperature"],
+          nested: [],
+          summary: "Below design below.indoorTemperature should be less than the summer design indoor temperature."
+        )
+//        .errorLabel("(belowDesign.below.indoorTemperature, designInfo.summer.indoorTemperature)")
       AsyncValidator.equals(\.aboveDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
-        .errorLabel("(aboveDesign.below.indoorTemperature, designInfo.summer.indoorTemperature)")
+        .mapError(
+          parenthesized: ["belowDesign.below.indoorTemperature", "designInfo.summer.indoorTemperature"],
+          nested: [],
+          summary: "Above design below.indoorTemperature should be less than the summer design indoor temperature."
+        )
+//        .errorLabel("(aboveDesign.below.indoorTemperature, designInfo.summer.indoorTemperature)")
     }
   }
 }

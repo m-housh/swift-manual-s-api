@@ -12,6 +12,7 @@ let package = Package(
     .library(name: "SiteHandlerLive", targets: ["SiteHandlerLive"]),
     .library(name: "SiteRouteValidations", targets: ["SiteRouteValidations"]),
     .library(name: "SiteRouteValidationsLive", targets: ["SiteRouteValidationsLive"]),
+    .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
@@ -76,6 +77,14 @@ let package = Package(
       dependencies: [
         "SiteRouteValidations",
       ]
-    )
+    ),
+    .target(
+      name: "ValidationMiddleware",
+      dependencies: [
+        "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "Validations", package: "swift-validations"),
+      ]
+    ),
   ]
 )
