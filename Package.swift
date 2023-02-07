@@ -18,7 +18,7 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", .upToNextMajor(from: "0.6.1")),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.4.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.0"),
-    .package(url: "https://github.com/m-housh/swift-validation-builder.git", from: "0.1.0"),
+    .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
   ],
   targets: [
     .target(
@@ -52,7 +52,7 @@ let package = Package(
       name: "SiteHandlerLive",
       dependencies: [
         "SiteHandler",
-        .product(name: "Validations", package: "swift-validation-builder"),
+        .product(name: "Validations", package: "swift-validations"),
       ]
     ),
     .testTarget(
@@ -68,7 +68,7 @@ let package = Package(
       dependencies: [
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "Validations", package: "swift-validation-builder"),
+        .product(name: "Validations", package: "swift-validations"),
       ]
     ),
     .target(

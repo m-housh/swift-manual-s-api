@@ -1,4 +1,7 @@
 import XCTest
+import Dependencies
+import SiteHandlerLive
+import SiteRouteValidationsLive
 
 extension XCTest {
   func XCTAssertThrowsError<T: Sendable>(
@@ -15,4 +18,21 @@ extension XCTest {
       errorHandler(error)
     }
   }
+}
+
+func withLiveSiteHandler(operation: @escaping () async throws -> ()) async throws {
+  try await withDependencies({ dependencies in
+    dependencies.siteValidator = .liveValue
+    dependencies.siteHandler = .liveValue
+  }, operation: {
+    try await operation()
+  })
+}
+
+func withLiveSiteValidator(operation: @escaping () async throws -> ()) async throws {
+  try await withDependencies({ dependencies in
+    dependencies.siteValidator = .liveValue
+  }, operation: {
+    try await operation()
+  })
 }

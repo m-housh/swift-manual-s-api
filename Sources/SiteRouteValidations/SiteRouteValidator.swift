@@ -4,18 +4,14 @@ import Dependencies
 
 public struct SiteRouteValidator {
   
-  let validator: any AsyncValidator<ServerRoute>
+  private let validator: any AsyncValidation<ServerRoute>
   
-  public init(_ closure: @escaping (ServerRoute) async throws -> ()) {
-    self.init(AsyncValidation(closure))
-  }
-  
-  public init(_ validator: any AsyncValidator<ServerRoute>) {
+  public init(_ validator: any AsyncValidation<ServerRoute>) {
     self.validator = validator
   }
   
-  public init(@AsyncValidationBuilder<ServerRoute> validator: @escaping () -> any AsyncValidator<ServerRoute>) {
-    self.init(validator())
+  public init(_ validator: @escaping (ServerRoute) async throws -> Void) {
+    self.validator = AnyAsyncValidator(validator)
   }
   
   public func validate(_ route: ServerRoute) async throws {
@@ -24,7 +20,7 @@ public struct SiteRouteValidator {
 }
 
 extension SiteRouteValidator: TestDependencyKey {
-  static public var testValue = Self.init(Always().async)
+  static public var testValue: SiteRouteValidator = Self.init(AsyncValidator.fail())
 }
 
 extension DependencyValues {
@@ -36,26 +32,26 @@ extension DependencyValues {
 }
 
 public struct ApiRouteValidator: TestDependencyKey {
-  let validator: any AsyncValidator<ServerRoute.Api.Route>
+  let validator: any AsyncValidation<ServerRoute.Api.Route>
   
-  public init(_ validate: @escaping (ServerRoute.Api.Route) async throws -> Void) {
-    self.init(AsyncValidation(validate))
+  public init(_ validator: any AsyncValidation<ServerRoute.Api.Route>) {
+    self.validator = validator
   }
   
-  public init(_ validator: any AsyncValidator<ServerRoute.Api.Route>) {
-    self.validator = validator
+  public init(_ validator: @escaping (ServerRoute.Api.Route) async throws -> Void) {
+    self.validator = AnyAsyncValidator(validator)
   }
   
   public func validate(_ route: ServerRoute.Api.Route) async throws {
     try await self.validator.validate(route)
   }
   
-  public static let testValue = Self.init(Always().async)
+  public static let testValue = Self.init(AsyncValidator.fail())
 }
 
-extension DependencyValues {
-  public var apiRouteValidator: ApiRouteValidator {
-    get { self[ApiRouteValidator.self] }
-    set { self[ApiRouteValidator.self] = newValue }
-  }
-}
+//extension DependencyValues {
+//  public var apiRouteValidator: ApiRouteValidator {
+//    get { self[ApiRouteValidator.self] }
+//    set { self[ApiRouteValidator.self] = newValue }
+//  }
+//}

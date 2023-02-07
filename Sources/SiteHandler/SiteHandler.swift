@@ -7,16 +7,18 @@ public typealias RouteHandler<Request, Response: Encodable> = @Sendable (Request
 
 public struct SiteHandler {
   
-  @Dependency(\.siteValidator) var siteValidator
+  @Dependency(\.siteValidator) var siteValidator: SiteRouteValidator
+//  @Dependency(\.apiHandler) var apiHandler: ApiHandler
   
   public var api: ApiHandler
-  
+
   public init(api: ApiHandler) {
     self.api = api
   }
   
   public func respond(_ request: ServerRoute) async throws -> AnyEncodable {
     
+    // validate the request.
     try await siteValidator.validate(request)
     
     switch request {
@@ -29,8 +31,6 @@ public struct SiteHandler {
 }
 
 public struct ApiHandler {
-  
-  @Dependency(\.apiRouteValidator) var apiRouteValidator
   
   public var balancePoint: RouteHandler<ServerRoute.Api.Route.BalancePointRequest, BalancePointResponse>
   public var derating: RouteHandler<ServerRoute.Api.Route.DeratingRequest, AdjustmentMultiplier>
@@ -53,8 +53,6 @@ public struct ApiHandler {
   }
   
   public func respond(_ request: ServerRoute.Api) async throws -> AnyEncodable {
-    
-    try await apiRouteValidator.validate(request.route)
     
     switch request.route {
     case let .balancePoint(balancePointRequest):
@@ -83,8 +81,19 @@ extension ApiHandler {
     requiredKW: XCTestDynamicOverlay.unimplemented(),
     sizingLimits: XCTestDynamicOverlay.unimplemented()
   )
+  
+  public static let testValue: ApiHandler = .unimplemented
 }
 
-extension SiteHandler {
-  public static let unimplemented = Self.init(api: .unimplemented)
+extension SiteHandler: TestDependencyKey {
+  
+  public static let testValue: SiteHandler = .init(api: .unimplemented)
+}
+
+extension DependencyValues {
+  
+  public var siteHandler: SiteHandler {
+    get { self[SiteHandler.self] }
+    set { self[SiteHandler.self] = newValue }
+  }
 }

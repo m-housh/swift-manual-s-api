@@ -3,48 +3,72 @@ import SiteRouteValidations
 import Validations
 
 // MARK: - Cooling Interpolations
-extension CoolingCapacity: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
-      GreaterThan(\.total, 0)
-      GreaterThan(\.sensible, 0)
+extension CoolingCapacity: AsyncValidatable {
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.validate(\.total, with: .greaterThan(0))
+        .errorLabel("total")
+      
+      AsyncValidator.validate(\.sensible, with: .greaterThan(0))
+        .errorLabel("sensible")
     }
   }
 }
 
-extension CoolingCapacityEnvelope: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
-      GreaterThan(\.cfm, 0)
-      Validate(\.capacity)
-      GreaterThan(\.indoorTemperature, 0)
-    }
+extension CoolingCapacityEnvelope: AsyncValidatable {
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator.greaterThan(\.cfm, 0)
+      .errorLabel("cfm")
+    AsyncValidator.greaterThan(\.indoorTemperature, 0)
+      .errorLabel("indoor-temperature")
+    AsyncValidator.validate(\.capacity)
+      .errorLabel("capacity")
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.CapacityEnvelope: Validatable {
-  public var body: some Validator<Self> {
-    Validation {
-      Validate(\.above)
-      Validate(\.below)
-      Equals(\.above.cfm, \.below.cfm)
-      Equals(\.above.indoorTemperature, \.below.indoorTemperature)
-      GreaterThan(\.above.indoorWetBulb, \.below.indoorWetBulb)
-      GreaterThan(\.above.indoorWetBulb, 63)
-      Not(GreaterThan(\.below.indoorWetBulb, 63))
+extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.CapacityEnvelope: AsyncValidatable {
+  
+  private var baseValidator: AsyncValidatorOf<Self> {
+    .init {
+      AsyncValidator.validate(\Self.above)
+        .errorLabel("above")
+      AsyncValidator.validate(\Self.below)
+        .errorLabel("below")
+      AsyncValidator.equals(\Self.above.cfm, \Self.below.cfm)
+        .errorLabel("(above, below).cfm")
+    }
+  }
+  
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      baseValidator
+      AsyncValidator.equals(\Self.above.indoorTemperature, \Self.below.indoorTemperature)
+        .errorLabel("(above, below).indoor-temperature")
+     AsyncValidator.greaterThan(\Self.above.indoorWetBulb, \Self.below.indoorWetBulb)
+        .errorLabel("(above, below).indoor-wet-bulb")
+     AsyncValidator.greaterThan(\Self.above.indoorWetBulb, 63)
+        .errorLabel("above.indoor-wet-bulb")
+     AsyncValidator.lessThan(\Self.below.indoorWetBulb, 63)
+        .errorLabel("below.indoor-wet-bulb")
     }
   }
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.aboveDesign)
-      Validate(\.belowDesign)
-      Not(GreaterThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
-      Equals(\.aboveDesign.below.cfm, \.belowDesign.below.cfm)
-      Equals(\.belowDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
-      Equals(\.aboveDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.validate(\.aboveDesign)
+        .errorLabel("aboveDesign")
+      AsyncValidator.validate(\.belowDesign)
+        .errorLabel("belowDesign")
+      AsyncValidator.lessThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
+        .errorLabel("(belowDesign.below.outdoorTemperature, designInfo.summer.outdoorTemperature)")
+      AsyncValidator.equals(\.aboveDesign.below.cfm, \.belowDesign.below.cfm)
+        .errorLabel("(aboveDesign.below.cfm, belowDesign.below.cfm)")
+      AsyncValidator.equals(\.belowDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
+        .errorLabel("(belowDesign.below.indoorTemperature, designInfo.summer.indoorTemperature)")
+      AsyncValidator.equals(\.aboveDesign.below.indoorTemperature, \.designInfo.summer.indoorTemperature)
+        .errorLabel("(aboveDesign.below.indoorTemperature, designInfo.summer.indoorTemperature)")
     }
   }
 }
@@ -55,26 +79,38 @@ fileprivate enum OneWayRequestValidation: AsyncValidatable {
   case indoor(OneWayRequest)
   case outdoor(OneWayRequest)
   
-  var outdoorAsyncValidator: any AsyncValidator<OneWayRequest> {
-    AsyncValidation {
-      Validate(\.aboveDesign)
-      Validate(\.belowDesign)
-      Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
-      Equals(\.aboveDesign.indoorWetBulb, 63)
-      Equals(\.belowDesign.indoorWetBulb, 63)
-      Not(GreaterThan(\.belowDesign.outdoorTemperature, \.designInfo.summer.outdoorTemperature))
-      GreaterThan(\.aboveDesign.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
+  private var baseValidator: AsyncValidator<OneWayRequest> {
+    AsyncValidator {
+      AsyncValidator.validate(\OneWayRequest.aboveDesign)
+      AsyncValidator.validate(\OneWayRequest.belowDesign)
+      AsyncValidator.equals(\OneWayRequest.aboveDesign.cfm, \OneWayRequest.belowDesign.cfm)
     }
   }
   
-  var indoorAsyncValidator: any AsyncValidator<OneWayRequest> {
-    AsyncValidation {
-      Validate(\.aboveDesign)
-      Validate(\.belowDesign)
-      Equals(\.aboveDesign.cfm, \.belowDesign.cfm)
-      Equals(\.aboveDesign.indoorTemperature, \.belowDesign.indoorTemperature)
-      Not(GreaterThan(\.belowDesign.indoorWetBulb, 63))
-      GreaterThan(\.aboveDesign.indoorWetBulb, 63)
+  var outdoorAsyncValidator: any AsyncValidation<OneWayRequest> {
+    AsyncValidator<OneWayRequest> {
+      baseValidator
+      AsyncValidator.equals(\OneWayRequest.aboveDesign.indoorWetBulb, 63)
+      AsyncValidator.equals(\OneWayRequest.belowDesign.indoorWetBulb, 63)
+      AsyncValidator.lessThan(
+        \OneWayRequest.belowDesign.outdoorTemperature,
+         \OneWayRequest.designInfo.summer.outdoorTemperature
+      )
+      AsyncValidator.greaterThan(
+        \OneWayRequest.aboveDesign.outdoorTemperature,
+         \OneWayRequest.designInfo.summer.outdoorTemperature
+      )
+    }
+  }
+  
+  var indoorAsyncValidator: any AsyncValidation<OneWayRequest> {
+    AsyncValidator {
+      AsyncValidator.validate(\.aboveDesign)
+      AsyncValidator.validate(\.belowDesign)
+      AsyncValidator.equals(\.aboveDesign.cfm, \.belowDesign.cfm)
+      AsyncValidator.equals(\.aboveDesign.indoorTemperature, \.belowDesign.indoorTemperature)
+      AsyncValidator.lessThan(\.belowDesign.indoorWetBulb, 63)
+      AsyncValidator.greaterThan(\.aboveDesign.indoorWetBulb, 63)
     }
   }
   
@@ -89,11 +125,11 @@ fileprivate enum OneWayRequestValidation: AsyncValidatable {
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest: AsyncValidatable {
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.capacity)
-      Equals(\.capacity.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
-      Equals(\.capacity.indoorTemperature, \.designInfo.summer.indoorTemperature)
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.validate(\.capacity)
+      AsyncValidator.equals(\.capacity.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
+      AsyncValidator.equals(\.capacity.indoorTemperature, \.designInfo.summer.indoorTemperature)
     }
   }
 }
@@ -117,44 +153,45 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
 // MARK: - Heating Interpolations
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: AsyncValidatable {
   
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.afue) {
-        GreaterThan(0)
-        Not(GreaterThan(100))
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.validate(\.afue) {
+        Double.greaterThan(0)
+        Double.lessThanOrEquals(100)
       }
-      GreaterThan(\.input, 0)
+      AsyncValidator.validate(\.input, with: .greaterThan(0))
     }
   }
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
   
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      Validate(\.afue) {
-        GreaterThan(0)
-        Not(GreaterThan(100))
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.validate(\.afue) {
+        Double.greaterThan(0)
+        Double.lessThanOrEquals(100)
       }
-      GreaterThan(\.input, 0)
+      AsyncValidator.validate(\.input, with: .greaterThan(0))
     }
   }
+  
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
   
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      GreaterThan(\.inputKW, 0)
-      GreaterThan(\.houseLoad.heating, 0)
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.validate(\.inputKW, with: .greaterThan(0))
+      AsyncValidator.validate(\.houseLoad.heating, with: .greaterThan(0))
     }
   }
 }
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest: AsyncValidatable {
   
-  public var body: some AsyncValidator<Self> {
-    Validate(\.capacity).async
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator.validate(\.capacity)
   }
 }
 
@@ -189,10 +226,10 @@ extension ServerRoute.Api.Route.InterpolationRequest: AsyncValidatable {
 // MARK: - RequiredKW
 extension ServerRoute.Api.Route.RequiredKWRequest: AsyncValidatable {
   
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      GreaterThan(\.heatLoss, 0)
-      GreaterThanOrEquals(\.capacityAtDesign, 0)
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.greaterThan(\.heatLoss, 0)
+      AsyncValidator.greaterThanOrEquals(\.capacityAtDesign, 0)
     }
   }
 }
@@ -200,10 +237,10 @@ extension ServerRoute.Api.Route.RequiredKWRequest: AsyncValidatable {
 // MARK: - Balance Point
 extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
 
-  public var body: some AsyncValidator<Self> {
-    AsyncValidation {
-      GreaterThan(\.heatLoss, 0)
-      Validate(\.capacity)
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator {
+      AsyncValidator.greaterThan(\Self.heatLoss, 0).errorLabel("heatLoss")
+      AsyncValidator.validate(\Self.capacity).errorLabel("capacity")
     }
   }
 }
@@ -233,19 +270,19 @@ extension ServerRoute.Api.Route.SizingLimitRequest: AsyncValidatable {
 struct SizingLimitValidator: AsyncValidatable {
   let load: HouseLoad
 
-  var body: some AsyncValidator<Self> {
-    GreaterThan(\.load.cooling.total, 0).async
+  var body: some AsyncValidation<Self> {
+    Validator.greaterThan(\.load.cooling.total, 0)
   }
 }
 
-extension HeatPumpCapacity: Validatable {
+extension HeatPumpCapacity: AsyncValidatable {
   public typealias Value = Self
   
-  public var body: some Validator<Self> {
-    ValidatorOf<Self> {
-      GreaterThan(\Self.at47, 0)
-      GreaterThan(\Self.at17, 0)
-      GreaterThanOrEquals(\Self.at47, \Self.at17)
+  public var body: some AsyncValidation<Self> {
+    AsyncValidatorOf<Self> {
+      AsyncValidator.greaterThan(\Self.at47, 0)
+      AsyncValidator.greaterThan(\Self.at17, 0)
+      AsyncValidator.greaterThanOrEquals(\Self.at47, \Self.at17)
     }
   }
 }
