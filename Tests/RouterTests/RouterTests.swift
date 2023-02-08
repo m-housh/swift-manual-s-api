@@ -1,10 +1,9 @@
 import XCTest
 import URLRouting
-//import ManualSClient
 import CustomDump
 import Models
 import TestSupport
-@testable import Router
+import Router
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking

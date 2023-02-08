@@ -7,8 +7,6 @@ import TestSupport
 
 final class RequiredKWTests: XCTestCase {
   
-//  let client = SiteHandler.live
-  
   func test_requiredKW() async throws {
     try await withLiveSiteHandler {
       @Dependency(\.siteHandler) var client: SiteHandler
@@ -20,19 +18,5 @@ final class RequiredKWTests: XCTestCase {
     }
   }
   
-  func test_requiredKW_validations() async {
-    await XCTAssertThrowsError(
-      try await ServerRoute.Api.Route.RequiredKWRequest(
-        capacityAtDesign: 0,
-        heatLoss: 0
-      ).validate()
-    )
-    await XCTAssertThrowsError(
-      try await ServerRoute.Api.Route.RequiredKWRequest(
-        capacityAtDesign: -1,
-        heatLoss: 1234
-      ).validate()
-    )
-  }
 }
 

@@ -353,7 +353,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_thermal_balancePoint_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.siteValidator) var validator
-      var request = ServerRoute.Api.Route.BalancePointRequest.Thermal.zero
+      let request = ServerRoute.Api.Route.BalancePointRequest.Thermal.zero
       let expected1 = """
       Thermal Balance Point Request Errors:
       heatLoss: Heat loss should be greater than 0.

@@ -10,10 +10,10 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
           label: ErrorLabel.heatLoss,
           summary: "Heat loss should be greater than 0."
         )
-      
+
       AsyncValidator.validate(
         \.capacity,
-         with: HeatPumpCapacityValidation(label: ErrorLabel.capacity)
+        with: HeatPumpCapacityValidation(label: ErrorLabel.capacity)
       )
     }
     .errorLabel("Thermal Balance Point Request Errors")

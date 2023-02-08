@@ -7,7 +7,7 @@
 //}
 //
 //extension InterpolationType {
-//  
+//
 //  public var detailedDescription: String {
 //    switch self {
 //    case .oneWayIndoor:
@@ -20,7 +20,7 @@
 //      return "For no interpolation of manufacturer's cooling capacities at outdoor design conditions"
 //    }
 //  }
-//  
+//
 //  public var example: String {
 //    switch self {
 //    case .oneWayIndoor:

@@ -5,33 +5,32 @@ import Validations
 struct AdjustmentMultiplierValidation: AsyncValidation {
   @usableFromInline
   typealias Value = AdjustmentMultiplier
-  
- 
+
   @usableFromInline
   let style: Style
-  
+
   @usableFromInline
   let errorLabel: any CustomStringConvertible
-  
+
   @usableFromInline
   init(style: Style, label errorLabel: any CustomStringConvertible) {
     self.style = style
     self.errorLabel = errorLabel
   }
-  
+
   @usableFromInline
   enum Style {
     case cooling
     case heating
   }
-   
+
   @usableFromInline
   func validate(_ value: AdjustmentMultiplier) async throws {
     struct CoolingEnvelope {
       let total: Double
       let sensible: Double
     }
-    
+
     switch style {
     case .cooling:
       switch value {
@@ -50,7 +49,7 @@ struct AdjustmentMultiplierValidation: AsyncValidation {
         }
         .validate(.init(total: total, sensible: sensible))
       case .heating:
-        return // throw errors?
+        return  // throw errors?
       }
     case .heating:
       let heatingValue: Double
@@ -68,5 +67,5 @@ struct AdjustmentMultiplierValidation: AsyncValidation {
         .validate(heatingValue)
     }
   }
-  
+
 }

@@ -16,10 +16,10 @@ extension ServerRoute.Api.Route.SizingLimitRequest: AsyncValidatable {
 
 @usableFromInline
 struct SizingLimitValidator: AsyncValidatable {
-  
+
   @usableFromInline
   let load: HouseLoad
-  
+
   @usableFromInline
   init(load: HouseLoad) {
     self.load = load
@@ -35,4 +35,3 @@ struct SizingLimitValidator: AsyncValidatable {
       .errorLabel("Sizing Limit Request Errors")
   }
 }
-

@@ -3,18 +3,18 @@ import Validations
 
 @usableFromInline
 struct HeatPumpCapacityValidation: AsyncValidation {
-  
+
   @usableFromInline
   typealias Value = HeatPumpCapacity
-  
+
   @usableFromInline
   let errorLabel: any CustomStringConvertible
-  
+
   @usableFromInline
   init(label errorLabel: any CustomStringConvertible) {
     self.errorLabel = errorLabel
   }
-  
+
   @usableFromInline
   var body: some AsyncValidation<Value> {
     AsyncValidator.accumulating {

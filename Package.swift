@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
   name: "swift-manual-s-api",
-  platforms: [.macOS(.v10_15)],
+  platforms: [.macOS(.v10_15), .iOS(.v13)],
   products: [
     .library(name: "Models", targets: ["Models"]),
     .library(name: "Router", targets: ["Router"]),
@@ -12,11 +12,13 @@ let package = Package(
     .library(name: "SiteHandlerLive", targets: ["SiteHandlerLive"]),
     .library(name: "SiteRouteValidations", targets: ["SiteRouteValidations"]),
     .library(name: "SiteRouteValidationsLive", targets: ["SiteRouteValidationsLive"]),
-    .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", .upToNextMajor(from: "0.8.1")),
-    .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", .upToNextMajor(from: "0.6.1")),
+    .package(
+      url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git",
+      .upToNextMajor(from: "0.8.1")),
+    .package(
+      url: "https://github.com/pointfreeco/swift-custom-dump.git", .upToNextMajor(from: "0.6.1")),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.4.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.0"),
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
@@ -38,7 +40,7 @@ let package = Package(
       dependencies: [
         "Router",
         "TestSupport",
-        .product(name: "CustomDump", package: "swift-custom-dump")
+        .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
     .target(
@@ -47,7 +49,7 @@ let package = Package(
         "Models",
         "SiteRouteValidations",
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
     .target(
@@ -63,7 +65,7 @@ let package = Package(
         "SiteHandlerLive",
         "SiteRouteValidationsLive",
         "TestSupport",
-        .product(name: "CustomDump", package: "swift-custom-dump")
+        .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
     .target(
@@ -77,7 +79,7 @@ let package = Package(
     .target(
       name: "SiteRouteValidationsLive",
       dependencies: [
-        "SiteRouteValidations",
+        "SiteRouteValidations"
       ]
     ),
     .testTarget(
@@ -85,22 +87,15 @@ let package = Package(
       dependencies: [
         "SiteRouteValidationsLive",
         "TestSupport",
-        .product(name: "CustomDump", package: "swift-custom-dump")
+        .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
     .target(
       name: "TestSupport",
       dependencies: [
-        "Models",
+        "Models"
       ]
     ),
-    .target(
-      name: "ValidationMiddleware",
-      dependencies: [
-        "Models",
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "Validations", package: "swift-validations"),
-      ]
-    ),
+
   ]
 )

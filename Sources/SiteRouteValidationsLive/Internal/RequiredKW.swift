@@ -2,7 +2,7 @@ import Models
 import Validations
 
 extension ServerRoute.Api.Route.RequiredKWRequest: AsyncValidatable {
-  
+
   public var body: some AsyncValidation<Self> {
     AsyncValidator.accumulating {
       AsyncValidator.greaterThan(\.heatLoss, 0)

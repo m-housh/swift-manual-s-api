@@ -8,9 +8,9 @@ extension ServerRoute.Api.Route.DeratingRequest {
   }
 }
 
-fileprivate extension SystemType {
-  
-  func derating(elevation: Int) async throws -> AdjustmentMultiplier {
+extension SystemType {
+
+  fileprivate func derating(elevation: Int) async throws -> AdjustmentMultiplier {
     switch self {
     case .airToAir:
       // fix how to distinguish heating for heat pump.
@@ -25,10 +25,10 @@ fileprivate extension SystemType {
       return .heating(furnaceDerating(elevation: elevation))
     }
   }
-  
-  func furnaceDerating(elevation: Int) -> Double {
+
+  fileprivate func furnaceDerating(elevation: Int) -> Double {
     guard elevation > 0 else { return 1 }
-    
+
     if (0..<1000).contains(elevation) { return 1 }
     if (1000..<2000).contains(elevation) { return 0.96 }
     if (2000..<3000).contains(elevation) { return 0.92 }
@@ -44,10 +44,10 @@ fileprivate extension SystemType {
     // greater than 12,000 feet in elevation.
     return 0.52
   }
-  
-  func totalWetDerating(elevation: Int) -> Double {
+
+  fileprivate func totalWetDerating(elevation: Int) -> Double {
     guard elevation > 0 else { return 1 }
-    
+
     if (0..<1000).contains(elevation) { return 1 }
     if (1000..<2000).contains(elevation) { return 0.99 }
     if (2000..<3000).contains(elevation) { return 0.98 }
@@ -63,10 +63,10 @@ fileprivate extension SystemType {
     // greater than 12,000 feet in elevation.
     return 0.9
   }
-  
-  func sensibleWetDerating(elevation: Int) -> Double {
+
+  fileprivate func sensibleWetDerating(elevation: Int) -> Double {
     guard elevation > 0 else { return 1 }
-    
+
     if (0..<1000).contains(elevation) { return 1 }
     if (1000..<2000).contains(elevation) { return 0.97 }
     if (2000..<3000).contains(elevation) { return 0.94 }
@@ -82,10 +82,10 @@ fileprivate extension SystemType {
     // greater than 12,000 feet in elevation.
     return 0.65
   }
-  
-  func totalDryDerating(elevation: Int) -> Double {
+
+  fileprivate func totalDryDerating(elevation: Int) -> Double {
     guard elevation > 0 else { return 1 }
-    
+
     if (0..<1000).contains(elevation) { return 1 }
     if (1000..<2000).contains(elevation) { return 0.98 }
     if (2000..<3000).contains(elevation) { return 0.97 }

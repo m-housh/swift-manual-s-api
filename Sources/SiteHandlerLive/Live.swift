@@ -3,7 +3,7 @@ import Models
 @_exported import SiteHandler
 
 extension ApiHandler {
-  
+
   public static let live = Self.init(
     balancePoint: { try await $0.respond() },
     derating: { try await $0.respond() },

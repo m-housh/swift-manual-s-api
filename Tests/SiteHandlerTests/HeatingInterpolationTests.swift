@@ -5,10 +5,9 @@ import Models
 import SiteHandler
 import SiteHandlerLive
 import SiteRouteValidationsLive
+import TestSupport
 
 final class HeatingInterpolationTests: XCTestCase {
-  
-  //  let client = SiteHandler.live
   
   func test_furnace() async throws {
     try await withLiveSiteHandler {

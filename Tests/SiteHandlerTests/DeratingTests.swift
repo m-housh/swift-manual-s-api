@@ -3,10 +3,9 @@ import Dependencies
 import Models
 import SiteHandlerLive
 import SiteRouteValidationsLive
+import TestSupport
 
 final class DeratingClientTests: XCTestCase {
-  
-  //  let client = SiteHandler.live
   
   func testFurnaceDerating() async throws {
     try await withLiveSiteHandler {

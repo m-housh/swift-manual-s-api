@@ -3,10 +3,10 @@ import Models
 import URLRouting
 
 public struct ServerRouter: ParserPrinter {
-  
+
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
-  
+
   public init(
     decoder: JSONDecoder,
     encoder: JSONEncoder
@@ -14,10 +14,10 @@ public struct ServerRouter: ParserPrinter {
     self.encoder = encoder
     self.decoder = decoder
   }
-  
+
   @ParserBuilder
   var body: AnyParserPrinter<URLRequestData, ServerRoute> {
-    
+
     let coolingInterpolationRouter = OneOf {
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.noInterpolation)) {
         Method.post
@@ -30,7 +30,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.oneWayIndoor)) {
         Method.post
         Path { "oneWayIndoor" }
@@ -42,7 +42,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.oneWayOutdoor)) {
         Method.post
         Path { "oneWayOutdoor" }
@@ -54,7 +54,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.twoWay)) {
         Method.post
         Path { "twoWay" }
@@ -67,7 +67,7 @@ public struct ServerRouter: ParserPrinter {
         )
       }
     }
-    
+
     let heatingInterpolationRouter = OneOf {
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.boiler)) {
         Method.post
@@ -80,7 +80,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.electric)) {
         Method.post
         Path { "electric" }
@@ -92,7 +92,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.furnace)) {
         Method.post
         Path { "furnace" }
@@ -104,7 +104,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.heatPump)) {
         Method.post
         Path { "heatPump" }
@@ -117,19 +117,19 @@ public struct ServerRouter: ParserPrinter {
         )
       }
     }
-    
+
     let interpolationRouter = OneOf {
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.cooling)) {
         Path { "cooling" }
         coolingInterpolationRouter
       }
-      
+
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.heating)) {
         Path { "heating" }
         heatingInterpolationRouter
       }
     }
-    
+
     let apiRouter = OneOf {
       Route(.case(ServerRoute.Api.Route.balancePoint)) {
         Method.post
@@ -142,7 +142,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.derating)) {
         Method.post
         Path { "derating" }
@@ -154,12 +154,12 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.interpolate)) {
         Path { "interpolate" }
         interpolationRouter
       }
-      
+
       Route(.case(ServerRoute.Api.Route.requiredKW)) {
         Method.post
         Path { "requiredKW" }
@@ -171,7 +171,7 @@ public struct ServerRouter: ParserPrinter {
           )
         )
       }
-      
+
       Route(.case(ServerRoute.Api.Route.sizingLimits)) {
         Method.post
         Path { "sizingLimits" }
@@ -184,10 +184,10 @@ public struct ServerRouter: ParserPrinter {
         )
       }
     }
-    
+
     OneOf {
       Route(.case(ServerRoute.home))
-      
+
       Route(.case(ServerRoute.api)) {
         Path { "api" }
         Parse(.memberwise(ServerRoute.Api.init(isDebug:route:))) {
@@ -199,19 +199,20 @@ public struct ServerRouter: ParserPrinter {
       }
     }
     .eraseToAnyParserPrinter()
-    
+
   }
-  
-  public func print(_ output: Models.ServerRoute, into input: inout URLRouting.URLRequestData) throws {
+
+  public func print(_ output: Models.ServerRoute, into input: inout URLRouting.URLRequestData)
+    throws
+  {
     try self.body.print(output, into: &input)
   }
-  
+
   public func parse(_ input: inout URLRouting.URLRequestData) throws -> Models.ServerRoute {
     try self.body.parse(&input)
   }
 }
 
-#if DEBUG
 extension ServerRouter {
   public static let test = Self(
     decoder: .init(),
@@ -224,5 +225,3 @@ private let jsonEncoder: JSONEncoder = {
   encoder.outputFormatting = .sortedKeys
   return encoder
 }()
-
-#endif

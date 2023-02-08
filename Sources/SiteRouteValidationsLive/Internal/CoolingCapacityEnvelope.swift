@@ -5,15 +5,15 @@ import Validations
 struct CoolingCapacityEnvelopeValidation: AsyncValidation {
   @usableFromInline
   typealias Value = CoolingCapacityEnvelope
-  
+
   @usableFromInline
   let errorLabel: any CustomStringConvertible
-  
+
   @usableFromInline
   init(errorLabel: any CustomStringConvertible) {
     self.errorLabel = errorLabel
   }
-  
+
   @usableFromInline
   var body: some AsyncValidation<CoolingCapacityEnvelope> {
     AsyncValidator.accumulating {
@@ -22,7 +22,7 @@ struct CoolingCapacityEnvelopeValidation: AsyncValidation {
           nested: errorLabel, ErrorLabel.cfm,
           summary: "Cfm should be greater than 0."
         )
-      
+
       AsyncValidator.greaterThan(\.indoorTemperature, 0)
         .mapError(
           nested: errorLabel, ErrorLabel.indoorTemperature,
@@ -31,9 +31,9 @@ struct CoolingCapacityEnvelopeValidation: AsyncValidation {
 
       AsyncValidator.validate(
         \.capacity,
-         with: CoolingCapacityValidation(
+        with: CoolingCapacityValidation(
           errorLabel: ErrorLabel.nest(errorLabel, ErrorLabel.capacity)
-         )
+        )
       )
 
     }

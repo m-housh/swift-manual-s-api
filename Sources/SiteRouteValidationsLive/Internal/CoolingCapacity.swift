@@ -6,15 +6,15 @@ struct CoolingCapacityValidation: AsyncValidation {
 
   @usableFromInline
   typealias Value = CoolingCapacity
-  
+
   @usableFromInline
   let errorLabel: any CustomStringConvertible
-  
+
   @usableFromInline
   init(errorLabel: any CustomStringConvertible) {
     self.errorLabel = errorLabel
   }
- 
+
   @usableFromInline
   var body: some AsyncValidation<CoolingCapacity> {
     AsyncValidator.accumulating {

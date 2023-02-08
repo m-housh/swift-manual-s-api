@@ -1,7 +1,6 @@
 import Foundation
 import Models
 
-
 let model = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest(
   aboveDesign: .init(
     above: .init(
