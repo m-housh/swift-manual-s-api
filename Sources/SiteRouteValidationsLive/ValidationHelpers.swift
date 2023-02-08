@@ -12,48 +12,34 @@ extension AsyncValidation {
     self.errorLabel(label.description, inline: inline)
   }
   
-  @usableFromInline
-  func errorLabel(
-    nested: (any CustomStringConvertible)...,
-    inline: Bool = false
-  ) -> some AsyncValidation<Value> {
-    self.errorLabel(parenthesized: [], nested: nested, inline: inline)
-  }
-  
-  @usableFromInline
-  func errorLabel(
-    parenthesized: [(any CustomStringConvertible)],
-    nested: [(any CustomStringConvertible)],
-    inline: Bool = false
-  ) -> some AsyncValidation<Value> {
-    _CommonErrorValidator(upstream: self, labels: .nested(parenthesized: parenthesized, nested: nested))
-  }
-  
-  @usableFromInline
-  func mapError(
-    labels: CommonErrorLabel,
-    summary: String
-  ) -> some AsyncValidation<Value> {
-    self.mapError(_ValidationError(labels: labels, summary: summary))
-  }
-  
-  @usableFromInline
-   func mapError(
-    parenthesized: [(any CustomStringConvertible)],
-    nested: [(any CustomStringConvertible)],
-    summary: String
-  )
-  -> some AsyncValidation<Value>
-  {
-    self.mapError(labels: .nested(parenthesized: parenthesized, nested: nested), summary: summary)
-  }
+//  @usableFromInline
+//  func mapError(
+//    labels: CommonErrorLabel,
+//    summary: String
+//  ) -> some AsyncValidation<Value> {
+//    self.mapError(_ValidationError(labels: labels, summary: summary))
+//  }
+//
+//  @usableFromInline
+//   func mapError(
+//    parenthesized: [(any CustomStringConvertible)],
+//    nested: [(any CustomStringConvertible)],
+//    summary: String
+//  )
+//  -> some AsyncValidation<Value>
+//  {
+//    self.mapError(labels: .nested(parenthesized: parenthesized, nested: nested), summary: summary)
+//  }
   
   @usableFromInline
   func mapError(
     nested: (any CustomStringConvertible)...,
     summary: String
   ) -> some AsyncValidation<Value> {
-    self.mapError(parenthesized: [], nested: nested, summary: summary)
+    return self.mapError(
+      label: AnyErrorLabel.nest(nested).description,
+      summary: summary
+    )
   }
   
   
@@ -77,16 +63,16 @@ extension RawRepresentable where RawValue == String, Self: CustomStringConvertib
 struct _CommonErrorValidator<Upstream: AsyncValidation>: AsyncValidation {
   @usableFromInline
   let labels: CommonErrorLabel
-  
+
   @usableFromInline
   let upstream: Upstream
-  
+
   @usableFromInline
   init(upstream: Upstream, labels: CommonErrorLabel) {
     self.labels = labels
     self.upstream = upstream
   }
-  
+
   @usableFromInline
   func validate(_ value: Upstream.Value) async throws {
     do {
@@ -106,10 +92,15 @@ struct CommonError: Error {
 extension CommonError: CustomDebugStringConvertible {
   @usableFromInline
   var debugDescription: String {
-    return "\(labels):\n\t\((underlyingError as CustomDebugStringConvertible).debugDescription)"
+    let errorString = (underlyingError as CustomDebugStringConvertible).debugDescription
+    if !labels.description.isEmpty {
+      return "\(labels): \(errorString)"
+    }
+    return errorString
   }
 }
 
+// TODO: Remove
 
 @usableFromInline
 enum CommonErrorLabel: CustomStringConvertible {
@@ -143,8 +134,44 @@ enum CommonErrorLabel: CustomStringConvertible {
 
 }
 
+protocol ErrorLabelType: CustomStringConvertible { }
+
+extension ErrorLabelType {
+  
+  @inlinable
+  public static func nest(_ values: Self...) -> String {
+    values.map { $0.description }.joined(separator: ".")
+  }
+  
+  @inlinable
+  public static func nest(_ values: (any CustomStringConvertible)...) -> String {
+    values.map { $0.description }.joined(separator: ".")
+  }
+  
+  @inlinable
+  public static func parenthesize(_ values: Self...) -> String {
+    let inner = values.map { $0.description }.joined(separator: ", ")
+    return "(\(inner))"
+  }
+  
+  @inlinable
+  public static func parenthesize(_ values: (any CustomStringConvertible)...) -> String {
+    let inner = values.map { $0.description }.joined(separator: ", ")
+    return "(\(inner))"
+  }
+}
+
 @usableFromInline
-struct _ValidationError: Error, CustomDebugStringConvertible {
+struct AnyErrorLabel: ErrorLabelType {
+  @usableFromInline
+  let label: any CustomStringConvertible
+  
+  @usableFromInline
+  var description: String { label.description }
+}
+
+@usableFromInline
+struct _ValidationError: Error, CustomDebugStringConvertible, CustomStringConvertible {
   let labels: CommonErrorLabel
   let summary: String
   
@@ -158,5 +185,8 @@ struct _ValidationError: Error, CustomDebugStringConvertible {
   var debugDescription: String {
     "\(labels.description): \(summary)"
   }
+  
+  @usableFromInline
+  var description: String { debugDescription }
   
 }
