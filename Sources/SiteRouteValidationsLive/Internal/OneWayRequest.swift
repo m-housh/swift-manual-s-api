@@ -93,7 +93,7 @@ enum OneWayRequestValidation: AsyncValidatable {
       
       AsyncValidator.validate(
         \.manufacturerAdjustments,
-         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.manufacturerAdjustments).optional()
+         with: AdjustmentMultiplierValidation(style: .cooling, label: ErrorLabel.manufacturerAdjustments).optional()
       )
       .errorLabel("Manufacturer Adjustments")
       
@@ -148,10 +148,9 @@ enum OneWayRequestValidation: AsyncValidatable {
       
       AsyncValidator.validate(
         \.manufacturerAdjustments,
-         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.manufacturerAdjustments).optional()
+         with: AdjustmentMultiplierValidation(style: .cooling, label: ErrorLabel.manufacturerAdjustments).optional()
       )
       .errorLabel("Manufacturer Adjustments")
-      
       
       AsyncValidator.accumulating {
         AsyncValidator.equals(\.aboveDesign.indoorTemperature, \.belowDesign.indoorTemperature)

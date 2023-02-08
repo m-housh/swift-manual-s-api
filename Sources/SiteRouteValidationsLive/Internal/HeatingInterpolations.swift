@@ -1,7 +1,6 @@
 import Models
 import Validations
 
-// TODO: Validate House Load and Adjustment Multipliers
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: AsyncValidatable {
   
   @inlinable
@@ -37,7 +36,6 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: Asyn
   }
 }
 
-// TODO: Validate House Load and Adjustment Multipliers
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
   
   @inlinable
@@ -72,3 +70,56 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: Asy
     .errorLabel("Furnace Request Errors")
   }
 }
+
+extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
+  
+  @inlinable
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator.accumulating {
+      AsyncValidator.validate(\.inputKW, with: .greaterThan(0))
+        .mapError(
+          label: ErrorLabel.inputKW,
+          summary: "Input KW should be greater than 0."
+        )
+      
+      AsyncValidator.validate(
+        \.houseLoad,
+         with: HouseLoadValidator(style: .heating)
+      )
+      
+      AsyncValidator.validate(
+        \.altitudeDeratings,
+         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings).optional()
+      )
+      
+      AsyncValidator.validate(
+        \.heatPumpCapacity,
+         with: Int.greaterThan(0).async().optional()
+      )
+      .mapError(
+        label: ErrorLabel.heatPumpCapacity,
+        summary: "Heat pump capacity should be greater than 0."
+      )
+    }
+    .errorLabel("Electric Request Errors")
+  }
+}
+
+extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest: AsyncValidatable {
+  
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator.accumulating {
+      AsyncValidator.validate(
+        \.altitudeDeratings,
+         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings).optional()
+      )
+      
+      AsyncValidator.validate(\.capacity, with: HeatPumpCapacityValidation(label: ErrorLabel.capacity))
+      
+      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .heating))
+      
+    }
+    .errorLabel("Heat Pump Request Errors")
+  }
+}
+

@@ -1,3 +1,4 @@
+import Foundation
 import Validations
 
 extension AsyncValidation {
@@ -50,9 +51,12 @@ extension RawRepresentable where RawValue == String, Self: CustomStringConvertib
   
 }
 
-@usableFromInline
-struct _ValidationError: Error, CustomDebugStringConvertible, CustomStringConvertible {
+public struct _ValidationError: Error, CustomDebugStringConvertible, CustomStringConvertible, LocalizedError {
+  
+  @usableFromInline
   let label: any CustomStringConvertible
+  
+  @usableFromInline
   let summary: String
   
   @usableFromInline
@@ -61,12 +65,11 @@ struct _ValidationError: Error, CustomDebugStringConvertible, CustomStringConver
     self.summary = summary
   }
   
-  @usableFromInline
-  var debugDescription: String {
+  public var debugDescription: String {
     "\(label.description): \(summary)"
   }
   
-  @usableFromInline
-  var description: String { debugDescription }
+  public var description: String { debugDescription }
   
+  public var errorDescription: String? { debugDescription }
 }

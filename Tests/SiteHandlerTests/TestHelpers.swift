@@ -20,9 +20,12 @@ extension XCTest {
   }
 }
 
-func withLiveSiteHandler(operation: @escaping () async throws -> ()) async throws {
+func withLiveSiteHandler(
+  liveValidator: Bool = false,
+  operation: @escaping () async throws -> ()
+) async throws {
   try await withDependencies({ dependencies in
-    dependencies.siteValidator = .liveValue
+    dependencies.siteValidator = liveValidator ? .liveValue : .noValidation
     dependencies.siteHandler = .liveValue
   }, operation: {
     try await operation()

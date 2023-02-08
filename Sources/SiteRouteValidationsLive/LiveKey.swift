@@ -22,7 +22,6 @@ extension ApiRouteValidator: DependencyKey {
 
 extension SiteRouteValidator: DependencyKey {
   
-  
   public static var liveValue: SiteRouteValidator = .init { route in
     
     let apiRouteValidator = ApiRouteValidator.liveValue
@@ -35,4 +34,5 @@ extension SiteRouteValidator: DependencyKey {
       return try await apiRouteValidator.validate(api.route)
     }
   }
+  
 }

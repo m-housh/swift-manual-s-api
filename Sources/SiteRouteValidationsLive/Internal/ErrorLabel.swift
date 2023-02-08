@@ -6,16 +6,24 @@ enum ErrorLabel: String, CustomStringConvertible {
   case aboveDesign
   case afue
   case altitudeDeratings
+  case at17
+  case at47
   case below
   case belowDesign
   case capacity
+  case capacityAtDesign
   case cfm
+  case cooling
   case designInfo
   case heating
+  case heatLoss
+  case heatPumpCapacity
   case houseLoad
+  case load
   case indoorTemperature
   case indoorWetBulb
   case input
+  case inputKW
   case manufacturerAdjustments
   case outdoorTemperature
   case sensible

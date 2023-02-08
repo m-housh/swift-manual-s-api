@@ -17,7 +17,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequ
       
       AsyncValidator.validate(
         \.manufacturerAdjustments,
-         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.manufacturerAdjustments)
+         with: AdjustmentMultiplierValidation(style: .cooling, label: ErrorLabel.manufacturerAdjustments)
           .optional()
       )
       .errorLabel("Manufacturer Adjustments")

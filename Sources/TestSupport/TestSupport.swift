@@ -130,4 +130,11 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal {
     capacity: .zero
   )
 }
+
+extension ServerRoute.Api.Route.SizingLimitRequest {
+  public static let zero = Self.init(
+    systemType: .mock,
+    houseLoad: .zero
+  )
+}
 #endif

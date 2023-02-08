@@ -95,7 +95,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: Asyn
       
       AsyncValidator.validate(
         \.manufacturerAdjustments,
-         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.manufacturerAdjustments).optional()
+         with: AdjustmentMultiplierValidation(style: .cooling, label: ErrorLabel.manufacturerAdjustments).optional()
       )
       .errorLabel("Manufacturer Adjustments")
     
