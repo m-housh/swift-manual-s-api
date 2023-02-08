@@ -47,15 +47,3 @@ public struct DesignInfo: Codable, Equatable, Sendable {
   }
 }
 
-extension DesignInfo {
-  
-  public static let zero = Self.init(
-    summer: .init(outdoorTemperature: 0, indoorTemperature: 0, indoorHumidity: 0),
-    winter: .init(outdoorTemperature: 0),
-    elevation: 0
-  )
-  
-  #if DEBUG
-  public static let mock = Self.init()
-  #endif
-}

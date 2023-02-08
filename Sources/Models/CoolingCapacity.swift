@@ -28,7 +28,6 @@ public struct CoolingCapacity: Codable, Equatable, Sendable {
   public static var zero: Self {
     .init(total: 0, sensible: 0)
   }
-  
 }
 
 public struct CoolingCapacityEnvelope: Codable, Equatable, Sendable {

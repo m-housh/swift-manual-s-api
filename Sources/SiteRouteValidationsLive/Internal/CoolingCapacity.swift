@@ -14,24 +14,18 @@ struct CoolingCapacityValidation: AsyncValidation {
   init(errorLabel: any CustomStringConvertible) {
     self.errorLabel = errorLabel
   }
-  
-  @usableFromInline
-  enum ErrorLabel: String, ErrorLabelType {
-    case total
-    case sensible
-  }
-  
+ 
   @usableFromInline
   var body: some AsyncValidation<CoolingCapacity> {
     AsyncValidator.accumulating {
       AsyncValidator.validate(\.total, with: .greaterThan(0))
         .mapError(
-          label: ErrorLabel.nest(errorLabel, ErrorLabel.total),
+          nested: errorLabel, ErrorLabel.total,
           summary: "Total capacity should be greater than 0"
         )
       AsyncValidator.validate(\.sensible, with: .greaterThan(0))
         .mapError(
-          label: ErrorLabel.nest(errorLabel, ErrorLabel.sensible),
+          nested: errorLabel, ErrorLabel.sensible,
           summary: "Sensible capacity should be greater than 0"
         )
     }

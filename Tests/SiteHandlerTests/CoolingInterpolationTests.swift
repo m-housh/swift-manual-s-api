@@ -191,59 +191,7 @@ final class CoolingInterpolationTests: XCTestCase {
       )
     }
   }
-  
-//  func test_twoWay_validations() async throws {
-//    try await withLiveSiteValidator {
-//      @Dependency(\.siteValidator) var validator
-//      let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest(
-//        aboveDesign: .init(
-//          above: .init(
-//            cfm: 0,
-//            indoorTemperature: 0,
-//            indoorWetBulb: 0,
-//            outdoorTemperature: 0,
-//            capacity: .init(total: 0, sensible: 0)
-//          ),
-//          below: .init(
-//            cfm: 0,
-//            indoorTemperature: 0,
-//            indoorWetBulb: 0,
-//            outdoorTemperature: 0,
-//            capacity: .init(total: 0, sensible: 0)
-//          )
-//        ),
-//        belowDesign: .init(
-//          above: .init(
-//            cfm: 0,
-//            indoorTemperature: 0,
-//            indoorWetBulb: 0,
-//            outdoorTemperature: 0,
-//            capacity: .init(total: 0, sensible: 0)
-//          ),
-//          below: .init(
-//            cfm: 0,
-//            indoorTemperature: 0,
-//            indoorWetBulb: 0,
-//            outdoorTemperature: 0,
-//            capacity: .init(total: 0, sensible: 0)
-//          )
-//        ),
-//        designInfo: .init(),
-//        houseLoad: .mock,
-//        systemType: .default
-//      )
-//
-//      do {
-//        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.twoWay(request))))))
-//      } catch {
-//        print()
-//        print((error as CustomDebugStringConvertible).debugDescription)
-//        print()
-//        throw error
-//      }
-//    }
-//  }
-  
+
 }
 
 extension DesignInfo {

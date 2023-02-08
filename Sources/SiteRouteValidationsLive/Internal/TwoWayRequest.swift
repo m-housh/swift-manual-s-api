@@ -18,15 +18,6 @@ struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
   }
   
   @usableFromInline
-  enum ErrorLabel: String, ErrorLabelType {
-    case above
-    case below
-    case cfm
-    case indoorTemperature
-    case indoorWetBulb
-  }
-  
-  @usableFromInline
   var body: some AsyncValidation<Value> {
     AsyncValidator.accumulating {
       AsyncValidatorOf<Value>.validate(
@@ -84,34 +75,7 @@ struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
 
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
   
-  @usableFromInline
-  enum ErrorLabel: String, ErrorLabelType {
-    case aboveDesign
-    case below
-    case belowDesign
-    case cfm
-    case designInfo
-    case indoorTemperature
-    case outdoorTemperature
-    case summer
-   
-    @usableFromInline
-    static var aboveDesignBelow: String {
-      self.nest(.aboveDesign, .below)
-    }
-    
-    @usableFromInline
-    static var belowDesignBelow: String {
-      self.nest(.belowDesign, .below)
-    }
-    
-    @usableFromInline
-    static var designInfoSummer: String {
-      self.nest(.designInfo, .summer)
-    }
-  }
-  
-//  @inlinable
+  @inlinable
   public var body: some AsyncValidation<Self> {
     AsyncValidator<Self>.accumulating {
       AsyncValidator.validate(
@@ -125,6 +89,15 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: Asyn
          with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.belowDesign)
       )
       .errorLabel("Below Design")
+      
+      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .cooling))
+        .errorLabel("House Load")
+      
+      AsyncValidator.validate(
+        \.manufacturerAdjustments,
+         with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.manufacturerAdjustments).optional()
+      )
+      .errorLabel("Manufacturer Adjustments")
     
       AsyncValidatorOf<Value>.accumulating {
         AsyncValidator.lessThan(\.belowDesign.below.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
@@ -152,7 +125,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: Asyn
             summary: "Above design below.cfm should equal the below design below.cfm."
           )
       }
-      .errorLabel("\nGeneral")
+      .errorLabel("General")
       
     }
     .errorLabel("Two Way Request Errors")

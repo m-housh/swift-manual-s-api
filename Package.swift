@@ -37,6 +37,7 @@ let package = Package(
       name: "RouterTests",
       dependencies: [
         "Router",
+        "TestSupport",
         .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
@@ -61,6 +62,7 @@ let package = Package(
       dependencies: [
         "SiteHandlerLive",
         "SiteRouteValidationsLive",
+        "TestSupport",
         .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
@@ -76,6 +78,20 @@ let package = Package(
       name: "SiteRouteValidationsLive",
       dependencies: [
         "SiteRouteValidations",
+      ]
+    ),
+    .testTarget(
+      name: "SiteRouteValidationTests",
+      dependencies: [
+        "SiteRouteValidationsLive",
+        "TestSupport",
+        .product(name: "CustomDump", package: "swift-custom-dump")
+      ]
+    ),
+    .target(
+      name: "TestSupport",
+      dependencies: [
+        "Models",
       ]
     ),
     .target(

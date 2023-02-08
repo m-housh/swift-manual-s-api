@@ -19,6 +19,9 @@ public struct HouseLoad: Codable, Equatable, Sendable {
 }
 
 extension HouseLoad {
+  
+  public static let zero = Self()
+  
   public struct CoolingLoad: Codable, Equatable, Sendable {
     /// The total cooling load / gain.
     public var total: Int
@@ -49,9 +52,3 @@ extension HouseLoad {
     }
   }
 }
-
-#if DEBUG
-extension HouseLoad {
-  public static let mock = Self.init(heating: 49_667, cooling: .init(total: 17_872, sensible: 13_894))
-}
-#endif

@@ -10,10 +10,8 @@ struct CoolingCapacityEnvelopeValidation: AsyncValidation {
   let errorLabel: any CustomStringConvertible
   
   @usableFromInline
-  enum ErrorLabel: String, ErrorLabelType {
-    case cfm
-    case capacity
-    case indoorTemperature
+  init(errorLabel: any CustomStringConvertible) {
+    self.errorLabel = errorLabel
   }
   
   @usableFromInline
@@ -21,13 +19,13 @@ struct CoolingCapacityEnvelopeValidation: AsyncValidation {
     AsyncValidator.accumulating {
       AsyncValidator.greaterThan(\.cfm, 0)
         .mapError(
-          label: ErrorLabel.nest(errorLabel, ErrorLabel.cfm),
+          nested: errorLabel, ErrorLabel.cfm,
           summary: "Cfm should be greater than 0."
         )
       
       AsyncValidator.greaterThan(\.indoorTemperature, 0)
         .mapError(
-          label: ErrorLabel.nest(errorLabel, ErrorLabel.indoorTemperature),
+          nested: errorLabel, ErrorLabel.indoorTemperature,
           summary: "Indoor temperature should be greater than 0."
         )
 

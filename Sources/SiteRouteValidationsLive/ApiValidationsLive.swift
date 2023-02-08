@@ -4,84 +4,6 @@ import Validations
 
 // MARK: - Cooling Interpolations
 
-
-
-fileprivate enum OneWayRequestValidation: AsyncValidatable {
-  
-  typealias OneWayRequest = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest
-  case indoor(OneWayRequest)
-  case outdoor(OneWayRequest)
-  
-  private var baseValidator: AsyncValidator<OneWayRequest> {
-    AsyncValidator {
-      AsyncValidator.validate(
-        \OneWayRequest.aboveDesign,
-         with: CoolingCapacityEnvelopeValidation(errorLabel: "aboveDesign")
-      )
-      AsyncValidator.validate(
-        \OneWayRequest.belowDesign,
-         with: CoolingCapacityEnvelopeValidation(errorLabel: "belowDesign")
-      )
-      AsyncValidator.equals(\OneWayRequest.aboveDesign.cfm, \OneWayRequest.belowDesign.cfm)
-    }
-  }
-  
-  var outdoorAsyncValidator: any AsyncValidation<OneWayRequest> {
-    AsyncValidator<OneWayRequest> {
-      baseValidator
-      AsyncValidator.equals(\OneWayRequest.aboveDesign.indoorWetBulb, 63)
-      AsyncValidator.equals(\OneWayRequest.belowDesign.indoorWetBulb, 63)
-      AsyncValidator.lessThan(
-        \OneWayRequest.belowDesign.outdoorTemperature,
-         \OneWayRequest.designInfo.summer.outdoorTemperature
-      )
-      AsyncValidator.greaterThan(
-        \OneWayRequest.aboveDesign.outdoorTemperature,
-         \OneWayRequest.designInfo.summer.outdoorTemperature
-      )
-    }
-  }
-  
-  var indoorAsyncValidator: any AsyncValidation<OneWayRequest> {
-    AsyncValidator {
-      AsyncValidator.validate(
-        \OneWayRequest.aboveDesign,
-         with: CoolingCapacityEnvelopeValidation(errorLabel: "aboveDesign")
-      )
-      AsyncValidator.validate(
-        \OneWayRequest.belowDesign,
-         with: CoolingCapacityEnvelopeValidation(errorLabel: "belowDesign")
-      )
-      AsyncValidator.equals(\.aboveDesign.cfm, \.belowDesign.cfm)
-      AsyncValidator.equals(\.aboveDesign.indoorTemperature, \.belowDesign.indoorTemperature)
-      AsyncValidator.lessThan(\.belowDesign.indoorWetBulb, 63)
-      AsyncValidator.greaterThan(\.aboveDesign.indoorWetBulb, 63)
-    }
-  }
-  
-  func validate(_ value: Self) async throws {
-    switch value {
-    case let .indoor(indoorRequest):
-      return try await indoorAsyncValidator.validate(indoorRequest)
-    case let .outdoor(outdoorRequest):
-      return try await outdoorAsyncValidator.validate(outdoorRequest)
-    }
-  }
-}
-
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest: AsyncValidatable {
-  public var body: some AsyncValidation<Self> {
-    AsyncValidator {
-      AsyncValidator.validate(
-        \.capacity,
-         with: CoolingCapacityEnvelopeValidation(errorLabel: "capacity")
-      )
-      AsyncValidator.equals(\.capacity.outdoorTemperature, \.designInfo.summer.outdoorTemperature)
-      AsyncValidator.equals(\.capacity.indoorTemperature, \.designInfo.summer.indoorTemperature)
-    }
-  }
-}
-
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
   
   public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest.Cooling) async throws {
@@ -99,32 +21,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
 }
 
 // MARK: - Heating Interpolations
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: AsyncValidatable {
-  
-  public var body: some AsyncValidation<Self> {
-    AsyncValidator {
-      AsyncValidator.validate(\.afue) {
-        Double.greaterThan(0)
-        Double.lessThanOrEquals(100)
-      }
-      AsyncValidator.validate(\.input, with: .greaterThan(0))
-    }
-  }
-}
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
-  
-  public var body: some AsyncValidation<Self> {
-    AsyncValidator {
-      AsyncValidator.validate(\.afue) {
-        Double.greaterThan(0)
-        Double.lessThanOrEquals(100)
-      }
-      AsyncValidator.validate(\.input, with: .greaterThan(0))
-    }
-  }
-  
-}
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
   
