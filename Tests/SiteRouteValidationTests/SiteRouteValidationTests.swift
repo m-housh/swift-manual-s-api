@@ -50,7 +50,7 @@ final class SiteRouteValidationTests: XCTestCase {
       do {
         try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.twoWay(request))))))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected, description)
       }
     }
@@ -85,7 +85,7 @@ final class SiteRouteValidationTests: XCTestCase {
       do {
         try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.oneWayIndoor(request))))))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected1, description)
       }
       
@@ -121,7 +121,7 @@ final class SiteRouteValidationTests: XCTestCase {
 
         try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.oneWayIndoor(request))))))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected2, description)
       }
     }
@@ -161,7 +161,7 @@ final class SiteRouteValidationTests: XCTestCase {
       do {
         try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.oneWayOutdoor(request))))))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected1, description)
       }
     }
@@ -189,7 +189,7 @@ final class SiteRouteValidationTests: XCTestCase {
       do {
         try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.noInterpolation(request))))))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected1, description)
       }
       
@@ -221,7 +221,7 @@ final class SiteRouteValidationTests: XCTestCase {
       do {
         try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.noInterpolation(request))))))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected2, description)
       }
       
@@ -246,7 +246,7 @@ final class SiteRouteValidationTests: XCTestCase {
           route: .interpolate(.heating(.boiler(request)))
         )))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected1, description)
       }
     }
@@ -272,7 +272,7 @@ final class SiteRouteValidationTests: XCTestCase {
           route: .interpolate(.heating(.furnace(request)))
         )))
       } catch {
-        let description = (error as CustomDebugStringConvertible).debugDescription
+        let description = (error as CustomStringConvertible).description
         XCTAssertNoDifference(expected1, description)
       }
     }
