@@ -25,4 +25,4 @@ jobs:
         swift-version: 5.7
     - uses: actions/checkout@v3
     - name: Run Tests
-      run: make test-linux
+      run: make DOCKER_PLATFORM=linux/amd64 test-linux
