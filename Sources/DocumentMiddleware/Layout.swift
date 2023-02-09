@@ -6,11 +6,11 @@ func layout(title: String, content: Node) -> Node {
     .html(
       .head(
         .title(title),
-        
+
         // Bootstrap style-sheet
         .link(attributes: [
           .rel(.stylesheet),
-          .href("https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css")
+          .href("https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css"),
         ])
       ),
       .body(
@@ -19,21 +19,21 @@ func layout(title: String, content: Node) -> Node {
         footer,
         .script(attributes: [
           .async(true),
-          .src("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+          .src("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"),
         ])
       )
-    )
+    ),
   ]
 }
 
-fileprivate let header: Node = [
+private let header: Node = [
   .h1("swift-manual-s-api"),
   .blockquote(
     "Api Documentation for manual-s server."
-  )
+  ),
 ]
 
-fileprivate let footer: Node = [
+private let footer: Node = [
   .hr,
-  .footer("© 2023 Michael Housh")
+  .footer("© 2023 Michael Housh"),
 ]

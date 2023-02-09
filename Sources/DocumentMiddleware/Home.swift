@@ -1,7 +1,8 @@
 import Html
 
 let home: Node = [
-  .p("""
-Add some content here.
-""")
+  .p(
+    """
+    Add some content here.
+    """)
 ]

@@ -2,9 +2,8 @@ import Dependencies
 import Html
 import Models
 
-
 public struct DocumentMiddleware {
-  
+
   public func respond(route: ServerRoute) async throws -> Node {
     // Fix me.
     return layout(title: "Home", content: home)

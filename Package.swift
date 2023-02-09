@@ -81,7 +81,7 @@ var package = Package(
 package.dependencies.append(contentsOf: [
   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
   .package(url: "https://github.com/pointfreeco/vapor-routing.git", from: "0.1.0"),
-  .package(url: "https://github.com/pointfreeco/swift-html-vapor.git", from: "0.4.0")
+  .package(url: "https://github.com/pointfreeco/swift-html-vapor.git", from: "0.4.0"),
 ])
 
 package.targets.append(contentsOf: [
@@ -90,7 +90,7 @@ package.targets.append(contentsOf: [
     dependencies: [
       "Models",
       .product(name: "Dependencies", package: "swift-dependencies"),
-      .product(name: "HtmlVaporSupport", package: "swift-html-vapor")
+      .product(name: "HtmlVaporSupport", package: "swift-html-vapor"),
     ]
   ),
   .executableTarget(

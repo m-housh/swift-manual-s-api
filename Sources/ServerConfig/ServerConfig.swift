@@ -1,6 +1,6 @@
-import DocumentMiddleware // remove and have site middleware handle this.
 import Dependencies
-import HtmlVaporSupport // remove and have site middleware handle this.
+import DocumentMiddleware  // remove and have site middleware handle this.
+import HtmlVaporSupport  // remove and have site middleware handle this.
 import Models
 import RouteHandlerLive
 import Router
@@ -49,7 +49,7 @@ private func siteHandler(
   @Dependency(\.siteMiddleware) var siteMiddleware
   return try await documentMiddleware.respond(route: route)
     .encodeResponse(for: request).get()
-//  return try await siteMiddleware.respond(route: route)
+  //  return try await siteMiddleware.respond(route: route)
 }
 
 extension AnyEncodable: AsyncResponseEncodable {
