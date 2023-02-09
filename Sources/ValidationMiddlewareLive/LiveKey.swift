@@ -1,6 +1,6 @@
 import Dependencies
 import Models
-@_exported import SiteRouteValidations
+@_exported import ValidationMiddleware
 import Validations
 
 /// Handles validations for api routes.
@@ -59,10 +59,10 @@ extension ApiRouteValidator {
   }
 }
 
-extension SiteRouteValidator: DependencyKey {
+extension ValidationMiddleware: DependencyKey {
 
   @inlinable
-  public static var liveValue: SiteRouteValidator {
+  public static var liveValue: ValidationMiddleware {
     .init { route in
 
       let apiRouteValidator = ApiRouteValidator.liveValue

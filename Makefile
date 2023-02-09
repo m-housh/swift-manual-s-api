@@ -1,4 +1,4 @@
-PLATFORM_IOS = iOS Simulator,name=iPhone 14 Pro
+PLATFORM_IOS = iOS Simulator,name=iPhone 14 Pro,OS=16.2
 PLATFORM_MACOS = macOS
 PLATFORM_MAC_CATALYST = macOS,variant=Mac Catalyst
 CONFIG ?= debug
@@ -18,7 +18,7 @@ test-linux:
 		"swift:$(SWIFT_VERSION)-focal" swift test
 
 test-library:
-	for platform in "$(PLATFORM_IOS)" "$(PLATFORM_MACOS)" "$(PLATFORM_MAC_CATALYST)"; do \
+	for platform in "$(PLATFORM_MACOS)" "$(PLATFORM_MAC_CATALYST)"; do \
 		xcodebuild test \
 			-configuration $(CONFIG) \
 			-workspace .swiftpm/xcode/package.xcworkspace \

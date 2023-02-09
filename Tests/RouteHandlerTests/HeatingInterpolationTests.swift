@@ -2,9 +2,8 @@ import XCTest
 import Dependencies
 import CustomDump
 import Models
-import SiteHandler
-import SiteHandlerLive
-import SiteRouteValidationsLive
+import RouteHandlerLive
+import ValidationMiddlewareLive
 import TestSupport
 
 final class HeatingInterpolationTests: XCTestCase {
@@ -12,7 +11,7 @@ final class HeatingInterpolationTests: XCTestCase {
   func test_furnace() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
         altitudeDeratings: nil,
@@ -36,46 +35,10 @@ final class HeatingInterpolationTests: XCTestCase {
     }
   }
   
-  func test_furnace_fails() async {
-    let validator = withDependencies({
-      $0.siteValidator = .liveValue
-    }, operation: {
-      @Dependency(\.siteValidator) var validator
-      return validator
-    })
-
-    await XCTAssertThrowsError(try await validator.validate(.api(.init(
-      isDebug: true,
-      route: .interpolate(.heating(.furnace(.init(
-        houseLoad: .mock,
-        input: 0,
-        afue: 96
-      ))))
-    ))))
-    
-     await XCTAssertThrowsError(try await validator.validate(.api(.init(
-      isDebug: true,
-      route: .interpolate(.heating(.furnace(.init(
-        houseLoad: .mock,
-        input: 10_000,
-        afue: 0
-      ))))
-    ))))
-    
-    await XCTAssertThrowsError(try await validator.validate(.api(.init(
-      isDebug: true,
-      route: .interpolate(.heating(.furnace(.init(
-        houseLoad: .mock,
-        input: 10_000,
-        afue: 101
-      ))))
-    ))))
-  }
-  
   func test_boiler() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
         altitudeDeratings: nil,
@@ -96,7 +59,7 @@ final class HeatingInterpolationTests: XCTestCase {
   func test_electric_no_heatPump() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
         altitudeDeratings: nil,
@@ -115,34 +78,10 @@ final class HeatingInterpolationTests: XCTestCase {
     }
   }
   
-  func test_electric_fails() async throws {
-
-    let validator = withDependencies({
-      $0.siteValidator = .liveValue
-    }, operation: {
-      @Dependency(\.siteValidator) var siteValidator
-
-      return siteValidator
-    })
-
-    await XCTAssertThrowsError(
-      try await validator.validate(
-        .api(.init(
-          isDebug: true,
-          route: .interpolate(.heating(.electric(.init(
-            altitudeDeratings: nil,
-            houseLoad: .mock,
-            inputKW: 0
-          ))))
-        ))
-      )
-    )
-  }
-  
   func test_heatPump() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest(
         altitudeDeratings: nil,

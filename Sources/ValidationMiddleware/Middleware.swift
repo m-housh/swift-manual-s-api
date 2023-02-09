@@ -4,13 +4,13 @@ import Validations
 
 /// Handles validations for site routes.
 ///
-public struct SiteRouteValidator {
+public struct ValidationMiddleware {
 
   /// The actual validator to use.
   @usableFromInline
   let validator: any AsyncValidation<ServerRoute>
 
-  /// Create a new site route validator, that wraps the given validator.
+  /// Create a new  route validator, that wraps the given validator.
   ///
   /// - Parameters:
   ///   - validator: The validator to use for route validations.
@@ -38,21 +38,25 @@ public struct SiteRouteValidator {
   }
 }
 
-extension SiteRouteValidator: TestDependencyKey {
+extension ValidationMiddleware: TestDependencyKey {
 
   /// Validator that fails when used.
-  public static var testValue: SiteRouteValidator = Self.init(AsyncValidator.fail())
+  public static var testValue: ValidationMiddleware {
+    Self.init(AsyncValidator.fail())
+  }
 
   /// A validator that does not perform any validation logic.
-  public static var noValidation = Self.init(AsyncValidator.success())
+  public static var noValidation: ValidationMiddleware {
+    Self.init(AsyncValidator.success())
+  }
 }
 
 extension DependencyValues {
 
   /// Access a site route validator through the @Dependency values.
   ///
-  public var siteValidator: SiteRouteValidator {
-    get { self[SiteRouteValidator.self] }
-    set { self[SiteRouteValidator.self] = newValue }
+  public var validationMiddleware: ValidationMiddleware {
+    get { self[ValidationMiddleware.self] }
+    set { self[ValidationMiddleware.self] = newValue }
   }
 }

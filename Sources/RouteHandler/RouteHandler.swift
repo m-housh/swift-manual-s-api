@@ -1,17 +1,8 @@
 import Dependencies
 import Models
-import SiteRouteValidations
 import XCTestDynamicOverlay
 
-public typealias RouteHandler<Request, Response: Encodable> = @Sendable (Request) async throws ->
-  Response
-
-// TODO: Remove dependency on siteValidator and move to a site-middleware module, so this module only handles responding to
-//       routes once they've been validated.
-public struct SiteHandler {
-
-  @Dependency(\.siteValidator) var siteValidator: SiteRouteValidator
-  //  @Dependency(\.apiHandler) var apiHandler: ApiHandler
+public struct RouteHandler {
 
   public var api: ApiHandler
 
@@ -21,9 +12,6 @@ public struct SiteHandler {
 
   public func respond(_ request: ServerRoute) async throws -> AnyEncodable {
 
-    // validate the request.
-    try await siteValidator.validate(request)
-
     switch request {
     case let .api(apiRequest):
       return try await api.respond(apiRequest)
@@ -32,27 +20,48 @@ public struct SiteHandler {
     }
   }
 }
+public typealias HandlerType<Request, Response: Encodable> = @Sendable (Request) async throws ->
+Response
 
 public struct ApiHandler {
 
-  public var balancePoint:
-    RouteHandler<ServerRoute.Api.Route.BalancePointRequest, BalancePointResponse>
-  public var derating: RouteHandler<ServerRoute.Api.Route.DeratingRequest, AdjustmentMultiplier>
-  public var interpolate:
-    RouteHandler<ServerRoute.Api.Route.InterpolationRequest, InterpolationResponse>
-  public var requiredKW: RouteHandler<ServerRoute.Api.Route.RequiredKWRequest, RequiredKWResponse>
-  public var sizingLimits: RouteHandler<ServerRoute.Api.Route.SizingLimitRequest, SizingLimits>
+  public var balancePoint: HandlerType<
+    ServerRoute.Api.Route.BalancePointRequest,
+    BalancePointResponse
+  >
+  
+  public var derating: HandlerType<
+    ServerRoute.Api.Route.DeratingRequest,
+    AdjustmentMultiplier
+  >
+  
+  public var interpolate: HandlerType<
+    ServerRoute.Api.Route.InterpolationRequest,
+    InterpolationResponse
+  >
+  
+  public var requiredKW: HandlerType<
+    ServerRoute.Api.Route.RequiredKWRequest,
+    RequiredKWResponse
+  >
+  
+  public var sizingLimits: HandlerType<
+    ServerRoute.Api.Route.SizingLimitRequest,
+    SizingLimits
+  >
 
   public init(
-    balancePoint: @escaping RouteHandler<
-      ServerRoute.Api.Route.BalancePointRequest, BalancePointResponse
+    balancePoint: @escaping HandlerType<
+      ServerRoute.Api.Route.BalancePointRequest,
+      BalancePointResponse
     >,
-    derating: @escaping RouteHandler<ServerRoute.Api.Route.DeratingRequest, AdjustmentMultiplier>,
-    interpolate: @escaping RouteHandler<
-      ServerRoute.Api.Route.InterpolationRequest, InterpolationResponse
+    derating: @escaping HandlerType<ServerRoute.Api.Route.DeratingRequest, AdjustmentMultiplier>,
+    interpolate: @escaping HandlerType<
+      ServerRoute.Api.Route.InterpolationRequest,
+      InterpolationResponse
     >,
-    requiredKW: @escaping RouteHandler<ServerRoute.Api.Route.RequiredKWRequest, RequiredKWResponse>,
-    sizingLimits: @escaping RouteHandler<ServerRoute.Api.Route.SizingLimitRequest, SizingLimits>
+    requiredKW: @escaping HandlerType<ServerRoute.Api.Route.RequiredKWRequest, RequiredKWResponse>,
+    sizingLimits: @escaping HandlerType<ServerRoute.Api.Route.SizingLimitRequest, SizingLimits>
   ) {
     self.balancePoint = balancePoint
     self.derating = derating
@@ -94,15 +103,15 @@ extension ApiHandler {
   public static let testValue: ApiHandler = .unimplemented
 }
 
-extension SiteHandler: TestDependencyKey {
+extension RouteHandler: TestDependencyKey {
 
-  public static let testValue: SiteHandler = .init(api: .unimplemented)
+  public static let testValue: RouteHandler = .init(api: .unimplemented)
 }
 
 extension DependencyValues {
 
-  public var siteHandler: SiteHandler {
-    get { self[SiteHandler.self] }
-    set { self[SiteHandler.self] = newValue }
+  public var routeHandler: RouteHandler {
+    get { self[RouteHandler.self] }
+    set { self[RouteHandler.self] = newValue }
   }
 }

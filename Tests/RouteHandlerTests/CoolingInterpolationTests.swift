@@ -2,9 +2,9 @@ import XCTest
 import CustomDump
 import Dependencies
 import Models
-import SiteHandler
-import SiteHandlerLive
-import SiteRouteValidationsLive
+import RouteHandler
+import RouteHandlerLive
+import ValidationMiddlewareLive
 import TestSupport
 
 final class CoolingInterpolationTests: XCTestCase {
@@ -12,7 +12,7 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_noInterpolation() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest(
         capacity: .init(
@@ -53,7 +53,7 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_oneWayOutdoor() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
         aboveDesign: .init(
@@ -94,7 +94,7 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_oneWayIndoor() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
         aboveDesign: .init(
@@ -135,7 +135,7 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_twoWay() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest(
         aboveDesign: .init(

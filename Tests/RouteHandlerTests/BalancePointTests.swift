@@ -2,8 +2,8 @@ import XCTest
 import CustomDump
 import Dependencies
 import Models
-import SiteHandlerLive
-import SiteRouteValidationsLive
+import RouteHandlerLive
+import ValidationMiddlewareLive
 import TestSupport
 
 final class BalancePointTests: XCTestCase {
@@ -11,8 +11,8 @@ final class BalancePointTests: XCTestCase {
   func test_thermalBalancePoint() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteValidator) var validator: SiteRouteValidator
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.validationMiddleware) var validator: ValidationMiddleware
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       let request = ServerRoute.Api.Route.balancePoint(.thermal(.init(designTemperature: 5, heatLoss: 49_667, capacity: .mock)))
       

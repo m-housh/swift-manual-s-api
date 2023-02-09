@@ -1,8 +1,8 @@
 import Models
 import XCTest
 import Dependencies
-import SiteHandlerLive
-import SiteRouteValidationsLive
+import RouteHandlerLive
+import ValidationMiddlewareLive
 import TestSupport
 
 final class SizingLimitTests: XCTestCase {
@@ -11,7 +11,7 @@ final class SizingLimitTests: XCTestCase {
   
   func test_cooling_mildWinterOrLatentLoad() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       let suts: [(SystemType, SizingLimits)] = [
         (
           .airToAir(type: .heatPump, compressor: .singleSpeed, climate: .mildWinterOrLatentLoad),
@@ -49,7 +49,7 @@ final class SizingLimitTests: XCTestCase {
   
   func test_cooling_coldWinterOrNoLatentLoad() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       let suts: [(SystemType, SizingLimits)] = [
         (
           .airToAir(type: .heatPump, compressor: .singleSpeed, climate: .coldWinterOrNoLatentLoad),
@@ -88,7 +88,7 @@ final class SizingLimitTests: XCTestCase {
   
   func test_cooling_coldWinterOrNoLatentLoad_throws_error() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       do {
         _ = try await client.api.sizingLimits(.init(
@@ -104,7 +104,7 @@ final class SizingLimitTests: XCTestCase {
   
   func test_furnace() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       let sut = try await client.api.sizingLimits(.init(systemType: .furnaceOnly))
       XCTAssertEqual(sut, .init(oversizing: .furnace(140), undersizing: .furnace(90)))
     }
@@ -113,7 +113,7 @@ final class SizingLimitTests: XCTestCase {
   
   func test_boiler() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       let sut = try await client.api.sizingLimits(.init(systemType: .boilerOnly))
       XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
     }

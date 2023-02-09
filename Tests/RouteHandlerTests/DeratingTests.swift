@@ -1,8 +1,8 @@
 import XCTest
 import Dependencies
 import Models
-import SiteHandlerLive
-import SiteRouteValidationsLive
+import RouteHandlerLive
+import ValidationMiddlewareLive
 import TestSupport
 
 final class DeratingClientTests: XCTestCase {
@@ -10,7 +10,7 @@ final class DeratingClientTests: XCTestCase {
   func testFurnaceDerating() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       var elevation = 1
       var iteration = 0
@@ -47,7 +47,7 @@ final class DeratingClientTests: XCTestCase {
   func testTotalWetDerating() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       var elevation = 1
       var iteration = 0
@@ -116,7 +116,7 @@ final class DeratingClientTests: XCTestCase {
   
   func test_anyEncodable_response() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.siteHandler) var client: SiteHandler
+      @Dependency(\.routeHandler) var client: RouteHandler
       
       let request = ServerRoute.Api.Route.derating(.init(elevation: 0, systemType: .default))
       let expected = AdjustmentMultiplier.airToAir(total: 1, sensible: 1, heating: 1)

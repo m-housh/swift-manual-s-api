@@ -2,14 +2,14 @@ import XCTest
 import CustomDump
 import Dependencies
 import Models
-import SiteRouteValidationsLive
+import ValidationMiddlewareLive
 import TestSupport
 
 final class SiteRouteValidationTests: XCTestCase {
 
   func test_twoWay_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.zero
       request.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
       let expected = """
@@ -63,7 +63,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_oneWay_indoor_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest.zero
       let expected1 = """
       One Way Indoor Request Errors:
@@ -139,7 +139,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_oneWay_outdoor_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest.zero
       request.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
       let expected1 = """
@@ -184,7 +184,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_noInterpolation_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest.zero
       let expected1 = """
       No Interpolation Request Errors:
@@ -247,7 +247,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_boiler_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest.zero
       request.altitudeDeratings = .airToAir(total: 0, sensible: 0, heating: 0)
       let expected1 = """
@@ -273,7 +273,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_furnace_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest.zero
       request.altitudeDeratings = .heating(0)
       let expected1 = """
@@ -299,7 +299,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_electric_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest.zero
       request.heatPumpCapacity = 0
       request.altitudeDeratings = .heating(0)
@@ -326,7 +326,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_heatPump_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest.zero
       request.altitudeDeratings = .heating(0)
       let expected1 = """
@@ -352,7 +352,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_thermal_balancePoint_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       let request = ServerRoute.Api.Route.BalancePointRequest.Thermal.zero
       let expected1 = """
       Thermal Balance Point Request Errors:
@@ -376,7 +376,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_requiredKW_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.RequiredKWRequest.zero
       request.capacityAtDesign = -1
       let expected1 = """
@@ -400,7 +400,7 @@ final class SiteRouteValidationTests: XCTestCase {
   
   func test_sizingLimit_validations() async throws {
     try await withLiveSiteValidator {
-      @Dependency(\.siteValidator) var validator
+      @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.SizingLimitRequest.zero
       request.systemType = .airToAir(type: .airConditioner, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad)
       let expected1 = """

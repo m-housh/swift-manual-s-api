@@ -1,6 +1,6 @@
 import Dependencies
 import Models
-@_exported import SiteHandler
+@_exported import RouteHandler
 
 extension ApiHandler {
 
@@ -20,6 +20,6 @@ extension ApiHandler {
   )
 }
 
-extension SiteHandler: DependencyKey {
-  public static let liveValue: SiteHandler = Self.init(api: .live)
+extension RouteHandler: DependencyKey {
+  public static let liveValue: RouteHandler = Self.init(api: .live)
 }

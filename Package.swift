@@ -1,17 +1,17 @@
 // swift-tools-version: 5.7
 
+import Foundation
 import PackageDescription
 
-let package = Package(
+// MARK: - Shared
+var package = Package(
   name: "swift-manual-s-api",
-  platforms: [.macOS(.v10_15), .iOS(.v13)],
+  platforms: [.macOS(.v12)],
   products: [
     .library(name: "Models", targets: ["Models"]),
     .library(name: "Router", targets: ["Router"]),
-    .library(name: "SiteHandler", targets: ["SiteHandler"]),
-    .library(name: "SiteHandlerLive", targets: ["SiteHandlerLive"]),
-    .library(name: "SiteRouteValidations", targets: ["SiteRouteValidations"]),
-    .library(name: "SiteRouteValidationsLive", targets: ["SiteRouteValidationsLive"]),
+    .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
+    .library(name: "ValidationMiddlewareLive", targets: ["ValidationMiddlewareLive"]),
   ],
   dependencies: [
     .package(
@@ -44,32 +44,7 @@ let package = Package(
       ]
     ),
     .target(
-      name: "SiteHandler",
-      dependencies: [
-        "Models",
-        "SiteRouteValidations",
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
-      ]
-    ),
-    .target(
-      name: "SiteHandlerLive",
-      dependencies: [
-        "SiteHandler",
-        .product(name: "Validations", package: "swift-validations"),
-      ]
-    ),
-    .testTarget(
-      name: "SiteHandlerTests",
-      dependencies: [
-        "SiteHandlerLive",
-        "SiteRouteValidationsLive",
-        "TestSupport",
-        .product(name: "CustomDump", package: "swift-custom-dump"),
-      ]
-    ),
-    .target(
-      name: "SiteRouteValidations",
+      name: "ValidationMiddleware",
       dependencies: [
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -77,15 +52,15 @@ let package = Package(
       ]
     ),
     .target(
-      name: "SiteRouteValidationsLive",
+      name: "ValidationMiddlewareLive",
       dependencies: [
-        "SiteRouteValidations"
+        "ValidationMiddleware"
       ]
     ),
     .testTarget(
-      name: "SiteRouteValidationTests",
+      name: "ValidationMiddlewareTests",
       dependencies: [
-        "SiteRouteValidationsLive",
+        "ValidationMiddlewareLive",
         "TestSupport",
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
@@ -99,3 +74,65 @@ let package = Package(
 
   ]
 )
+
+// MARK: - Server
+package.dependencies.append(contentsOf: [
+  .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+  .package(url: "https://github.com/pointfreeco/vapor-routing.git", from: "0.1.0"),
+])
+
+package.targets.append(contentsOf: [
+  .executableTarget(
+    name: "server",
+    dependencies: ["ServerConfig"]
+  ),
+  .target(
+    name: "ServerConfig",
+    dependencies: [
+      "Models",
+      "Router",
+      "RouteHandlerLive",
+      "SiteMiddleware",
+      "ValidationMiddlewareLive",
+      .product(name: "Vapor", package: "vapor"),
+      .product(name: "VaporRouting", package: "vapor-routing"),
+    ],
+    swiftSettings: [
+      // Enable better optimizations when building in Release configuration. Despite the use of
+      // the `.unsafeFlags` construct required by SwiftPM, this flag is recommended for Release
+      // builds. See <https://github.com/swift-server/guides/blob/main/docs/building.md#building-for-production> for details.
+      .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
+    ]
+  ),
+  .target(
+    name: "SiteMiddleware",
+    dependencies: [
+      "RouteHandler",
+      "ValidationMiddleware",
+    ]
+  ),
+  .target(
+    name: "RouteHandler",
+    dependencies: [
+      "Models",
+      .product(name: "Dependencies", package: "swift-dependencies"),
+      .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
+    ]
+  ),
+  .target(
+      name: "RouteHandlerLive",
+      dependencies: [
+        "RouteHandler",
+      ]
+    ),
+    .testTarget(
+      name: "RouteHandlerTests",
+      dependencies: [
+        "RouteHandlerLive",
+        "ValidationMiddlewareLive",
+        "TestSupport",
+        .product(name: "CustomDump", package: "swift-custom-dump"),
+      ]
+    ),
+
+])
