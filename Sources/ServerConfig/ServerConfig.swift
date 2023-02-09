@@ -44,10 +44,8 @@ private func siteHandler(
   request: Request,
   route: ServerRoute
 ) async throws -> AsyncResponseEncodable {
-  @Dependency(\.documentMiddleware) var documentMiddleware
   @Dependency(\.siteMiddleware) var siteMiddleware
-  return try await documentMiddleware.respond(route: route)
-  //  return try await siteMiddleware.respond(route: route)
+  return try await siteMiddleware.respond(route: route)
 }
 
 extension AnyEncodable: AsyncResponseEncodable {
@@ -62,5 +60,18 @@ extension AnyEncodable: AsyncResponseEncodable {
 extension Node: AsyncResponseEncodable {
   public func encodeResponse(for request: Request) async throws -> Response {
     try await encodeResponse(for: request).get()
+  }
+}
+
+extension Either: AsyncResponseEncodable
+where Left: AsyncResponseEncodable, Right: AsyncResponseEncodable {
+
+  public func encodeResponse(for request: Request) async throws -> Response {
+    switch self {
+    case let .left(left):
+      return try await left.encodeResponse(for: request)
+    case let .right(right):
+      return try await right.encodeResponse(for: request)
+    }
   }
 }
