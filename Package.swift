@@ -16,9 +16,11 @@ var package = Package(
   dependencies: [
     .package(
       url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git",
-      .upToNextMajor(from: "0.8.1")),
+      from: "0.8.1"
+    ),
     .package(
-      url: "https://github.com/pointfreeco/swift-custom-dump.git", .upToNextMajor(from: "0.6.1")),
+      url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "0.6.1"
+    ),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.4.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.0"),
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
@@ -79,9 +81,18 @@ var package = Package(
 package.dependencies.append(contentsOf: [
   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
   .package(url: "https://github.com/pointfreeco/vapor-routing.git", from: "0.1.0"),
+  .package(url: "https://github.com/pointfreeco/swift-html-vapor.git", from: "0.4.0")
 ])
 
 package.targets.append(contentsOf: [
+  .target(
+    name: "DocumentMiddleware",
+    dependencies: [
+      "Models",
+      .product(name: "Dependencies", package: "swift-dependencies"),
+      .product(name: "HtmlVaporSupport", package: "swift-html-vapor")
+    ]
+  ),
   .executableTarget(
     name: "server",
     dependencies: ["ServerConfig"]
@@ -107,6 +118,7 @@ package.targets.append(contentsOf: [
   .target(
     name: "SiteMiddleware",
     dependencies: [
+      "DocumentMiddleware",
       "RouteHandler",
       "ValidationMiddleware",
     ]

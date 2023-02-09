@@ -1,4 +1,6 @@
+import DocumentMiddleware // remove and have site middleware handle this.
 import Dependencies
+import HtmlVaporSupport // remove and have site middleware handle this.
 import Models
 import RouteHandlerLive
 import Router
@@ -7,7 +9,7 @@ import ValidationMiddlewareLive
 import Vapor
 import VaporRouting
 
-public func configure(_ app: Application) throws {
+public func configure(_ app: Vapor.Application) throws {
   withDependencies { dependencies in
     dependencies.validationMiddleware = .liveValue
     dependencies.routeHandler = .liveValue
@@ -25,7 +27,7 @@ public func configure(_ app: Application) throws {
 
 }
 
-private func configureVaporMiddleware(_ app: Application) {
+private func configureVaporMiddleware(_ app: Vapor.Application) {
   let corsConfiguration = CORSMiddleware.Configuration(
     allowedOrigin: .all,
     allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
@@ -43,8 +45,11 @@ private func siteHandler(
   request: Request,
   route: ServerRoute
 ) async throws -> AsyncResponseEncodable {
+  @Dependency(\.documentMiddleware) var documentMiddleware
   @Dependency(\.siteMiddleware) var siteMiddleware
-  return try await siteMiddleware.respond(route: route)
+  return try await documentMiddleware.respond(route: route)
+    .encodeResponse(for: request).get()
+//  return try await siteMiddleware.respond(route: route)
 }
 
 extension AnyEncodable: AsyncResponseEncodable {
