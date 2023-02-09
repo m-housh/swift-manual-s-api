@@ -25,7 +25,7 @@ public func configure(_ app: Application) throws {
 
 }
 
-private func configureVaporMiddleware(_ app: Application) {
+fileprivate func configureVaporMiddleware(_ app: Application) {
   let corsConfiguration = CORSMiddleware.Configuration(
     allowedOrigin: .all,
     allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
@@ -39,7 +39,7 @@ private func configureVaporMiddleware(_ app: Application) {
   app.middleware.use(cors, at: .beginning)
 }
 
-private func siteHandler(
+fileprivate func siteHandler(
   request: Request,
   route: ServerRoute
 ) async throws -> AsyncResponseEncodable {
