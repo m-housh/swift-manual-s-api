@@ -48,7 +48,6 @@ private func siteHandler(
   @Dependency(\.documentMiddleware) var documentMiddleware
   @Dependency(\.siteMiddleware) var siteMiddleware
   return try await documentMiddleware.respond(route: route)
-    .encodeResponse(for: request).get()
   //  return try await siteMiddleware.respond(route: route)
 }
 
@@ -58,5 +57,11 @@ extension AnyEncodable: AsyncResponseEncodable {
     response.headers.contentType = .json
     response.body = Response.Body(data: try JSONEncoder().encode(self))
     return response
+  }
+}
+
+extension Node: AsyncResponseEncodable {
+  public func encodeResponse(for request: Request) async throws -> Response {
+    try await encodeResponse(for: request).get()
   }
 }
