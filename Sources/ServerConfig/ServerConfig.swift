@@ -1,27 +1,26 @@
+import ApiRouteMiddlewareLive
 import Dependencies
 import DocumentMiddleware  // remove and have site middleware handle this.
 import HtmlVaporSupport  // remove and have site middleware handle this.
 import Models
-import RouteHandlerLive
-import Router
 import SiteMiddleware
+import SiteRouter
 import ValidationMiddlewareLive
 import Vapor
 import VaporRouting
 
 public func configure(_ app: Vapor.Application) throws {
+
   withDependencies { dependencies in
     dependencies.validationMiddleware = .liveValue
-    dependencies.routeHandler = .liveValue
+    dependencies.apiMiddleware = .liveValue
   } operation: {
 
     // configure the vapor middleware(s)
     configureVaporMiddleware(app)
 
-    // configure the router.
-    let router = ServerRouter(decoder: .init(), encoder: .init())
-
     // register the router and site handler.
+    let router = SiteRouter.liveValue
     app.mount(router, use: siteHandler(request:route:))
   }
 

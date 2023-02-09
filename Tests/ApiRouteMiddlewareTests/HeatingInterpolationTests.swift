@@ -2,24 +2,25 @@ import XCTest
 import Dependencies
 import CustomDump
 import Models
-import RouteHandlerLive
-import ValidationMiddlewareLive
-import TestSupport
+import ApiRouteMiddlewareLive
+import FirstPartyMocks
 
 final class HeatingInterpolationTests: XCTestCase {
   
   func test_furnace() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client: RouteHandler
+      @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
+      let route = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
         altitudeDeratings: nil,
         houseLoad: .mock,
         input: 60_000,
         afue: 96
       )
-      let sut = try await client.api.interpolate(.heating(.furnace(request)))
+      
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.furnace(route))))
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .heating(
@@ -38,7 +39,7 @@ final class HeatingInterpolationTests: XCTestCase {
   func test_boiler() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client: RouteHandler
+      @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
         altitudeDeratings: nil,
@@ -46,7 +47,8 @@ final class HeatingInterpolationTests: XCTestCase {
         input: 60_000,
         afue: 96
       )
-      let sut = try await client.api.interpolate(.heating(.boiler(request)))
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.boiler(request))))
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .heating(.init(
@@ -59,14 +61,16 @@ final class HeatingInterpolationTests: XCTestCase {
   func test_electric_no_heatPump() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client: RouteHandler
+      @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
         altitudeDeratings: nil,
         houseLoad: .mock,
         inputKW: 15
       )
-      let sut = try await client.api.interpolate(.heating(.electric(request)))
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.electric(request))))
+      
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .heating(
@@ -81,7 +85,7 @@ final class HeatingInterpolationTests: XCTestCase {
   func test_heatPump() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client: RouteHandler
+      @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest(
         altitudeDeratings: nil,
@@ -89,7 +93,8 @@ final class HeatingInterpolationTests: XCTestCase {
         designInfo: .init(),
         houseLoad: .mock
       )
-      let sut = try await client.api.interpolate(.heating(.heatPump(request)))
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.heatPump(request))))
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .heating(

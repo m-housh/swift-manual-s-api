@@ -1,7 +1,6 @@
 import XCTest
 import Dependencies
-import RouteHandlerLive
-import ValidationMiddlewareLive
+import ApiRouteMiddlewareLive
 
 extension XCTest {
   func XCTAssertThrowsError<T: Sendable>(
@@ -25,16 +24,7 @@ func withLiveSiteHandler(
   operation: @escaping () async throws -> ()
 ) async throws {
   try await withDependencies({ dependencies in
-    dependencies.validationMiddleware = liveValidator ? .liveValue : .noValidation
-    dependencies.routeHandler = .liveValue
-  }, operation: {
-    try await operation()
-  })
-}
-
-func withLiveSiteValidator(operation: @escaping () async throws -> ()) async throws {
-  try await withDependencies({ dependencies in
-    dependencies.validationMiddleware = .liveValue
+    dependencies.apiMiddleware = .liveValue
   }, operation: {
     try await operation()
   })

@@ -2,8 +2,8 @@ import XCTest
 import URLRouting
 import CustomDump
 import Models
-import TestSupport
-import Router
+import FirstPartyMocks
+import SiteRouter
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
@@ -11,7 +11,7 @@ import Router
 
 final class RouterTests: XCTestCase {
   
-  let router = ServerRouter.test
+  let router = SiteRouter.testValue
   
   func test_requiredkw() throws {
     let json = """

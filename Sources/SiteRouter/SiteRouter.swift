@@ -1,8 +1,9 @@
+import Dependencies
 import Foundation
 import Models
 import URLRouting
 
-public struct ServerRouter: ParserPrinter {
+public struct SiteRouter: ParserPrinter {
 
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
@@ -16,7 +17,7 @@ public struct ServerRouter: ParserPrinter {
   }
 
   @ParserBuilder
-  var body: AnyParserPrinter<URLRequestData, ServerRoute> {
+  public var body: AnyParserPrinter<URLRequestData, ServerRoute> {
 
     let coolingInterpolationRouter = OneOf {
       Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.noInterpolation)) {
@@ -202,22 +203,37 @@ public struct ServerRouter: ParserPrinter {
 
   }
 
-  public func print(_ output: Models.ServerRoute, into input: inout URLRouting.URLRequestData)
-    throws
-  {
+  public func print(
+    _ output: Models.ServerRoute,
+    into input: inout URLRouting.URLRequestData
+  ) throws {
     try self.body.print(output, into: &input)
   }
 
-  public func parse(_ input: inout URLRouting.URLRequestData) throws -> Models.ServerRoute {
+  public func parse(
+    _ input: inout URLRouting.URLRequestData
+  ) throws -> Models.ServerRoute {
     try self.body.parse(&input)
   }
 }
 
-extension ServerRouter {
-  public static let test = Self(
-    decoder: .init(),
-    encoder: jsonEncoder
-  )
+extension SiteRouter: DependencyKey {
+
+  public static var testValue: SiteRouter {
+    .init(decoder: .init(), encoder: jsonEncoder)
+  }
+
+  public static var liveValue: SiteRouter {
+    .init(decoder: .init(), encoder: jsonEncoder)
+  }
+}
+
+extension DependencyValues {
+
+  public var siteRouter: SiteRouter {
+    get { self[SiteRouter.self] }
+    set { self[SiteRouter.self] = newValue }
+  }
 }
 
 private let jsonEncoder: JSONEncoder = {

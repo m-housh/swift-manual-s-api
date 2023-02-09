@@ -9,7 +9,7 @@ var package = Package(
   platforms: [.macOS(.v12)],
   products: [
     .library(name: "Models", targets: ["Models"]),
-    .library(name: "Router", targets: ["Router"]),
+    .library(name: "SiteRouter", targets: ["SiteRouter"]),
     .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
     .library(name: "ValidationMiddlewareLive", targets: ["ValidationMiddlewareLive"]),
   ],
@@ -31,17 +31,18 @@ var package = Package(
       dependencies: []
     ),
     .target(
-      name: "Router",
+      name: "SiteRouter",
       dependencies: [
         "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "URLRouting", package: "swift-url-routing"),
       ]
     ),
     .testTarget(
-      name: "RouterTests",
+      name: "SiteRouterTests",
       dependencies: [
-        "Router",
-        "TestSupport",
+        "SiteRouter",
+        "FirstPartyMocks",
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
@@ -63,12 +64,12 @@ var package = Package(
       name: "ValidationMiddlewareTests",
       dependencies: [
         "ValidationMiddlewareLive",
-        "TestSupport",
+        "FirstPartyMocks",
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
     .target(
-      name: "TestSupport",
+      name: "FirstPartyMocks",
       dependencies: [
         "Models"
       ]
@@ -101,8 +102,8 @@ package.targets.append(contentsOf: [
     name: "ServerConfig",
     dependencies: [
       "Models",
-      "Router",
-      "RouteHandlerLive",
+      "SiteRouter",
+      "ApiRouteMiddlewareLive",
       "SiteMiddleware",
       "ValidationMiddlewareLive",
       .product(name: "Vapor", package: "vapor"),
@@ -119,12 +120,12 @@ package.targets.append(contentsOf: [
     name: "SiteMiddleware",
     dependencies: [
       "DocumentMiddleware",
-      "RouteHandler",
+      "ApiRouteMiddleware",
       "ValidationMiddleware",
     ]
   ),
   .target(
-    name: "RouteHandler",
+    name: "ApiRouteMiddleware",
     dependencies: [
       "Models",
       .product(name: "Dependencies", package: "swift-dependencies"),
@@ -132,17 +133,16 @@ package.targets.append(contentsOf: [
     ]
   ),
   .target(
-    name: "RouteHandlerLive",
+    name: "ApiRouteMiddlewareLive",
     dependencies: [
-      "RouteHandler"
+      "ApiRouteMiddleware"
     ]
   ),
   .testTarget(
-    name: "RouteHandlerTests",
+    name: "ApiRouteMiddlewareTests",
     dependencies: [
-      "RouteHandlerLive",
-      "ValidationMiddlewareLive",
-      "TestSupport",
+      "ApiRouteMiddlewareLive",
+      "FirstPartyMocks",
       .product(name: "CustomDump", package: "swift-custom-dump"),
     ]
   ),

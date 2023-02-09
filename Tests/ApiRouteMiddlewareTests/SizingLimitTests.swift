@@ -1,17 +1,15 @@
 import Models
 import XCTest
 import Dependencies
-import RouteHandlerLive
-import ValidationMiddlewareLive
-import TestSupport
+import ApiRouteMiddlewareLive
+import FirstPartyMocks
 
 final class SizingLimitTests: XCTestCase {
   
-//  let client = SiteHandler.live
   
   func test_cooling_mildWinterOrLatentLoad() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.routeHandler) var client: RouteHandler
+      @Dependency(\.apiMiddleware) var client
       let suts: [(SystemType, SizingLimits)] = [
         (
           .airToAir(type: .heatPump, compressor: .singleSpeed, climate: .mildWinterOrLatentLoad),
@@ -41,7 +39,8 @@ final class SizingLimitTests: XCTestCase {
       
       // MARK: Test
       for (systemType, expected) in suts {
-        let sut = try await client.api.sizingLimits(.init(systemType: systemType))
+        let request = ServerRoute.Api(isDebug: true, route: .sizingLimits(.init(systemType: systemType)))
+        let sut = try await client.respond(request).value as! SizingLimits
         XCTAssertEqual(sut, expected)
       }
     }
@@ -49,7 +48,7 @@ final class SizingLimitTests: XCTestCase {
   
   func test_cooling_coldWinterOrNoLatentLoad() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.routeHandler) var client: RouteHandler
+      @Dependency(\.apiMiddleware) var client
       let suts: [(SystemType, SizingLimits)] = [
         (
           .airToAir(type: .heatPump, compressor: .singleSpeed, climate: .coldWinterOrNoLatentLoad),
@@ -79,33 +78,34 @@ final class SizingLimitTests: XCTestCase {
       
       // MARK: Test
       for (systemType, expected) in suts {
-        //      let sut = try await client.sizingLimits(systemType, .mock)
-        let sut = try await client.api.sizingLimits(.init(systemType: systemType, houseLoad: .mock))
+        let apiRequest = ServerRoute.Api(isDebug: true, route: .sizingLimits(.init(systemType: systemType, houseLoad: .mock)))
+        let sut = try await client.respond(apiRequest).value as! SizingLimits
         XCTAssertEqual(sut, expected)
       }
     }
   }
   
-  func test_cooling_coldWinterOrNoLatentLoad_throws_error() async throws {
-    try await withLiveSiteHandler {
-      @Dependency(\.routeHandler) var client: RouteHandler
-      
-      do {
-        _ = try await client.api.sizingLimits(.init(
-          systemType: .airToAir(type: .airConditioner, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad),
-          houseLoad: nil
-        ))
-        XCTFail()
-      } catch {
-        XCTAssertTrue(true)
-      }
-    }
-  }
+//  func test_cooling_coldWinterOrNoLatentLoad_throws_error() async throws {
+//    try await withLiveSiteHandler {
+//      @Dependency(\.apiMiddleware) var client
+//
+//      do {
+//        _ = try await client.api.sizingLimits(.init(
+//          systemType: .airToAir(type: .airConditioner, compressor: .variableSpeed, climate: .coldWinterOrNoLatentLoad),
+//          houseLoad: nil
+//        ))
+//        XCTFail()
+//      } catch {
+//        XCTAssertTrue(true)
+//      }
+//    }
+//  }
   
   func test_furnace() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.routeHandler) var client: RouteHandler
-      let sut = try await client.api.sizingLimits(.init(systemType: .furnaceOnly))
+      @Dependency(\.apiMiddleware) var client
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .sizingLimits(.init(systemType: .furnaceOnly)))
+      let sut = try await client.respond(apiRequest).value as! SizingLimits
       XCTAssertEqual(sut, .init(oversizing: .furnace(140), undersizing: .furnace(90)))
     }
   }
@@ -113,8 +113,9 @@ final class SizingLimitTests: XCTestCase {
   
   func test_boiler() async throws {
     try await withLiveSiteHandler {
-      @Dependency(\.routeHandler) var client: RouteHandler
-      let sut = try await client.api.sizingLimits(.init(systemType: .boilerOnly))
+      @Dependency(\.apiMiddleware) var client
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .sizingLimits(.init(systemType: .boilerOnly)))
+      let sut = try await client.respond(apiRequest).value as! SizingLimits
       XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
     }
   }

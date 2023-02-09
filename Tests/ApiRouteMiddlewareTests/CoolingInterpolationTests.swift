@@ -2,17 +2,15 @@ import XCTest
 import CustomDump
 import Dependencies
 import Models
-import RouteHandler
-import RouteHandlerLive
-import ValidationMiddlewareLive
-import TestSupport
+import ApiRouteMiddlewareLive
+import FirstPartyMocks
 
 final class CoolingInterpolationTests: XCTestCase {
   
   func test_noInterpolation() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client
+      @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest(
         capacity: .init(
@@ -28,10 +26,10 @@ final class CoolingInterpolationTests: XCTestCase {
         systemType: .default
       )
       
-      let serverRoute = ServerRoute.api(.init(
+      let serverRoute = ServerRoute.Api(
         isDebug: true,
         route: .interpolate(.cooling(.noInterpolation(request)))
-      ))
+      )
       
       let sut = try await client.respond(serverRoute).value as? InterpolationResponse
       XCTAssertNotNil(sut)
@@ -53,9 +51,9 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_oneWayOutdoor() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client
+      @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
+      let route = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
         aboveDesign: .init(
           cfm: 800,
           indoorTemperature: 75,
@@ -75,7 +73,9 @@ final class CoolingInterpolationTests: XCTestCase {
         systemType: .default
       )
       
-      let sut = try await client.api.interpolate(.cooling(.oneWayOutdoor(request)))
+      let request = ServerRoute.Api(isDebug: true, route: .interpolate(.cooling(.oneWayOutdoor(route))))
+      
+      let sut = try await client.respond(request).value as! InterpolationResponse
       XCTAssertEqual(
         sut,
         .cooling(.init(
@@ -94,7 +94,7 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_oneWayIndoor() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client
+      @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest(
         aboveDesign: .init(
@@ -116,7 +116,9 @@ final class CoolingInterpolationTests: XCTestCase {
         systemType: .default
       )
       
-      let sut = try await client.api.interpolate(.cooling(.oneWayIndoor(request)))
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.cooling(.oneWayIndoor(request))))
+      
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .cooling(.init(
@@ -135,7 +137,7 @@ final class CoolingInterpolationTests: XCTestCase {
   func test_twoWay() async throws {
     try await withLiveSiteHandler {
       
-      @Dependency(\.routeHandler) var client
+      @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest(
         aboveDesign: .init(
@@ -175,7 +177,9 @@ final class CoolingInterpolationTests: XCTestCase {
         systemType: .default
       )
       
-      let sut = try await client.api.interpolate(.cooling(.twoWay(request)))
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.cooling(.twoWay(request))))
+      
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .cooling(.init(

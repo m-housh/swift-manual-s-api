@@ -2,28 +2,10 @@ import Dependencies
 import Models
 import XCTestDynamicOverlay
 
-public struct RouteHandler {
-
-  public var api: ApiHandler
-
-  public init(api: ApiHandler) {
-    self.api = api
-  }
-
-  public func respond(_ request: ServerRoute) async throws -> AnyEncodable {
-
-    switch request {
-    case let .api(apiRequest):
-      return try await api.respond(apiRequest)
-    case .home:
-      return "\(request)".eraseToAnyEncodable()  // fix
-    }
-  }
-}
 public typealias HandlerType<Request, Response: Encodable> = @Sendable (Request) async throws ->
   Response
 
-public struct ApiHandler {
+public struct ApiRouteMiddleware {
 
   public var balancePoint:
     HandlerType<
@@ -95,7 +77,7 @@ public struct ApiHandler {
 
 // MARK: - Unimplemented
 
-extension ApiHandler {
+extension ApiRouteMiddleware: TestDependencyKey {
 
   public static let unimplemented = Self.init(
     balancePoint: XCTestDynamicOverlay.unimplemented(),
@@ -105,18 +87,13 @@ extension ApiHandler {
     sizingLimits: XCTestDynamicOverlay.unimplemented()
   )
 
-  public static let testValue: ApiHandler = .unimplemented
-}
-
-extension RouteHandler: TestDependencyKey {
-
-  public static let testValue: RouteHandler = .init(api: .unimplemented)
+  public static let testValue: ApiRouteMiddleware = .unimplemented
 }
 
 extension DependencyValues {
 
-  public var routeHandler: RouteHandler {
-    get { self[RouteHandler.self] }
-    set { self[RouteHandler.self] = newValue }
+  public var apiMiddleware: ApiRouteMiddleware {
+    get { self[ApiRouteMiddleware.self] }
+    set { self[ApiRouteMiddleware.self] = newValue }
   }
 }
