@@ -21,34 +21,39 @@ public struct RouteHandler {
   }
 }
 public typealias HandlerType<Request, Response: Encodable> = @Sendable (Request) async throws ->
-Response
+  Response
 
 public struct ApiHandler {
 
-  public var balancePoint: HandlerType<
-    ServerRoute.Api.Route.BalancePointRequest,
-    BalancePointResponse
-  >
-  
-  public var derating: HandlerType<
-    ServerRoute.Api.Route.DeratingRequest,
-    AdjustmentMultiplier
-  >
-  
-  public var interpolate: HandlerType<
-    ServerRoute.Api.Route.InterpolationRequest,
-    InterpolationResponse
-  >
-  
-  public var requiredKW: HandlerType<
-    ServerRoute.Api.Route.RequiredKWRequest,
-    RequiredKWResponse
-  >
-  
-  public var sizingLimits: HandlerType<
-    ServerRoute.Api.Route.SizingLimitRequest,
-    SizingLimits
-  >
+  public var balancePoint:
+    HandlerType<
+      ServerRoute.Api.Route.BalancePointRequest,
+      BalancePointResponse
+    >
+
+  public var derating:
+    HandlerType<
+      ServerRoute.Api.Route.DeratingRequest,
+      AdjustmentMultiplier
+    >
+
+  public var interpolate:
+    HandlerType<
+      ServerRoute.Api.Route.InterpolationRequest,
+      InterpolationResponse
+    >
+
+  public var requiredKW:
+    HandlerType<
+      ServerRoute.Api.Route.RequiredKWRequest,
+      RequiredKWResponse
+    >
+
+  public var sizingLimits:
+    HandlerType<
+      ServerRoute.Api.Route.SizingLimitRequest,
+      SizingLimits
+    >
 
   public init(
     balancePoint: @escaping HandlerType<

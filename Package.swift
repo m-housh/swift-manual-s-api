@@ -120,19 +120,19 @@ package.targets.append(contentsOf: [
     ]
   ),
   .target(
-      name: "RouteHandlerLive",
-      dependencies: [
-        "RouteHandler",
-      ]
-    ),
-    .testTarget(
-      name: "RouteHandlerTests",
-      dependencies: [
-        "RouteHandlerLive",
-        "ValidationMiddlewareLive",
-        "TestSupport",
-        .product(name: "CustomDump", package: "swift-custom-dump"),
-      ]
-    ),
+    name: "RouteHandlerLive",
+    dependencies: [
+      "RouteHandler"
+    ]
+  ),
+  .testTarget(
+    name: "RouteHandlerTests",
+    dependencies: [
+      "RouteHandlerLive",
+      "ValidationMiddlewareLive",
+      "TestSupport",
+      .product(name: "CustomDump", package: "swift-custom-dump"),
+    ]
+  ),
 
 ])
