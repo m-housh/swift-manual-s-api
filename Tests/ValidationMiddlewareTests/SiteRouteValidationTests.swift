@@ -275,7 +275,7 @@ final class SiteRouteValidationTests: XCTestCase {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest.zero
-      request.altitudeDeratings = .heating(0)
+      request.altitudeDeratings = .heating(multiplier: 0)
       let expected1 = """
       Furnace Request Errors:
       altitudeDeratings: Heating adjustment multiplier should be greater than 0.
@@ -302,7 +302,7 @@ final class SiteRouteValidationTests: XCTestCase {
       @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest.zero
       request.heatPumpCapacity = 0
-      request.altitudeDeratings = .heating(0)
+      request.altitudeDeratings = .heating(multiplier: 0)
       let expected1 = """
       Electric Request Errors:
       heatPumpCapacity: Heat pump capacity should be greater than 0.
@@ -328,7 +328,7 @@ final class SiteRouteValidationTests: XCTestCase {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
       var request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest.zero
-      request.altitudeDeratings = .heating(0)
+      request.altitudeDeratings = .heating(multiplier: 0)
       let expected1 = """
       Heat Pump Request Errors:
       houseLoad.heating: Heating load should be greater than 0.

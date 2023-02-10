@@ -10,7 +10,7 @@ public enum ServerRoute: Equatable, Sendable {
 extension ServerRoute {
   public enum Documentation: Equatable, Sendable {
     case home
-    case route(Route)
+    case api(Route)
 
     public enum Route: Equatable, Sendable {
       case balancePoint
@@ -290,10 +290,74 @@ extension ServerRoute {
   }
 }
 
+// MARK: - Helpers
+
 /// A helper protocol to ensure that cooling interpolation requests carry these values.
 public protocol CoolingInterpolationRequest: Codable, Equatable, Sendable {
   var designInfo: DesignInfo { get }
   var houseLoad: HouseLoad { get }
   var manufacturerAdjustments: AdjustmentMultiplier? { get }
   var systemType: SystemType { get }
+}
+
+/// A helper protocol to return a route key to be used in routers.
+public protocol RouteKey: CaseIterable {
+  var key: String { get }
+}
+
+extension RawRepresentable where RawValue == String, Self: RouteKey {
+  public var key: String { rawValue }
+}
+
+extension ServerRoute.Documentation.Route.Interpolation.Cooling: RouteKey {}
+extension ServerRoute.Documentation.Route.Interpolation.Heating: RouteKey {}
+
+extension ServerRoute.Documentation.Route.Interpolation {
+  public enum Key: String, RouteKey {
+    case cooling
+    case heating
+  }
+}
+
+extension ServerRoute.Documentation.Route {
+  public enum Key: String, RouteKey {
+    case balancePoint
+    case derating
+    case interpolate
+    case requiredKW
+    case sizingLimits
+  }
+}
+
+extension ServerRoute.Documentation {
+  public enum Key: String, RouteKey {
+    case home
+    case api
+
+    public var key: String {
+      switch self {
+      case .home:
+        return "/"
+      case .api:
+        return rawValue
+      }
+    }
+  }
+}
+
+extension ServerRoute {
+  public enum Key: String, RouteKey {
+    case home
+    case documentation
+    case api
+
+    public var key: String {
+      switch self {
+      case .home:
+        return "/"
+      case .api, .documentation:
+        return rawValue
+      }
+    }
+  }
 }

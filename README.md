@@ -51,6 +51,7 @@ make SERVER_PORT=8000 run-server-in-docker
 This project relys on several other open-source packages, including (but not limited to):
 
 - [apple/swift-log](https://github.com/apple/swift-log)
+- [m-housh/swift-validations](https://github.com/m-housh/swift-validations)
 - [pointfreeco/swift-dependencies](https://github.com/pointfreeco/swift-dependencies)
 - [pointfreeco/swift-url-routing](https://github.com/pointfreeco/swift-url-routing)
 - [pointfreeco/swift-html](https://github.com/pointfreeco/swift-url-routing)

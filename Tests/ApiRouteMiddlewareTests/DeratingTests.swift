@@ -40,8 +40,8 @@ final class DeratingClientTests: XCTestCase {
         )
         let sut = try await client.respond(request1).value as! AdjustmentMultiplier
         let sut2 = try await client.respond(request2).value as! AdjustmentMultiplier
-        XCTAssertEqual(sut, .heating(expected[iteration]))
-        XCTAssertEqual(sut2, .heating(expected[iteration]))
+        XCTAssertEqual(sut, .heating(multiplier: expected[iteration]))
+        XCTAssertEqual(sut2, .heating(multiplier: expected[iteration]))
         iteration += 1
         elevation += 1000
       }
@@ -51,7 +51,7 @@ final class DeratingClientTests: XCTestCase {
         route: .derating(.init(elevation: -1, systemType: .furnaceOnly))
       )
       let belowZero = try await client.respond(belowZeroRequest).value as! AdjustmentMultiplier
-      XCTAssertEqual(belowZero, .heating(1))
+      XCTAssertEqual(belowZero, .heating(multiplier: 1))
     }
   }
   

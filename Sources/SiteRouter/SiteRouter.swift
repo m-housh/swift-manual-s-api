@@ -3,8 +3,6 @@ import Foundation
 import Models
 import URLRouting
 
-// TODO: Add documentation routes.
-
 public struct SiteRouter: ParserPrinter {
 
   public var encoder: JSONEncoder
@@ -24,12 +22,12 @@ public struct SiteRouter: ParserPrinter {
       Route(.case(ServerRoute.home))
 
       Route(.case(ServerRoute.documentation)) {
-        Path { "documentation" }
+        Path { ServerRoute.Key.documentation.key }
         DocumentRouter()
       }
 
       Route(.case(ServerRoute.api)) {
-        Path { "api" }
+        Path { ServerRoute.Key.api.key }
         Parse(.memberwise(ServerRoute.Api.init(isDebug:route:))) {
           Headers {
             Field("X-DEBUG", default: false) { Bool.parser() }
@@ -80,3 +78,8 @@ private let jsonEncoder: JSONEncoder = {
   encoder.outputFormatting = .sortedKeys
   return encoder
 }()
+
+typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling
+typealias HeatingKey = ServerRoute.Documentation.Route.Interpolation.Heating
+typealias InterpolationKey = ServerRoute.Documentation.Route.Interpolation.Key
+typealias RouteKey = ServerRoute.Documentation.Route.Key

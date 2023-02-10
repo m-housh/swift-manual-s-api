@@ -1,42 +1,27 @@
-import ApiRouteMiddleware
 import Dependencies
-import DocumentMiddleware
 import Html
-import Logging
-import LoggingDependency
 import Models
-import ValidationMiddleware
 
+/// Handle a server route, responding with either an html node or an encodable response.
+///
 public struct SiteMiddleware {
 
-  @Dependency(\.logger) var logger
-  @Dependency(\.apiMiddleware) var apiMiddleware
-  @Dependency(\.documentMiddleware) var documentMiddleware
-  @Dependency(\.validationMiddleware) var validations
+  /// Handle a server route, responding with either an html node or an encodable response.
+  ///
+  public var respond: (ServerRoute) async throws -> Either<Node, AnyEncodable>
 
-  public func respond(route: ServerRoute) async throws -> Either<Node, AnyEncodable> {
-    try await validations.validate(route)
-    switch route {
-    case let .api(api):
-      logger.debug(
-        """
-        Handling api route:
-        Route: \(api.route)
-        """)
-      return try await .right(apiMiddleware.respond(api).eraseToAnyEncodable())
-    case .documentation(_):
-      // fix
-      return try await .left(documentMiddleware.respond(route: route))
-    case .home:
-      return try await .left(documentMiddleware.respond(route: route))  // fix.
-    }
+  public init(
+    respond: @escaping (ServerRoute) async throws -> Either<Node, AnyEncodable>
+  ) {
+    self.respond = respond
   }
+
 }
 
-extension SiteMiddleware: DependencyKey {
+extension SiteMiddleware: TestDependencyKey {
 
-  public static var liveValue: SiteMiddleware {
-    .init()
+  public static var testValue: SiteMiddleware {
+    .init(respond: unimplemented("\(Self.self).respond"))
   }
 
 }
@@ -49,10 +34,13 @@ extension DependencyValues {
   }
 }
 
+/// A helper type that holds  onto either a left or right value.
+///
 public enum Either<Left, Right> {
   case left(Left)
   case right(Right)
 
+  /// Access the left value.
   public var left: Left? {
     switch self {
     case let .left(left):
@@ -62,6 +50,7 @@ public enum Either<Left, Right> {
     }
   }
 
+  /// Access the right value.
   public var right: Right? {
     switch self {
     case .left:

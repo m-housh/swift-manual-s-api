@@ -2,78 +2,78 @@ import Models
 import URLRouting
 
 // TODO: Move
-enum InterpolationKey: String {
-  case cooling
-  case heating
-}
-
-enum RouteKey: String {
-  case balancePoint
-  case derating
-  case interpolate
-  case requiredKW
-  case sizingLimits
-}
+//enum InterpolationKey: String {
+//  case cooling
+//  case heating
+//}
+//
+//enum RouteKey: String {
+//  case balancePoint
+//  case derating
+//  case interpolate
+//  case requiredKW
+//  case sizingLimits
+//}
 
 struct DocumentRouter: ParserPrinter {
 
-  typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling
-  typealias HeatingKey = ServerRoute.Documentation.Route.Interpolation.Heating
+  //  typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling
+  //  typealias HeatingKey = ServerRoute.Documentation.Route.Interpolation.Heating
 
   @ParserBuilder
   var body: AnyParserPrinter<URLRequestData, ServerRoute.Documentation> {
     let coolingInterpolationRouter = OneOf {
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Cooling.noInterpolation)) {
         Method.get
-        Path { CoolingKey.noInterpolation.rawValue }
+        Path { CoolingKey.noInterpolation.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayIndoor)) {
         Method.get
-        Path { CoolingKey.oneWayIndoor.rawValue }
+        Path { CoolingKey.oneWayIndoor.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayOutdoor)) {
         Method.get
-        Path { CoolingKey.oneWayOutdoor.rawValue }
+        Path { CoolingKey.oneWayOutdoor.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Cooling.twoWay)) {
         Method.get
-        Path { CoolingKey.twoWay.rawValue }
+        Path { CoolingKey.twoWay.key }
       }
     }
 
     let heatingInterpolationRouter = OneOf {
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Heating.boiler)) {
         Method.get
-        Path { HeatingKey.boiler.rawValue }
+        Path { HeatingKey.boiler.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Heating.electric)) {
         Method.get
-        Path { HeatingKey.electric.rawValue }
+        Path { HeatingKey.electric.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Heating.furnace)) {
         Method.get
-        Path { HeatingKey.furnace.rawValue }
+        Path { HeatingKey.furnace.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.Heating.heatPump)) {
         Method.get
-        Path { HeatingKey.heatPump.rawValue }
+        Path { HeatingKey.heatPump.key }
       }
     }
 
     let interpolationRouter = OneOf {
       Route(.case(ServerRoute.Documentation.Route.Interpolation.cooling)) {
-        Path { InterpolationKey.cooling.rawValue }
+        Path { InterpolationKey.cooling.key }
         coolingInterpolationRouter
       }
 
       Route(.case(ServerRoute.Documentation.Route.Interpolation.heating)) {
-        Path { InterpolationKey.heating.rawValue }
+        Path { InterpolationKey.heating.key }
         heatingInterpolationRouter
       }
     }
@@ -81,35 +81,35 @@ struct DocumentRouter: ParserPrinter {
     let routeRouter = OneOf {
       Route(.case(ServerRoute.Documentation.Route.balancePoint)) {
         Method.get
-        Path { RouteKey.balancePoint.rawValue }
+        Path { RouteKey.balancePoint.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.derating)) {
         Method.get
-        Path { RouteKey.derating.rawValue }
+        Path { RouteKey.derating.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.interpolate)) {
-        Path { RouteKey.interpolate.rawValue }
+        Path { RouteKey.interpolate.key }
         interpolationRouter
       }
 
       Route(.case(ServerRoute.Documentation.Route.requiredKW)) {
         Method.get
-        Path { RouteKey.requiredKW.rawValue }
+        Path { RouteKey.requiredKW.key }
       }
 
       Route(.case(ServerRoute.Documentation.Route.sizingLimits)) {
         Method.get
-        Path { RouteKey.sizingLimits.rawValue }
+        Path { RouteKey.sizingLimits.key }
       }
     }
 
     OneOf {
       Route(.case(ServerRoute.Documentation.home))
 
-      Route(.case(ServerRoute.Documentation.route)) {
-        Path { "api" }
+      Route(.case(ServerRoute.Documentation.api)) {
+        Path { ServerRoute.Documentation.Key.api.key }
         routeRouter
       }
     }

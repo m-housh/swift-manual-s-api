@@ -20,9 +20,9 @@ extension SystemType {
         heating: totalDryDerating(elevation: elevation)
       )
     case .furnaceOnly:
-      return .heating(furnaceDerating(elevation: elevation))
+      return .heating(multiplier: furnaceDerating(elevation: elevation))
     case .boilerOnly:
-      return .heating(furnaceDerating(elevation: elevation))
+      return .heating(multiplier: furnaceDerating(elevation: elevation))
     }
   }
 

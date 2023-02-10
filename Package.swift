@@ -8,6 +8,7 @@ var package = Package(
   name: "swift-manual-s-api",
   platforms: [.macOS(.v12)],
   products: [
+    .library(name: "FirstPartyMocks", targets: ["FirstPartyMocks"]),
     .library(name: "Models", targets: ["Models"]),
     .library(name: "SiteRouter", targets: ["SiteRouter"]),
     .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
@@ -26,6 +27,12 @@ var package = Package(
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
   ],
   targets: [
+    .target(
+      name: "FirstPartyMocks",
+      dependencies: [
+        "Models"
+      ]
+    ),
     .target(
       name: "Models",
       dependencies: []
@@ -68,13 +75,6 @@ var package = Package(
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
-    .target(
-      name: "FirstPartyMocks",
-      dependencies: [
-        "Models"
-      ]
-    ),
-
   ]
 )
 
@@ -82,8 +82,21 @@ var package = Package(
 package.dependencies.append(contentsOf: [
   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
   .package(url: "https://github.com/pointfreeco/vapor-routing.git", from: "0.1.0"),
+  .package(url: "https://github.com/pointfreeco/swift-html.git", from: "0.4.0"),
   .package(url: "https://github.com/pointfreeco/swift-html-vapor.git", from: "0.4.0"),
   .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
+])
+
+package.products.append(contentsOf: [
+  .library(name: "ApiRouteMiddleware", targets: ["ApiRouteMiddleware"]),
+  .library(name: "ApiRouteMiddlewareLive", targets: ["ApiRouteMiddlewareLive"]),
+  .library(name: "DocumentMiddleware", targets: ["DocumentMiddleware"]),
+  .library(name: "DocumentMiddlewareLive", targets: ["DocumentMiddlewareLive"]),
+  .library(name: "LoggingDependency", targets: ["LoggingDependency"]),
+  .executable(name: "server", targets: ["server"]),
+  .library(name: "ServerConfig", targets: ["ServerConfig"]),
+  .library(name: "SiteMiddleware", targets: ["SiteMiddleware"]),
+  .library(name: "SiteMiddlewareLive", targets: ["SiteMiddlewareLive"]),
 ])
 
 package.targets.append(contentsOf: [
@@ -113,9 +126,17 @@ package.targets.append(contentsOf: [
     name: "DocumentMiddleware",
     dependencies: [
       "Models",
-      "SiteRouter",
       .product(name: "Dependencies", package: "swift-dependencies"),
-      .product(name: "HtmlVaporSupport", package: "swift-html-vapor"),
+      .product(name: "Html", package: "swift-html"),
+      .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
+    ]
+  ),
+  .target(
+    name: "DocumentMiddlewareLive",
+    dependencies: [
+      "Models",
+      "SiteRouter",
+      "DocumentMiddleware",
     ]
   ),
   .target(
@@ -133,11 +154,13 @@ package.targets.append(contentsOf: [
     name: "ServerConfig",
     dependencies: [
       "ApiRouteMiddlewareLive",
+      "DocumentMiddlewareLive",
       "LoggingDependency",
       "Models",
-      "SiteMiddleware",
+      "SiteMiddlewareLive",
       "SiteRouter",
       "ValidationMiddlewareLive",
+      .product(name: "HtmlVaporSupport", package: "swift-html-vapor"),
       .product(name: "Vapor", package: "vapor"),
       .product(name: "VaporRouting", package: "vapor-routing"),
     ],
@@ -151,11 +174,18 @@ package.targets.append(contentsOf: [
   .target(
     name: "SiteMiddleware",
     dependencies: [
-      "ApiRouteMiddleware",
-      "DocumentMiddleware",
-      "LoggingDependency",
-      "ValidationMiddleware",
+      "Models",
+      .product(name: "Dependencies", package: "swift-dependencies"),
+      .product(name: "Html", package: "swift-html"),
     ]
   ),
+  .target(
+    name: "SiteMiddlewareLive",
+    dependencies: [
+      "SiteMiddleware",
+      .product(name: "HtmlVaporSupport", package: "swift-html-vapor"),
+      .product(name: "Vapor", package: "vapor"),
 
+    ]
+  ),
 ])

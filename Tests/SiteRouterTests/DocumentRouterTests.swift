@@ -22,7 +22,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.requiredKW))
+      .documentation(.api(.requiredKW))
     )
   }
   
@@ -35,7 +35,7 @@ final class DocumentRouterTests: XCTestCase {
 
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.derating))
+      .documentation(.api(.derating))
     )
   }
   
@@ -48,7 +48,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.sizingLimits))
+      .documentation(.api(.sizingLimits))
     )
   }
   
@@ -60,7 +60,7 @@ final class DocumentRouterTests: XCTestCase {
     let route = try router.match(request: request)
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.cooling(.noInterpolation))))
+      .documentation(.api(.interpolate(.cooling(.noInterpolation))))
     )
   }
   
@@ -73,7 +73,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.cooling(.oneWayIndoor))))
+      .documentation(.api(.interpolate(.cooling(.oneWayIndoor))))
     )
   }
   
@@ -86,7 +86,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.cooling(.oneWayOutdoor))))
+      .documentation(.api(.interpolate(.cooling(.oneWayOutdoor))))
     )
     
   }
@@ -100,7 +100,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.cooling(.twoWay))))
+      .documentation(.api(.interpolate(.cooling(.twoWay))))
     )
   }
   
@@ -113,7 +113,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.heating(.boiler))))
+      .documentation(.api(.interpolate(.heating(.boiler))))
     )
   }
   
@@ -126,7 +126,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.heating(.furnace))))
+      .documentation(.api(.interpolate(.heating(.furnace))))
     )
   }
   
@@ -139,7 +139,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.heating(.electric))))
+      .documentation(.api(.interpolate(.heating(.electric))))
     )
   }
   
@@ -152,7 +152,7 @@ final class DocumentRouterTests: XCTestCase {
     
     XCTAssertNoDifference(
       route,
-      .documentation(.route(.interpolate(.heating(.heatPump))))
+      .documentation(.api(.interpolate(.heating(.heatPump))))
     )
   }
 }

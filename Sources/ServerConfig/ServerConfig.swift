@@ -1,31 +1,23 @@
-import ApiRouteMiddlewareLive
 import Dependencies
-import HtmlVaporSupport  // remove and have site middleware handle this.
 import Logging
 import LoggingDependency
 import Models
-import SiteMiddleware
+import SiteMiddlewareLive
 import SiteRouter
-import ValidationMiddlewareLive
 import Vapor
 import VaporRouting
 
+/// Configure the vapor application with the dependencies, middleware, routes, etc.
+///
+/// - Parameters:
+///    - app: The vapor application to configure.
 public func configure(_ app: Vapor.Application) async throws {
 
-  await withDependencies {
-    $0.apiMiddleware = .liveValue
-    $0.logger = app.logger
-    $0.siteRouter = .liveValue
-    $0.validationMiddleware = .liveValue
-  } operation: {
+  // configure the vapor middleware(s)
+  await configureVaporMiddleware(app)
 
-    // configure the vapor middleware(s)
-    await configureVaporMiddleware(app)
-
-    // configure site router.
-    await configureSiteRouter(app)
-
-  }
+  // configure site router.
+  await configureSiteRouter(app)
 
 }
 
@@ -63,32 +55,4 @@ private func siteHandler(
 ) async throws -> AsyncResponseEncodable {
   @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
   return try await siteMiddleware.respond(route: route)
-}
-
-extension AnyEncodable: AsyncResponseEncodable {
-  public func encodeResponse(for request: Vapor.Request) async throws -> Vapor.Response {
-    let response = Response()
-    response.headers.contentType = .json
-    response.body = Response.Body(data: try JSONEncoder().encode(self))
-    return response
-  }
-}
-
-extension Node: AsyncResponseEncodable {
-  public func encodeResponse(for request: Request) async throws -> Response {
-    try await encodeResponse(for: request).get()
-  }
-}
-
-extension Either: AsyncResponseEncodable
-where Left: AsyncResponseEncodable, Right: AsyncResponseEncodable {
-
-  public func encodeResponse(for request: Request) async throws -> Response {
-    switch self {
-    case let .left(left):
-      return try await left.encodeResponse(for: request)
-    case let .right(right):
-      return try await right.encodeResponse(for: request)
-    }
-  }
 }
