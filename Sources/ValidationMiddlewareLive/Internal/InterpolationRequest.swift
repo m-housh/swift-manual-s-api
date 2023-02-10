@@ -3,6 +3,7 @@ import Validations
 
 extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
 
+  @inlinable
   public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest.Cooling) async throws {
     switch value {
     case let .noInterpolation(noInterpolation):
@@ -19,6 +20,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating: AsyncValidatable {
 
+  @inlinable
   public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest.Heating) async throws {
     switch value {
     case let .boiler(boiler):
@@ -35,6 +37,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating: AsyncValidatable {
 
 extension ServerRoute.Api.Route.InterpolationRequest: AsyncValidatable {
 
+  @inlinable
   public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest) async throws {
     switch value {
     case let .cooling(cooling):

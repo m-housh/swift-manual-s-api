@@ -109,6 +109,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: As
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest: AsyncValidatable {
 
+  @inlinable
   public var body: some AsyncValidation<Self> {
     AsyncValidator.accumulating {
       AsyncValidator.validate(

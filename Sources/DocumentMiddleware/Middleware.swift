@@ -5,8 +5,17 @@ import Models
 public struct DocumentMiddleware {
 
   public func respond(route: ServerRoute) async throws -> Node {
-    // Fix me.
-    return layout(title: "Home", content: home)
+    switch route {
+    case .documentation(_):
+      // Fix me.
+      return layout(title: "Documentation", content: documentationHome())
+    case .home:
+      return layout(title: "Home", content: home())
+    case .api:
+      // This should be an error.
+      return layout(title: "Home", content: home())
+
+    }
   }
 }
 

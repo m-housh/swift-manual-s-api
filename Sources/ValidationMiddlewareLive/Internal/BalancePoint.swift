@@ -3,6 +3,7 @@ import Validations
 
 extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
 
+  @inlinable
   public var body: some AsyncValidation<Self> {
     AsyncValidator.accumulating {
       AsyncValidator.greaterThan(\.heatLoss, 0)
@@ -21,6 +22,8 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
 }
 
 extension ServerRoute.Api.Route.BalancePointRequest: AsyncValidatable {
+
+  @inlinable
   public func validate(_ value: ServerRoute.Api.Route.BalancePointRequest) async throws {
     switch value {
     case let .thermal(thermal):

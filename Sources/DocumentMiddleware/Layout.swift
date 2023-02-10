@@ -5,13 +5,19 @@ func layout(title: String, content: Node) -> Node {
     .doctype,
     .html(
       .head(
+        .meta(name: "viewport", content: "width=device-width, initial-scale=1"),
+
         .title(title),
 
         // Bootstrap style-sheet
+        //        .link(attributes: [
+        //          .rel(.stylesheet),
+        //          .href("https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css"),
         .link(attributes: [
           .rel(.stylesheet),
-          .href("https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css"),
+          .href("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"),
         ])
+
       ),
       .body(
         header,
@@ -19,7 +25,8 @@ func layout(title: String, content: Node) -> Node {
         footer,
         .script(attributes: [
           .async(true),
-          .src("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"),
+          .src(
+            "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"),
         ])
       )
     ),

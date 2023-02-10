@@ -12,7 +12,6 @@ final class BalancePointTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       let request = ServerRoute.Api.Route.balancePoint(.thermal(.init(designTemperature: 5, heatLoss: 49_667, capacity: .mock)))
       let expected = BalancePointResponse(balancePoint: 38.5)
-      let serverRoute = ServerRoute.api(.init(isDebug: true, route: request))
       let sut2 = try await client.respond(.init(isDebug: true, route: request))
       XCTAssertNotNil(sut2.value as? BalancePointResponse)
       XCTAssertNoDifference(sut2.value as! BalancePointResponse, expected)

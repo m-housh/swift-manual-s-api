@@ -6,12 +6,13 @@ DOCKER_PLATFORM ?= linux/arm64
 DOCKER_IMAGE_NAME ?= swift-manual-s-server
 SERVER_PORT ?= 8080
 SWIFT_VERSION ?= 5.7
+LOG_LEVEL ?= info
 
 default: test-swift
 
 test-swift:
 	swift test
-	
+
 test-linux:
 	docker run --rm \
 		--volume "$(PWD):$(PWD)" \
@@ -27,7 +28,7 @@ test-library:
 			-scheme swift-manual-s-api-Package \
 			-destination platform="$$platform" || exit 1; \
 	done;
-	
+
 test-all: test-linux
 	$(MAKE) CONFIG=debug test-library
 	$(MAKE) CONFIG=release test-library
@@ -39,11 +40,14 @@ format:
 		--recursive \
 		./Package.swift \
 		./Sources
-		
+
 build-server:
 	docker build -t $(DOCKER_IMAGE_NAME):latest .
-	
-run-server: build-server
+
+run-server:
+	LOG_LEVEL=$(LOG_LEVEL) swift run server
+
+run-server-in-docker: build-server
 	docker run -it --rm -p "$(SERVER_PORT):8080" $(DOCKER_IMAGE_NAME):latest
 
 .PHONY: format test-swift test-linux test-library

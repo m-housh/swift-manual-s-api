@@ -1,7 +1,8 @@
 import ApiRouteMiddlewareLive
 import Dependencies
-import DocumentMiddleware  // remove and have site middleware handle this.
 import HtmlVaporSupport  // remove and have site middleware handle this.
+import Logging
+import LoggingDependency
 import Models
 import SiteMiddleware
 import SiteRouter
@@ -9,24 +10,31 @@ import ValidationMiddlewareLive
 import Vapor
 import VaporRouting
 
-public func configure(_ app: Vapor.Application) throws {
+public func configure(_ app: Vapor.Application) async throws {
 
-  withDependencies { dependencies in
-    dependencies.validationMiddleware = .liveValue
-    dependencies.apiMiddleware = .liveValue
+  await withDependencies {
+    $0.apiMiddleware = .liveValue
+    $0.logger = app.logger
+    $0.siteRouter = .liveValue
+    $0.validationMiddleware = .liveValue
   } operation: {
 
     // configure the vapor middleware(s)
-    configureVaporMiddleware(app)
+    await configureVaporMiddleware(app)
 
-    // register the router and site handler.
-    let router = SiteRouter.liveValue
-    app.mount(router, use: siteHandler(request:route:))
+    // configure site router.
+    await configureSiteRouter(app)
+
   }
 
 }
 
-private func configureVaporMiddleware(_ app: Vapor.Application) {
+// Configure the vapor middleware.
+private func configureVaporMiddleware(_ app: Vapor.Application) async {
+  @Dependency(\.logger) var logger: Logger
+
+  logger.info("Bootstrapping vapor middleware.")
+
   let corsConfiguration = CORSMiddleware.Configuration(
     allowedOrigin: .all,
     allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
@@ -40,11 +48,20 @@ private func configureVaporMiddleware(_ app: Vapor.Application) {
   app.middleware.use(cors, at: .beginning)
 }
 
+// Register the site router with the vapor application.
+private func configureSiteRouter(_ app: Vapor.Application) async {
+  @Dependency(\.logger) var logger: Logger
+  @Dependency(\.siteRouter) var router: SiteRouter
+
+  logger.info("Bootstrapping site router.")
+  app.mount(router, use: siteHandler(request:route:))
+}
+
 private func siteHandler(
   request: Request,
   route: ServerRoute
 ) async throws -> AsyncResponseEncodable {
-  @Dependency(\.siteMiddleware) var siteMiddleware
+  @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
   return try await siteMiddleware.respond(route: route)
 }
 

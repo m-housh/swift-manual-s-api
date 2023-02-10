@@ -1,8 +1,41 @@
+import Dependencies
 import Html
+import SiteRouter
 
-let home: Node = [
-  .p(
-    """
-    Add some content here.
-    """)
-]
+func home() -> Node {
+  @Dependency(\.siteRouter) var siteRouter: SiteRouter
+
+  return [
+    .h1("Swift Manual-S API"),
+    .p(
+      """
+      Add some content here.
+      """),
+    .a(
+      attributes: [
+        .href(siteRouter.path(for: .documentation(.home)))
+      ],
+      .text("documentation")
+    ),
+  ]
+}
+
+func documentationHome() -> Node {
+
+  @Dependency(\.siteRouter) var siteRouter: SiteRouter
+
+  return [
+    .h1("Documentation"),
+    .p(
+      """
+      Add some content here.
+      """),
+    .a(
+      attributes: [
+        .href(siteRouter.path(for: .home))
+      ],
+      .text("home")
+    ),
+  ]
+
+}

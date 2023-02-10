@@ -2,21 +2,31 @@ import ApiRouteMiddleware
 import Dependencies
 import DocumentMiddleware
 import Html
+import Logging
+import LoggingDependency
 import Models
 import ValidationMiddleware
 
 public struct SiteMiddleware {
 
-  @Dependency(\.documentMiddleware) var documentMiddleware
+  @Dependency(\.logger) var logger
   @Dependency(\.apiMiddleware) var apiMiddleware
+  @Dependency(\.documentMiddleware) var documentMiddleware
   @Dependency(\.validationMiddleware) var validations
 
   public func respond(route: ServerRoute) async throws -> Either<Node, AnyEncodable> {
     try await validations.validate(route)
-    // TODO: make route handler only respond to api routes.
     switch route {
     case let .api(api):
+      logger.debug(
+        """
+        Handling api route:
+        Route: \(api.route)
+        """)
       return try await .right(apiMiddleware.respond(api).eraseToAnyEncodable())
+    case .documentation(_):
+      // fix
+      return try await .left(documentMiddleware.respond(route: route))
     case .home:
       return try await .left(documentMiddleware.respond(route: route))  // fix.
     }

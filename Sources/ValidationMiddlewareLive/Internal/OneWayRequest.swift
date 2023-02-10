@@ -1,34 +1,14 @@
 import Models
 import Validations
 
+@usableFromInline
 enum OneWayRequestValidation: AsyncValidatable {
 
+  @usableFromInline
   typealias OneWayRequest = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest
+
   case indoor(OneWayRequest)
   case outdoor(OneWayRequest)
-
-  private var baseValidator: AsyncValidator<OneWayRequest> {
-    AsyncValidator.accumulating {
-      AsyncValidator.validate(
-        \OneWayRequest.aboveDesign,
-        with: CoolingCapacityEnvelopeValidation(errorLabel: ErrorLabel.aboveDesign)
-      )
-      .errorLabel(label: "Above Design")
-
-      AsyncValidator.validate(
-        \OneWayRequest.belowDesign,
-        with: CoolingCapacityEnvelopeValidation(errorLabel: ErrorLabel.belowDesign)
-      )
-      .errorLabel(label: "Below Design")
-
-      AsyncValidator.equals(\OneWayRequest.aboveDesign.cfm, \OneWayRequest.belowDesign.cfm)
-        .mapError(
-          nested: ErrorLabel.parenthesize(ErrorLabel.aboveDesign, ErrorLabel.belowDesign),
-          ErrorLabel.cfm,
-          summary: "Above design cfm should equal below design cfm."
-        )
-    }
-  }
 
   @usableFromInline
   func aboveDesign(

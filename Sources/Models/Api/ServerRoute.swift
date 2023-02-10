@@ -1,12 +1,50 @@
 import Foundation
 
-public enum ServerRoute: Equatable {
+public enum ServerRoute: Equatable, Sendable {
   case api(Api)
+  case documentation(Documentation)
   case home
 }
 
+// MARK: - Documentation Routes
 extension ServerRoute {
-  public struct Api: Equatable {
+  public enum Documentation: Equatable, Sendable {
+    case home
+    case route(Route)
+
+    public enum Route: Equatable, Sendable {
+      case balancePoint
+      case derating
+      case interpolate(Interpolation)
+      case requiredKW
+      case sizingLimits
+
+      public enum Interpolation: Equatable, Sendable {
+
+        case cooling(Cooling)
+        case heating(Heating)
+
+        public enum Cooling: String, Equatable, Sendable {
+          case noInterpolation
+          case oneWayIndoor
+          case oneWayOutdoor
+          case twoWay
+        }
+
+        public enum Heating: String, Equatable, Sendable {
+          case boiler
+          case electric
+          case furnace
+          case heatPump
+        }
+      }
+    }
+  }
+}
+
+// MARK: - Api Routes
+extension ServerRoute {
+  public struct Api: Equatable, Sendable {
     public let isDebug: Bool
     public let route: Route
 
@@ -18,7 +56,7 @@ extension ServerRoute {
       self.route = route
     }
 
-    public enum Route: Equatable {
+    public enum Route: Equatable, Sendable {
       case balancePoint(BalancePointRequest)
       case derating(DeratingRequest)
       case interpolate(InterpolationRequest)
@@ -52,10 +90,10 @@ extension ServerRoute {
       }
 
       public struct RequiredKWRequest: Codable, Equatable, Sendable {
-        public var capacityAtDesign: Double
+        public var capacityAtDesign: Double?
         public var heatLoss: Double
 
-        public init(capacityAtDesign: Double, heatLoss: Double) {
+        public init(capacityAtDesign: Double? = nil, heatLoss: Double) {
           self.capacityAtDesign = capacityAtDesign
           self.heatLoss = heatLoss
         }
