@@ -1,13 +1,21 @@
+/// Represents system types for manual-s interpolations.
 public enum SystemType: Codable, Equatable, Sendable {
 
+  /// Represents air-conditioner or heat-pump system types.
   case airToAir(type: EquipmentType, compressor: CompressorType, climate: ClimateType)
+  
+  /// Represents a gas / propane / oil furnace system type.
   case furnaceOnly
+  
+  /// Represents a gas / propane / oil boiler system type.
   case boilerOnly
 
+  /// A default system type.
   public static var `default`: Self {
     .airToAir(type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad)
   }
 
+  /// Represents a human readable representation of the system type.
   public var label: String {
     switch self {
     case .furnaceOnly:
@@ -19,6 +27,7 @@ public enum SystemType: Codable, Equatable, Sendable {
     }
   }
 
+  /// Represents a ``SystemType/Tag`` for the given system type.
   public var tag: Tag { .init(systemType: self) }
 
 }

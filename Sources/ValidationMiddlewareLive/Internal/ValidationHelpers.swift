@@ -1,4 +1,5 @@
 import Foundation
+import Models
 import Validations
 
 extension AsyncValidation {
@@ -40,7 +41,7 @@ extension AsyncValidation {
     label: any CustomStringConvertible,
     summary: String
   ) -> some AsyncValidation<Value> {
-    self.mapError(_ValidationError(label: label, summary: summary))
+    self.mapError(ValidationError(label: label, summary: summary))
   }
 }
 
@@ -51,27 +52,3 @@ extension RawRepresentable where RawValue == String, Self: CustomStringConvertib
 
 }
 
-public struct _ValidationError: Error, CustomDebugStringConvertible, CustomStringConvertible,
-  LocalizedError
-{
-
-  @usableFromInline
-  let label: any CustomStringConvertible
-
-  @usableFromInline
-  let summary: String
-
-  @usableFromInline
-  init(label: any CustomStringConvertible, summary: String) {
-    self.label = label
-    self.summary = summary
-  }
-
-  public var debugDescription: String {
-    "\(label.description): \(summary)"
-  }
-
-  public var description: String { debugDescription }
-
-  public var errorDescription: String? { debugDescription }
-}

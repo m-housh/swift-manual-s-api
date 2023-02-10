@@ -7,6 +7,11 @@ public struct HouseLoad: Codable, Equatable, Sendable {
   /// The cooling load / gain of the house.
   public var cooling: CoolingLoad
 
+  /// Create a new house load container.
+  ///
+  /// - Parameters:
+  ///   - heating: The heating loss / load
+  ///   - cooling: The cooling gains / load.
   public init(
     heating: Int = .zero,
     cooling: CoolingLoad = .zero
@@ -20,7 +25,9 @@ public struct HouseLoad: Codable, Equatable, Sendable {
 extension HouseLoad {
 
   public static let zero = Self()
+  
 
+  /// Represents the cooling gains / load for a house.
   public struct CoolingLoad: Codable, Equatable, Sendable {
     /// The total cooling load / gain.
     public var total: Int
@@ -28,6 +35,11 @@ extension HouseLoad {
     /// The sensible cooling load / gain.
     public var sensible: Int
 
+    /// Create a new cooling gain / load container.
+    ///
+    /// - Parameters:
+    ///   - total: The total cooling heat gains / load.
+    ///   - sensible: The sensible cooling heat gains / load.
     public init(
       total: Int,
       sensible: Int

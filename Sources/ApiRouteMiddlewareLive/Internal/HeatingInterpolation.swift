@@ -21,30 +21,6 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
 }
 
-//// MARK: - Validations
-//extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
-//
-//  public var body: some AsyncValidator<Self> {
-//    AsyncValidation {
-//      Validate(\.afue) {
-//        GreaterThan(0)
-//        Not(GreaterThan(100))
-//      }
-//      GreaterThan(\.input, 0)
-//    }
-//  }
-//}
-//
-//extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
-//
-//  public var body: some AsyncValidator<Self> {
-//    AsyncValidation {
-//      GreaterThan(\.inputKW, 0)
-//      GreaterThan(\.houseLoad.heating, 0)
-//    }
-//  }
-//}
-
 // MARK: - Interpolations
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating {
@@ -166,7 +142,7 @@ extension InterpolationResponse.Heating.Result {
           percentOfLoad: furnace.percentOfLoad
         ))
     default:
-      throw ValidationError("Invalid conversion.")  // better error.
+      throw ValidationError(summary: "Invalid conversion.")  // better error.
     }
   }
 }

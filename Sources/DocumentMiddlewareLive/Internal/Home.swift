@@ -20,22 +20,3 @@ func home() -> Node {
   ]
 }
 
-func documentationHome() -> Node {
-
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
-
-  return [
-    .h1("Documentation"),
-    .p(
-      """
-      Add some content here.
-      """),
-    .a(
-      attributes: [
-        .href(siteRouter.path(for: .home))
-      ],
-      .text("home")
-    ),
-  ]
-
-}

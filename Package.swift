@@ -25,6 +25,7 @@ var package = Package(
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.4.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.0"),
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
+    .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.0.0"),
   ],
   targets: [
     .target(
@@ -182,7 +183,9 @@ package.targets.append(contentsOf: [
   .target(
     name: "SiteMiddlewareLive",
     dependencies: [
+      "ApiRouteMiddleware",
       "SiteMiddleware",
+      "ValidationMiddleware",
       .product(name: "HtmlVaporSupport", package: "swift-html-vapor"),
       .product(name: "Vapor", package: "vapor"),
 

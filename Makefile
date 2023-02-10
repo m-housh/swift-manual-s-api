@@ -7,6 +7,7 @@ DOCKER_IMAGE_NAME ?= swift-manual-s-server
 SERVER_PORT ?= 8080
 SWIFT_VERSION ?= 5.7
 LOG_LEVEL ?= info
+DOCC_TARGET ?= SiteMiddlewareLive
 
 default: test-swift
 
@@ -50,4 +51,20 @@ run-server:
 run-server-in-docker: build-server
 	docker run -it --rm -p "$(SERVER_PORT):8080" $(DOCKER_IMAGE_NAME):latest
 
+build-documentation:
+	swift package \
+		--allow-writing-to-directory ./docs \
+		generate-documentation \
+		--target $(DOCC_TARGET) \
+		--disable-indexing \
+		--transform-for-static-hosting \
+		--hosting-base-path swift-manual-s-api \
+		--output-path ./docs
+
+preview-documentation:
+	swift package \
+		--disable-sandbox \
+		preview-documentation \
+		--target $(DOCC_TARGET)
+		
 .PHONY: format test-swift test-linux test-library

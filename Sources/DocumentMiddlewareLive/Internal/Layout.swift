@@ -29,6 +29,10 @@ func layout(title: String, content: Node) -> Node {
   ]
 }
 
+func layout(_ renderable: Renderable) -> Node {
+  layout(title: renderable.title, content: renderable.content)
+}
+
 private let header: Node = [
   .h1("swift-manual-s-api"),
   .blockquote(

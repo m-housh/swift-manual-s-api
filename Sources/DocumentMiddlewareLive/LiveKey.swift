@@ -12,7 +12,7 @@ extension DocumentMiddleware: DependencyKey {
         return layout(title: "Home", content: home())
       case .documentation(_):
         // TODO: fix to handle routes.
-        return layout(title: "Documentation", content: documentationHome())
+        return layout(DocumentHome())
       }
     })
   }
