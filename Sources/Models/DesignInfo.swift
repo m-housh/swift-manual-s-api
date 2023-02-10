@@ -22,13 +22,13 @@ public struct DesignInfo: Codable, Equatable, Sendable {
 
   /// Represents the design information for the summer conditions.
   public struct Summer: Codable, Equatable, Sendable {
-    
+
     /// The summer outdoor design temperature.
     public var outdoorTemperature: Int
-    
+
     /// The summer indoor design temperature.
     public var indoorTemperature: Int
-    
+
     /// The summer indoor design humidity.
     public var indoorHumidity: Int
 
@@ -51,7 +51,7 @@ public struct DesignInfo: Codable, Equatable, Sendable {
 
   /// Represents the design information for the winter conditions.
   public struct Winter: Codable, Equatable, Sendable {
-    
+
     /// The winter outdoor design temperature.
     public var outdoorTemperature: Int
 

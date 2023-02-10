@@ -1,6 +1,6 @@
 /// Represents the response from a balance point api request.
 public struct BalancePointResponse: Codable, Equatable {
-  
+
   /// The calculated balance point temperature.
   public let balancePoint: Double
 

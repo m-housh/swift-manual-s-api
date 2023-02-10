@@ -25,7 +25,6 @@ public struct HouseLoad: Codable, Equatable, Sendable {
 extension HouseLoad {
 
   public static let zero = Self()
-  
 
   /// Represents the cooling gains / load for a house.
   public struct CoolingLoad: Codable, Equatable, Sendable {

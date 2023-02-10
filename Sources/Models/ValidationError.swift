@@ -13,7 +13,7 @@ public struct ValidationError: Error, LocalizedError {
     self.label = label
     self.summary = summary
   }
-  
+
   @inlinable
   public var errorDescription: String? { debugDescription }
 }
@@ -24,12 +24,11 @@ extension ValidationError: CustomDebugStringConvertible {
     guard let label else { return summary }
     return "\(label.description): \(summary)"
   }
-  
-  
+
 }
 
 extension ValidationError: CustomStringConvertible {
   @inlinable
   public var description: String { debugDescription }
-  
+
 }

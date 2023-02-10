@@ -51,4 +51,3 @@ extension RawRepresentable where RawValue == String, Self: CustomStringConvertib
   var description: String { rawValue }
 
 }
-

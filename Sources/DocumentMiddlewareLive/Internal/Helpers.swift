@@ -10,6 +10,6 @@ protocol Renderable {
 
 func link(for path: ServerRoute, text: String) -> Node {
   @Dependency(\.siteRouter) var siteRouter: SiteRouter
-  
+
   return .a(attributes: [.href(siteRouter.path(for: path))], .text(text))
 }

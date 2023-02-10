@@ -3,10 +3,10 @@ public enum SystemType: Codable, Equatable, Sendable {
 
   /// Represents air-conditioner or heat-pump system types.
   case airToAir(type: EquipmentType, compressor: CompressorType, climate: ClimateType)
-  
+
   /// Represents a gas / propane / oil furnace system type.
   case furnaceOnly
-  
+
   /// Represents a gas / propane / oil boiler system type.
   case boilerOnly
 

@@ -38,19 +38,19 @@ public struct CoolingCapacity: Codable, Equatable, Sendable {
 ///
 ///
 public struct ManufactuerCoolingCapacity: Codable, Equatable, Sendable {
-  
+
   /// The manufacturer's cfm for the capacity.
   public var cfm: Int
-  
+
   /// The indoor temperature for the manufacturer's capacity.
   public var indoorTemperature: Int
-  
+
   /// The indoor wet-bulb temperature for the manufacturer's capacity.
   public var indoorWetBulb: Int
-  
+
   /// The outdoor temperature for the manufacturer's capacity.
   public var outdoorTemperature: Int
-  
+
   /// The cooling capacity from the manufacturer.
   public var capacity: CoolingCapacity
 
