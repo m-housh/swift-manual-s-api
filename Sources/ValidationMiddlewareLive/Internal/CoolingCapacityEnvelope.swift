@@ -4,7 +4,7 @@ import Validations
 @usableFromInline
 struct CoolingCapacityEnvelopeValidation: AsyncValidation {
   @usableFromInline
-  typealias Value = CoolingCapacityEnvelope
+  typealias Value = ManufactuerCoolingCapacity
 
   @usableFromInline
   let errorLabel: any CustomStringConvertible
@@ -15,7 +15,7 @@ struct CoolingCapacityEnvelopeValidation: AsyncValidation {
   }
 
   @usableFromInline
-  var body: some AsyncValidation<CoolingCapacityEnvelope> {
+  var body: some AsyncValidation<ManufactuerCoolingCapacity> {
     AsyncValidator.accumulating {
       AsyncValidator.greaterThan(\.cfm, 0)
         .mapError(

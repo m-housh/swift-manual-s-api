@@ -3,7 +3,7 @@ import Models
 // This file contains extension on model types to be used in tests, these are generally not needed,
 // however they need to be public to test release builds.
 
-extension CoolingCapacityEnvelope {
+extension ManufactuerCoolingCapacity {
 
   public static var zero = Self.init(
     cfm: 0,

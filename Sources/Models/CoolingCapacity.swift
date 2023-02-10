@@ -1,11 +1,16 @@
 public struct CoolingCapacity: Codable, Equatable, Sendable {
 
-  /// The total cooling load / gain.
+  /// The total cooling capacity.
   public var total: Int
 
-  /// The sensible cooling load / gain.
+  /// The sensible cooling capacity.
   public var sensible: Int
 
+  /// Create a new cooling capacity instance.
+  ///
+  /// - Parameters:
+  ///   - total: The total cooling capacity.
+  ///   - sensible: The sensible cooling capacity.
   public init(
     total: Int,
     sensible: Int
@@ -14,7 +19,7 @@ public struct CoolingCapacity: Codable, Equatable, Sendable {
     self.sensible = sensible
   }
 
-  /// The latent cooling load / gain.
+  /// The latent cooling.
   public var latent: Int { total - sensible }
 
   /// The calculated sensible heat ratio.
@@ -29,7 +34,7 @@ public struct CoolingCapacity: Codable, Equatable, Sendable {
   }
 }
 
-public struct CoolingCapacityEnvelope: Codable, Equatable, Sendable {
+public struct ManufactuerCoolingCapacity: Codable, Equatable, Sendable {
   public var cfm: Int
   public var indoorTemperature: Int
   public var indoorWetBulb: Int

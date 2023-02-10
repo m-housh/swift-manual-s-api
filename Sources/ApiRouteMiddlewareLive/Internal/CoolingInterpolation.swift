@@ -321,11 +321,11 @@ fileprivate struct OneWayOutdoorEnvelope {
   let outdoorTemperature: Int
   let capacity: Int
   
-  static func total(_ capacity: CoolingCapacityEnvelope) -> Self {
+  static func total(_ capacity: ManufactuerCoolingCapacity) -> Self {
     .init(outdoorTemperature: capacity.outdoorTemperature, capacity: capacity.capacity.total)
   }
   
-  static func sensible(_ capacity: CoolingCapacityEnvelope) -> Self {
+  static func sensible(_ capacity: ManufactuerCoolingCapacity) -> Self {
     .init(outdoorTemperature: capacity.outdoorTemperature, capacity: capacity.capacity.sensible)
   }
   

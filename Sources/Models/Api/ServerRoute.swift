@@ -1,17 +1,31 @@
 import Foundation
 
+/// Represents the routes for the server.
 public enum ServerRoute: Equatable, Sendable {
+
+  /// Api routes.
   case api(Api)
+
+  /// HTML document routes.
   case documentation(Documentation)
+
+  /// The server root.
   case home
 }
 
 // MARK: - Documentation Routes
 extension ServerRoute {
+
+  /// Represents HTML document routes.
   public enum Documentation: Equatable, Sendable {
+
+    /// The root for documents.
     case home
+
+    /// The api documentation routes.
     case api(Route)
 
+    /// Represents the api routes.
     public enum Route: Equatable, Sendable {
       case balancePoint
       case derating
@@ -44,10 +58,22 @@ extension ServerRoute {
 
 // MARK: - Api Routes
 extension ServerRoute {
+
+  /// Represents api routes / operations that the server can handle.
   public struct Api: Equatable, Sendable {
+
+    /// Is the route in debug mode
+    // This is for future use, not really used for anything currently.
     public let isDebug: Bool
+
+    /// The actual api route.
     public let route: Route
 
+    /// Create a new api instance.
+    ///
+    /// - Parameters:
+    ///   - isDebug: Whether the route is in debug mode or not.
+    ///   - route: The api route.
     public init(
       isDebug: Bool,
       route: Route
@@ -56,21 +82,48 @@ extension ServerRoute {
       self.route = route
     }
 
+    /// Represents the api routes and the input types that they handle.
     public enum Route: Equatable, Sendable {
+
+      /// A route that calculates the balance point.
       case balancePoint(BalancePointRequest)
+
+      /// A route that calculates an applicable derating adjustment.
       case derating(DeratingRequest)
+
+      /// A route that interpolates equipment capacities.
       case interpolate(InterpolationRequest)
+
+      /// A  route that calculates the required kilowatt sizing.
       case requiredKW(RequiredKWRequest)
+
+      /// A route that can calculate the allowable sizing limits.
       case sizingLimits(SizingLimitRequest)
 
+      /// Represents the balance point requests we can calculate.
       public enum BalancePointRequest: Codable, Equatable, Sendable {
+
+        /// A route that can calculate the thermal balance point.
         case thermal(Thermal)
 
+        /// The inputs for a thermal balance point request.
         public struct Thermal: Codable, Equatable, Sendable {
+
+          /// The winter outdoor design temperature.
           public var designTemperature: Double
+
+          /// The winter heat loss / load.
           public var heatLoss: Double
+
+          /// The heat pump's capacity at AHRI conditions.
           public var capacity: HeatPumpCapacity
 
+          /// Create a new thermal balance point request.
+          ///
+          /// - Parameters:
+          ///   - designTemperature: The outdoor winter design temperature.
+          ///   - heatLoss: The winter heat loss / load of the house.
+          ///   - capacity: The heat pump capacity at AHRI conditions.
           public init(designTemperature: Double, heatLoss: Double, capacity: HeatPumpCapacity) {
             self.designTemperature = designTemperature
             self.heatLoss = heatLoss
@@ -79,44 +132,100 @@ extension ServerRoute {
         }
       }
 
+      /// Represents the inputs needed for calculating a derating based on the project elevation.
+      ///
       public struct DeratingRequest: Codable, Equatable, Sendable {
+
+        /// The project elevation.
         public var elevation: Int
+
+        /// The  system type to be used.
         public var systemType: SystemType
 
+        /// Create a new derating request.
+        ///
+        /// - Parameters:
+        ///   - elevation: The project elevation.
+        ///   - systemType: The system type to be used for the calculation.
         public init(elevation: Int, systemType: SystemType) {
           self.elevation = elevation
           self.systemType = systemType
         }
       }
 
+      /// Represents the inputs need for a required killowatt request.
+      ///
+      ///
       public struct RequiredKWRequest: Codable, Equatable, Sendable {
+
+        /// The heat pump's capacity at the winter outdoor design temperature, if applicable.
         public var capacityAtDesign: Double?
+
+        /// The buildings winter heat loss / load.
         public var heatLoss: Double
 
+        /// Create a new request.
+        ///
+        /// - Parameters:
+        ///   - capacityAtDesign: The heat pump's capacity at the winter design temperature, if applicable.
+        ///   - heatLoss: The buildings winter heat loss / load.
         public init(capacityAtDesign: Double? = nil, heatLoss: Double) {
           self.capacityAtDesign = capacityAtDesign
           self.heatLoss = heatLoss
         }
       }
 
+      /// Represents the inputs needed for sizing limit requests.
       public struct SizingLimitRequest: Codable, Equatable, Sendable {
+
+        /// The system type used.
         public var systemType: SystemType
+
+        /// The house load, which is required for certain climate types (cold-winter or no latent load climates)
         public var houseLoad: HouseLoad?
 
+        /// Create a new sizing limit request.
+        ///
+        /// - Parameters:
+        ///   - systemType: The system type to be used.
+        ///   - houseLoad: The house load, if applicable for the climate type.
         public init(systemType: SystemType, houseLoad: HouseLoad? = nil) {
           self.systemType = systemType
           self.houseLoad = houseLoad
         }
       }
 
+      /// Represents the different interpolation requests that can be performed.
+      ///
       public enum InterpolationRequest: Codable, Equatable, Sendable {
+
+        /// A cooling interpolation.
         case cooling(Cooling)
+
+        /// A heating interpolation.
         case heating(Heating)
 
+        /// Represents the cooling interpolations that can be performed.
         public enum Cooling: Codable, Equatable, Sendable {
+
+          /// Used when there is no interpolation of the manufacturer's data required.
+          ///
+          /// This is equivalent to `Form S-1d`.
           case noInterpolation(NoInterpolationRequest)
+
+          /// Used when there is a one way interpolation of the manufacturer's cooling capacity at indoor design conditions.
+          ///
+          /// This is equivalent to `Form S-1b`
           case oneWayIndoor(OneWayRequest)
+
+          /// Used when there is a one way interpolation of the manufacturer's cooling capacity at outdoor design conditions.
+          ///
+          /// This is equivalent to `Form S-1b`
           case oneWayOutdoor(OneWayRequest)
+
+          /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
+          ///
+          /// This is equivalent to `Form S-1a`
           case twoWay(TwoWayRequest)
 
           public struct TwoWayRequest: CoolingInterpolationRequest {
@@ -144,10 +253,10 @@ extension ServerRoute {
             }
 
             public struct CapacityEnvelope: Codable, Equatable, Sendable {
-              public var above: CoolingCapacityEnvelope
-              public var below: CoolingCapacityEnvelope
+              public var above: ManufactuerCoolingCapacity
+              public var below: ManufactuerCoolingCapacity
 
-              public init(above: CoolingCapacityEnvelope, below: CoolingCapacityEnvelope) {
+              public init(above: ManufactuerCoolingCapacity, below: ManufactuerCoolingCapacity) {
                 self.above = above
                 self.below = below
               }
@@ -155,16 +264,16 @@ extension ServerRoute {
           }
 
           public struct OneWayRequest: CoolingInterpolationRequest {
-            public var aboveDesign: CoolingCapacityEnvelope
-            public var belowDesign: CoolingCapacityEnvelope
+            public var aboveDesign: ManufactuerCoolingCapacity
+            public var belowDesign: ManufactuerCoolingCapacity
             public var designInfo: DesignInfo
             public var houseLoad: HouseLoad
             public var manufacturerAdjustments: AdjustmentMultiplier?
             public var systemType: SystemType
 
             public init(
-              aboveDesign: CoolingCapacityEnvelope,
-              belowDesign: CoolingCapacityEnvelope,
+              aboveDesign: ManufactuerCoolingCapacity,
+              belowDesign: ManufactuerCoolingCapacity,
               designInfo: DesignInfo,
               houseLoad: HouseLoad,
               manufacturerAdjustments: AdjustmentMultiplier? = nil,
@@ -180,14 +289,14 @@ extension ServerRoute {
           }
 
           public struct NoInterpolationRequest: CoolingInterpolationRequest {
-            public var capacity: CoolingCapacityEnvelope
+            public var capacity: ManufactuerCoolingCapacity
             public var designInfo: DesignInfo
             public var houseLoad: HouseLoad
             public var manufacturerAdjustments: AdjustmentMultiplier?
             public var systemType: SystemType
 
             public init(
-              capacity: CoolingCapacityEnvelope,
+              capacity: ManufactuerCoolingCapacity,
               designInfo: DesignInfo,
               houseLoad: HouseLoad,
               manufacturerAdjustments: AdjustmentMultiplier?,
