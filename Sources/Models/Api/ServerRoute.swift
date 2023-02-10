@@ -290,6 +290,7 @@ extension ServerRoute {
   }
 }
 
+/// A helper protocol to ensure that cooling interpolation requests carry these values.
 public protocol CoolingInterpolationRequest: Codable, Equatable, Sendable {
   var designInfo: DesignInfo { get }
   var houseLoad: HouseLoad { get }

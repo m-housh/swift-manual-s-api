@@ -475,5 +475,182 @@ final class RouterTests: XCTestCase {
       )
     )
   }
+  
+  func test_boiler() throws {
+    let json = """
+    {
+      "altitudeDeratings": {
+        "heating": {
+          "multiplier": 1.0
+        }
+      },
+      "houseLoad": {
+        "cooling": {
+          "total": 17872,
+          "sensible": 13894
+        },
+        "heating": 49667,
+      },
+      "input": 100000,
+      "afue": 96.5
+    }
+    """
+    var request = URLRequest(url: URL(string: "/api/interpolate/heating/boiler")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+    
+    let route = try router.match(request: request)
+   
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.heating(.boiler(.init(
+          altitudeDeratings: .heating(multiplier: 1),
+          houseLoad: .mock,
+          input: 100_000,
+          afue: 96.5
+        ))))
+      ))
+    )
+  }
+  
+  func test_furnace() throws {
+    let json = """
+    {
+      "altitudeDeratings": {
+        "airToAir": {
+          "total": 1.0,
+          "sensible": 1.0,
+          "heating": 1.0
+        }
+      },
+      "houseLoad": {
+        "cooling": {
+          "total": 17872,
+          "sensible": 13894
+        },
+        "heating": 49667,
+      },
+      "input": 100000,
+      "afue": 96.5
+    }
+    """
+    var request = URLRequest(url: URL(string: "/api/interpolate/heating/furnace")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+    
+    let route = try router.match(request: request)
+   
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.heating(.furnace(.init(
+          altitudeDeratings: .airToAir(total: 1, sensible: 1, heating: 1),
+          houseLoad: .mock,
+          input: 100_000,
+          afue: 96.5
+        ))))
+      ))
+    )
+  }
+  
+  func test_electric() throws {
+
+    let json = """
+    {
+      "altitudeDeratings": {
+        "heating": {
+          "multiplier": 1.0
+        }
+      },
+      "heatPumpCapacity": 12000,
+      "houseLoad": {
+        "cooling": {
+          "total": 17872,
+          "sensible": 13894
+        },
+        "heating": 49667
+      },
+      "inputKW": 12.5
+    }
+    """
+    var request = URLRequest(url: URL(string: "/api/interpolate/heating/electric")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+    
+    let route = try router.match(request: request)
+    
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.heating(.electric(.init(
+          altitudeDeratings: .heating(multiplier: 1),
+          heatPumpCapacity: 12_000,
+          houseLoad: .mock,
+          inputKW: 12.5
+        ))))
+      ))
+    )
+    
+  }
+  
+  func test_heat_pump() throws {
+    let json = """
+    {
+      "altitudeDeratings": {
+        "airToAir": {
+          "total": 1.0,
+          "sensible": 1.0,
+          "heating": 1.0
+        }
+      },
+      "capacity": {
+        "at47": 24600,
+        "at17": 15100
+      },
+      "designInfo" : {
+        "elevation" : 0,
+        "summer" : {
+          "indoorHumidity" : 50,
+          "indoorTemperature" : 75,
+          "outdoorTemperature" : 90
+        },
+        "winter" : {
+          "outdoorTemperature" : 5
+        }
+      },
+      "houseLoad": {
+        "cooling": {
+          "total": 17872,
+          "sensible": 13894
+        },
+        "heating": 49667
+      }
+    }
+    """
+    var request = URLRequest(url: URL(string: "/api/interpolate/heating/heatPump")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+    
+    let route = try router.match(request: request)
+    
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.heating(.heatPump(.init(
+          altitudeDeratings: .airToAir(total: 1, sensible: 1, heating: 1),
+          capacity: .mock,
+          designInfo: .mock,
+          houseLoad: .mock
+        ))))
+      ))
+    )
+    
+  }
+  
 }
 
