@@ -11,7 +11,7 @@ func layout(title: String, content: Node) -> Node {
         .meta(name: "viewport", content: "width=device-width, initial-scale=1"),
         .title(title),
         bootstrapStyleSheet
-       ),
+      ),
       .body(
         navbar,
         .main(content),
@@ -39,7 +39,7 @@ private var bootstrapScript: Node {
     .src(
       "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"),
   ])
-  
+
 }
 
 private let footer: Node = [
@@ -61,7 +61,7 @@ private var navbar: Node {
       attributes: [.class("container-fluid")],
       [
         navbarBrand(siteRouter),
-        .div(attributes: [.class("justify-content-end")], documentDropdown(siteRouter))
+        .div(attributes: [.class("justify-content-end")], documentDropdown(siteRouter)),
       ])
   )
 }
@@ -90,7 +90,7 @@ private func documentDropdown(_ router: SiteRouter) -> Node {
         .li(link(for: .sizingLimits, class: .dropdownItem)),
       ])
   }
-  
+
   return .ul(
     attributes: [.class("nav navbar-nav me-auto mb-2 mb-lg-0")],
     [
