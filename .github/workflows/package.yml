@@ -5,16 +5,16 @@ on:
   workflow_run:
     workflows: ["CI"]
     types:
-      - success
-  push:
-    branches:
-      - "**"
-    tags:
-      - "*.*.*"
-      - "v*.*.*"
-  pull_request:
-    branches:
-      - "main"
+      - complete
+#   push:
+#     branches:
+#       - "**"
+#     tags:
+#       - "*.*.*"
+#       - "v*.*.*"
+#   pull_request:
+#     branches:
+#       - "main"
 
 permissions:
   contents: write
@@ -64,5 +64,5 @@ jobs:
           context: .
           file: ./Bootstrap/Dockerfile.prod
           push: ${{ github.event.name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/m-housh/swift-manual-s-api:latest
           labels: ${{ steps.meta.outputs.labels }}
