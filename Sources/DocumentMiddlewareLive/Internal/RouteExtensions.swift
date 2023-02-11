@@ -22,7 +22,7 @@ extension ServerRoute.Documentation.Route.Key: LinkRepresentable {
       return "Sizing Limits"
     }
   }
-  
+
   var route: Models.ServerRoute {
     switch self {
     case .balancePoint:
@@ -30,7 +30,7 @@ extension ServerRoute.Documentation.Route.Key: LinkRepresentable {
     case .derating:
       return .documentation(.api(.derating))
     case .interpolate:
-      return .documentation(.api(.interpolate(.cooling(.noInterpolation)))) // fix
+      return .documentation(.api(.interpolate(.cooling(.noInterpolation))))  // fix
     case .requiredKW:
       return .documentation(.api(.requiredKW))
     case .sizingLimits:
@@ -40,7 +40,7 @@ extension ServerRoute.Documentation.Route.Key: LinkRepresentable {
 }
 
 extension ServerRoute.Documentation.Route.Interpolation.Key: LinkRepresentable {
-  
+
   var text: String {
     switch self {
     case .home:
@@ -49,12 +49,12 @@ extension ServerRoute.Documentation.Route.Interpolation.Key: LinkRepresentable {
       return rawValue.capitalized
     }
   }
-  
+
   var route: ServerRoute {
     switch self {
     case .home:
       return .documentation(.api(.interpolate(.home)))
-      
+
     case .cooling:
       // fix
       return .documentation(.api(.interpolate(.cooling(.noInterpolation))))

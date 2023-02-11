@@ -48,11 +48,10 @@ func content(_ nodes: [Node]) -> Node {
     div?.append(node)
   }
   return div!
-  
- //  .div(attributes: [.class("container")], nodes[0])
+
+  //  .div(attributes: [.class("container")], nodes[0])
 }
 
 func content(_ nodes: Node...) -> Node {
   content(nodes)
 }
-

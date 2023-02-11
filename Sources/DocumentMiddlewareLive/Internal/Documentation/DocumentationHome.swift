@@ -10,13 +10,16 @@ struct DocumentHome: Renderable {
   let title: String = ServerRoute.Documentation.Key.home.text
 
   var content: Node {
-    .div(attributes: [.class("container")],
-      .div(attributes: [.class("row")], [
-        .h1("\(title)"),
-        _content,
-        .h2("Routes"),
-        _links
-      ])
+    .div(
+      attributes: [.class("container")],
+      .div(
+        attributes: [.class("row")],
+        [
+          .h1("\(title)"),
+          _content,
+          .h2("Routes"),
+          _links,
+        ])
     )
   }
 
@@ -26,7 +29,7 @@ struct DocumentHome: Renderable {
       Add some content here for the \(title) route.
       """)
   }
-  
+
   private var _links: Node {
     ServerRoute.Documentation.Route.Key.allCases
       .map {

@@ -119,7 +119,7 @@ struct ApiRouter: ParserPrinter {
         heatingInterpolationRouter
       }
     }
-    
+
     let balancePointRouter = Route(.case(ServerRoute.Api.Route.BalancePointRequest.thermal)) {
       Method.post
       Path { "thermal" }

@@ -428,7 +428,7 @@ extension ServerRoute.Documentation.Route.Interpolation {
     case home
     case cooling
     case heating
-    
+
     public var key: String {
       switch self {
       case .home:
