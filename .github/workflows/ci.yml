@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
+  # MacOS tests.
   mac:
     name: macOS
     runs-on: macOS-12
@@ -20,6 +21,7 @@ jobs:
     - name: Run ${{ matrix.xcode }} Tests for ${{ matrix.config }}
       run: make CONFIG=${{ matrix.config }} test-library
 
+  # Ubuntu tests.
   ubuntu:
     name: Ubuntu
     runs-on: ubuntu-20.04
@@ -30,3 +32,50 @@ jobs:
     - uses: actions/checkout@v3
     - name: Run Tests
       run: make DOCKER_PLATFORM=linux/amd64 test-linux
+
+  # Package / build docker image if tests succeed.
+  docker:
+    needs: [macOS, ubuntu]
+    name: Push Docker image to Github
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            m-housh/swift-manual-s-api
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        if: github.event.name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Bootstrap/Dockerfile.prod
+          push: ${{ github.event.name != 'pull_request' }}
+          tags: ghcr.io/m-housh/swift-manual-s-api:latest
+          labels: ${{ steps.meta.outputs.labels }}
