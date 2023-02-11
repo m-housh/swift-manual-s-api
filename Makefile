@@ -42,13 +42,13 @@ format:
 		./Package.swift \
 		./Sources
 
-build-server:
+build-docker-server-image:
 	docker build -t $(DOCKER_IMAGE_NAME):latest .
 
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server
 
-run-server-in-docker: build-server
+run-server-in-docker: build-docker-server-image
 	docker run -it --rm -p "$(SERVER_PORT):8080" $(DOCKER_IMAGE_NAME):latest
 
 build-documentation:

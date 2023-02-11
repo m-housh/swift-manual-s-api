@@ -112,3 +112,23 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
     }
   }
 }
+
+// MARK: - Encoding
+
+extension InterpolationResponse {
+  
+  private enum CodingKeys: CodingKey {
+    case cooling
+    case heating
+  }
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case let .cooling(cooling):
+      try container.encode(cooling, forKey: .cooling)
+    case let .heating(heating):
+      try container.encode(heating, forKey: .heating)
+    }
+  }
+}
