@@ -1,7 +1,10 @@
 name: CI
 
 on:
+  release:
+    types: [published]
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -36,46 +39,15 @@ jobs:
   # Package / build docker image if tests succeed.
   docker:
     needs: [ubuntu]
-    name: Push Docker image to Github
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            m-housh/swift-manual-s-api
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Setup Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        if: github.event.name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and Push Image
-        uses: docker/build-push-action@v4
+      - name: Build and publish image to ghcr.io
+        uses: macrbre/push-to-ghcr@master
         with:
           context: .
-          file: ./Bootstrap/Dockerfile.prod
-          push: ${{ github.event.name != 'pull_request' }}
-          tags: ghcr.io/m-housh/swift-manual-s-api:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          dockerfile: ./Bootstrap/Dockerfile.prod
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          image_name: ${{ github.repository }}
+
