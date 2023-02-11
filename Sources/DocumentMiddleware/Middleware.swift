@@ -7,16 +7,18 @@ import XCTestDynamicOverlay
 ///
 public struct DocumentMiddleware {
 
-  public var respond: (Route) async throws -> Node
+  public var render: (Route) async throws -> Node
 
+  @inlinable
   public init(
-    respond: @escaping (Route) async throws -> Node
+    render: @escaping (Route) async throws -> Node
   ) {
-    self.respond = respond
+    self.render = render
   }
 
-  public func respond(route: Route) async throws -> Node {
-    try await self.respond(route)
+  @inlinable
+  public func render(route: Route) async throws -> Node {
+    try await self.render(route)
   }
 
   /// The routes handled by the documentation middleware.
@@ -28,7 +30,7 @@ public struct DocumentMiddleware {
 
 extension DocumentMiddleware: TestDependencyKey {
   public static var testValue: DocumentMiddleware {
-    return .init(respond: unimplemented("\(Self.self).respond"))
+    return .init(render: unimplemented("\(Self.self).respond"))
   }
 }
 

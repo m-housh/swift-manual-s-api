@@ -36,6 +36,7 @@ extension ServerRoute {
       // TODO: Add a home route.
       public enum Interpolation: Equatable, Sendable {
 
+        case home
         case cooling(Cooling)
         case heating(Heating)
 
@@ -424,8 +425,18 @@ extension ServerRoute.Documentation.Route.Interpolation.Heating: RouteKey {}
 
 extension ServerRoute.Documentation.Route.Interpolation {
   public enum Key: String, RouteKey {
+    case home
     case cooling
     case heating
+    
+    public var key: String {
+      switch self {
+      case .home:
+        return "/"
+      case .cooling, .heating:
+        return rawValue
+      }
+    }
   }
 }
 

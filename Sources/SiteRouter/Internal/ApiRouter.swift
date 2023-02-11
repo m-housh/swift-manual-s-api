@@ -119,18 +119,23 @@ struct ApiRouter: ParserPrinter {
         heatingInterpolationRouter
       }
     }
+    
+    let balancePointRouter = Route(.case(ServerRoute.Api.Route.BalancePointRequest.thermal)) {
+      Method.post
+      Path { "thermal" }
+      Body(
+        .json(
+          ServerRoute.Api.Route.BalancePointRequest.Thermal.self,
+          decoder: self.decoder,
+          encoder: self.encoder
+        )
+      )
+    }
 
     OneOf {
       Route(.case(ServerRoute.Api.Route.balancePoint)) {
-        Method.post
         Path { RouteKey.balancePoint.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.BalancePointRequest.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
+        balancePointRouter
       }
 
       Route(.case(ServerRoute.Api.Route.derating)) {

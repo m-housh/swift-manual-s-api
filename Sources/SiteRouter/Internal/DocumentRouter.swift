@@ -67,6 +67,9 @@ struct DocumentRouter: ParserPrinter {
     }
 
     let interpolationRouter = OneOf {
+      
+      Route(.case(ServerRoute.Documentation.Route.Interpolation.home))
+      
       Route(.case(ServerRoute.Documentation.Route.Interpolation.cooling)) {
         Path { InterpolationKey.cooling.key }
         coolingInterpolationRouter

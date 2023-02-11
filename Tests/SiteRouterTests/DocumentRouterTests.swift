@@ -155,5 +155,18 @@ final class DocumentRouterTests: XCTestCase {
       .documentation(.api(.interpolate(.heating(.heatPump))))
     )
   }
+  
+  func test_interpolate_home() throws {
+    
+    var request = URLRequest(url: URL(string: "/documentation/api/interpolate")!)
+    request.httpMethod = "GET"
+    
+    let route = try router.match(request: request)
+    
+    XCTAssertNoDifference(
+      route,
+      .documentation(.api(.interpolate(.home)))
+    )
+  }
 }
 

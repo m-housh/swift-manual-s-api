@@ -6,13 +6,12 @@ import Models
 extension DocumentMiddleware: DependencyKey {
 
   public static var liveValue: DocumentMiddleware {
-    .init(respond: { route in
+    .init(render: { route in
       switch route {
       case .home:
         return layout(title: "Home", content: home())
-      case .documentation(_):
-        // TODO: fix to handle routes.
-        return layout(DocumentHome())
+      case let .documentation(documentRoute):
+        return renderDocumentRoute(documentRoute)
       }
     })
   }

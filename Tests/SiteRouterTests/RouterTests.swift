@@ -14,6 +14,35 @@ final class RouterTests: XCTestCase {
   
   let router = SiteRouter.testValue
   
+  func test_balance_point() throws {
+    let json = """
+    {
+      "designTemperature": 5,
+      "heatLoss": 49667,
+      "capacity": {
+        "at47": 24600,
+        "at17": 15100
+      }
+    }
+    """
+    var request = URLRequest(url: URL(string: "/api/balancePoint/thermal")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+    
+    let route = try router.match(request: request)
+    
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .balancePoint(.thermal(.init(
+          designTemperature: 5,
+          heatLoss: 49_667,
+          capacity: .mock
+        )))))
+    )
+  }
+  
   func test_requiredkw() throws {
     let json = """
     {

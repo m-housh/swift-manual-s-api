@@ -38,10 +38,11 @@ extension SiteMiddleware: DependencyKey {
           """
         )
         return try await .left(
-          documentMiddleware.respond(route: .documentation(documentationRoute)))
+          documentMiddleware.render(route: .documentation(documentationRoute))
+        )
       case .home:
         logger.debug("Handling home route.")
-        return try await .left(documentMiddleware.respond(route: .home))
+        return try await .left(documentMiddleware.render(route: .home))
       }
     }
   }
