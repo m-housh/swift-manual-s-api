@@ -32,13 +32,29 @@ make run-server
 
 Docker can be downloaded for your machine [here](https://www.docker.com).
 
+#### Pull a pre-built image.
+
+The following command will pull a pre-built image that can run the server locally.
+
+```bash
+docker pull ghcr.io/m-housh/swift-manual-s-api:latest
+```
+
+Then run the server image.
+
+```bash
+docker run -it --rm ghcr.io/m-housh/swift-manual-s-api:latest
+```
+
+#### Building the image from source on your local machine.
+
 First build the docker image.
 
 ```bash
 make build-docker-server-image
 ```
 
-The run the image.
+Then run the image.
 
 ```bash
 make run-server-in-docker

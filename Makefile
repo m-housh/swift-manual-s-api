@@ -3,7 +3,8 @@ PLATFORM_MACOS = macOS
 PLATFORM_MAC_CATALYST = macOS,variant=Mac Catalyst
 CONFIG ?= debug
 DOCKER_PLATFORM ?= linux/arm64
-DOCKER_IMAGE_NAME ?= swift-manual-s-server
+DOCKER_IMAGE_NAME ?= ghcr.io/m-housh/swift-manual-s-api
+DOCKER_TAG ?= latest
 SERVER_PORT ?= 8080
 SWIFT_VERSION ?= 5.7
 LOG_LEVEL ?= info
@@ -45,10 +46,11 @@ format:
 build-docker-server-image:
 	docker build \
 		--file Bootstrap/Dockerfile.prod \
-		--tag $(DOCKER_IMAGE_NAME):latest .
+		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) .
 
-push-docker-image: build-docker-server-image
-	docker push $(DOCKER_IMAGE_NAME):latest
+push-docker-image:
+	docker push $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
+	
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server
 
@@ -58,7 +60,7 @@ run-server-in-docker:
 		--rm \
 		-p "$(SERVER_PORT):8080" \
 		-e "LOG_LEVEL=$(LOG_LEVEL)" \
-		$(DOCKER_IMAGE_NAME):latest
+		$(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
 
 build-documentation:
 	swift package \
