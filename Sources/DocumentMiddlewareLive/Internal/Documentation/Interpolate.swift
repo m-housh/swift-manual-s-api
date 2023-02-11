@@ -10,12 +10,15 @@ struct InterpolateHome: Renderable {
   let title: String = ServerRoute.Documentation.Route.Key.interpolate.text
 
   var content: Node {
-    .div(attributes: [.class("container")],
-      .div(attributes: [.class("row")], [
-        .h1("\(title)"),
-        _content,
-        _links
-      ])
+    .div(
+      attributes: [.class("container")],
+      .div(
+        attributes: [.class("row")],
+        [
+          .h1("\(title)"),
+          _content,
+          _links,
+        ])
     )
   }
 
@@ -25,7 +28,7 @@ struct InterpolateHome: Renderable {
       Add some content here for the \(title) route.
       """)
   }
-  
+
   private var _links: Node {
     .ul(
       .li(link(for: .documentation(.home), text: "Documentation"))
@@ -39,8 +42,8 @@ func renderInterpolateRoute(_ route: ServerRoute.Documentation.Route.Interpolati
   case .home:
     return layout(InterpolateHome())
   case .cooling(_):
-    return layout(InterpolateHome()) // fix.
+    return layout(InterpolateHome())  // fix.
   case .heating(_):
-    return layout(InterpolateHome()) // fix.
+    return layout(InterpolateHome())  // fix.
   }
 }
