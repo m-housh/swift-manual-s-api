@@ -7,7 +7,7 @@ on:
 
 jobs:
   # MacOS tests.
-  mac:
+  macOS:
     name: macOS
     runs-on: macOS-12
     strategy:
