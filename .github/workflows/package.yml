@@ -2,6 +2,10 @@
 name: Publish Docker image
 
 on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - success
   push:
     branches:
       - "**"
@@ -11,6 +15,10 @@ on:
   pull_request:
     branches:
       - "main"
+
+permissions:
+  contents: write
+  id_token: write
 
 jobs:
   docker:
@@ -26,7 +34,6 @@ jobs:
         with:
           images: |
             m-housh/swift-manual-s-api
-            ghcr.io/m-housh/swift-manual-s-api
           tags: |
             type=schedule
             type=ref,event=branch
