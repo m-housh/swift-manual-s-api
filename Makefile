@@ -43,13 +43,20 @@ format:
 		./Sources
 
 build-docker-server-image:
-	docker build -t $(DOCKER_IMAGE_NAME):latest .
+	docker build \
+		--file Bootstrap/Dockerfile.prod \
+		--tag $(DOCKER_IMAGE_NAME):latest .
 
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server
 
-run-server-in-docker: build-docker-server-image
-	docker run -it --rm -p "$(SERVER_PORT):8080" $(DOCKER_IMAGE_NAME):latest
+run-server-in-docker:
+	docker run \
+		-it \
+		--rm \
+		-p "$(SERVER_PORT):8080" \
+		-e "LOG_LEVEL=$(LOG_LEVEL)" \
+		$(DOCKER_IMAGE_NAME):latest
 
 build-documentation:
 	swift package \
@@ -66,5 +73,5 @@ preview-documentation:
 		--disable-sandbox \
 		preview-documentation \
 		--target $(DOCC_TARGET)
-		
+
 .PHONY: format test-swift test-linux test-library

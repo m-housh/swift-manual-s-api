@@ -6,7 +6,6 @@ func home() -> Node {
   @Dependency(\.siteRouter) var siteRouter: SiteRouter
 
   return [
-    //    .raw("<div class=container>"),
     .div(
       attributes: [.class("container")],
       .div(

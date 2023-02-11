@@ -10,20 +10,13 @@ func layout(title: String, content: Node) -> Node {
       .head(
         .meta(name: "viewport", content: "width=device-width, initial-scale=1"),
         .title(title),
-        .link(attributes: [
-          .rel(.stylesheet),
-          .href("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"),
-        ])
-      ),
+        bootstrapStyleSheet
+       ),
       .body(
         navbar,
         .main(content),
         footer,
-        .script(attributes: [
-          .async(true),
-          .src(
-            "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"),
-        ])
+        bootstrapScript
       )
     ),
   ]
@@ -33,15 +26,30 @@ func layout(_ renderable: Renderable) -> Node {
   layout(title: renderable.title, content: renderable.content)
 }
 
+private var bootstrapStyleSheet: ChildOf<Tag.Head> {
+  .link(attributes: [
+    .rel(.stylesheet),
+    .href("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"),
+  ])
+}
+
+private var bootstrapScript: Node {
+  .script(attributes: [
+    .async(true),
+    .src(
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"),
+  ])
+  
+}
+
 private let footer: Node = [
   .div(
     attributes: [.class("fixed-bottom bg-success")],
-    [
-      .footer(
-        attributes: [ /*.class("text-center")*/],
-        .p(attributes: [.class("text-light fs-5 pt-3 ms-5")], "© 2023 Michael Housh")
-      )
-    ])
+    .footer(
+      attributes: [ /*.class("text-center")*/],
+      .p(attributes: [.class("text-light fs-5 pt-3 ms-5")], "© 2023 Michael Housh")
+    )
+  )
 ]
 
 private var navbar: Node {
@@ -53,7 +61,7 @@ private var navbar: Node {
       attributes: [.class("container-fluid")],
       [
         navbarBrand(siteRouter),
-        documentDropdown(siteRouter),
+        .div(attributes: [.class("justify-content-end")], documentDropdown(siteRouter))
       ])
   )
 }
@@ -82,8 +90,9 @@ private func documentDropdown(_ router: SiteRouter) -> Node {
         .li(link(for: .sizingLimits, class: .dropdownItem)),
       ])
   }
+  
   return .ul(
-    attributes: [.class("navbar-nav me-auto mb-2 mb-lg-0")],
+    attributes: [.class("nav navbar-nav me-auto mb-2 mb-lg-0")],
     [
       .li(
         attributes: [.class("nav-item dropdown")],

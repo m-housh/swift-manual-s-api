@@ -32,7 +32,13 @@ make run-server
 
 Docker can be downloaded for your machine [here](https://www.docker.com).
 
-This will build the docker image and then run it on your machine.
+First build the docker image.
+
+```bash
+make build-docker-server-image
+```
+
+The run the image.
 
 ```bash
 make run-server-in-docker

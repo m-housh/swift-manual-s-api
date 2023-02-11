@@ -411,6 +411,8 @@ public protocol CoolingInterpolationRequest: Codable, Equatable, Sendable {
   var systemType: SystemType { get }
 }
 
+// MARK: - Route Keys
+
 /// A helper protocol to return a route key to be used in routers.
 public protocol RouteKey: CaseIterable {
   var key: String { get }
