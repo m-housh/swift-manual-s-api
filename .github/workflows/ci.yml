@@ -35,7 +35,7 @@ jobs:
 
   # Package / build docker image if tests succeed.
   docker:
-    needs: [macOS, ubuntu]
+    needs: [ubuntu]
     name: Push Docker image to Github
     runs-on: ubuntu-latest
     steps:
