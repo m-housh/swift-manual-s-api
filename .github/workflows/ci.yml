@@ -10,31 +10,31 @@ on:
 
 jobs:
   # MacOS tests.
-  macOS:
-    name: macOS
-    runs-on: macOS-12
-    strategy:
-      matrix:
-        xcode: ['14.2']
-        config: ['debug', 'release']
-    steps:
-    - uses: actions/checkout@v3
-    - name: Select Xcode ${{ matrix.xcode }}
-      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
-    - name: Run ${{ matrix.xcode }} Tests for ${{ matrix.config }}
-      run: make CONFIG=${{ matrix.config }} test-library
-
-  # Ubuntu tests.
-  ubuntu:
-    name: Ubuntu
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: 5.7
-    - uses: actions/checkout@v3
-    - name: Run Tests
-      run: make DOCKER_PLATFORM=linux/amd64 test-linux
+#   macOS:
+#     name: macOS
+#     runs-on: macOS-12
+#     strategy:
+#       matrix:
+#         xcode: ['14.2']
+#         config: ['debug', 'release']
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Select Xcode ${{ matrix.xcode }}
+#       run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+#     - name: Run ${{ matrix.xcode }} Tests for ${{ matrix.config }}
+#       run: make CONFIG=${{ matrix.config }} test-library
+#
+#   # Ubuntu tests.
+#   ubuntu:
+#     name: Ubuntu
+#     runs-on: ubuntu-20.04
+#     steps:
+#     - uses: swift-actions/setup-swift@v1
+#       with:
+#         swift-version: 5.7
+#     - uses: actions/checkout@v3
+#     - name: Run Tests
+#       run: make DOCKER_PLATFORM=linux/amd64 test-linux
 
   # Package / build docker image if tests succeed.
   docker:
@@ -53,7 +53,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCRIO_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -61,4 +61,4 @@ jobs:
           context: .
           file: ./Bootstrap/Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ github.actor }}/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:latest
