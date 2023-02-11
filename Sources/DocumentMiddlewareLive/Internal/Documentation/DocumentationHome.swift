@@ -8,8 +8,8 @@ struct DocumentHome: Renderable {
   @Dependency(\.siteRouter) var siteRouter: SiteRouter
 
   let title: String = ServerRoute.Documentation.Key.home.text
-  
-  init() { }
+
+  init() {}
 
   var content: Node {
     .div(
