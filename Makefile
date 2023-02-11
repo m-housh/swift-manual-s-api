@@ -47,6 +47,8 @@ build-docker-server-image:
 		--file Bootstrap/Dockerfile.prod \
 		--tag $(DOCKER_IMAGE_NAME):latest .
 
+push-docker-image: build-docker-server-image
+	docker push $(DOCKER_IMAGE_NAME):latest
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server
 
