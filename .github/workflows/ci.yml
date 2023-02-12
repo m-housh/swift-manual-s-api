@@ -50,7 +50,8 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Setup buildx builder
-        run: docker buildx use default
+        run: |
+          docker buildx create --name builder --driver docker-container --bootstrap
 
       - name: List buildx
         run: docker buildx ls
