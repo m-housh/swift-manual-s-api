@@ -8,9 +8,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-permissions:
-  packages: write
-
 jobs:
   # MacOS tests.
 #   macOS:
@@ -60,7 +57,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCRIO_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
