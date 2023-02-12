@@ -16,7 +16,7 @@ default: test-swift
 test-swift:
 	swift test
 
-test-linux:
+test-linux: build-docker-dev-image
 	docker run --rm \
 		--volume "$(PWD):$(PWD)" \
 		--workdir "$(PWD)" \
@@ -86,5 +86,8 @@ preview-documentation:
 		--disable-sandbox \
 		preview-documentation \
 		--target $(DOCC_TARGET)
+
+clean:
+	rm -rf .build
 
 .PHONY: format test-swift test-linux test-library

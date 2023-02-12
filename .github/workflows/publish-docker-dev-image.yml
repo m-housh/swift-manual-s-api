@@ -6,21 +6,37 @@ on:
   workflow_call:
     inputs:
       registry:
-        required: true
+        description: 'The image registry to use.'
+        default: 'ghcr.io'
+        required: false
         type: string
       image-name:
-        required: true
+        description: 'The docker image name to use.'
+        default: ${{ github.repository }}
+        required: false
         type: string
       tag:
-        required: true
+        description: 'The docker image tag to use.'
+        default: 'latest'
+        required: false
         type: string
       username:
-        required: true
+        description: 'The username for the image registry.'
+        default: ${{ github.actor }}
+        required: false
         type: string
       file:
+        description: 'The location of the Dockerfile to use.'
+        default: ./Dockerfile
+        required: false
         type: string
+      push:
+        default: false
+        required: false
+        type: boolean
     secrets:
       token:
+        description: 'The authentication to use for the registry.'
         required: true
 
 jobs:
@@ -51,13 +67,13 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-            type=raw,value=dev
+            type=raw,value=${{ inputs.tag }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           file: ${{ inputs.file }}
-          push: true
+          push: ${{ inputs.push }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
