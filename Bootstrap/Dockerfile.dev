@@ -37,7 +37,7 @@ RUN swift build
 # ================================
 FROM swift:5.7-focal-slim
 
-LABEL org.opencontainers.description=Development image.
+LABEL org.opencontainers.description="Development image."
 LABEL org.opencontainers.image.license=MIT
 LABEL org.opencontainers.image.src=https://github.com/m-housh/swift-manual-s-api
 

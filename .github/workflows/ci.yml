@@ -37,48 +37,4 @@ jobs:
   # Package / build docker development image if tests succeed.
   docker:
     needs: [ubuntu]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: List buildx
-        run: docker buildx ls
-
-      - name: Login to ghcr.io Hub
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCRIO_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            ghcr.io/${{ github.repository }}:dev
-            # generate Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
-
-      - name: Build and push dev image.
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Bootstrap/Dockerfile.dev
-            # can't get multi-platforms to work in the ci environment.
-            #platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository }}:dev
+    uses: ./.github/workflows/publish-dev-image.yml
