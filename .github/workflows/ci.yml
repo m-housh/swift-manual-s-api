@@ -51,7 +51,7 @@ jobs:
 
       - name: Setup buildx builder
         run: |
-          docker buildx create --name builder--driver docker-container --bootstrap --use
+          docker buildx create --name builder --driver docker-container --bootstrap --use
 
       - name: List buildx
         run: docker buildx ls
