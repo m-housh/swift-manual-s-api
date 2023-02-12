@@ -38,10 +38,12 @@ jobs:
   docker:
     needs: [ubuntu]
     uses: ./.github/workflows/publish-docker-dev-image.yml
+    if: ${{ github.event.name != 'pull_request' }}
     with:
       file: ./Bootstrap/Dockerfile.dev
         #image-name: ${{ github.repository }}
         #registry: ghcr.io
+      push: true
       tag: dev
         #username: ${{ github.actor }}
     secrets:
