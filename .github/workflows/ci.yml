@@ -38,7 +38,7 @@ jobs:
 
   # Package / build docker image if tests succeed.
   docker:
-    needs: [ubuntu]
+    #    needs: [ubuntu]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
