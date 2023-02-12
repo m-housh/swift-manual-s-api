@@ -37,4 +37,4 @@ jobs:
   # Package / build docker development image if tests succeed.
   docker:
     needs: [ubuntu]
-    uses: ./.github/workflows/publish-dev-image.yml
+    uses: ./.github/workflows/publish-docker-dev-image.yml
