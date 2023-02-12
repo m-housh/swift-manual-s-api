@@ -8,6 +8,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permission:
+  packages: write
+
 jobs:
   # MacOS tests.
 #   macOS:
@@ -49,10 +52,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Setup buildx builder
-        run: |
-          docker buildx create --name builder --driver docker-container --bootstrap --use
-
       - name: List buildx
         run: docker buildx ls
 
@@ -61,7 +60,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCRIO_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -69,6 +68,6 @@ jobs:
           context: .
           file: ./Bootstrap/Dockerfile.prod
             # can't get multi-platforms to work in the ci environment.
-          platforms: linux/amd64,linux/arm64
-          push: true
+            #platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/${{ github.repository }}:latest
