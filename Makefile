@@ -2,7 +2,7 @@ PLATFORM_IOS = iOS Simulator,name=iPhone 14 Pro,OS=16.2
 PLATFORM_MACOS = macOS
 PLATFORM_MAC_CATALYST = macOS,variant=Mac Catalyst
 CONFIG ?= debug
-DOCKER_PLATFORM ?= linux/arm64,linux/amd64
+DOCKER_PLATFORM ?= linux/arm64
 DOCKER_IMAGE_NAME ?= ghcr.io/m-housh/swift-manual-s-api
 DOCKER_TAG ?= latest
 DOCKERFILE ?= Bootstrap/Dockerfile.prod
@@ -49,7 +49,7 @@ build-docker-image:
 		--file $(DOCKERFILE) \
 		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) \
 		--platform $(DOCKER_PLATFORM) \
-		--push \
+		--load \
 		.
 
 build-docker-dev-image:

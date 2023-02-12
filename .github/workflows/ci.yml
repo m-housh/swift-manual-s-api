@@ -1,8 +1,6 @@
 name: CI
 
 on:
-  release:
-    types: [published]
   push:
     branches: [main]
   pull_request:
@@ -36,9 +34,9 @@ jobs:
     - name: Run Tests
       run: make DOCKER_PLATFORM=linux/amd64 test-linux
 
-  # Package / build docker image if tests succeed.
+  # Package / build docker development image if tests succeed.
   docker:
-    #    needs: [ubuntu]
+    needs: [ubuntu]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -58,6 +56,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCRIO_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}:dev
+            # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
 
       - name: Build and push dev image.
         uses: docker/build-push-action@v4
