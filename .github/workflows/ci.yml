@@ -39,11 +39,10 @@ jobs:
     needs: [ubuntu]
     uses: ./.github/workflows/publish-docker-dev-image.yml
     with:
-      inputs:
-        file: ./Bootstrap/Dockerfile.dev
-        image-name: ${{ github.repository }}
-        registry: ghcr.io
-        tag: dev
-        username: ${{ github.actor }}
-      secrets:
-        token: ${{ secrets.GHCRIO_TOKEN }}
+      file: ./Bootstrap/Dockerfile.dev
+      image-name: ${{ github.repository }}
+      registry: ghcr.io
+      tag: dev
+      username: ${{ github.actor }}
+    secrets:
+      token: ${{ secrets.GHCRIO_TOKEN }}
