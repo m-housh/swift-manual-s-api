@@ -51,7 +51,7 @@ docker run -it --rm ghcr.io/m-housh/swift-manual-s-api:latest
 First build the docker image.
 
 ```bash
-make build-docker-server-image
+make build-docker-image
 ```
 
 Then run the image.

@@ -5,6 +5,7 @@ CONFIG ?= debug
 DOCKER_PLATFORM ?= linux/arm64
 DOCKER_IMAGE_NAME ?= ghcr.io/m-housh/swift-manual-s-api
 DOCKER_TAG ?= latest
+DOCKERFILE ?= Bootstrap/Dockerfile.prod
 SERVER_PORT ?= 8080
 SWIFT_VERSION ?= 5.7
 LOG_LEVEL ?= info
@@ -43,10 +44,17 @@ format:
 		./Package.swift \
 		./Sources
 
-build-docker-server-image:
-	docker build \
-		--file Bootstrap/Dockerfile.prod \
-		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) .
+build-docker-image:
+	docker buildx build \
+		--file $(DOCKERFILE) \
+		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) \
+		--platform linux/amd64,linux/arm64 \
+		.
+		
+build-docker-dev-image:
+	$(MAKE) DOCKERFILE="Bootstrap/Dockerfile.dev" \
+		DOCKER_TAG="dev" \
+		build-docker-server-image
 
 push-docker-image:
 	docker push $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
