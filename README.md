@@ -97,6 +97,18 @@ command.
 make SERVER_PORT=8000 run-server-in-docker
 ```
 
+## Viewing the documents
+
+Once you have the container running locally, if you open your browser to:
+
+```bash
+http://localhost:8080/
+```
+
+Or whichever server port you specified when running the container.
+
+Then you can browse the documents and api routes.
+
 ## Dependencies
 
 This project relys on several other open-source packages, including (but not limited to):
