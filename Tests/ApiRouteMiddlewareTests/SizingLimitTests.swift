@@ -4,6 +4,7 @@ import Dependencies
 import ApiRouteMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class SizingLimitTests: XCTestCase {
   
   

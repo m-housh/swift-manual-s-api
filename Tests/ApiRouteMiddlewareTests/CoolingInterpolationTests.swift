@@ -5,6 +5,7 @@ import Models
 import ApiRouteMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class CoolingInterpolationTests: XCTestCase {
   
   func test_noInterpolation() async throws {

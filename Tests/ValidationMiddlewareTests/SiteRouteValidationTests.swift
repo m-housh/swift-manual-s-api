@@ -5,6 +5,7 @@ import Models
 import ValidationMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class SiteRouteValidationTests: XCTestCase {
 
   func test_twoWay_validations() async throws {

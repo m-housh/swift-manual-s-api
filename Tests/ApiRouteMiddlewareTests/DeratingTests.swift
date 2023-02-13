@@ -4,6 +4,7 @@ import Models
 import ApiRouteMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class DeratingClientTests: XCTestCase {
   
   func testFurnaceDerating() async throws {

@@ -5,6 +5,7 @@ import Models
 import ApiRouteMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class BalancePointTests: XCTestCase {
   
   func test_thermalBalancePoint() async throws {

@@ -4,6 +4,7 @@ import Models
 import ApiRouteMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class RequiredKWTests: XCTestCase {
   
   func test_requiredKW() async throws {

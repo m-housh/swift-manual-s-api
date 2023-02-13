@@ -5,6 +5,7 @@ import Models
 import ApiRouteMiddlewareLive
 import FirstPartyMocks
 
+@MainActor
 final class HeatingInterpolationTests: XCTestCase {
   
   func test_furnace() async throws {
