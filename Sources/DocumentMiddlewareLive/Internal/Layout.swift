@@ -10,13 +10,13 @@ func layout(title: String, content: Node) -> Node {
       .head(
         .meta(name: "viewport", content: "width=device-width, initial-scale=1"),
         .title(title),
-        bootstrapStyleSheet
+        Layout.bootstrapStyleSheet
       ),
       .body(
-        navbar,
+        Layout.navbar,
         .main(content),
-        footer,
-        bootstrapScript
+        Layout.footer,
+        Layout.bootstrapScript
       )
     ),
   ]
@@ -26,102 +26,104 @@ func layout(_ renderable: Renderable) -> Node {
   layout(title: renderable.title, content: renderable.content)
 }
 
-private var bootstrapStyleSheet: ChildOf<Tag.Head> {
-  .link(attributes: [
-    .rel(.stylesheet),
-    .href("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"),
-  ])
-}
+private struct Layout {
+  @Dependency(\.siteRouter) private static var siteRouter: SiteRouter
 
-private var bootstrapScript: Node {
-  .script(attributes: [
-    .async(true),
-    .src(
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"),
-  ])
+  private static let bootstrapCss: String =
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
 
-}
-
-private let footer: Node = [
-  .div(
-    attributes: [.class("fixed-bottom bg-success")],
-    .footer(
-      attributes: [ /*.class("text-center")*/],
-      .p(attributes: [.class("text-light fs-5 pt-3 ms-5")], "© 2023 Michael Housh")
-    )
-  )
-]
-
-private var navbar: Node {
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
-
-  return .nav(
-    attributes: [.class("navbar navbar-expand-lg bg-success text-light")],
-    .div(
-      attributes: [.class("container-fluid")],
-      [
-        navbarBrand(siteRouter),
-        .div(attributes: [.class("justify-content-end")], documentDropdown(siteRouter)),
-      ])
-  )
-}
-
-private func navbarBrand(_ router: SiteRouter) -> Node {
-  .a(
-    attributes: [
-      .class("navbar-brand text-light"),
-      .href(router.path(for: .home)),
-    ],
-    .text("Home")
-  )
-}
-
-private func documentDropdown(_ router: SiteRouter) -> Node {
-
-  var documentNavbarItem: Node {
-    .ul(
-      attributes: [.class("dropdown-menu")],
-      [
-        .li(link(for: .documentation(.home), text: "Home", class: "dropdown-item")),
-        .li(link(for: .balancePoint, class: .dropdownItem)),
-        .li(link(for: .derating, class: .dropdownItem)),
-        .li(link(for: .interpolate, class: .dropdownItem)),
-        .li(link(for: .requiredKW, class: .dropdownItem)),
-        .li(link(for: .sizingLimits, class: .dropdownItem)),
-      ])
+  static var bootstrapStyleSheet: ChildOf<Tag.Head> {
+    .link(attributes: [
+      .rel(.stylesheet),
+      .href(bootstrapCss),
+    ])
   }
 
-  return .ul(
-    attributes: [.class("nav navbar-nav me-auto mb-2 mb-lg-0")],
-    [
-      .li(
-        attributes: [.class("nav-item dropdown")],
-        [
-          .a(
-            attributes: [
-              .class("nav-link dropdown-toggle text-light"),
-              .role(.button),
-              .ariaExpanded(false),
-              .data("bs-toggle", "dropdown"),
-            ],
-            .text("Documentation")
-          ),
-          documentNavbarItem,
-        ])
+  static var bootstrapScript: Node {
+    .script(attributes: [
+      .async(true),
+      .src(
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"),
     ])
-}
 
-private func link(for key: ServerRoute.Documentation.Route.Key, class: ClassString) -> Node {
-  link(for: key, class: `class`.description)
-}
+  }
 
-enum ClassString: String, CustomStringConvertible {
-  case dropdownItem
+  static var footer: Node {
 
-  var description: String {
-    switch self {
-    case .dropdownItem:
-      return "dropdown-item"
+    let classString = "\(SharedString.textLight) fs-5 pt-3 ms-5"
+
+    return [
+      .div(
+        attributes: [.class(.fixedBottom, .bgSuccess)],
+        .footer(
+          attributes: [ /*.class("text-center")*/],
+          .p(
+            attributes: [.class(classString)],
+            "© 2023 Michael Housh"
+          )
+        )
+      )
+    ]
+  }
+
+  static var navbar: Node {
+
+    return .nav(
+      attributes: [.class(.bgSuccess, .navbar, .navbarExpandLg, .textLight)],
+      .div(
+        attributes: [.class(.containerFluid)],
+        [
+          navbarBrand(siteRouter),
+          .div(
+            attributes: [.class(.justifyContentEnd)],
+            documentDropdown(siteRouter)
+          ),
+        ])
+    )
+  }
+
+  private static func navbarBrand(_ router: SiteRouter) -> Node {
+    .a(
+      attributes: [
+        .class(.navbarBrand, .textLight),
+        .href(router.path(for: .home)),
+      ],
+      .text("Home")
+    )
+  }
+
+  private static func documentDropdown(_ router: SiteRouter) -> Node {
+
+    var documentNavbarItem: Node {
+      .ul(
+        attributes: [.class(.dropdownMenu)],
+        [
+          .li(link(for: .documentation(.home), text: "Home", class: .dropdownItem)),
+          .li(link(for: .balancePoint, class: .dropdownItem)),
+          .li(link(for: .derating, class: .dropdownItem)),
+          .li(link(for: .interpolate, class: .dropdownItem)),
+          .li(link(for: .requiredKW, class: .dropdownItem)),
+          .li(link(for: .sizingLimits, class: .dropdownItem)),
+        ])
     }
+
+    return .ul(
+      attributes: [.class(.nav, .navbarNav)],
+      [
+        .li(
+          attributes: [.class(.navItem, .dropdown)],
+          [
+            .a(
+              attributes: [
+                .class(.navLink, .dropdownToggle, .textLight),
+                .role(.button),
+                .ariaExpanded(false),
+                .data(.bsToggle, .dropdown),
+              ],
+              .text("Documentation")
+            ),
+            documentNavbarItem,
+          ])
+      ])
   }
 }

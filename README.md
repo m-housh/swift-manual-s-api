@@ -28,6 +28,14 @@ directory.
 make run-server
 ```
 
+This will build and run the server, or you can open the project in Xcode by clicking on the
+`Package.swift` file or using the following command in the terminal from the root project
+directory.
+
+```bash
+xed .
+```
+
 ### Run in docker
 
 Docker can be downloaded for your machine [here](https://www.docker.com).
@@ -35,6 +43,13 @@ Docker can be downloaded for your machine [here](https://www.docker.com).
 #### Pull a pre-built image.
 
 The following command will pull a pre-built image that can run the server locally.
+This will be the latest release version, which will be a `slim` version of the build.
+It will only be able to run the server, no other commands will easily work inside the
+container, which will be fine for most development use cases.
+
+> Note: By default the `linux/amd64` versions get built in the `ci/cd` pipeline, the
+> `linux/arm64` variants may not always be available as they have to be built and pushed
+> seperately.
 
 ```bash
 docker pull ghcr.io/m-housh/swift-manual-s-api:latest
@@ -44,6 +59,20 @@ Then run the server image.
 
 ```bash
 docker run -it --rm ghcr.io/m-housh/swift-manual-s-api:latest
+```
+
+If you would like to pull a pre-built image of the main branch that can be used more
+broadly for tests or other commands, you can use the following command to pull a 
+development container image, only `linux/amd64` images will be built for the main branch.
+
+```bash
+docker pull ghcr.io/m-housh/swift-manual-s-api:dev
+```
+
+You could then run tests in the development container.
+
+```bash
+docker run -it --rm ghcr.io/m-housh/swift-manual-s-api:dev swift test
 ```
 
 #### Building the image from source on your local machine.

@@ -20,16 +20,26 @@ extension LinkRepresentable {
   }
 }
 
-func link(for path: ServerRoute, text: String, class: String = "") -> Node {
+func link(for path: ServerRoute, text: any CustomStringConvertible, class: String = "") -> Node {
   @Dependency(\.siteRouter) var siteRouter: SiteRouter
   return .a(
     attributes: [.href(siteRouter.path(for: path)), .class(`class`)],
-    .text(text)
+    .text(text.description)
   )
+}
+
+func link(for path: ServerRoute, text: any CustomStringConvertible, class strings: SharedString...)
+  -> Node
+{
+  link(for: path, text: text, class: strings.map(\.description).joined(separator: " "))
 }
 
 func link(for value: any LinkRepresentable, class: String = "") -> Node {
   link(for: value.route, text: value.text, class: `class`)
+}
+
+func link(for key: ServerRoute.Documentation.Route.Key, class strings: SharedString...) -> Node {
+  link(for: key, class: strings.map(\.description).joined(separator: " "))
 }
 
 func content(_ nodes: [Node]) -> Node {
@@ -54,4 +64,30 @@ func content(_ nodes: [Node]) -> Node {
 
 func content(_ nodes: Node...) -> Node {
   content(nodes)
+}
+
+extension Attribute {
+  static func data(_ name: SharedString, _ value: SharedString) -> Self {
+    .init(name.description, value.description)
+  }
+}
+
+func row(class: SharedString..., content: @escaping () -> Node) -> Node {
+  var classString = SharedString.row.description
+  classString += " \(`class`.map(\.description).joined(separator: " "))"
+  return .div(attributes: [.class(classString)], content())
+}
+
+func row(content: @escaping () -> Node) -> Node {
+  return .div(attributes: [.class(.row)], content())
+}
+
+func container(class: SharedString..., content: @escaping () -> Node) -> Node {
+  var classString = SharedString.container.description
+  classString += " \(`class`.map(\.description).joined(separator: " "))"
+  return .div(attributes: [.class(classString)], content())
+}
+
+func container(content: @escaping () -> Node) -> Node {
+  return .div(attributes: [.class(.container)], content())
 }

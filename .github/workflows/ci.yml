@@ -8,19 +8,19 @@ on:
 
 jobs:
   # MacOS tests.
-#   macOS:
-#     name: macOS
-#     runs-on: macOS-12
-#     strategy:
-#       matrix:
-#         xcode: ['14.2']
-#         config: ['debug', 'release']
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Select Xcode ${{ matrix.xcode }}
-#       run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
-#     - name: Run ${{ matrix.xcode }} Tests for ${{ matrix.config }}
-#       run: make CONFIG=${{ matrix.config }} test-library
+  macOS:
+    name: macOS
+    runs-on: macOS-12
+    strategy:
+      matrix:
+        xcode: ['14.2']
+        config: ['debug', 'release']
+    steps:
+    - uses: actions/checkout@v3
+    - name: Select Xcode ${{ matrix.xcode }}
+      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+    - name: Run ${{ matrix.xcode }} Tests for ${{ matrix.config }}
+      run: make CONFIG=${{ matrix.config }} test-library
 
   # Ubuntu tests.
   ubuntu:
@@ -37,14 +37,11 @@ jobs:
   # Package / build docker development image if tests succeed.
   docker:
     needs: [ubuntu]
-    uses: ./.github/workflows/publish-docker-dev-image.yml
+    uses: ./.github/workflows/publish-docker-image.yml
     if: ${{ github.event.name != 'pull_request' }}
     with:
       file: ./Bootstrap/Dockerfile.dev
-        #image-name: ${{ github.repository }}
-        #registry: ghcr.io
-      push: true
+      push: ${{ github.event.name != 'pull_request' }}
       tag: dev
-        #username: ${{ github.actor }}
     secrets:
       token: ${{ secrets.GHCRIO_TOKEN }}

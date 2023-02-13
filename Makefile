@@ -16,12 +16,17 @@ default: test-swift
 test-swift:
 	swift test
 
-test-linux: build-docker-dev-image
+test-linux:
 	docker run --rm \
 		--volume "$(PWD):$(PWD)" \
 		--workdir "$(PWD)" \
 		--platform "$(DOCKER_PLATFORM)" \
 		"swift:$(SWIFT_VERSION)-focal" swift test
+		
+test-dev-image: build-docker-dev-image
+	docker run -it --rm \
+		$(DOCKER_IMAGE_NAME):dev \
+		swift test
 
 test-library:
 	for platform in "$(PLATFORM_MACOS)" "$(PLATFORM_MAC_CATALYST)"; do \

@@ -12,24 +12,34 @@ struct DocumentHome: Renderable {
   init() {}
 
   var content: Node {
-    .div(
-      attributes: [.class("container")],
-      .div(
-        attributes: [.class("row")],
+    container {
+      row {
         [
           .h1("\(title)"),
+          .hr(attributes: [.class(.border, .borderSuccess)]),
           _content,
-          .h2("Routes"),
-          _links,
-        ])
-    )
+          routes,
+        ]
+      }
+    }
+  }
+
+  private var routes: Node {
+    row {
+      [
+        .h2("Routes"),
+        _links,
+      ]
+    }
   }
 
   private var _content: Node {
-    .p(
-      """
-      Add some content here for the \(title) route.
-      """)
+    row {
+      .p(
+        """
+        Add some content here for the \(title) route.
+        """)
+    }
   }
 
   private var _links: Node {

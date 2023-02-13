@@ -2,24 +2,49 @@ import Dependencies
 import Html
 import SiteRouter
 
-func home() -> Node {
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
+struct Home: Renderable {
 
-  return [
-    .div(
-      attributes: [.class("container")],
-      .div(
-        attributes: [.class("row align-items-start")],
+  @Dependency(\.siteRouter) private var siteRouter: SiteRouter
+
+  var title: String { Key.home.description }
+
+  init() {}
+
+  var content: Node {
+    container {
+      row(class: .alignItemsStart) {
         [
-          .h1("Home"),
-          .p(
-            """
-              Add some content here.
-            """),
-          link(for: .documentation(.home), text: "Documentation"),
-
+          .h1("\(title)"),
+          .hr(attributes: [.class(.border, .borderSuccess)]),
+          body,
+          link(for: .documentation(.home), text: Key.documentation),
         ]
-      )
-    )
-  ]
+
+      }
+    }
+  }
+
+  private var body: Node {
+    [
+      row {
+        .p(
+          """
+          Add some content here.
+          """
+        )
+      }
+    ]
+  }
+
+  enum Key: String, CustomStringConvertible {
+    case documentation
+    case home
+
+    var description: String {
+      switch self {
+      case .home, .documentation:
+        return rawValue.capitalized
+      }
+    }
+  }
 }
