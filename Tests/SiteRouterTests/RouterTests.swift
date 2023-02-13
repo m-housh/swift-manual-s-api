@@ -383,7 +383,7 @@ final class RouterTests: XCTestCase {
     let json = """
     {
       "aboveDesign" : {
-        "above" : {
+        "aboveWetBulb" : {
           "capacity" : {
             "sensible" : 15937,
             "total" : 24828
@@ -393,7 +393,7 @@ final class RouterTests: XCTestCase {
           "indoorWetBulb" : 67,
           "outdoorTemperature" : 95
         },
-        "below" : {
+        "belowWetBulb" : {
           "capacity" : {
             "sensible" : 19078,
             "total" : 23046
@@ -405,7 +405,7 @@ final class RouterTests: XCTestCase {
         }
       },
       "belowDesign" : {
-        "above" : {
+        "aboveWetBulb" : {
           "capacity" : {
             "sensible" : 16330,
             "total" : 25986
@@ -415,7 +415,7 @@ final class RouterTests: XCTestCase {
           "indoorWetBulb" : 67,
           "outdoorTemperature" : 85
         },
-        "below" : {
+        "belowWetBulb" : {
           "capacity" : {
             "sensible" : 19605,
             "total" : 24029
@@ -467,14 +467,14 @@ final class RouterTests: XCTestCase {
           isDebug: false,
           route: .interpolate(.cooling(.twoWay(.init(
             aboveDesign: .init(
-              above: .init(
+              aboveWetBulb: .init(
                 cfm: 800,
                 indoorTemperature: 75,
                 indoorWetBulb: 67,
                 outdoorTemperature: 95,
                 capacity: .init(total: 24_828, sensible: 15_937)
               ),
-              below: .init(
+              belowWetBulb: .init(
                 cfm: 800,
                 indoorTemperature: 75,
                 indoorWetBulb: 62,
@@ -483,14 +483,14 @@ final class RouterTests: XCTestCase {
               )
             ),
             belowDesign: .init(
-              above: .init(
+              aboveWetBulb: .init(
                 cfm: 800,
                 indoorTemperature: 75,
                 indoorWetBulb: 67,
                 outdoorTemperature: 85,
                 capacity: .init(total: 25_986, sensible: 16_330)
               ),
-              below: .init(
+              belowWetBulb: .init(
                 cfm: 800,
                 indoorTemperature: 75,
                 indoorWetBulb: 62,

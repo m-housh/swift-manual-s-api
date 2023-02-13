@@ -5,9 +5,14 @@ import Html
 enum SharedString: String, CustomStringConvertible {
   case alignItemsStart
   case bgSuccess
+  case bgSuccessSubtle
   case border
   case borderSuccess
   case bsToggle
+  case card
+  case cardBody
+  case cardTitle
+  case cardSubtitle
   case container
   case containerFluid
   case dropdown
@@ -16,7 +21,9 @@ enum SharedString: String, CustomStringConvertible {
   case dropdownToggle
   case fixedBottom
   case justifyContentEnd
+  case mb3
   case mb5
+  case mt10
   case nav
   case navbar
   case navbarBrand
@@ -25,9 +32,12 @@ enum SharedString: String, CustomStringConvertible {
   case navItem
   case navLink
   case pb2
+  case pb5
   case pt2
+  case pt5
   case row
   case textLight
+  case textMuted
   case textSecondary
 
   var description: String {
@@ -36,10 +46,18 @@ enum SharedString: String, CustomStringConvertible {
       return "align-items-start"
     case .bgSuccess:
       return "bg-success"
+    case .bgSuccessSubtle:
+      return "bg-success-subtle"
     case .bsToggle:
       return "bs-toggle"
     case .borderSuccess:
       return "border-success"
+    case .cardBody:
+      return "card-body"
+    case .cardTitle:
+      return "card-title"
+    case .cardSubtitle:
+      return "card-subtitle"
     case .containerFluid:
       return "container-fluid"
     case .dropdownItem:
@@ -52,8 +70,12 @@ enum SharedString: String, CustomStringConvertible {
       return "fixed-bottom"
     case .justifyContentEnd:
       return "justify-content-end"
+    case .mb3:
+      return "mb-3"
     case .mb5:
       return "mb-5"
+    case .mt10:
+      return "mt-10"
     case .navbarBrand:
       return "navbar-brand"
     case .navbarExpandLg:
@@ -66,13 +88,19 @@ enum SharedString: String, CustomStringConvertible {
       return "navbar-nav"
     case .pb2:
       return "pb-2"
+    case .pb5:
+      return "pb-5"
     case .pt2:
       return "pt-2"
+    case .pt5:
+      return "pt-5"
+    case .textMuted:
+      return "text-muted"
     case .textSecondary:
       return "text-secondary"
     case .textLight:
       return "text-light"
-    case .container, .row, .nav, .dropdown, .navbar, .border:
+    case .container, .row, .nav, .dropdown, .navbar, .border, .card:
       return rawValue
 
     }

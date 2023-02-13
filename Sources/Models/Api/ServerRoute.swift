@@ -197,6 +197,7 @@ extension ServerRoute {
         }
       }
 
+      // TODO: Allow an indirect case that interpolates a heating & cooling type during a single request.
       /// Represents the different interpolation requests that can be performed.
       ///
       public enum InterpolationRequest: Codable, Equatable, Sendable {
@@ -255,12 +256,12 @@ extension ServerRoute {
             }
 
             public struct CapacityEnvelope: Codable, Equatable, Sendable {
-              public var above: ManufactuerCoolingCapacity
-              public var below: ManufactuerCoolingCapacity
+              public var aboveWetBulb: ManufactuerCoolingCapacity
+              public var belowWetBulb: ManufactuerCoolingCapacity
 
-              public init(above: ManufactuerCoolingCapacity, below: ManufactuerCoolingCapacity) {
-                self.above = above
-                self.below = below
+              public init(aboveWetBulb: ManufactuerCoolingCapacity, belowWetBulb: ManufactuerCoolingCapacity) {
+                self.aboveWetBulb = aboveWetBulb
+                self.belowWetBulb = belowWetBulb
               }
             }
           }

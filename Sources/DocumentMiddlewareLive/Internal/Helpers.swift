@@ -5,23 +5,6 @@ import Models
 import SiteRouter
 import URLRouting
 
-protocol Renderable {
-  var title: String { get }
-  func content() async throws -> Node
-}
-
-protocol LinkRepresentable {
-  var text: String { get }
-  var route: ServerRoute { get }
-  var link: Node { get }
-}
-
-extension LinkRepresentable {
-  var link: Node {
-    DocumentMiddlewareLive.link(for: self)
-  }
-}
-
 func link(for path: ServerRoute, text: any CustomStringConvertible, class: String = "") -> Node {
   @Dependency(\.siteRouter) var siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>
   return .a(
@@ -77,6 +60,12 @@ extension Attribute {
 }
 
 func row(class: SharedString..., content: @escaping () -> Node) -> Node {
+  var classString = SharedString.row.description
+  classString += " \(`class`.map(\.description).joined(separator: " "))"
+  return .div(attributes: [.class(classString)], content())
+}
+
+func row(class: (any CustomStringConvertible)..., content: @escaping () -> Node) -> Node {
   var classString = SharedString.row.description
   classString += " \(`class`.map(\.description).joined(separator: " "))"
   return .div(attributes: [.class(classString)], content())

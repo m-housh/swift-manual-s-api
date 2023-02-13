@@ -142,14 +142,14 @@ final class CoolingInterpolationTests: XCTestCase {
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest(
         aboveDesign: .init(
-          above: .init(
+          aboveWetBulb: .init(
             cfm: 800,
             indoorTemperature: 75,
             indoorWetBulb: 67,
             outdoorTemperature: 95,
             capacity: .init(total: 24_828, sensible: 15_937)
           ),
-          below: .init(
+          belowWetBulb: .init(
             cfm: 800,
             indoorTemperature: 75,
             indoorWetBulb: 62,
@@ -158,14 +158,14 @@ final class CoolingInterpolationTests: XCTestCase {
           )
         ),
         belowDesign: .init(
-          above: .init(
+          aboveWetBulb: .init(
             cfm: 800,
             indoorTemperature: 75,
             indoorWetBulb: 67,
             outdoorTemperature: 85,
             capacity: .init(total: 25_986, sensible: 16_330)
           ),
-          below: .init(
+          belowWetBulb: .init(
             cfm: 800,
             indoorTemperature: 75,
             indoorWetBulb: 62,

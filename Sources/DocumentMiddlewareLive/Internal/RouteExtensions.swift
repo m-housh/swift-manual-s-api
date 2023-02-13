@@ -93,3 +93,32 @@ extension ServerRoute.Documentation.Route.Interpolation.Cooling: LinkRepresentab
     }
   }
 }
+
+extension ServerRoute.Documentation.Route.Interpolation.Heating: LinkRepresentable {
+  
+  var text: String {
+    switch self {
+    case .boiler:
+      return "Boiler"
+    case .electric:
+      return "Electric"
+    case .furnace:
+      return "Furnace"
+    case .heatPump:
+      return "Heat Pump"
+    }
+  }
+  
+  var route: ServerRoute {
+    switch self {
+    case .boiler:
+      return .documentation(.api(.interpolate(.heating(.boiler))))
+    case .electric:
+      return .documentation(.api(.interpolate(.heating(.electric))))
+    case .furnace:
+      return .documentation(.api(.interpolate(.heating(.furnace))))
+    case .heatPump:
+      return .documentation(.api(.interpolate(.heating(.heatPump))))
+    }
+  }
+}

@@ -1,3 +1,5 @@
+// TODO: Add pass / fail results.
+
 public enum InterpolationResponse: Codable, Equatable, Sendable {
   case cooling(Cooling)
   case heating(Heating)
@@ -129,6 +131,31 @@ extension InterpolationResponse {
       try container.encode(cooling, forKey: .cooling)
     case let .heating(heating):
       try container.encode(heating, forKey: .heating)
+    }
+  }
+}
+
+extension InterpolationResponse.Heating.Result {
+  
+  private enum CodingKeys: CodingKey {
+    case boiler
+    case electric
+    case furnace
+    case heatPump
+  }
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case let .boiler(boiler):
+      try container.encode(boiler, forKey: .boiler)
+    case let .electric(electric):
+      try container.encode(electric, forKey: .electric)
+    case let .furnace(furnace):
+      try container.encode(furnace, forKey: .furnace)
+    case let .heatPump(heatPump):
+      try container.encode(heatPump, forKey: .heatPump)
+
     }
   }
 }

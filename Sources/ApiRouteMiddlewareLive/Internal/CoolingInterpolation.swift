@@ -233,8 +233,8 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayR
   
   func oneWayIndoorRequest(_ request: any CoolingInterpolationRequest) -> ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
     .init(
-      aboveDesign: above,
-      belowDesign: below,
+      aboveDesign: aboveWetBulb,
+      belowDesign: belowWetBulb,
       designInfo: request.designInfo,
       houseLoad: request.houseLoad,
       systemType: request.systemType
@@ -249,17 +249,17 @@ fileprivate extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayR
   ) -> ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
     .init(
       aboveDesign: .init(
-        cfm: aboveDesign.above.cfm,
-        indoorTemperature: aboveDesign.above.indoorTemperature,
+        cfm: aboveDesign.aboveWetBulb.cfm,
+        indoorTemperature: aboveDesign.aboveWetBulb.indoorTemperature,
         indoorWetBulb: 63,
-        outdoorTemperature: aboveDesign.above.outdoorTemperature,
+        outdoorTemperature: aboveDesign.aboveWetBulb.outdoorTemperature,
         capacity: above.interpolatedCapacity
       ),
       belowDesign: .init(
-        cfm: belowDesign.above.cfm,
-        indoorTemperature: belowDesign.above.indoorTemperature,
+        cfm: belowDesign.aboveWetBulb.cfm,
+        indoorTemperature: belowDesign.aboveWetBulb.indoorTemperature,
         indoorWetBulb: 63,
-        outdoorTemperature: belowDesign.below.outdoorTemperature,
+        outdoorTemperature: belowDesign.belowWetBulb.outdoorTemperature,
         capacity: below.interpolatedCapacity
       ),
       designInfo: designInfo,

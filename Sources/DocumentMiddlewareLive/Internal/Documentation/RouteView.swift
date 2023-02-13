@@ -3,7 +3,7 @@ import Dependencies
 import Html
 import Models
 
-struct RouteDocument {
+struct RouteView {
   @Dependency(\.apiMiddleware) var apiMiddleware
   @Dependency(\.siteRouter) var siteRouter
   @Dependency(\.baseURL) var baseURL
@@ -67,7 +67,7 @@ struct RouteDocument {
       row(class: .pt2) {
         description
       },
-      row(class: .pt2) {
+      row(class: "pt-3") {
         [
           heading("Route:"),
           .code(.pre([.text("POST "), .text(routeString)])),
@@ -79,7 +79,7 @@ struct RouteDocument {
           .code(.pre(.text(jsonString))),
         ]
       },
-      row(class: .pt2, .mb5) {
+      row(class: .pt2, .mb5, .pb5) {
         [
           heading("JSON Output Example:"),
           .code(.pre(.text(jsonOutput))),
@@ -93,7 +93,7 @@ struct RouteDocument {
   }
 }
 
-extension RouteDocument: Renderable {
+extension RouteView: Renderable {
 
   //  var content: Node {
   func content() async throws -> Node {

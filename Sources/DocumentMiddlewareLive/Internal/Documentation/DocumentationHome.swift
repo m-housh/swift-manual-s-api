@@ -64,7 +64,7 @@ func renderDocumentRoute(_ documentRoute: ServerRoute.Documentation) async throw
   case .api(.derating):
     return try await layout(DeratingHome())
   case let .api(.interpolate(interpolateRoute)):
-    return try await renderInterpolateRoute(interpolateRoute)
+    return try await layout(renderInterpolateRoute(interpolateRoute))
   case .api(.requiredKW):
     return try await layout(RequiredKWHome())
   case .api(.sizingLimits):

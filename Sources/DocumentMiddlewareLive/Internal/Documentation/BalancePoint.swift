@@ -17,7 +17,7 @@ struct BalancePointHome: Renderable {
 
   //  var content: Node {
   func content() async throws -> Node {
-    try await RouteDocument(
+    try await RouteView(
       json: json,
       route: route,
       title: title,
