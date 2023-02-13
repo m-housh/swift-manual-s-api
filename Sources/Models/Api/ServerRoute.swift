@@ -259,7 +259,9 @@ extension ServerRoute {
               public var aboveWetBulb: ManufactuerCoolingCapacity
               public var belowWetBulb: ManufactuerCoolingCapacity
 
-              public init(aboveWetBulb: ManufactuerCoolingCapacity, belowWetBulb: ManufactuerCoolingCapacity) {
+              public init(
+                aboveWetBulb: ManufactuerCoolingCapacity, belowWetBulb: ManufactuerCoolingCapacity
+              ) {
                 self.aboveWetBulb = aboveWetBulb
                 self.belowWetBulb = belowWetBulb
               }

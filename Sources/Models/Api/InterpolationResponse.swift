@@ -136,14 +136,14 @@ extension InterpolationResponse {
 }
 
 extension InterpolationResponse.Heating.Result {
-  
+
   private enum CodingKeys: CodingKey {
     case boiler
     case electric
     case furnace
     case heatPump
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {

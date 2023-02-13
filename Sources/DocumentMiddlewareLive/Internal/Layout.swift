@@ -106,7 +106,8 @@ private struct Layout {
           .li(link(for: .interpolate, class: .dropdownItem)),
           .li(link(for: .requiredKW, class: .dropdownItem)),
           .li(link(for: .sizingLimits, class: .dropdownItem)),
-        ])
+        ]
+      )
     }
 
     return .ul(

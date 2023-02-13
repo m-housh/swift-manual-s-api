@@ -48,7 +48,7 @@ struct DocumentHome: Renderable {
       .map {
         ChildOf<Tag.Ul>.li($0.link)
       }
-      .reduce(into: Node.ul(.li(link(for: .home, text: "Home")))) {
+      .reduce(into: Node.ul()) {
         $0.append($1.rawValue)
       }
   }

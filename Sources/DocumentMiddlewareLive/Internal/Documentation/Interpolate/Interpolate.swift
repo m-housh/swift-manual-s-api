@@ -24,16 +24,14 @@ struct InterpolateHome: Renderable {
 
   //  var content: Node {
   func content() async throws -> Node {
-    .div(
-      attributes: [.class("container")],
-      .div(
-        attributes: [.class("row")],
-        [
-          .h1("\(title)"),
-          _content,
-          _links,
-        ])
-    )
+    container {
+      [
+        titleRow(title: title, content: .hr(attributes: [.class(.border, .borderSuccess)])),
+        _content,
+        linkRow(title: "Cooling Routes", content: _coolingLinks),
+        linkRow(title: "Heating Routes", content: _heatingLinks),
+      ]
+    }
   }
 
   private var _content: Node {
@@ -43,10 +41,45 @@ struct InterpolateHome: Renderable {
       """)
   }
 
-  private var _links: Node {
+  private func titleRow(title: String, content: Node) -> Node {
+    row {
+      [
+        .h1(.text(title)),
+        content,
+      ]
+    }
+  }
+
+  private func linkRow(title: String, content: Node) -> Node {
+    DocumentMiddlewareLive.row {
+      [
+        .h3(.text(title)),
+        content,
+      ]
+    }
+  }
+  private var _coolingLinks: Node {
     .ul(
-      .li(link(for: .documentation(.home), text: "Documentation"))
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Cooling.noInterpolation)),
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayIndoor)),
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayOutdoor)),
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Cooling.twoWay))
     )
   }
+
+  private var _heatingLinks: Node {
+    .ul(
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Heating.boiler)),
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Heating.electric)),
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Heating.furnace)),
+      .li(link(for: ServerRoute.Documentation.Route.Interpolation.Heating.heatPump))
+    )
+  }
+
+  //  private var _links: Node {
+  //    .ul(
+  //      .li(link(for: .documentation(.home), text: "Documentation"))
+  //    )
+  //  }
 
 }

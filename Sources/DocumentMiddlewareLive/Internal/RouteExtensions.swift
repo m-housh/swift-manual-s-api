@@ -30,7 +30,7 @@ extension ServerRoute.Documentation.Route.Key: LinkRepresentable {
     case .derating:
       return .documentation(.api(.derating))
     case .interpolate:
-      return .documentation(.api(.interpolate(.cooling(.noInterpolation))))  // fix
+      return .documentation(.api(.interpolate(.home)))
     case .requiredKW:
       return .documentation(.api(.requiredKW))
     case .sizingLimits:
@@ -95,7 +95,7 @@ extension ServerRoute.Documentation.Route.Interpolation.Cooling: LinkRepresentab
 }
 
 extension ServerRoute.Documentation.Route.Interpolation.Heating: LinkRepresentable {
-  
+
   var text: String {
     switch self {
     case .boiler:
@@ -108,7 +108,7 @@ extension ServerRoute.Documentation.Route.Interpolation.Heating: LinkRepresentab
       return "Heat Pump"
     }
   }
-  
+
   var route: ServerRoute {
     switch self {
     case .boiler:

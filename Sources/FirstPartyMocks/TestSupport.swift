@@ -138,7 +138,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest {
     houseLoad: .zero,
     systemType: .mock
   )
-  
+
   public static let mock = Self.init(
     aboveDesign: .init(
       aboveWetBulb: .init(
@@ -187,7 +187,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
     input: 0,
     afue: 0
   )
-  
+
   public static let mock = Self.init(
     altitudeDeratings: .heating(multiplier: 1.0),
     houseLoad: .mock,
@@ -204,7 +204,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest {
     input: 0,
     afue: 0
   )
-  
+
   public static let mock = Self.init(
     altitudeDeratings: .heating(multiplier: 1.0),
     houseLoad: .mock,
@@ -221,7 +221,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest {
     houseLoad: .zero,
     inputKW: 0
   )
-  
+
   public static let mock = Self.init(
     altitudeDeratings: .heating(multiplier: 1.0),
     heatPumpCapacity: 23_200,
@@ -238,7 +238,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest {
     designInfo: .zero,
     houseLoad: .zero
   )
-  
+
   public static let mock = Self.init(
     altitudeDeratings: .airToAir(total: 1.0, sensible: 1.0, heating: 1.0),
     capacity: .mock,
