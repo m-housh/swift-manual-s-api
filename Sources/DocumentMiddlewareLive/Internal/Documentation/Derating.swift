@@ -1,38 +1,28 @@
 import Dependencies
+import FirstPartyMocks
 import Html
 import Models
 import SiteRouter
 
 struct DeratingHome: Renderable {
 
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
-
   let title: String = ServerRoute.Documentation.Route.Key.derating.text
-
-  var content: Node {
-    .div(
-      attributes: [.class("container")],
-      .div(
-        attributes: [.class("row")],
-        [
-          .h1("\(title)"),
-          _content,
-          _links,
-        ])
-    )
+  let route = ServerRoute.Api.Route.derating(.mock)
+  let json = ServerRoute.Api.Route.DeratingRequest.mock
+  var description: String {
+    #"""
+    This route is used to calculate the elevation deratings for the given conditions.
+    """#
   }
 
-  private var _content: Node {
-    .p(
-      """
-      Add some content here for the \(title) route.
-      """)
-  }
-
-  private var _links: Node {
-    .ul(
-      .li(link(for: .documentation(.home), text: "Documentation"))
-    )
+  //  var content: Node {
+  func content() async throws -> Node {
+    try await RouteDocument(
+      json: json,
+      route: route,
+      title: title,
+      description: description
+    ).content()
   }
 
 }

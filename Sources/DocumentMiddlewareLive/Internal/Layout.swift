@@ -22,12 +22,12 @@ func layout(title: String, content: Node) -> Node {
   ]
 }
 
-func layout(_ renderable: Renderable) -> Node {
-  layout(title: renderable.title, content: renderable.content)
+func layout(_ renderable: Renderable) async throws -> Node {
+  try await layout(title: renderable.title, content: renderable.content())
 }
 
 private struct Layout {
-  @Dependency(\.siteRouter) private static var siteRouter: SiteRouter
+  @Dependency(\.siteRouter) private static var siteRouter
 
   private static let bootstrapCss: String =
     "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
@@ -82,7 +82,7 @@ private struct Layout {
     )
   }
 
-  private static func navbarBrand(_ router: SiteRouter) -> Node {
+  private static func navbarBrand(_ router: AnyParserPrinter<URLRequestData, ServerRoute>) -> Node {
     .a(
       attributes: [
         .class(.navbarBrand, .textLight),
@@ -92,7 +92,9 @@ private struct Layout {
     )
   }
 
-  private static func documentDropdown(_ router: SiteRouter) -> Node {
+  private static func documentDropdown(_ router: AnyParserPrinter<URLRequestData, ServerRoute>)
+    -> Node
+  {
 
     var documentNavbarItem: Node {
       .ul(

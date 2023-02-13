@@ -5,13 +5,14 @@ import SiteRouter
 
 struct DocumentHome: Renderable {
 
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
+  @Dependency(\.siteRouter) var siteRouter
 
   let title: String = ServerRoute.Documentation.Key.home.text
 
   init() {}
 
-  var content: Node {
+  //  var content: Node {
+  func content() async throws -> Node {
     container {
       row {
         [
@@ -54,19 +55,19 @@ struct DocumentHome: Renderable {
 
 }
 
-func renderDocumentRoute(_ documentRoute: ServerRoute.Documentation) -> Node {
+func renderDocumentRoute(_ documentRoute: ServerRoute.Documentation) async throws -> Node {
   switch documentRoute {
   case .home:
-    return layout(DocumentHome())
+    return try await layout(DocumentHome())
   case .api(.balancePoint):
-    return layout(BalancePointHome())
+    return try await layout(BalancePointHome())
   case .api(.derating):
-    return layout(DeratingHome())
+    return try await layout(DeratingHome())
   case let .api(.interpolate(interpolateRoute)):
-    return renderInterpolateRoute(interpolateRoute)
+    return try await renderInterpolateRoute(interpolateRoute)
   case .api(.requiredKW):
-    return layout(RequiredKWHome())
+    return try await layout(RequiredKWHome())
   case .api(.sizingLimits):
-    return layout(SizingLimitsHome())
+    return try await layout(SizingLimitsHome())
   }
 }

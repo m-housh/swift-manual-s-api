@@ -56,11 +56,40 @@ extension ServerRoute.Documentation.Route.Interpolation.Key: LinkRepresentable {
       return .documentation(.api(.interpolate(.home)))
 
     case .cooling:
-      // fix
+      // fix needs a home route??
       return .documentation(.api(.interpolate(.cooling(.noInterpolation))))
     case .heating:
-      // fix
+      // fix needs a home route??
       return .documentation(.api(.interpolate(.heating(.boiler))))
+    }
+  }
+}
+
+extension ServerRoute.Documentation.Route.Interpolation.Cooling: LinkRepresentable {
+
+  var text: String {
+    switch self {
+    case .noInterpolation:
+      return "No Interpolation"
+    case .oneWayIndoor:
+      return "One Way Indoor"
+    case .oneWayOutdoor:
+      return "One Way Outdoor"
+    case .twoWay:
+      return "Two Way"
+    }
+  }
+
+  var route: ServerRoute {
+    switch self {
+    case .noInterpolation:
+      return .documentation(.api(.interpolate(.cooling(.noInterpolation))))
+    case .oneWayIndoor:
+      return .documentation(.api(.interpolate(.cooling(.oneWayIndoor))))
+    case .oneWayOutdoor:
+      return .documentation(.api(.interpolate(.cooling(.oneWayOutdoor))))
+    case .twoWay:
+      return .documentation(.api(.interpolate(.cooling(.twoWay))))
     }
   }
 }

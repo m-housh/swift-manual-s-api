@@ -4,13 +4,14 @@ import SiteRouter
 
 struct Home: Renderable {
 
-  @Dependency(\.siteRouter) private var siteRouter: SiteRouter
+  @Dependency(\.siteRouter) private var siteRouter
 
   var title: String { Key.home.description }
 
   init() {}
 
-  var content: Node {
+  //  var content: Node {
+  func content() async throws -> Node {
     container {
       row(class: .alignItemsStart) {
         [

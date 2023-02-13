@@ -13,12 +13,21 @@ import VaporRouting
 ///    - app: The vapor application to configure.
 public func configure(_ app: Vapor.Application) async throws {
 
-  // configure the vapor middleware(s)
-  await configureVaporMiddleware(app)
+  await withDependencies(
+    {
+      $0.siteRouter = $0.siteRouter.baseURL(
+        app.environment == .production
+          ? "http://localhost:8080"  // fix
+          : "http://localhost:8080"
+      ).eraseToAnyParserPrinter()
+    },
+    operation: {
+      // configure the vapor middleware(s)
+      await configureVaporMiddleware(app)
 
-  // configure site router.
-  await configureSiteRouter(app)
-
+      // configure site router.
+      await configureSiteRouter(app)
+    })
 }
 
 // Configure the vapor middleware.
@@ -43,8 +52,7 @@ private func configureVaporMiddleware(_ app: Vapor.Application) async {
 // Register the site router with the vapor application.
 private func configureSiteRouter(_ app: Vapor.Application) async {
   @Dependency(\.logger) var logger: Logger
-  @Dependency(\.siteRouter) var router: SiteRouter
-
+  @Dependency(\.siteRouter) var router: AnyParserPrinter<URLRequestData, ServerRoute>
   logger.info("Bootstrapping site router.")
   app.mount(router, use: siteHandler(request:route:))
 }

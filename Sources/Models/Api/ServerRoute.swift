@@ -484,3 +484,20 @@ extension ServerRoute {
     }
   }
 }
+
+// MARK: Custom Encoding
+
+extension ServerRoute.Api.Route.BalancePointRequest {
+
+  private enum CodingKeys: String, CodingKey {
+    case thermal
+  }
+
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case let .thermal(thermal):
+      try container.encode(thermal, forKey: .thermal)
+    }
+  }
+}

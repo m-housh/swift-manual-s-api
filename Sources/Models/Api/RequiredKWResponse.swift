@@ -1,3 +1,5 @@
+import Foundation
+
 /// Represents the response from a required kilowatt api request.
 ///
 public struct RequiredKWResponse: Codable, Equatable {

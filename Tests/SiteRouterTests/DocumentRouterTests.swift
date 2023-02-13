@@ -12,7 +12,7 @@ import SiteRouter
 
 final class DocumentRouterTests: XCTestCase {
   
-  let router = SiteRouter.testValue
+  let router = SiteRouterKey.testValue
   
   func test_requiredkw() throws {
     var request = URLRequest(url: URL(string: "/documentation/api/requiredKW")!)
