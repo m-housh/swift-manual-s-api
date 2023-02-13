@@ -8,7 +8,7 @@ import WebKit
 
 var greeting = "Hello, playground"
 
-let current = layout(DocumentHome())
+let current = layout(BalancePointHome())
 
 let webView = WKWebView(frame: .init(x: 0, y: 0, width: 500, height: 700))
 webView.loadHTMLString(render(current), baseURL: nil)

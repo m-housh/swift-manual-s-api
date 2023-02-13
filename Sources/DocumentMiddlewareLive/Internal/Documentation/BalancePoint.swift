@@ -1,38 +1,27 @@
 import Dependencies
+import FirstPartyMocks
 import Html
 import Models
 import SiteRouter
 
 struct BalancePointHome: Renderable {
 
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
-
   let title: String = ServerRoute.Documentation.Route.Key.balancePoint.text
-
-  var content: Node {
-    .div(
-      attributes: [.class("container")],
-      .div(
-        attributes: [.class("row")],
-        [
-          .h1("\(title)"),
-          _content,
-          _links,
-        ])
-    )
+  let route = ServerRoute.Api.Route.balancePoint(.thermal(.mock))
+  let json = ServerRoute.Api.Route.BalancePointRequest.Thermal.mock
+  var description: String {
+    #"""
+    This route is used to calculate the thermal balance point for the given conditions.
+    """#
   }
 
-  private var _content: Node {
-    .p(
-      """
-      Add some content here for the \(title) route.
-      """)
+//  var content: Node {
+  func content() async throws -> Node {
+    try await RouteDocument(
+      json: json,
+      route: route,
+      title: title,
+      description: description
+    ).content()
   }
-
-  private var _links: Node {
-    .ul(
-      .li(link(for: .documentation(.home), text: "Documentation"))
-    )
-  }
-
 }

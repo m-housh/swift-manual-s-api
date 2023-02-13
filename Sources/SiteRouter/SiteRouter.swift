@@ -1,7 +1,7 @@
 import Dependencies
 import Foundation
 import Models
-import URLRouting
+@_exported import URLRouting
 
 public struct SiteRouter: ParserPrinter {
 
@@ -54,28 +54,44 @@ public struct SiteRouter: ParserPrinter {
   }
 }
 
-extension SiteRouter: DependencyKey {
-
-  public static var testValue: SiteRouter {
-    .init(decoder: .init(), encoder: jsonEncoder)
+public enum SiteRouterKey: DependencyKey {
+  
+  public static var testValue: AnyParserPrinter<URLRequestData, ServerRoute> {
+    SiteRouter(decoder: .init(), encoder: jsonEncoder).eraseToAnyParserPrinter()
   }
+  
+  public static var liveValue: AnyParserPrinter<URLRequestData, ServerRoute> {
+    SiteRouter(decoder: .init(), encoder: jsonEncoder).eraseToAnyParserPrinter()
+  }
+}
 
-  public static var liveValue: SiteRouter {
-    .init(decoder: .init(), encoder: jsonEncoder)
+private enum BaseUrlKey: DependencyKey {
+  
+  static var  testValue: String {
+    "http://localhost:8080"
+  }
+  
+  static var liveValue: String {
+    "http://localhost:8080"
   }
 }
 
 extension DependencyValues {
 
-  public var siteRouter: SiteRouter {
-    get { self[SiteRouter.self] }
-    set { self[SiteRouter.self] = newValue }
+  public var siteRouter: AnyParserPrinter<URLRequestData, ServerRoute> {
+    get { self[SiteRouterKey.self].eraseToAnyParserPrinter() }
+    set { self[SiteRouterKey.self] = .init(newValue) }
+  }
+  
+  public var baseURL: String {
+    get { self[BaseUrlKey.self] }
+    set { self[BaseUrlKey.self] = newValue }
   }
 }
 
 private let jsonEncoder: JSONEncoder = {
   var encoder = JSONEncoder()
-  encoder.outputFormatting = .sortedKeys
+  encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
   return encoder
 }()
 

@@ -12,7 +12,7 @@ import SiteRouter
 // TODO: Add heating interpolation routes.
 final class RouterTests: XCTestCase {
   
-  let router = SiteRouter.testValue
+  let router = SiteRouterKey.testValue
   
   func test_balance_point() throws {
     let json = """

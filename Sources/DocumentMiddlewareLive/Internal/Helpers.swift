@@ -1,11 +1,13 @@
 import Dependencies
+import Foundation
 import Html
 import Models
 import SiteRouter
+import URLRouting
 
 protocol Renderable {
   var title: String { get }
-  var content: Node { get }
+  func content() async throws -> Node
 }
 
 protocol LinkRepresentable {
@@ -21,7 +23,7 @@ extension LinkRepresentable {
 }
 
 func link(for path: ServerRoute, text: any CustomStringConvertible, class: String = "") -> Node {
-  @Dependency(\.siteRouter) var siteRouter: SiteRouter
+  @Dependency(\.siteRouter) var siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>
   return .a(
     attributes: [.href(siteRouter.path(for: path)), .class(`class`)],
     .text(text.description)
@@ -42,6 +44,7 @@ func link(for key: ServerRoute.Documentation.Route.Key, class strings: SharedStr
   link(for: key, class: strings.map(\.description).joined(separator: " "))
 }
 
+// TODO: Remove
 func content(_ nodes: [Node]) -> Node {
   var children = nodes[...]
   if nodes.count == 0 {
@@ -62,13 +65,14 @@ func content(_ nodes: [Node]) -> Node {
   //  .div(attributes: [.class("container")], nodes[0])
 }
 
+// TODO: Remove
 func content(_ nodes: Node...) -> Node {
   content(nodes)
 }
 
 extension Attribute {
   static func data(_ name: SharedString, _ value: SharedString) -> Self {
-    .init(name.description, value.description)
+    .init("data-\(name.description)", value.description)
   }
 }
 
@@ -91,3 +95,9 @@ func container(class: SharedString..., content: @escaping () -> Node) -> Node {
 func container(content: @escaping () -> Node) -> Node {
   return .div(attributes: [.class(.container)], content())
 }
+
+let jsonEncoder: JSONEncoder = {
+  let encoder = JSONEncoder()
+  encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+  return encoder
+}()

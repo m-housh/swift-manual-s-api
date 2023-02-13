@@ -135,9 +135,11 @@ package.targets.append(contentsOf: [
   .target(
     name: "DocumentMiddlewareLive",
     dependencies: [
+      "ApiRouteMiddleware",
+      "DocumentMiddleware",
+      "FirstPartyMocks",
       "Models",
       "SiteRouter",
-      "DocumentMiddleware",
     ]
   ),
   .target(
