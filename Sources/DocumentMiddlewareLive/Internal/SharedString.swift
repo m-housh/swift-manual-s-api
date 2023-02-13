@@ -1,7 +1,7 @@
 import Html
 
 /// Represents strings that are used in html attributes, such as `class` and `data`.
-/// 
+///
 enum SharedString: String, CustomStringConvertible {
   case alignItemsStart
   case bgSuccess

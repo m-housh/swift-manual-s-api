@@ -12,19 +12,22 @@ import VaporRouting
 /// - Parameters:
 ///    - app: The vapor application to configure.
 public func configure(_ app: Vapor.Application) async throws {
-  
-  await withDependencies({
-    $0.siteRouter = $0.siteRouter.baseURL(
-      app.environment == .production ? "http://localhost:8080" // fix
-      : "http://localhost:8080"
-    ).eraseToAnyParserPrinter()
-  }, operation: {
-    // configure the vapor middleware(s)
-    await configureVaporMiddleware(app)
-    
-    // configure site router.
-    await configureSiteRouter(app)
-  })
+
+  await withDependencies(
+    {
+      $0.siteRouter = $0.siteRouter.baseURL(
+        app.environment == .production
+          ? "http://localhost:8080"  // fix
+          : "http://localhost:8080"
+      ).eraseToAnyParserPrinter()
+    },
+    operation: {
+      // configure the vapor middleware(s)
+      await configureVaporMiddleware(app)
+
+      // configure site router.
+      await configureSiteRouter(app)
+    })
 }
 
 // Configure the vapor middleware.

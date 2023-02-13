@@ -11,7 +11,7 @@ struct DocumentHome: Renderable {
 
   init() {}
 
-//  var content: Node {
+  //  var content: Node {
   func content() async throws -> Node {
     container {
       row {

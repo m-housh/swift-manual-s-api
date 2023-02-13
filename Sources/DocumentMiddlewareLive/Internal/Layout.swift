@@ -92,7 +92,9 @@ private struct Layout {
     )
   }
 
-  private static func documentDropdown(_ router: AnyParserPrinter<URLRequestData, ServerRoute>) -> Node {
+  private static func documentDropdown(_ router: AnyParserPrinter<URLRequestData, ServerRoute>)
+    -> Node
+  {
 
     var documentNavbarItem: Node {
       .ul(

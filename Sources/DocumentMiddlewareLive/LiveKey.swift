@@ -5,7 +5,7 @@ import Html
 import Models
 
 extension DocumentMiddleware: DependencyKey {
-  
+
   public static var liveValue: DocumentMiddleware {
     return DocumentMiddleware { route in
       switch route {

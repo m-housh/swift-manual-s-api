@@ -55,22 +55,22 @@ public struct SiteRouter: ParserPrinter {
 }
 
 public enum SiteRouterKey: DependencyKey {
-  
+
   public static var testValue: AnyParserPrinter<URLRequestData, ServerRoute> {
     SiteRouter(decoder: .init(), encoder: jsonEncoder).eraseToAnyParserPrinter()
   }
-  
+
   public static var liveValue: AnyParserPrinter<URLRequestData, ServerRoute> {
     SiteRouter(decoder: .init(), encoder: jsonEncoder).eraseToAnyParserPrinter()
   }
 }
 
 private enum BaseUrlKey: DependencyKey {
-  
-  static var  testValue: String {
+
+  static var testValue: String {
     "http://localhost:8080"
   }
-  
+
   static var liveValue: String {
     "http://localhost:8080"
   }
@@ -82,7 +82,7 @@ extension DependencyValues {
     get { self[SiteRouterKey.self].eraseToAnyParserPrinter() }
     set { self[SiteRouterKey.self] = .init(newValue) }
   }
-  
+
   public var baseURL: String {
     get { self[BaseUrlKey.self] }
     set { self[BaseUrlKey.self] = newValue }

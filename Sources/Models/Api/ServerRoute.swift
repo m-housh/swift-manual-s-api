@@ -488,7 +488,7 @@ extension ServerRoute {
 // MARK: Custom Encoding
 
 extension ServerRoute.Api.Route.BalancePointRequest {
-  
+
   private enum CodingKeys: String, CodingKey {
     case thermal
   }

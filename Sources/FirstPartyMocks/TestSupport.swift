@@ -19,7 +19,7 @@ extension ManufactuerCoolingCapacity {
     outdoorTemperature: 0,
     capacity: .zero
   )
-  
+
   public static var mock = Self.init(
     cfm: 800,
     indoorTemperature: 75,
@@ -72,7 +72,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequ
     manufacturerAdjustments: nil,
     systemType: .mock
   )
-  
+
   public static let mock = Self.init(
     capacity: .mock,
     designInfo: .mock,
@@ -91,15 +91,15 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
     houseLoad: .zero,
     systemType: .mock
   )
-  
+
   public static var outdoorMock: Self {
     var aboveDesign = ManufactuerCoolingCapacity.mock
     aboveDesign.outdoorTemperature = 95
-    
+
     var belowDesign = ManufactuerCoolingCapacity.mock
     belowDesign.outdoorTemperature = 85
     belowDesign.capacity = .init(total: 23_200, sensible: 17_100)
-    
+
     return .init(
       aboveDesign: aboveDesign,
       belowDesign: belowDesign,
@@ -108,18 +108,18 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
       systemType: .mock
     )
   }
-  
+
   public static var indoorMock: Self {
     var aboveDesign = ManufactuerCoolingCapacity.mock
     aboveDesign.indoorWetBulb = 67
     aboveDesign.outdoorTemperature = 95
     aboveDesign.capacity = .init(total: 24_828, sensible: 15_937)
-    
+
     var belowDesign = ManufactuerCoolingCapacity.mock
     belowDesign.outdoorTemperature = 95
     belowDesign.indoorWetBulb = 62
     belowDesign.capacity = .init(total: 23_046, sensible: 19_078)
-    
+
     return .init(
       aboveDesign: aboveDesign,
       belowDesign: belowDesign,
@@ -185,7 +185,7 @@ extension ServerRoute.Api.Route.RequiredKWRequest {
     capacityAtDesign: 0,
     heatLoss: 0
   )
-  
+
   public static let mock = Self.init(
     capacityAtDesign: 23_123,
     heatLoss: 49_667
@@ -198,7 +198,7 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal {
     heatLoss: 0,
     capacity: .zero
   )
-  
+
   public static let mock = Self.init(
     designTemperature: 5,
     heatLoss: 49_667,
@@ -207,9 +207,9 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal {
 }
 
 extension ServerRoute.Api.Route.DeratingRequest {
-  
+
   public static let zero = Self.init(elevation: 0, systemType: .mock)
-  
+
   public static let mock = Self.init(elevation: 5_000, systemType: .mock)
 }
 
@@ -218,7 +218,7 @@ extension ServerRoute.Api.Route.SizingLimitRequest {
     systemType: .mock,
     houseLoad: .zero
   )
-  
+
   public static let mock = Self.init(
     systemType: .mock,
     houseLoad: .mock

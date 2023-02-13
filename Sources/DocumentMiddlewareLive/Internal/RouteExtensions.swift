@@ -66,7 +66,7 @@ extension ServerRoute.Documentation.Route.Interpolation.Key: LinkRepresentable {
 }
 
 extension ServerRoute.Documentation.Route.Interpolation.Cooling: LinkRepresentable {
-  
+
   var text: String {
     switch self {
     case .noInterpolation:
@@ -79,7 +79,7 @@ extension ServerRoute.Documentation.Route.Interpolation.Cooling: LinkRepresentab
       return "Two Way"
     }
   }
-  
+
   var route: ServerRoute {
     switch self {
     case .noInterpolation:
