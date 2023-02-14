@@ -40,7 +40,13 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
     let output = Double(furnace.input) * (furnace.afue / 100)
     var finalCapacity = output
-    if case let .heating(derating) = furnace.altitudeDeratings {
+    
+    let altitudeDerating = try await ServerRoute.Api.Route.DeratingRequest(
+      elevation: furnace.elevation,
+      systemType: .furnaceOnly
+    ).respond()
+    
+    if case let .heating(derating) = altitudeDerating {
       finalCapacity *= derating
     }
 
@@ -48,6 +54,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
     return .furnace(
       .init(
+        altitudeDeratings: altitudeDerating,
         outputCapacity: Int(output),
         finalCapacity: Int(finalCapacity),
         percentOfLoad: .normalizePercentage(percentOfLoad)
@@ -74,13 +81,19 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
       ))
   }
 
+  // TODO: FIX DERATINGS.
   fileprivate func interpolate(heatPump: HeatPumpRequest) async throws
     -> InterpolationResponse.Heating.Result
   {
-    //    try await heatPump.capacity.validate()
 
     var finalCapacity = heatPump.capacity
-    if case let .airToAir(total: _, sensible: _, heating: derating) = heatPump.altitudeDeratings {
+    
+    let altitudeDeratings = try await ServerRoute.Api.Route.DeratingRequest(
+      elevation: heatPump.elevation,
+      systemType: heatPump.systemType
+    ).respond()
+    
+    if case let .airToAir(total: _, sensible: _, heating: derating) = altitudeDeratings {
       finalCapacity = await heatPump.capacity.derate(derating)
     }
     let balancePointRequest = ServerRoute.Api.Route.BalancePointRequest.thermal(
@@ -100,6 +113,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
     return .heatPump(
       .init(
+        altitudeDeratings: altitudeDeratings,
         finalCapacity: finalCapacity,
         capacityAtDesign: Int(capacityAtDesign),
         balancePointTemperature: balancePoint,
@@ -130,7 +144,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
   fileprivate var furnaceRequest: ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest
   {
     .init(
-      altitudeDeratings: self.altitudeDeratings,
+      elevation: self.elevation,
       houseLoad: self.houseLoad,
       input: self.input,
       afue: self.afue
@@ -145,6 +159,7 @@ extension InterpolationResponse.Heating.Result {
     case let .furnace(furnace):
       return .boiler(
         .init(
+          altitudeDeratings: furnace.altitudeDeratings,
           outputCapacity: furnace.outputCapacity,
           finalCapacity: furnace.finalCapacity,
           percentOfLoad: furnace.percentOfLoad
@@ -214,8 +229,8 @@ extension SizingLimits {
   private func validateElectric(_ furnace: InterpolationResponse.Heating.Result.Electric)
     -> [String]?
   {
-    guard case let .electricFurnace(oversizing) = self.oversizing,
-      case let .electricFurnace(undersizing) = self.undersizing
+    guard case let .electric(oversizing) = self.oversizing,
+      case let .electric(undersizing) = self.undersizing
     else {
       return ["Invalid sizing limits \(self)."]
     }

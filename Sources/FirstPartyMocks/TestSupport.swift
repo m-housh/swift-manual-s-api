@@ -105,6 +105,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
       belowDesign: belowDesign,
       designInfo: .mock,
       houseLoad: .mock,
+      manufacturerAdjustments: .airToAir(total: 0.98, sensible: 0.95, heating: 1.0),
       systemType: .mock
     )
   }
@@ -125,6 +126,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
       belowDesign: belowDesign,
       designInfo: .mock,
       houseLoad: .mock,
+      manufacturerAdjustments: .airToAir(total: 0.98, sensible: 0.95, heating: 1.0),
       systemType: .mock
     )
   }
@@ -182,14 +184,14 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest {
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
 
   public static let zero = Self.init(
-    altitudeDeratings: nil,
+    elevation: 0,
     houseLoad: .zero,
     input: 0,
     afue: 0
   )
 
   public static let mock = Self.init(
-    altitudeDeratings: .heating(multiplier: 1.0),
+    elevation: 5000,
     houseLoad: .mock,
     input: 60_000,
     afue: 96.5
@@ -199,14 +201,14 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest {
 
   public static let zero = Self.init(
-    altitudeDeratings: nil,
+    elevation: 0,
     houseLoad: .zero,
     input: 0,
     afue: 0
   )
 
   public static let mock = Self.init(
-    altitudeDeratings: .heating(multiplier: 1.0),
+    elevation: 5_000,
     houseLoad: .mock,
     input: 60_000,
     afue: 96.5
@@ -233,17 +235,19 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest {
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest {
 
   public static let zero = Self.init(
-    altitudeDeratings: nil,
     capacity: .zero,
     designInfo: .zero,
-    houseLoad: .zero
+    elevation: .zero,
+    houseLoad: .zero,
+    systemType: .mock
   )
 
   public static let mock = Self.init(
-    altitudeDeratings: .airToAir(total: 1.0, sensible: 1.0, heating: 1.0),
     capacity: .mock,
     designInfo: .mock,
-    houseLoad: .mock
+    elevation: 5_000,
+    houseLoad: .mock,
+    systemType: .mock
   )
 }
 

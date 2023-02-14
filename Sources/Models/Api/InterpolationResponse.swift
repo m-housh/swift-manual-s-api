@@ -72,16 +72,19 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
       case heatPump(HeatPump)
 
       public struct Boiler: Codable, Equatable, Sendable {
+        public let altitudeDeratings: AdjustmentMultiplier
         public let outputCapacity: Int
         public let finalCapacity: Int
         public let percentOfLoad: Double
         public let sizingLimits: SizingLimits
 
         public init(
+          altitudeDeratings: AdjustmentMultiplier,
           outputCapacity: Int,
           finalCapacity: Int,
           percentOfLoad: Double
         ) {
+          self.altitudeDeratings = altitudeDeratings
           self.outputCapacity = outputCapacity
           self.finalCapacity = finalCapacity
           self.percentOfLoad = percentOfLoad
@@ -90,16 +93,19 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
       }
 
       public struct Furnace: Codable, Equatable, Sendable {
+        public let altitudeDeratings: AdjustmentMultiplier
         public let outputCapacity: Int
         public let finalCapacity: Int
         public let percentOfLoad: Double
         public let sizingLimits: SizingLimits
 
         public init(
+          altitudeDeratings: AdjustmentMultiplier,
           outputCapacity: Int,
           finalCapacity: Int,
           percentOfLoad: Double
         ) {
+          self.altitudeDeratings = altitudeDeratings
           self.outputCapacity = outputCapacity
           self.finalCapacity = finalCapacity
           self.percentOfLoad = percentOfLoad
@@ -118,22 +124,25 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
         ) {
           self.requiredKW = requiredKW
           self.percentOfLoad = percentOfLoad
-          self.sizingLimits = .init(oversizing: .electricFurnace(), undersizing: .electricFurnace())
+          self.sizingLimits = .init(oversizing: .electric(), undersizing: .electric())
         }
       }
 
       public struct HeatPump: Codable, Equatable, Sendable {
+        public let altitudeDeratings: AdjustmentMultiplier
         public let finalCapacity: HeatPumpCapacity
         public let capacityAtDesign: Int
         public let balancePointTemperature: Double
         public let requiredKW: Double
 
         public init(
+          altitudeDeratings: AdjustmentMultiplier,
           finalCapacity: HeatPumpCapacity,
           capacityAtDesign: Int,
           balancePointTemperature: Double,
           requiredKW: Double
         ) {
+          self.altitudeDeratings = altitudeDeratings
           self.finalCapacity = finalCapacity
           self.capacityAtDesign = capacityAtDesign
           self.balancePointTemperature = balancePointTemperature
@@ -157,9 +166,9 @@ extension InterpolationResponse {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
     case let .cooling(cooling):
-      try container.encode(cooling, forKey: .cooling)
+      try container.encode(cooling.result, forKey: .cooling)
     case let .heating(heating):
-      try container.encode(heating, forKey: .heating)
+      try container.encode(heating.result, forKey: .heating)
     }
   }
 }

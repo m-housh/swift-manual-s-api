@@ -14,7 +14,7 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let route = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
-        altitudeDeratings: nil,
+        elevation: 0,
         houseLoad: .mock,
         input: 60_000,
         afue: 96
@@ -27,6 +27,7 @@ final class HeatingInterpolationTests: XCTestCase {
         .init(result: .heating(
           .init(
             result: .furnace(.init(
+              altitudeDeratings: .heating(multiplier: 1),
               outputCapacity: 57_600,
               finalCapacity: 57_600,
               percentOfLoad: 116
@@ -43,7 +44,7 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let route = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
-        altitudeDeratings: nil,
+        elevation: 0,
         houseLoad: .mock,
         input: 160_000,
         afue: 96
@@ -58,6 +59,7 @@ final class HeatingInterpolationTests: XCTestCase {
           result: .heating(
           .init(
             result: .furnace(.init(
+              altitudeDeratings: .heating(multiplier: 1),
               outputCapacity: 153_600,
               finalCapacity: 153_600,
               percentOfLoad: 309.3
@@ -74,7 +76,7 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
-        altitudeDeratings: nil,
+        elevation: 0,
         houseLoad: .mock,
         input: 60_000,
         afue: 96
@@ -84,8 +86,12 @@ final class HeatingInterpolationTests: XCTestCase {
       XCTAssertNoDifference(
         sut,
         .init(result: .heating(.init(
-          result: .boiler(.init(outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116))))
-        )
+          result: .boiler(.init(
+            altitudeDeratings: .heating(multiplier: 1),
+            outputCapacity: 57_600,
+            finalCapacity: 57_600,
+            percentOfLoad: 116))
+        )))
       )
     }
   }
@@ -96,7 +102,7 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let route = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
-        altitudeDeratings: nil,
+        elevation: 0,
         houseLoad: .mock,
         input: 160_000,
         afue: 96
@@ -111,6 +117,7 @@ final class HeatingInterpolationTests: XCTestCase {
           result: .heating(
           .init(
             result: .boiler(.init(
+              altitudeDeratings: .heating(multiplier: 1),
               outputCapacity: 153_600,
               finalCapacity: 153_600,
               percentOfLoad: 309.3
@@ -177,10 +184,11 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest(
-        altitudeDeratings: nil,
         capacity: .mock,
         designInfo: .init(),
-        houseLoad: .mock
+        elevation: 0,
+        houseLoad: .mock,
+        systemType: .mock
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.heatPump(request))))
       let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
@@ -190,6 +198,7 @@ final class HeatingInterpolationTests: XCTestCase {
           .init(
             result: .heatPump(
               .init(
+                altitudeDeratings: .airToAir(total: 1, sensible: 1, heating: 1),
                 finalCapacity: .mock,
                 capacityAtDesign: 11_308,
                 balancePointTemperature: 38.5,

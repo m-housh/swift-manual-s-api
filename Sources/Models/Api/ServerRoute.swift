@@ -323,18 +323,18 @@ extension ServerRoute {
           case heatPump(HeatPumpRequest)
 
           public struct BoilerRequest: Codable, Equatable, Sendable {
-            public var altitudeDeratings: AdjustmentMultiplier?
+            public var elevation: Int
             public var houseLoad: HouseLoad
             public var input: Int
             public var afue: Double
 
             public init(
-              altitudeDeratings: AdjustmentMultiplier? = nil,
+              elevation: Int = 0,
               houseLoad: HouseLoad,
               input: Int,
               afue: Double
             ) {
-              self.altitudeDeratings = altitudeDeratings
+              self.elevation = elevation
               self.houseLoad = houseLoad
               self.input = input
               self.afue = afue
@@ -361,18 +361,18 @@ extension ServerRoute {
           }
 
           public struct FurnaceRequest: Codable, Equatable, Sendable {
-            public var altitudeDeratings: AdjustmentMultiplier?
+            public var elevation: Int
             public var houseLoad: HouseLoad
             public var input: Int
             public var afue: Double
 
             public init(
-              altitudeDeratings: AdjustmentMultiplier? = nil,
+              elevation: Int = 0,
               houseLoad: HouseLoad,
               input: Int,
               afue: Double
             ) {
-              self.altitudeDeratings = altitudeDeratings
+              self.elevation = elevation
               self.houseLoad = houseLoad
               self.input = input
               self.afue = afue
@@ -380,21 +380,24 @@ extension ServerRoute {
           }
 
           public struct HeatPumpRequest: Codable, Equatable, Sendable {
-            public var altitudeDeratings: AdjustmentMultiplier?
             public var capacity: HeatPumpCapacity
             public var designInfo: DesignInfo
+            public var elevation: Int
             public var houseLoad: HouseLoad
+            public var systemType: SystemType
 
             public init(
-              altitudeDeratings: AdjustmentMultiplier? = nil,
               capacity: HeatPumpCapacity,
               designInfo: DesignInfo,
-              houseLoad: HouseLoad
+              elevation: Int = 0,
+              houseLoad: HouseLoad,
+              systemType: SystemType
             ) {
-              self.altitudeDeratings = altitudeDeratings
               self.capacity = capacity
               self.designInfo = designInfo
+              self.elevation = elevation
               self.houseLoad = houseLoad
+              self.systemType = systemType
             }
           }
         }

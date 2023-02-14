@@ -18,31 +18,11 @@ struct BalancePointHome: Renderable {
   var inputDescription: Node {
     container {
       card(body: [
-        ("Capacity", "The heat pump capacity."),
-        ("Design Temperature", "The winter outdoor design temperature."),
-        ("Heat Loss", "The winter heat loss of the building."),
+        ("capacity", "The heat pump capacity."),
+        ("designTemperature", "The winter outdoor design temperature."),
+        ("heatLoss", "The winter heat loss of the building."),
       ])
     }
-  }
-
-  func card(body: [(String, String)]) -> Node {
-    let bodyNode = body.map({ (title, description) -> ChildOf<Tag.Ul> in
-      .li(
-        attributes: [.class("list-group-item pb-3 ps-2")],
-        [
-          Node.pre(attributes: [.class("text-secondary fs-5 mb-0")], .text(title)),
-          Node.text(description),
-        ]
-      )
-    })
-    .reduce(into: Node.ul(attributes: [.class("list-group list-group-flush")])) {
-      $0.append($1.rawValue)
-    }
-
-    return .div(
-      attributes: [.class("card bg-success-subtle")],
-      bodyNode
-    )
   }
 
   //  var content: Node {

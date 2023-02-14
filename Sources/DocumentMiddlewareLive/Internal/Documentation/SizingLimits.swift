@@ -13,6 +13,10 @@ struct SizingLimitsHome: Renderable {
     This route is used to calculate the acceptable sizing limits for the given conditions.
     """#
   }
+  let inputDescription = card(body: [
+    ("houseLoad", "The house load at the outdoor design conditions."),
+    ("systemType", "The system type to calculate the sizing limits for.")
+  ])
 
   func content() async throws -> Node {
     try await RouteView(
@@ -20,7 +24,7 @@ struct SizingLimitsHome: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 

@@ -72,3 +72,25 @@ let jsonEncoder: JSONEncoder = {
   encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
   return encoder
 }()
+
+// MARK: - Card
+
+func card(body: [(String, String)]) -> Node {
+  let bodyNode = body.map({ (title, description) -> ChildOf<Tag.Ul> in
+    .li(
+      attributes: [.class("list-group-item pb-3 ps-2")],
+      [
+        Node.pre(attributes: [.class("text-secondary fs-6 mb-0 pt-2")], .text(title)),
+        Node.text(description),
+      ]
+    )
+  })
+  .reduce(into: Node.ul(attributes: [.class("list-group list-group-flush")])) {
+    $0.append($1.rawValue)
+  }
+
+  return .div(
+    attributes: [.class("card bg-success-subtle")],
+    bodyNode
+  )
+}

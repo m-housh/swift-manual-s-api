@@ -14,6 +14,10 @@ struct DeratingHome: Renderable {
     This route is used to calculate the elevation deratings for the given conditions.
     """#
   }
+  let inputDescription = card(body: [
+    ("elevation", "The project elevation."),
+    ("systemType", "The system type to calculate the deratings for.")
+  ])
 
   //  var content: Node {
   func content() async throws -> Node {
@@ -22,7 +26,7 @@ struct DeratingHome: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 

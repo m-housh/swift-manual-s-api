@@ -509,11 +509,7 @@ final class RouterTests: XCTestCase {
   func test_boiler() throws {
     let json = """
     {
-      "altitudeDeratings": {
-        "heating": {
-          "multiplier": 1.0
-        }
-      },
+      "elevation": 0,
       "houseLoad": {
         "cooling": {
           "total": 17872,
@@ -536,7 +532,7 @@ final class RouterTests: XCTestCase {
       .api(.init(
         isDebug: false,
         route: .interpolate(.heating(.boiler(.init(
-          altitudeDeratings: .heating(multiplier: 1),
+          elevation: 0,
           houseLoad: .mock,
           input: 100_000,
           afue: 96.5
@@ -548,13 +544,7 @@ final class RouterTests: XCTestCase {
   func test_furnace() throws {
     let json = """
     {
-      "altitudeDeratings": {
-        "airToAir": {
-          "total": 1.0,
-          "sensible": 1.0,
-          "heating": 1.0
-        }
-      },
+      "elevation": 0,
       "houseLoad": {
         "cooling": {
           "total": 17872,
@@ -577,7 +567,7 @@ final class RouterTests: XCTestCase {
       .api(.init(
         isDebug: false,
         route: .interpolate(.heating(.furnace(.init(
-          altitudeDeratings: .airToAir(total: 1, sensible: 1, heating: 1),
+          elevation: 0,
           houseLoad: .mock,
           input: 100_000,
           afue: 96.5
@@ -630,13 +620,7 @@ final class RouterTests: XCTestCase {
   func test_heat_pump() throws {
     let json = """
     {
-      "altitudeDeratings": {
-        "airToAir": {
-          "total": 1.0,
-          "sensible": 1.0,
-          "heating": 1.0
-        }
-      },
+      "elevation": 0,
       "capacity": {
         "at47": 24600,
         "at17": 15100
@@ -658,6 +642,13 @@ final class RouterTests: XCTestCase {
           "sensible": 13894
         },
         "heating": 49667
+      },
+      "systemType" : {
+        "airToAir" : {
+          "climate" : "mildWinterOrLatentLoad",
+          "compressor" : "variableSpeed",
+          "type" : "heatPump"
+        }
       }
     }
     """
@@ -672,10 +663,11 @@ final class RouterTests: XCTestCase {
       .api(.init(
         isDebug: false,
         route: .interpolate(.heating(.heatPump(.init(
-          altitudeDeratings: .airToAir(total: 1, sensible: 1, heating: 1),
           capacity: .mock,
           designInfo: .mock,
-          houseLoad: .mock
+          elevation: 0,
+          houseLoad: .mock,
+          systemType: .mock
         ))))
       ))
     )

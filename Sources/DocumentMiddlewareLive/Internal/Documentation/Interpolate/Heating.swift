@@ -24,6 +24,10 @@ private struct BoilerView: Renderable {
   let description = """
     This route is used to interpolate a boiler for the given conditons.
     """
+  let inputDescription = card(body: [
+    ("afue", "The boiler efficiency percentage."),
+    ("altitudeDeratings", "The boiler efficiency percentage."),
+  ])
 
   func content() async throws -> Node {
     try await RouteView(

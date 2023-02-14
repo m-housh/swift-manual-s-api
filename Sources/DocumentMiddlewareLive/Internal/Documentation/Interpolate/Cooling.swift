@@ -34,8 +34,16 @@ private struct OneWayIndoorView: Renderable {
       The manufacturer's published indoor data is 67° and 62° wet-bulb, so interpolation is needed to
       calculate the capacity at 63° wet-bulb.
     """,
-
   ]
+  
+  let inputDescription = card(body: [
+    ("aboveDesign", "The manufacturer's capacity above the indoor design conditions."),
+    ("belowDesign", "The manufacturer's capacity below the indoor design conditions."),
+    ("designInfo", "The design information for the project."),
+    ("houseLoad", "The house load for the project at design conditions."),
+    ("manufacturerAdjustments", "Optional adjustments multipliers to the manufacturer's capacity."),
+    ("systemType", "The system type for the interpolation."),
+  ])
 
   func content() async throws -> Node {
     try await InterpolationView(
@@ -46,7 +54,8 @@ private struct OneWayIndoorView: Renderable {
       ),
       json: json,
       title: title,
-      route: route
+      route: route,
+      inputDescription: inputDescription
     ).content()
   }
 }
@@ -70,6 +79,15 @@ private struct OneWayOutdoorView: Renderable {
     """,
 
   ]
+  
+  let inputDescription = card(body: [
+    ("aboveDesign", "The manufacturer's capacity above the outdoor design conditions."),
+    ("belowDesign", "The manufacturer's capacity below the outdoor design conditions."),
+    ("designInfo", "The design information for the project."),
+    ("houseLoad", "The house load for the project at design conditions."),
+    ("manufacturerAdjustments", "Optional adjustments multipliers to the manufacturer's capacity."),
+    ("systemType", "The system type for the interpolation."),
+  ])
 
   func content() async throws -> Node {
     try await InterpolationView(
@@ -80,7 +98,8 @@ private struct OneWayOutdoorView: Renderable {
       ),
       json: json,
       title: title,
-      route: route
+      route: route,
+      inputDescription: inputDescription
     ).content()
   }
 }
@@ -103,6 +122,14 @@ private struct NoInterpolationView: Renderable {
     """,
 
   ]
+  
+  let inputDescription = card(body: [
+    ("capacity", "The manufacturer's capacity at the design indoor and outdoor conditions."),
+    ("designInfo", "The design information for the project."),
+    ("houseLoad", "The house load for the project at design conditions."),
+    ("manufacturerAdjustments", "Optional adjustments multipliers to the manufacturer's capacity."),
+    ("systemType", "The system type for the interpolation."),
+  ])
 
   func content() async throws -> Node {
     try await InterpolationView(
@@ -113,7 +140,8 @@ private struct NoInterpolationView: Renderable {
       ),
       json: json,
       title: title,
-      route: route
+      route: route,
+      inputDescription: inputDescription
     ).content()
   }
 }
@@ -140,6 +168,15 @@ private struct TwoWayView: Renderable {
     """,
 
   ]
+  
+  let inputDescription = card(body: [
+    ("aboveDesign", "The manufacturer's capacity above the indoor and outdoor design conditions."),
+    ("belowDesign", "The manufacturer's capacity below the indoor and outdoor design conditions."),
+    ("designInfo", "The design information for the project."),
+    ("houseLoad", "The house load for the project at design conditions."),
+    ("manufacturerAdjustments", "Optional adjustments multipliers to the manufacturer's capacity."),
+    ("systemType", "The system type for the interpolation."),
+  ])
 
   func content() async throws -> Node {
     try await InterpolationView(
@@ -150,7 +187,8 @@ private struct TwoWayView: Renderable {
       ),
       json: json,
       title: title,
-      route: route
+      route: route,
+      inputDescription: inputDescription
     ).content()
   }
 }
@@ -160,6 +198,7 @@ private struct InterpolationView: Renderable {
   let json: any Encodable
   let title: String
   let route: ServerRoute.Api.Route
+  let inputDescription: Node
 
   struct Description {
     let mainDescription: String
@@ -207,7 +246,7 @@ private struct InterpolationView: Renderable {
       route: route,
       title: title,
       description: description.content,
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 }

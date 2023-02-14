@@ -12,6 +12,10 @@ struct RequiredKWHome: Renderable {
     This route is used to calculate the required kilowatts for the given conditions.
     """#
   }
+  let inputDescription = card(body: [
+    ("capacityAtDesign", "The system capacity at the design temperature."),
+    ("heatLoss", "The houses heat loss/load at the outdoor design temperature.")
+  ])
 
   func content() async throws -> Node {
     try await RouteView(
@@ -19,7 +23,7 @@ struct RequiredKWHome: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 
