@@ -23,7 +23,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
 // MARK: - Interpolations
 extension InterpolationResponseEnvelope {
-  
+
   init(result: InterpolationResponse.Heating.Result) {
     self.init(
       failures: result.validateSizingLimits(),
@@ -65,7 +65,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
     let requiredKW = try await requredKWRequest.respond().requiredKW
 
     let percentOfLoad = electric.inputKW / requiredKW
-//    let sizingLimits =
+    //    let sizingLimits =
 
     return .electric(
       .init(
@@ -168,17 +168,17 @@ extension InterpolationResponse.Heating.Result {
       return nil
     }
   }
-  
+
   func validateSizingLimits() -> [String]? {
     sizingLimits?.validate(result: self)
   }
 }
 
 extension SizingLimits {
-  
+
   private func validateBoiler(_ boiler: InterpolationResponse.Heating.Result.Boiler) -> [String]? {
     guard case let .boiler(oversizing) = self.oversizing,
-          case let .boiler(undersizing) = self.undersizing
+      case let .boiler(undersizing) = self.undersizing
     else {
       return ["Invalid sizing limits \(self)."]
     }
@@ -189,13 +189,14 @@ extension SizingLimits {
     if boiler.percentOfLoad < Double(undersizing) {
       failures.append("Undersizing failure.")
     }
-    
+
     return failures.isEmpty ? nil : failures
   }
-  
-  private func validateFurnace(_ furnace: InterpolationResponse.Heating.Result.Furnace) -> [String]? {
+
+  private func validateFurnace(_ furnace: InterpolationResponse.Heating.Result.Furnace) -> [String]?
+  {
     guard case let .furnace(oversizing) = self.oversizing,
-          case let .furnace(undersizing) = self.undersizing
+      case let .furnace(undersizing) = self.undersizing
     else {
       return ["Invalid sizing limits \(self)."]
     }
@@ -206,13 +207,15 @@ extension SizingLimits {
     if furnace.percentOfLoad < Double(undersizing) {
       failures.append("Undersizing failure.")
     }
-    
+
     return failures.isEmpty ? nil : failures
   }
-  
-  private func validateElectric(_ furnace: InterpolationResponse.Heating.Result.Electric) -> [String]? {
+
+  private func validateElectric(_ furnace: InterpolationResponse.Heating.Result.Electric)
+    -> [String]?
+  {
     guard case let .electricFurnace(oversizing) = self.oversizing,
-          case let .electricFurnace(undersizing) = self.undersizing
+      case let .electricFurnace(undersizing) = self.undersizing
     else {
       return ["Invalid sizing limits \(self)."]
     }
@@ -223,10 +226,10 @@ extension SizingLimits {
     if furnace.percentOfLoad < Double(undersizing) {
       failures.append("Undersizing failure.")
     }
-    
+
     return failures.isEmpty ? nil : failures
   }
-  
+
   fileprivate func validate(result: InterpolationResponse.Heating.Result) -> [String]? {
     switch result {
     case let .boiler(boiler):

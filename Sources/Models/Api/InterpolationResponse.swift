@@ -5,7 +5,7 @@ public struct InterpolationResponseEnvelope: Codable, Equatable, Sendable {
   public let result: InterpolationResponse
   // not a computed property, so it get's encoded in json responses.
   public let isFailed: Bool
-  
+
   public init(
     failures: [String]? = nil,
     result: InterpolationResponse

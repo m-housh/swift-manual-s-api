@@ -43,11 +43,12 @@ struct RouteView {
     guard let data = try? jsonEncoder.encode(json),
       let string = String(data: data, encoding: .utf8)
     else {
-      logger.warning("""
-      Failed to parse json string.
-      
-      Route: \(routeString)
-      """)
+      logger.warning(
+        """
+        Failed to parse json string.
+
+        Route: \(routeString)
+        """)
       return "Oops, something went wrong."
     }
     return string
@@ -63,11 +64,12 @@ struct RouteView {
     guard let data = try? jsonEncoder.encode(output),
       let string = String(data: data, encoding: .utf8)
     else {
-      logger.warning("""
-      Failed to parse json output.
-      
-      Route: \(routeString)
-      """)
+      logger.warning(
+        """
+        Failed to parse json output.
+
+        Route: \(routeString)
+        """)
       return "Oops, something went wrong."
     }
     return string
