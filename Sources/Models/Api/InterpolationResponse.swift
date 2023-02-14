@@ -1,5 +1,25 @@
 // TODO: Add pass / fail results.
 
+public struct InterpolationResponseEnvelope: Codable, Equatable, Sendable {
+  public let failures: [String]?
+  public let result: InterpolationResponse
+  // not a computed property, so it get's encoded in json responses.
+  public let isFailed: Bool
+  
+  public init(
+    failures: [String]? = nil,
+    result: InterpolationResponse
+  ) {
+    self.failures = failures
+    self.result = result
+    if let failures {
+      self.isFailed = !failures.isEmpty
+    } else {
+      self.isFailed = false
+    }
+  }
+}
+
 public enum InterpolationResponse: Codable, Equatable, Sendable {
   case cooling(Cooling)
   case heating(Heating)
@@ -17,19 +37,22 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
       public let finalCapacityAtDesign: CoolingCapacity
       public let altitudeDerating: AdjustmentMultiplier?
       public let capacityAsPercentOfLoad: CapacityAsPercentOfLoad
+      public let sizingLimits: SizingLimits
 
       public init(
         interpolatedCapacity: CoolingCapacity,
         excessLatent: Int,
         finalCapacityAtDesign: CoolingCapacity,
         altitudeDerating: AdjustmentMultiplier?,
-        capacityAsPercentOfLoad: CapacityAsPercentOfLoad
+        capacityAsPercentOfLoad: CapacityAsPercentOfLoad,
+        sizingLimits: SizingLimits
       ) {
         self.interpolatedCapacity = interpolatedCapacity
         self.excessLatent = excessLatent
         self.finalCapacityAtDesign = finalCapacityAtDesign
         self.altitudeDerating = altitudeDerating
         self.capacityAsPercentOfLoad = capacityAsPercentOfLoad
+        self.sizingLimits = sizingLimits
       }
     }
   }
@@ -52,6 +75,7 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
         public let outputCapacity: Int
         public let finalCapacity: Int
         public let percentOfLoad: Double
+        public let sizingLimits: SizingLimits
 
         public init(
           outputCapacity: Int,
@@ -61,6 +85,7 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
           self.outputCapacity = outputCapacity
           self.finalCapacity = finalCapacity
           self.percentOfLoad = percentOfLoad
+          self.sizingLimits = .init(oversizing: .boiler(), undersizing: .boiler())
         }
       }
 
@@ -68,6 +93,7 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
         public let outputCapacity: Int
         public let finalCapacity: Int
         public let percentOfLoad: Double
+        public let sizingLimits: SizingLimits
 
         public init(
           outputCapacity: Int,
@@ -77,12 +103,14 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
           self.outputCapacity = outputCapacity
           self.finalCapacity = finalCapacity
           self.percentOfLoad = percentOfLoad
+          self.sizingLimits = .init(oversizing: .furnace(), undersizing: .furnace())
         }
       }
 
       public struct Electric: Codable, Equatable, Sendable {
         public let requiredKW: Double
         public let percentOfLoad: Double
+        public let sizingLimits: SizingLimits
 
         public init(
           requiredKW: Double,
@@ -90,6 +118,7 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
         ) {
           self.requiredKW = requiredKW
           self.percentOfLoad = percentOfLoad
+          self.sizingLimits = .init(oversizing: .electricFurnace(), undersizing: .electricFurnace())
         }
       }
 

@@ -11,9 +11,9 @@ extension ApiRouteMiddleware: DependencyKey {
       interpolate: { request in
         switch request {
         case let .cooling(coolingRequest):
-          return .cooling(try await coolingRequest.respond())
+          return try await coolingRequest.respond()
         case let .heating(heatingRequest):
-          return .heating(try await heatingRequest.respond())
+          return try await heatingRequest.respond()
         }
       },
       requiredKW: { try await $0.respond() },

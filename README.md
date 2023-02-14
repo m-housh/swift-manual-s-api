@@ -4,8 +4,14 @@
 
 A server written in swift that serves an api and html site for Manual-S calculations.
 
-This project is under active development, so documentation is currently lacking and the api's are subject to
-change.
+This project is under active development, so hosted documentation is currently lacking 
+and the api's are subject to change.
+
+- [Run locally](#run-locally)
+- [Run in docker](#run-in-docker)
+- [Build from source](#building-the-image-from-source)
+- [View documents locally](#viewing-the-documents)
+- [Project Dependencies](#dependencies)
 
 ## Run locally
 
@@ -75,7 +81,7 @@ You could then run tests in the development container.
 docker run -it --rm ghcr.io/m-housh/swift-manual-s-api:dev swift test
 ```
 
-#### Building the image from source on your local machine.
+### Building the image from source
 
 First build the docker image.
 
@@ -105,9 +111,11 @@ Once you have the container running locally, if you open your browser to:
 http://localhost:8080/
 ```
 
-Or whichever server port you specified when running the container.
-
 Then you can browse the documents and api routes.
+
+If you specified a different port when starting the container, then use whichever server 
+port you specified.
+
 
 ## Dependencies
 

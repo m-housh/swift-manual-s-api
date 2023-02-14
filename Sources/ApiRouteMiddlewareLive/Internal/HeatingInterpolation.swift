@@ -4,7 +4,7 @@ import Validations
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
-  func respond() async throws -> InterpolationResponse.Heating {
+  func respond() async throws -> InterpolationResponseEnvelope {
     let result: InterpolationResponse.Heating.Result
     switch self {
     case let .boiler(boiler):
@@ -22,13 +22,21 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 }
 
 // MARK: - Interpolations
+extension InterpolationResponseEnvelope {
+  
+  init(result: InterpolationResponse.Heating.Result) {
+    self.init(
+      failures: result.validateSizingLimits(),
+      result: .heating(.init(result: result))
+    )
+  }
+}
 
 extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
   fileprivate func interpolate(furnace: FurnaceRequest) async throws
     -> InterpolationResponse.Heating.Result
   {
-    //    try await furnace.validate()
 
     let output = Double(furnace.input) * (furnace.afue / 100)
     var finalCapacity = output
@@ -57,6 +65,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
     let requiredKW = try await requredKWRequest.respond().requiredKW
 
     let percentOfLoad = electric.inputKW / requiredKW
+//    let sizingLimits =
 
     return .electric(
       .init(
@@ -96,7 +105,6 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
         balancePointTemperature: balancePoint,
         requiredKW: requiredKW
       ))
-
   }
 }
 
@@ -143,6 +151,92 @@ extension InterpolationResponse.Heating.Result {
         ))
     default:
       throw ValidationError(summary: "Invalid conversion.")  // better error.
+    }
+  }
+}
+
+extension InterpolationResponse.Heating.Result {
+  var sizingLimits: SizingLimits? {
+    switch self {
+    case let .boiler(boiler):
+      return boiler.sizingLimits
+    case let .electric(electric):
+      return electric.sizingLimits
+    case let .furnace(furnace):
+      return furnace.sizingLimits
+    case .heatPump(_):
+      return nil
+    }
+  }
+  
+  func validateSizingLimits() -> [String]? {
+    sizingLimits?.validate(result: self)
+  }
+}
+
+extension SizingLimits {
+  
+  private func validateBoiler(_ boiler: InterpolationResponse.Heating.Result.Boiler) -> [String]? {
+    guard case let .boiler(oversizing) = self.oversizing,
+          case let .boiler(undersizing) = self.undersizing
+    else {
+      return ["Invalid sizing limits \(self)."]
+    }
+    var failures = [String]()
+    if boiler.percentOfLoad > Double(oversizing) {
+      failures.append("Oversizing failure.")
+    }
+    if boiler.percentOfLoad < Double(undersizing) {
+      failures.append("Undersizing failure.")
+    }
+    
+    return failures.isEmpty ? nil : failures
+  }
+  
+  private func validateFurnace(_ furnace: InterpolationResponse.Heating.Result.Furnace) -> [String]? {
+    guard case let .furnace(oversizing) = self.oversizing,
+          case let .furnace(undersizing) = self.undersizing
+    else {
+      return ["Invalid sizing limits \(self)."]
+    }
+    var failures = [String]()
+    if furnace.percentOfLoad > Double(oversizing) {
+      failures.append("Oversizing failure.")
+    }
+    if furnace.percentOfLoad < Double(undersizing) {
+      failures.append("Undersizing failure.")
+    }
+    
+    return failures.isEmpty ? nil : failures
+  }
+  
+  private func validateElectric(_ furnace: InterpolationResponse.Heating.Result.Electric) -> [String]? {
+    guard case let .electricFurnace(oversizing) = self.oversizing,
+          case let .electricFurnace(undersizing) = self.undersizing
+    else {
+      return ["Invalid sizing limits \(self)."]
+    }
+    var failures = [String]()
+    if furnace.percentOfLoad > Double(oversizing) {
+      failures.append("Oversizing failure.")
+    }
+    if furnace.percentOfLoad < Double(undersizing) {
+      failures.append("Undersizing failure.")
+    }
+    
+    return failures.isEmpty ? nil : failures
+  }
+  
+  fileprivate func validate(result: InterpolationResponse.Heating.Result) -> [String]? {
+    switch result {
+    case let .boiler(boiler):
+      return validateBoiler(boiler)
+    case let .electric(electric):
+      return validateElectric(electric)
+    case let .furnace(furnace):
+      return validateFurnace(furnace)
+    case .heatPump(_):
+      return nil
     }
   }
 }

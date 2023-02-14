@@ -138,6 +138,7 @@ package.targets.append(contentsOf: [
       "ApiRouteMiddleware",
       "DocumentMiddleware",
       "FirstPartyMocks",
+      "LoggingDependency",
       "Models",
       "SiteRouter",
     ]

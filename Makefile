@@ -64,6 +64,9 @@ build-docker-dev-image:
 
 push-docker-image:
 	docker push $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
+	
+push-docker-dev-image:
+	$(MAKE) DOCKER_TAG="dev" push-docker-image
 
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server

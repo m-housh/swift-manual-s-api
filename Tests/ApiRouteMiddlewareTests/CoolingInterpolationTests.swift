@@ -32,19 +32,21 @@ final class CoolingInterpolationTests: XCTestCase {
         route: .interpolate(.cooling(.noInterpolation(request)))
       )
       
-      let sut = try await client.respond(serverRoute).value as? InterpolationResponse
+      let sut = try await client.respond(serverRoute).value as? InterpolationResponseEnvelope
+      print(sut!.result)
       XCTAssertNotNil(sut)
       XCTAssertNoDifference(
         sut,
-        .cooling(.init(
+        .init(result: .cooling(.init(
           result: .init(
             interpolatedCapacity: request.capacity.capacity,
             excessLatent: 886,
             finalCapacityAtDesign: .init(total: 22_600, sensible: 17_736),
             altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
-            capacityAsPercentOfLoad: .init(total: 126.5, sensible: 127.7, latent: 122.3)
+            capacityAsPercentOfLoad: .init(total: 126.5, sensible: 127.7, latent: 122.3),
+            sizingLimits: .init(oversizing: .cooling(total: 130), undersizing: .cooling())
           ))
-        ))
+        )))
     }
   }
 
@@ -76,18 +78,19 @@ final class CoolingInterpolationTests: XCTestCase {
       
       let request = ServerRoute.Api(isDebug: true, route: .interpolate(.cooling(.oneWayOutdoor(route))))
       
-      let sut = try await client.respond(request).value as! InterpolationResponse
+      let sut = try await client.respond(request).value as! InterpolationResponseEnvelope
       XCTAssertEqual(
         sut,
-        .cooling(.init(
+        .init(result: .cooling(.init(
           result: .init(
             interpolatedCapacity: .init(total: 22_600, sensible: 16_850),
             excessLatent: 886,
             finalCapacityAtDesign: .init(total: 22_600, sensible: 17_736),
             altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
-            capacityAsPercentOfLoad: .init(total: 126.5, sensible: 127.7, latent: 122.3)
+            capacityAsPercentOfLoad: .init(total: 126.5, sensible: 127.7, latent: 122.3),
+            sizingLimits: .init(oversizing: .cooling(total: 130), undersizing: .cooling())
           )
-        ))
+        )))
       )
     }
   }
@@ -119,18 +122,22 @@ final class CoolingInterpolationTests: XCTestCase {
       
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.cooling(.oneWayIndoor(request))))
       
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
       XCTAssertNoDifference(
         sut,
-        .cooling(.init(
-          result: .init(
-            interpolatedCapacity: .init(total: 23_402, sensible: 18_450),
-            excessLatent: 487,
-            finalCapacityAtDesign: .init(total: 23_402, sensible: 18_937),
-            altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
-            capacityAsPercentOfLoad: .init(total: 130.9, sensible: 136.3, latent: 112.2)
-          )
-        ))
+        .init(
+          failures: ["Oversizing total failure"],
+          result:
+            .cooling(.init(
+              result: .init(
+                interpolatedCapacity: .init(total: 23_402, sensible: 18_450),
+                excessLatent: 487,
+                finalCapacityAtDesign: .init(total: 23_402, sensible: 18_937),
+                altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
+                capacityAsPercentOfLoad: .init(total: 130.9, sensible: 136.3, latent: 112.2),
+                sizingLimits: .init(oversizing: .cooling(total: 130), undersizing: .cooling())
+              )
+            )))
       )
     }
   }
@@ -180,18 +187,21 @@ final class CoolingInterpolationTests: XCTestCase {
       
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.cooling(.twoWay(request))))
       
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
       XCTAssertNoDifference(
         sut,
-        .cooling(.init(
+        .init(
+          failures: ["Oversizing total failure"],
+          result: .cooling(.init(
           result: .init(
             interpolatedCapacity: .init(total: 23_915, sensible: 18_700),
             excessLatent: 618,
             finalCapacityAtDesign: .init(total: 23_915, sensible: 19_318),
             altitudeDerating: .airToAir(total: 1, sensible: 1, heating: 1),
-            capacityAsPercentOfLoad: .init(total: 133.8, sensible: 139.0, latent: 115.6)
+            capacityAsPercentOfLoad: .init(total: 133.8, sensible: 139.0, latent: 115.6),
+            sizingLimits: .init(oversizing: .cooling(total: 130), undersizing: .cooling())
           )
-        ))
+        )))
       )
     }
   }

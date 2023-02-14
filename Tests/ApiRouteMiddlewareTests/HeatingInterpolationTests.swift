@@ -21,10 +21,10 @@ final class HeatingInterpolationTests: XCTestCase {
       )
       
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.furnace(route))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
       XCTAssertNoDifference(
         sut,
-        .heating(
+        .init(result: .heating(
           .init(
             result: .furnace(.init(
               outputCapacity: 57_600,
@@ -32,7 +32,38 @@ final class HeatingInterpolationTests: XCTestCase {
               percentOfLoad: 116
             ))
           )
-        )
+        ))
+      )
+    }
+  }
+  
+  func test_oversized_furnace() async throws {
+    try await withLiveSiteHandler {
+      
+      @Dependency(\.apiMiddleware) var client
+      
+      let route = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
+        altitudeDeratings: nil,
+        houseLoad: .mock,
+        input: 160_000,
+        afue: 96
+      )
+      
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.furnace(route))))
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      XCTAssertNoDifference(
+        sut,
+        .init(
+          failures: ["Oversizing failure."],
+          result: .heating(
+          .init(
+            result: .furnace(.init(
+              outputCapacity: 153_600,
+              finalCapacity: 153_600,
+              percentOfLoad: 309.3
+            ))
+          )
+        ))
       )
     }
   }
@@ -49,12 +80,43 @@ final class HeatingInterpolationTests: XCTestCase {
         afue: 96
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.boiler(request))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
       XCTAssertNoDifference(
         sut,
-        .heating(.init(
-          result: .boiler(.init(outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116)))
+        .init(result: .heating(.init(
+          result: .boiler(.init(outputCapacity: 57_600, finalCapacity: 57_600, percentOfLoad: 116))))
         )
+      )
+    }
+  }
+  
+  func test_oversized_boiler() async throws {
+    try await withLiveSiteHandler {
+      
+      @Dependency(\.apiMiddleware) var client
+      
+      let route = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
+        altitudeDeratings: nil,
+        houseLoad: .mock,
+        input: 160_000,
+        afue: 96
+      )
+      
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.boiler(route))))
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      XCTAssertNoDifference(
+        sut,
+        .init(
+          failures: ["Oversizing failure."],
+          result: .heating(
+          .init(
+            result: .boiler(.init(
+              outputCapacity: 153_600,
+              finalCapacity: 153_600,
+              percentOfLoad: 309.3
+            ))
+          )
+        ))
       )
     }
   }
@@ -71,13 +133,39 @@ final class HeatingInterpolationTests: XCTestCase {
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.electric(request))))
       
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
       XCTAssertNoDifference(
         sut,
-        .heating(
+        .init(result: .heating(
           .init(
             result: .electric(.init(requiredKW: 14.55, percentOfLoad: 103.1))
-          )
+          ))
+        )
+      )
+    }
+  }
+  
+  func test_oversized_electric_no_heatPump() async throws {
+    try await withLiveSiteHandler {
+      
+      @Dependency(\.apiMiddleware) var client
+      
+      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
+        altitudeDeratings: nil,
+        houseLoad: .mock,
+        inputKW: 115
+      )
+      let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.electric(request))))
+      
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      XCTAssertNoDifference(
+        sut,
+        .init(
+          failures: ["Oversizing failure."],
+          result: .heating(
+          .init(
+            result: .electric(.init(requiredKW: 14.55, percentOfLoad: 790.4))
+          ))
         )
       )
     }
@@ -95,10 +183,10 @@ final class HeatingInterpolationTests: XCTestCase {
         houseLoad: .mock
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.heatPump(request))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
       XCTAssertNoDifference(
         sut,
-        .heating(
+        .init(result: .heating(
           .init(
             result: .heatPump(
               .init(
@@ -109,7 +197,7 @@ final class HeatingInterpolationTests: XCTestCase {
               )
             )
           )
-        )
+        ))
       )
     }
   }

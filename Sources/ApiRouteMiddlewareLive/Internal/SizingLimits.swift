@@ -11,7 +11,7 @@ extension ServerRoute.Api.Route.SizingLimitRequest {
 
 extension SystemType {
 
-  fileprivate func sizingLimits(load: HouseLoad?) async throws -> SizingLimits {
+  func sizingLimits(load: HouseLoad?) async throws -> SizingLimits {
     switch self {
     case let .airToAir(type: _, compressor: compressor, climate: climate):
       let coolingTotal: Int

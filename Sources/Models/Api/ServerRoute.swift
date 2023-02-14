@@ -33,7 +33,6 @@ extension ServerRoute {
       case requiredKW
       case sizingLimits
 
-      // TODO: Add a home route.
       public enum Interpolation: Equatable, Sendable {
 
         case home

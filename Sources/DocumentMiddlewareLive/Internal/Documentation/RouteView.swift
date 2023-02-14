@@ -1,12 +1,14 @@
 import ApiRouteMiddleware
 import Dependencies
 import Html
+import LoggingDependency
 import Models
 
 struct RouteView {
   @Dependency(\.apiMiddleware) var apiMiddleware
-  @Dependency(\.siteRouter) var siteRouter
   @Dependency(\.baseURL) var baseURL
+  @Dependency(\.logger) var logger
+  @Dependency(\.siteRouter) var siteRouter
 
   let json: AnyEncodable
   let route: ServerRoute.Api.Route
@@ -41,6 +43,11 @@ struct RouteView {
     guard let data = try? jsonEncoder.encode(json),
       let string = String(data: data, encoding: .utf8)
     else {
+      logger.warning("""
+      Failed to parse json string.
+      
+      Route: \(routeString)
+      """)
       return "Oops, something went wrong."
     }
     return string
@@ -56,6 +63,11 @@ struct RouteView {
     guard let data = try? jsonEncoder.encode(output),
       let string = String(data: data, encoding: .utf8)
     else {
+      logger.warning("""
+      Failed to parse json output.
+      
+      Route: \(routeString)
+      """)
       return "Oops, something went wrong."
     }
     return string

@@ -22,7 +22,7 @@ public struct ApiRouteMiddleware {
   public var interpolate:
     HandlerType<
       ServerRoute.Api.Route.InterpolationRequest,
-      InterpolationResponse
+      InterpolationResponseEnvelope
     >
 
   public var requiredKW:
@@ -45,7 +45,7 @@ public struct ApiRouteMiddleware {
     derating: @escaping HandlerType<ServerRoute.Api.Route.DeratingRequest, AdjustmentMultiplier>,
     interpolate: @escaping HandlerType<
       ServerRoute.Api.Route.InterpolationRequest,
-      InterpolationResponse
+      InterpolationResponseEnvelope
     >,
     requiredKW: @escaping HandlerType<ServerRoute.Api.Route.RequiredKWRequest, RequiredKWResponse>,
     sizingLimits: @escaping HandlerType<ServerRoute.Api.Route.SizingLimitRequest, SizingLimits>
