@@ -47,7 +47,7 @@ private func configureVaporMiddleware(_ app: Vapor.Application) async {
   let cors = CORSMiddleware(configuration: corsConfiguration)
   // cors middleware should come before default error middleware using `at: .beginning`
   app.middleware.use(cors, at: .beginning)
-  
+
   let fileMiddleware = FileMiddleware(publicDirectory: app.directory.publicDirectory)
   app.middleware.use(fileMiddleware)
 }

@@ -38,7 +38,7 @@ extension SiteMiddleware: DependencyKey {
           """
         )
         return try await documentMiddleware.render(route: .documentation(documentationRoute))
-        
+
       case .home:
         logger.debug("Handling home route.")
         return try await documentMiddleware.render(route: .home)
@@ -48,8 +48,8 @@ extension SiteMiddleware: DependencyKey {
         return try await request.eventLoop.makeSucceededFuture(
           request.fileio.streamFile(at: file)
         ).get()
-//        return file.eraseToAnyEncodable()
-//        return request.fileio.streamFile(at: "\(file).zip")
+      //        return file.eraseToAnyEncodable()
+      //        return request.fileio.streamFile(at: "\(file).zip")
       }
     }
   }

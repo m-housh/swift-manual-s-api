@@ -74,7 +74,7 @@ extension ValidationMiddleware: DependencyKey {
         // no validations required.
         return
       case .public:
-        return // no validations required.
+        return  // no validations required.
       case let .api(api):
         return try await apiRouteValidator.validate(api.route)
       }

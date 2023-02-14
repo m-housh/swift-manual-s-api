@@ -8,7 +8,7 @@ public enum ServerRoute: Equatable, Sendable {
 
   /// HTML document routes.
   case documentation(Documentation)
-  
+
   case `public`(file: String)
 
   /// The server root.
