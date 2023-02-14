@@ -15,7 +15,7 @@ struct RouteView {
   let title: String
   let description: Node
   let inputDescription: Node
-  
+
   init(
     json: any Encodable,
     route: ServerRoute.Api.Route,
@@ -86,7 +86,7 @@ extension RouteView: Renderable {
       ]
     }
   }
-  
+
   private func body() async throws -> Node {
     let jsonOutput = try await jsonOutput()
     return [
@@ -109,9 +109,9 @@ extension RouteView: Renderable {
               },
               row(class: .col) {
                 .code(.pre(.text(jsonString)))
-              }
+              },
             ]
-          }
+          },
         ]
       },
       row(class: .pt2, .mb5, .pb5) {
@@ -122,5 +122,5 @@ extension RouteView: Renderable {
       },
     ]
   }
-  
+
 }

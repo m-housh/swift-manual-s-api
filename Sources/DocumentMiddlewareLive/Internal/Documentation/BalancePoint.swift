@@ -14,7 +14,7 @@ struct BalancePointHome: Renderable {
     This route is used to calculate the thermal balance point for the given conditions.
     """#
   }
-  
+
   var inputDescription: Node {
     container {
       card(body: [
@@ -24,23 +24,25 @@ struct BalancePointHome: Renderable {
       ])
     }
   }
-  
+
   func card(body: [(String, String)]) -> Node {
     let bodyNode = body.map({ (title, description) -> ChildOf<Tag.Ul> in
-        .li(
-          attributes: [.class("list-group-item pb-3 ps-2")],
-          [
-            Node.pre(attributes: [.class("text-secondary fs-5 mb-0")], .text(title)),
-            Node.text(description)
-          ]
-        )
+      .li(
+        attributes: [.class("list-group-item pb-3 ps-2")],
+        [
+          Node.pre(attributes: [.class("text-secondary fs-5 mb-0")], .text(title)),
+          Node.text(description),
+        ]
+      )
     })
-      .reduce(into: Node.ul(attributes: [.class("list-group list-group-flush")])) { $0.append($1.rawValue) }
-    
+    .reduce(into: Node.ul(attributes: [.class("list-group list-group-flush")])) {
+      $0.append($1.rawValue)
+    }
+
     return .div(
       attributes: [.class("card bg-success-subtle")],
       bodyNode
-     )
+    )
   }
 
   //  var content: Node {
