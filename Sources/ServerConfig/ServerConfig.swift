@@ -47,6 +47,9 @@ private func configureVaporMiddleware(_ app: Vapor.Application) async {
   let cors = CORSMiddleware(configuration: corsConfiguration)
   // cors middleware should come before default error middleware using `at: .beginning`
   app.middleware.use(cors, at: .beginning)
+  
+  let fileMiddleware = FileMiddleware(publicDirectory: app.directory.publicDirectory)
+  app.middleware.use(fileMiddleware)
 }
 
 // Register the site router with the vapor application.
@@ -62,5 +65,5 @@ private func siteHandler(
   route: ServerRoute
 ) async throws -> AsyncResponseEncodable {
   @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
-  return try await siteMiddleware.respond(route: route)
+  return try await siteMiddleware.respond(request: request, route: route)
 }

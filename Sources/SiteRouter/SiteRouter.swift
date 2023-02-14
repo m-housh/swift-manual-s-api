@@ -27,6 +27,14 @@ public struct SiteRouter: ParserPrinter {
         Path { ServerRoute.Key.documentation.key }
         DocumentRouter()
       }
+      
+      Route(.case(ServerRoute.public(file:))) {
+        Path { "public" }
+        Query {
+          Field("file")
+        }
+//        Parse(.memberwise(<#T##(Values) -> Struct#>))
+      }
 
       // matches /api/v1
       Route(.case(ServerRoute.api)) {

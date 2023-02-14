@@ -18,7 +18,7 @@ extension SiteMiddleware: DependencyKey {
     @Dependency(\.documentMiddleware) var documentMiddleware: DocumentMiddleware
     @Dependency(\.validationMiddleware) var validations: ValidationMiddleware
 
-    return .init { route in
+    return .init { request, route in
 
       try await validations.validate(route)
 
@@ -29,7 +29,7 @@ extension SiteMiddleware: DependencyKey {
           Handling api route:
           Route: \(api.route)
           """)
-        return try await .right(apiMiddleware.respond(api).eraseToAnyEncodable())
+        return try await apiMiddleware.respond(api).eraseToAnyEncodable()
       case let .documentation(documentationRoute):
         logger.debug(
           """
@@ -37,12 +37,19 @@ extension SiteMiddleware: DependencyKey {
           Route: \(documentationRoute)
           """
         )
-        return try await .left(
-          documentMiddleware.render(route: .documentation(documentationRoute))
-        )
+        return try await documentMiddleware.render(route: .documentation(documentationRoute))
+        
       case .home:
         logger.debug("Handling home route.")
-        return try await .left(documentMiddleware.render(route: .home))
+        return try await documentMiddleware.render(route: .home)
+      case let .public(file: file):
+        logger.info("Handling public file: \(file)")
+        // FIXME
+        return try await request.eventLoop.makeSucceededFuture(
+          request.fileio.streamFile(at: file)
+        ).get()
+//        return file.eraseToAnyEncodable()
+//        return request.fileio.streamFile(at: "\(file).zip")
       }
     }
   }
@@ -51,8 +58,8 @@ extension SiteMiddleware: DependencyKey {
   ///
   /// - Parameters:
   ///   - route: The server route to respond to.
-  public func respond(route: ServerRoute) async throws -> AsyncResponseEncodable {
-    try await self.respond(route)
+  public func respond(request: Request, route: ServerRoute) async throws -> AsyncResponseEncodable {
+    try await self.respond(request, route)
   }
 }
 
@@ -76,15 +83,15 @@ extension Node: AsyncResponseEncodable {
 }
 
 /// Transform an either to an encodable type that vapor can use.
-extension Either: AsyncResponseEncodable
-where Left: AsyncResponseEncodable, Right: AsyncResponseEncodable {
-
-  public func encodeResponse(for request: Request) async throws -> Response {
-    switch self {
-    case let .left(left):
-      return try await left.encodeResponse(for: request)
-    case let .right(right):
-      return try await right.encodeResponse(for: request)
-    }
-  }
-}
+//extension Either: AsyncResponseEncodable
+//where Left: AsyncResponseEncodable, Right: AsyncResponseEncodable {
+//
+//  public func encodeResponse(for request: Request) async throws -> Response {
+//    switch self {
+//    case let .left(left):
+//      return try await left.encodeResponse(for: request)
+//    case let .right(right):
+//      return try await right.encodeResponse(for: request)
+//    }
+//  }
+//}

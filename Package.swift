@@ -181,6 +181,7 @@ package.targets.append(contentsOf: [
       "Models",
       .product(name: "Dependencies", package: "swift-dependencies"),
       .product(name: "Html", package: "swift-html"),
+      .product(name: "Vapor", package: "vapor"),
     ]
   ),
   .target(
