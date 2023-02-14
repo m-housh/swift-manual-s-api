@@ -3,7 +3,7 @@ import Html
 import Models
 import SiteRouter
 
-func layout(title: String, content: Node) -> Node {
+func layout(title: String, navbar: Navbar = .init(), content: Node) async throws -> Node {
   return [
     .doctype,
     .html(
@@ -13,7 +13,7 @@ func layout(title: String, content: Node) -> Node {
         Layout.bootstrapStyleSheet
       ),
       .body(
-        Layout.navbar,
+        try await navbar.content(),
         .main(content),
         Layout.footer,
         Layout.bootstrapScript
@@ -22,8 +22,8 @@ func layout(title: String, content: Node) -> Node {
   ]
 }
 
-func layout(_ renderable: Renderable) async throws -> Node {
-  try await layout(title: renderable.title, content: renderable.content())
+func layout(_ renderable: Renderable, navbar: Navbar = .init()) async throws -> Node {
+  try await layout(title: renderable.title, navbar: navbar, content: renderable.content())
 }
 
 private struct Layout {
@@ -66,6 +66,7 @@ private struct Layout {
     ]
   }
 
+  // TODO: Remove navbar stuff
   static var navbar: Node {
 
     return .nav(

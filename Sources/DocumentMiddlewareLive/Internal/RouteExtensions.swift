@@ -14,8 +14,10 @@ extension ServerRoute.Documentation.Route.Key: LinkRepresentable {
     switch self {
     case .balancePoint:
       return "Balance Point"
-    case .derating, .interpolate:
+    case .derating:
       return rawValue.capitalized
+    case .interpolate:
+      return "Interpolations"
     case .requiredKW:
       return "Required KW"
     case .sizingLimits:
@@ -44,7 +46,7 @@ extension ServerRoute.Documentation.Route.Interpolation.Key: LinkRepresentable {
   var text: String {
     switch self {
     case .home:
-      return "Interpolate"
+      return "Interpolations"
     case .cooling, .heating:
       return rawValue.capitalized
     }
