@@ -1,24 +1,7 @@
 import Models
 import URLRouting
 
-// TODO: Move
-//enum InterpolationKey: String {
-//  case cooling
-//  case heating
-//}
-//
-//enum RouteKey: String {
-//  case balancePoint
-//  case derating
-//  case interpolate
-//  case requiredKW
-//  case sizingLimits
-//}
-
 struct DocumentRouter: ParserPrinter {
-
-  //  typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling
-  //  typealias HeatingKey = ServerRoute.Documentation.Route.Interpolation.Heating
 
   @ParserBuilder
   var body: AnyParserPrinter<URLRequestData, ServerRoute.Documentation> {
@@ -112,7 +95,7 @@ struct DocumentRouter: ParserPrinter {
       Route(.case(ServerRoute.Documentation.home))
 
       Route(.case(ServerRoute.Documentation.api)) {
-        Path { ServerRoute.Documentation.Key.api.key }
+        Path { ServerRoute.Documentation.Key.api.key; "v1" }
         routeRouter
       }
     }

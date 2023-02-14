@@ -15,7 +15,7 @@ final class DocumentRouterTests: XCTestCase {
   let router = SiteRouterKey.testValue
   
   func test_requiredkw() throws {
-    var request = URLRequest(url: URL(string: "/documentation/api/requiredKW")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/requiredKW")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -28,7 +28,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_derating() throws {
 
-    var request = URLRequest(url: URL(string: "/documentation/api/derating")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/derating")!)
     request.httpMethod = "GET"
 
     let route = try router.match(request: request)
@@ -41,7 +41,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_sizingLimits() throws {
    
-    var request = URLRequest(url: URL(string: "/documentation/api/sizingLimits")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/sizingLimits")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -54,7 +54,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_noInterpolationRoute() throws {
    
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/cooling/noInterpolation")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/cooling/noInterpolation")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -66,7 +66,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_oneWayIndoor() throws {
    
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/cooling/oneWayIndoor")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/cooling/oneWayIndoor")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -79,7 +79,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_oneWayOutdoor() throws {
    
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/cooling/oneWayOutdoor")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/cooling/oneWayOutdoor")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -93,7 +93,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_twoWay() throws {
    
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/cooling/twoWay")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/cooling/twoWay")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -106,7 +106,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_boiler() throws {
    
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/heating/boiler")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/heating/boiler")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -119,7 +119,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_furnace() throws {
     
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/heating/furnace")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/heating/furnace")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -132,7 +132,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_electric() throws {
     
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/heating/electric")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/heating/electric")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -145,7 +145,7 @@ final class DocumentRouterTests: XCTestCase {
   
     func test_heatPump() throws {
     
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate/heating/heatPump")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate/heating/heatPump")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)
@@ -158,7 +158,7 @@ final class DocumentRouterTests: XCTestCase {
   
   func test_interpolate_home() throws {
     
-    var request = URLRequest(url: URL(string: "/documentation/api/interpolate")!)
+    var request = URLRequest(url: URL(string: "/documentation/api/v1/interpolate")!)
     request.httpMethod = "GET"
     
     let route = try router.match(request: request)

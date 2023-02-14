@@ -15,11 +15,10 @@ public func configure(_ app: Vapor.Application) async throws {
 
   await withDependencies(
     {
-      $0.siteRouter = $0.siteRouter.baseURL(
-        app.environment == .production
-          ? "http://localhost:8080"  // fix
-          : "http://localhost:8080"
-      ).eraseToAnyParserPrinter()
+      // This doesn't seem to really work.
+      $0.baseURL = app.environment == .production
+        ? "http://localhost:8080"
+        : "http://localhost:8080"
     },
     operation: {
       // configure the vapor middleware(s)

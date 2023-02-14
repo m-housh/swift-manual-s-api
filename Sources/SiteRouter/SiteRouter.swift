@@ -102,7 +102,7 @@ private let jsonEncoder: JSONEncoder = {
   return encoder
 }()
 
-// MARK: - Internalt Typealias
+// MARK: - Internal Typealias
 typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling
 typealias HeatingKey = ServerRoute.Documentation.Route.Interpolation.Heating
 typealias InterpolationKey = ServerRoute.Documentation.Route.Interpolation.Key
