@@ -16,7 +16,8 @@ public func configure(_ app: Vapor.Application) async throws {
   await withDependencies(
     {
       // This doesn't seem to really work.
-      $0.baseURL = app.environment == .production
+      $0.baseURL =
+        app.environment == .production
         ? "http://localhost:8080"
         : "http://localhost:8080"
     },

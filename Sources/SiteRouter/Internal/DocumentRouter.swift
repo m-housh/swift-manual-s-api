@@ -95,7 +95,10 @@ struct DocumentRouter: ParserPrinter {
       Route(.case(ServerRoute.Documentation.home))
 
       Route(.case(ServerRoute.Documentation.api)) {
-        Path { ServerRoute.Documentation.Key.api.key; "v1" }
+        Path {
+          ServerRoute.Documentation.Key.api.key
+          "v1"
+        }
         routeRouter
       }
     }
