@@ -40,12 +40,12 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
 
     let output = Double(furnace.input) * (furnace.afue / 100)
     var finalCapacity = output
-    
+
     let altitudeDerating = try await ServerRoute.Api.Route.DeratingRequest(
       elevation: furnace.elevation,
       systemType: .furnaceOnly
     ).respond()
-    
+
     if case let .heating(derating) = altitudeDerating {
       finalCapacity *= derating
     }
@@ -87,12 +87,12 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating {
   {
 
     var finalCapacity = heatPump.capacity
-    
+
     let altitudeDeratings = try await ServerRoute.Api.Route.DeratingRequest(
-      elevation: heatPump.elevation,
+      elevation: heatPump.designInfo.elevation,
       systemType: heatPump.systemType
     ).respond()
-    
+
     if case let .airToAir(total: _, sensible: _, heating: derating) = altitudeDeratings {
       finalCapacity = await heatPump.capacity.derate(derating)
     }

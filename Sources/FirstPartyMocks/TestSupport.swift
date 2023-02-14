@@ -218,14 +218,12 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest {
 extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest {
 
   public static let zero = Self.init(
-    altitudeDeratings: nil,
     heatPumpCapacity: nil,
     houseLoad: .zero,
     inputKW: 0
   )
 
   public static let mock = Self.init(
-    altitudeDeratings: .heating(multiplier: 1.0),
     heatPumpCapacity: 23_200,
     houseLoad: .mock,
     inputKW: 15
@@ -237,7 +235,6 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest {
   public static let zero = Self.init(
     capacity: .zero,
     designInfo: .zero,
-    elevation: .zero,
     houseLoad: .zero,
     systemType: .mock
   )
@@ -245,7 +242,6 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest {
   public static let mock = Self.init(
     capacity: .mock,
     designInfo: .mock,
-    elevation: 5_000,
     houseLoad: .mock,
     systemType: .mock
   )

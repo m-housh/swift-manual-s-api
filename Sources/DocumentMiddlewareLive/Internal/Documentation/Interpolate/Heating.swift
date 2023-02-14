@@ -26,7 +26,9 @@ private struct BoilerView: Renderable {
     """
   let inputDescription = card(body: [
     ("afue", "The boiler efficiency percentage."),
-    ("altitudeDeratings", "The boiler efficiency percentage."),
+    ("elevation", "The project elevation."),
+    ("houseLoad", "The project house load at the design conditons."),
+    ("input", "The boiler's BTU input rating."),
   ])
 
   func content() async throws -> Node {
@@ -35,7 +37,7 @@ private struct BoilerView: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
 
     ).content()
   }
@@ -49,6 +51,17 @@ private struct ElectricView: Renderable {
   let description = """
     This route is used to interpolate an electric furnace for the given conditons.
     """
+  let inputDescription = card(body: [
+    (
+      "heatPumpCapacity",
+      """
+        Optional heat pump capacity for the project.
+        (This should be the final interpolated capacity at design conditions).
+      """
+    ),
+    ("houseLoad", "The project house load at the design conditons."),
+    ("inputKW", "The rated kilowatts of the electric furnace."),
+  ])
 
   func content() async throws -> Node {
     try await RouteView(
@@ -56,7 +69,7 @@ private struct ElectricView: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 }
@@ -70,13 +83,20 @@ private struct FurnaceView: Renderable {
     This route is used to interpolate a furnace for the given conditons.
     """
 
+  let inputDescription = card(body: [
+    ("afue", "The furnace efficiency percentage."),
+    ("elevation", "The project elevation."),
+    ("houseLoad", "The project house load at the design conditons."),
+    ("input", "The furnace's BTU input rating."),
+  ])
+
   func content() async throws -> Node {
     try await RouteView(
       json: json,
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 }
@@ -90,13 +110,20 @@ private struct HeatPumpView: Renderable {
     This route is used to interpolate a heat pump for the given conditons.
     """
 
+  let inputDescription = card(body: [
+    ("capacity", "The manufacturer's capacity."),
+    ("designInfo", "The design information for the project."),
+    ("houseLoad", "The project house load at the design conditons."),
+    ("systemType", "The system type for the project."),
+  ])
+
   func content() async throws -> Node {
     try await RouteView(
       json: json,
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: .text("")  // FIXME
+      inputDescription: inputDescription
     ).content()
   }
 }

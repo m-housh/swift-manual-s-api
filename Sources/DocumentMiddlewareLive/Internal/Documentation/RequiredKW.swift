@@ -14,7 +14,7 @@ struct RequiredKWHome: Renderable {
   }
   let inputDescription = card(body: [
     ("capacityAtDesign", "The system capacity at the design temperature."),
-    ("heatLoss", "The houses heat loss/load at the outdoor design temperature.")
+    ("heatLoss", "The houses heat loss/load at the outdoor design temperature."),
   ])
 
   func content() async throws -> Node {

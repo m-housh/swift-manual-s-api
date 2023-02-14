@@ -25,7 +25,7 @@ final class RouterTests: XCTestCase {
       }
     }
     """
-    var request = URLRequest(url: URL(string: "/api/balancePoint/thermal")!)
+    var request = URLRequest(url: URL(string: "/api/v1/balancePoint/thermal")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -50,7 +50,7 @@ final class RouterTests: XCTestCase {
       "heatLoss": 12345
     }
     """
-    var request = URLRequest(url: URL(string: "/api/requiredKW")!)
+    var request = URLRequest(url: URL(string: "/api/v1/requiredKW")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -81,7 +81,7 @@ final class RouterTests: XCTestCase {
     }
     """
     
-    var request = URLRequest(url: URL(string: "/api/derating")!)
+    var request = URLRequest(url: URL(string: "/api/v1/derating")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -123,7 +123,7 @@ final class RouterTests: XCTestCase {
     }
     """
     
-    var request = URLRequest(url: URL(string: "/api/sizingLimits")!)
+    var request = URLRequest(url: URL(string: "/api/v1/sizingLimits")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -181,7 +181,7 @@ final class RouterTests: XCTestCase {
     }
     """
     
-    var request = URLRequest(url: URL(string: "/api/interpolate/cooling/noInterpolation")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/cooling/noInterpolation")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -259,7 +259,7 @@ final class RouterTests: XCTestCase {
     }
     """
     
-    var request = URLRequest(url: URL(string: "/api/interpolate/cooling/oneWayIndoor")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/cooling/oneWayIndoor")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -344,7 +344,7 @@ final class RouterTests: XCTestCase {
     }
     """
     
-    var request = URLRequest(url: URL(string: "/api/interpolate/cooling/oneWayOutdoor")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/cooling/oneWayOutdoor")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -454,7 +454,7 @@ final class RouterTests: XCTestCase {
     }
     """
     
-    var request = URLRequest(url: URL(string: "/api/interpolate/cooling/twoWay")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/cooling/twoWay")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -521,7 +521,7 @@ final class RouterTests: XCTestCase {
       "afue": 96.5
     }
     """
-    var request = URLRequest(url: URL(string: "/api/interpolate/heating/boiler")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/heating/boiler")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -556,7 +556,7 @@ final class RouterTests: XCTestCase {
       "afue": 96.5
     }
     """
-    var request = URLRequest(url: URL(string: "/api/interpolate/heating/furnace")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/heating/furnace")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -580,11 +580,6 @@ final class RouterTests: XCTestCase {
 
     let json = """
     {
-      "altitudeDeratings": {
-        "heating": {
-          "multiplier": 1.0
-        }
-      },
       "heatPumpCapacity": 12000,
       "houseLoad": {
         "cooling": {
@@ -596,7 +591,7 @@ final class RouterTests: XCTestCase {
       "inputKW": 12.5
     }
     """
-    var request = URLRequest(url: URL(string: "/api/interpolate/heating/electric")!)
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate/heating/electric")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -607,7 +602,6 @@ final class RouterTests: XCTestCase {
       .api(.init(
         isDebug: false,
         route: .interpolate(.heating(.electric(.init(
-          altitudeDeratings: .heating(multiplier: 1),
           heatPumpCapacity: 12_000,
           houseLoad: .mock,
           inputKW: 12.5
@@ -620,7 +614,6 @@ final class RouterTests: XCTestCase {
   func test_heat_pump() throws {
     let json = """
     {
-      "elevation": 0,
       "capacity": {
         "at47": 24600,
         "at17": 15100
@@ -652,7 +645,7 @@ final class RouterTests: XCTestCase {
       }
     }
     """
-    var request = URLRequest(url: URL(string: "/api/interpolate/heating/heatPump")!)
+    var request = URLRequest(url: URL(string: "http://localhost:8080/api/v1/interpolate/heating/heatPump")!)
     request.httpMethod = "POST"
     request.httpBody = Data(json.utf8)
     
@@ -665,7 +658,6 @@ final class RouterTests: XCTestCase {
         route: .interpolate(.heating(.heatPump(.init(
           capacity: .mock,
           designInfo: .mock,
-          elevation: 0,
           houseLoad: .mock,
           systemType: .mock
         ))))

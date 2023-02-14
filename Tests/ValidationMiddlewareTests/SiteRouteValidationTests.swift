@@ -249,7 +249,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_boiler_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest.zero
+      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest.zero
       let expected1 = """
       Boiler Request Errors:
       houseLoad.heating: Heating load should be greater than 0.
@@ -273,7 +273,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_furnace_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest.zero
+      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest.zero
       let expected1 = """
       Furnace Request Errors:
       houseLoad.heating: Heating load should be greater than 0.
@@ -322,7 +322,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_heatPump_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest.zero
+      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest.zero
       let expected1 = """
       Heat Pump Request Errors:
       houseLoad.heating: Heating load should be greater than 0.

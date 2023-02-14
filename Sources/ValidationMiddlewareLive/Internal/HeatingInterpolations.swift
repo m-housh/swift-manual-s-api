@@ -26,11 +26,11 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: Asyn
         with: HouseLoadValidator(style: .heating)
       )
 
-//      AsyncValidator.validate(
-//        \.altitudeDeratings,
-//        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
-//          .optional()
-//      )
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
 
     }
     .errorLabel("Boiler Request Errors")
@@ -62,11 +62,11 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: Asy
         with: HouseLoadValidator(style: .heating)
       )
 
-//      AsyncValidator.validate(
-//        \.altitudeDeratings,
-//        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
-//          .optional()
-//      )
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
     }
     .errorLabel("Furnace Request Errors")
   }
@@ -88,11 +88,11 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: As
         with: HouseLoadValidator(style: .heating)
       )
 
-//      AsyncValidator.validate(
-//        \.altitudeDeratings,
-//        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
-//          .optional()
-//      )
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
 
       AsyncValidator.validate(
         \.heatPumpCapacity,
@@ -112,11 +112,11 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest: As
   @inlinable
   public var body: some AsyncValidation<Self> {
     AsyncValidator.accumulating {
-//      AsyncValidator.validate(
-//        \.altitudeDeratings,
-//        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
-//          .optional()
-//      )
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
 
       AsyncValidator.validate(
         \.capacity, with: HeatPumpCapacityValidation(label: ErrorLabel.capacity))

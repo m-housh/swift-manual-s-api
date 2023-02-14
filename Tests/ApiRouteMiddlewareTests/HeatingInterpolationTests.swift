@@ -134,7 +134,6 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
-        altitudeDeratings: nil,
         houseLoad: .mock,
         inputKW: 15
       )
@@ -158,7 +157,6 @@ final class HeatingInterpolationTests: XCTestCase {
       @Dependency(\.apiMiddleware) var client
       
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
-        altitudeDeratings: nil,
         houseLoad: .mock,
         inputKW: 115
       )
@@ -186,7 +184,6 @@ final class HeatingInterpolationTests: XCTestCase {
       let request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest(
         capacity: .mock,
         designInfo: .init(),
-        elevation: 0,
         houseLoad: .mock,
         systemType: .mock
       )

@@ -16,7 +16,7 @@ struct DeratingHome: Renderable {
   }
   let inputDescription = card(body: [
     ("elevation", "The project elevation."),
-    ("systemType", "The system type to calculate the deratings for.")
+    ("systemType", "The system type to calculate the deratings for."),
   ])
 
   //  var content: Node {

@@ -5,6 +5,8 @@ import Models
 
 public struct SiteRouter: ParserPrinter {
 
+  @Dependency(\.baseURL) var baseURL
+
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
 
@@ -26,8 +28,12 @@ public struct SiteRouter: ParserPrinter {
         DocumentRouter()
       }
 
+      // matches /api/v1
       Route(.case(ServerRoute.api)) {
-        Path { ServerRoute.Key.api.key }
+        Path {
+          ServerRoute.Key.api.key
+          "v1"
+        }
         Parse(.memberwise(ServerRoute.Api.init(isDebug:route:))) {
           Headers {
             Field("X-DEBUG", default: false) { Bool.parser() }
@@ -36,6 +42,7 @@ public struct SiteRouter: ParserPrinter {
         }
       }
     }
+    .baseURL(baseURL)
     .eraseToAnyParserPrinter()
 
   }
@@ -95,6 +102,7 @@ private let jsonEncoder: JSONEncoder = {
   return encoder
 }()
 
+// MARK: - Internalt Typealias
 typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling
 typealias HeatingKey = ServerRoute.Documentation.Route.Interpolation.Heating
 typealias InterpolationKey = ServerRoute.Documentation.Route.Interpolation.Key

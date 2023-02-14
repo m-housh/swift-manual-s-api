@@ -53,14 +53,14 @@ public struct SizingLimits: Codable, Equatable, Sendable {
 
 // MARK: Encoding
 extension SizingLimits.Oversizing {
-  
+
   private enum CodingKeys: CodingKey {
     case boiler
     case cooling
     case electric
     case furnace
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
@@ -77,21 +77,22 @@ extension SizingLimits.Oversizing {
 }
 
 extension SizingLimits.Undersizing {
-  
+
   private enum CodingKeys: CodingKey {
     case boiler
     case cooling
     case electric
     case furnace
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
     case let .boiler(boiler):
       try container.encode(boiler, forKey: .boiler)
     case let .cooling(total: total, sensible: sensible, latent: latent):
-      try container.encode(["total": total, "sensible": sensible, "latent": latent], forKey: .cooling)
+      try container.encode(
+        ["total": total, "sensible": sensible, "latent": latent], forKey: .cooling)
     case let .electric(electric):
       try container.encode(electric, forKey: .electric)
     case let .furnace(furnace):

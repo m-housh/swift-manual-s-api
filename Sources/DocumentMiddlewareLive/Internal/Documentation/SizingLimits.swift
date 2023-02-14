@@ -15,7 +15,7 @@ struct SizingLimitsHome: Renderable {
   }
   let inputDescription = card(body: [
     ("houseLoad", "The house load at the outdoor design conditions."),
-    ("systemType", "The system type to calculate the sizing limits for.")
+    ("systemType", "The system type to calculate the sizing limits for."),
   ])
 
   func content() async throws -> Node {

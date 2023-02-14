@@ -342,18 +342,15 @@ extension ServerRoute {
           }
 
           public struct ElectricRequest: Codable, Equatable, Sendable {
-            public var altitudeDeratings: AdjustmentMultiplier?
             public var heatPumpCapacity: Int?
             public var houseLoad: HouseLoad
             public var inputKW: Double
 
             public init(
-              altitudeDeratings: AdjustmentMultiplier? = nil,
               heatPumpCapacity: Int? = nil,
               houseLoad: HouseLoad,
               inputKW: Double
             ) {
-              self.altitudeDeratings = altitudeDeratings
               self.heatPumpCapacity = heatPumpCapacity
               self.houseLoad = houseLoad
               self.inputKW = inputKW
@@ -382,20 +379,17 @@ extension ServerRoute {
           public struct HeatPumpRequest: Codable, Equatable, Sendable {
             public var capacity: HeatPumpCapacity
             public var designInfo: DesignInfo
-            public var elevation: Int
             public var houseLoad: HouseLoad
             public var systemType: SystemType
 
             public init(
               capacity: HeatPumpCapacity,
               designInfo: DesignInfo,
-              elevation: Int = 0,
               houseLoad: HouseLoad,
               systemType: SystemType
             ) {
               self.capacity = capacity
               self.designInfo = designInfo
-              self.elevation = elevation
               self.houseLoad = houseLoad
               self.systemType = systemType
             }

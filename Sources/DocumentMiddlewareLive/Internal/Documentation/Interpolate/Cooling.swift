@@ -35,7 +35,7 @@ private struct OneWayIndoorView: Renderable {
       calculate the capacity at 63° wet-bulb.
     """,
   ]
-  
+
   let inputDescription = card(body: [
     ("aboveDesign", "The manufacturer's capacity above the indoor design conditions."),
     ("belowDesign", "The manufacturer's capacity below the indoor design conditions."),
@@ -79,7 +79,7 @@ private struct OneWayOutdoorView: Renderable {
     """,
 
   ]
-  
+
   let inputDescription = card(body: [
     ("aboveDesign", "The manufacturer's capacity above the outdoor design conditions."),
     ("belowDesign", "The manufacturer's capacity below the outdoor design conditions."),
@@ -122,7 +122,7 @@ private struct NoInterpolationView: Renderable {
     """,
 
   ]
-  
+
   let inputDescription = card(body: [
     ("capacity", "The manufacturer's capacity at the design indoor and outdoor conditions."),
     ("designInfo", "The design information for the project."),
@@ -168,7 +168,7 @@ private struct TwoWayView: Renderable {
     """,
 
   ]
-  
+
   let inputDescription = card(body: [
     ("aboveDesign", "The manufacturer's capacity above the indoor and outdoor design conditions."),
     ("belowDesign", "The manufacturer's capacity below the indoor and outdoor design conditions."),
