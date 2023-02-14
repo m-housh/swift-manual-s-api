@@ -19,7 +19,8 @@ struct SizingLimitsHome: Renderable {
       json: json,
       route: route,
       title: title,
-      description: description
+      description: .text(description),
+      inputDescription: .text("") // FIXME
     ).content()
   }
 

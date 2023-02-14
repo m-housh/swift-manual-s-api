@@ -14,29 +14,20 @@ struct RouteView {
   let route: ServerRoute.Api.Route
   let title: String
   let description: Node
-
+  let inputDescription: Node
+  
   init(
     json: any Encodable,
     route: ServerRoute.Api.Route,
     title: String,
-    description: String
-  ) {
-    self.json = json.eraseToAnyEncodable()
-    self.route = route
-    self.title = title
-    self.description = .p(.text(description))
-  }
-
-  init(
-    json: any Encodable,
-    route: ServerRoute.Api.Route,
-    title: String,
-    description: Node
+    description: Node,
+    inputDescription: Node
   ) {
     self.json = json.eraseToAnyEncodable()
     self.route = route
     self.title = title
     self.description = description
+    self.inputDescription = inputDescription
   }
 
   private var jsonString: String {
@@ -75,6 +66,27 @@ struct RouteView {
     return string
   }
 
+  private func heading(_ string: String) -> Node {
+    .h3(attributes: [.class(.textSecondary)], .text(string))
+  }
+}
+
+extension RouteView: Renderable {
+  func content() async throws -> Node {
+    let body = try await body()
+    return container {
+      [
+        row(class: .pt2) {
+          [
+            .h1("\(title)"),
+            .hr(attributes: [.class(.border, .borderSuccess)]),
+          ]
+        },
+        body,
+      ]
+    }
+  }
+  
   private func body() async throws -> Node {
     let jsonOutput = try await jsonOutput()
     return [
@@ -90,7 +102,16 @@ struct RouteView {
       row(class: .pt2) {
         [
           heading("JSON Input Example:"),
-          .code(.pre(.text(jsonString))),
+          row(class: .alignItemsStart) {
+            [
+              row(class: .col) {
+                inputDescription
+              },
+              row(class: .col) {
+                .code(.pre(.text(jsonString)))
+              }
+            ]
+          }
         ]
       },
       row(class: .pt2, .mb5, .pb5) {
@@ -101,27 +122,5 @@ struct RouteView {
       },
     ]
   }
-
-  private func heading(_ string: String) -> Node {
-    .h3(attributes: [.class(.textSecondary)], .text(string))
-  }
-}
-
-extension RouteView: Renderable {
-
-  //  var content: Node {
-  func content() async throws -> Node {
-    let body = try await body()
-    return container {
-      [
-        row(class: .pt2) {
-          [
-            .h1("\(title)"),
-            .hr(attributes: [.class(.border, .borderSuccess)]),
-          ]
-        },
-        body,
-      ]
-    }
-  }
+  
 }

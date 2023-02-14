@@ -13,6 +13,7 @@ enum SharedString: String, CustomStringConvertible {
   case cardBody
   case cardTitle
   case cardSubtitle
+  case col
   case container
   case containerFluid
   case dropdown
@@ -100,7 +101,7 @@ enum SharedString: String, CustomStringConvertible {
       return "text-secondary"
     case .textLight:
       return "text-light"
-    case .container, .row, .nav, .dropdown, .navbar, .border, .card:
+    case .container, .row, .nav, .dropdown, .navbar, .border, .card, .col:
       return rawValue
 
     }

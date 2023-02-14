@@ -206,7 +206,8 @@ private struct InterpolationView: Renderable {
       json: json,
       route: route,
       title: title,
-      description: description.content
+      description: description.content,
+      inputDescription: .text("") // FIXME
     ).content()
   }
 }

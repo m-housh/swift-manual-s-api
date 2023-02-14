@@ -30,7 +30,9 @@ private struct BoilerView: Renderable {
       json: json,
       route: route,
       title: title,
-      description: description
+      description: .text(description),
+      inputDescription: .text("") // FIXME
+      
     ).content()
   }
 }
@@ -49,7 +51,8 @@ private struct ElectricView: Renderable {
       json: json,
       route: route,
       title: title,
-      description: description
+      description: .text(description),
+      inputDescription: .text("") // FIXME
     ).content()
   }
 }
@@ -68,7 +71,8 @@ private struct FurnaceView: Renderable {
       json: json,
       route: route,
       title: title,
-      description: description
+      description: .text(description),
+      inputDescription: .text("") // FIXME
     ).content()
   }
 }
@@ -87,7 +91,8 @@ private struct HeatPumpView: Renderable {
       json: json,
       route: route,
       title: title,
-      description: description
+      description: .text(description),
+      inputDescription: .text("") // FIXME
     ).content()
   }
 }
