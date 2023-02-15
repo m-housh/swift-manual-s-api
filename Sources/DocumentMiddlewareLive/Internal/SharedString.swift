@@ -17,6 +17,7 @@ enum SharedString: String, CustomStringConvertible {
   case container
   case containerFluid
   case dropdown
+  case dropdownHeader
   case dropdownItem
   case dropdownMenu
   case dropdownToggle
@@ -61,6 +62,8 @@ enum SharedString: String, CustomStringConvertible {
       return "card-subtitle"
     case .containerFluid:
       return "container-fluid"
+    case .dropdownHeader:
+      return "dropdown-header"
     case .dropdownItem:
       return "dropdown-item"
     case .dropdownMenu:

@@ -56,14 +56,15 @@ private func configureVaporMiddleware(_ app: Vapor.Application) async {
 private func configureSiteRouter(_ app: Vapor.Application) async {
   @Dependency(\.logger) var logger: Logger
   @Dependency(\.siteRouter) var router: AnyParserPrinter<URLRequestData, ServerRoute>
+  @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
   logger.info("Bootstrapping site router.")
-  app.mount(router, use: siteHandler(request:route:))
+  app.mount(router, use: siteMiddleware.respond(request:route:))
 }
 
-private func siteHandler(
-  request: Request,
-  route: ServerRoute
-) async throws -> AsyncResponseEncodable {
-  @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
-  return try await siteMiddleware.respond(request: request, route: route)
-}
+//private func siteHandler(
+//  request: Request,
+//  route: ServerRoute
+//) async throws -> AsyncResponseEncodable {
+//  @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
+//  return try await siteMiddleware.respond(request: request, route: route)
+//}

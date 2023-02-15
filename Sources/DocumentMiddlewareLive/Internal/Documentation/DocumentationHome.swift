@@ -58,7 +58,7 @@ struct DocumentHome: Renderable {
 func renderDocumentRoute(_ documentRoute: ServerRoute.Documentation) async throws -> Node {
   switch documentRoute {
   case .home:
-    return try await layout(DocumentHome())
+    return try await layout(DocumentHome(), navbar: Navbar(contents: Navbar.routesDropdown))
   case .api(.balancePoint):
     return try await layout(BalancePointHome())
   case .api(.derating):

@@ -22,7 +22,7 @@ test-linux:
 		--workdir "$(PWD)" \
 		--platform "$(DOCKER_PLATFORM)" \
 		"swift:$(SWIFT_VERSION)-focal" swift test
-		
+
 test-dev-image: build-docker-dev-image
 	docker run -it --rm \
 		$(DOCKER_IMAGE_NAME):dev \
@@ -50,11 +50,10 @@ format:
 		./Sources
 
 build-docker-image:
-	docker buildx build \
+	docker build \
 		--file $(DOCKERFILE) \
 		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) \
 		--platform $(DOCKER_PLATFORM) \
-		--load \
 		.
 
 build-docker-dev-image:
@@ -64,7 +63,7 @@ build-docker-dev-image:
 
 push-docker-image:
 	docker push $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
-	
+
 push-docker-dev-image:
 	$(MAKE) DOCKER_TAG="dev" push-docker-image
 
