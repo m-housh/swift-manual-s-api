@@ -98,6 +98,7 @@ package.products.append(contentsOf: [
   .library(name: "ServerConfig", targets: ["ServerConfig"]),
   .library(name: "SiteMiddleware", targets: ["SiteMiddleware"]),
   .library(name: "SiteMiddlewareLive", targets: ["SiteMiddlewareLive"]),
+  .library(name: "Stylesheet", targets: ["Stylesheet"]),
 ])
 
 package.targets.append(contentsOf: [
@@ -141,6 +142,7 @@ package.targets.append(contentsOf: [
       "LoggingDependency",
       "Models",
       "SiteRouter",
+      "Stylesheet",
     ]
   ),
   .target(
@@ -194,5 +196,15 @@ package.targets.append(contentsOf: [
       .product(name: "Vapor", package: "vapor"),
 
     ]
+  ),
+  .target(
+    name: "Stylesheet",
+    dependencies: [
+      .product(name: "HtmlVaporSupport", package: "swift-html-vapor")
+    ]
+  ),
+  .testTarget(
+    name: "StylesheetTests",
+    dependencies: ["Stylesheet"]
   ),
 ])

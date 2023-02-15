@@ -2,6 +2,7 @@ import Dependencies
 import Html
 import Models
 import SiteRouter
+import Stylesheet
 
 @usableFromInline
 struct Navbar: View {
@@ -17,15 +18,12 @@ struct Navbar: View {
 
   @usableFromInline
   func content() async throws -> Node {
-    var contentDiv = Node.div(attributes: [.class(.containerFluid)], navbarBrand)
+    var contentDiv = Node.div(attributes: [.class(.container(.fluid))], self.navbarBrand)
     if let contents {
       contentDiv.append(contents)
-      //      contentDiv.append(
-      //        .div(attributes: [.class(.justifyContentEnd)], contents)
-      //      )
     }
     return .nav(
-      attributes: [.class(.bgSuccess, .navbar, .navbarExpandLg, .textLight)],
+      attributes: [.class(.bg(.success), .navbar, .navbar(.expandLarge), .text(.light))],
       contentDiv
     )
   }
@@ -34,7 +32,7 @@ struct Navbar: View {
   var navbarBrand: Node {
     .a(
       attributes: [
-        .class(.navbarBrand, .textLight),
+        .class(.navbar(.brand), .text(.light)),
         .href(router.path(for: .home)),
       ],
       .text("Home")
@@ -45,31 +43,31 @@ struct Navbar: View {
   static var routesDropdown: Node {
 
     let dropdownItem = Node.ul(
-      attributes: [.class(.dropdownMenu), .style(safe: "margin-left:-40px;")],
+      attributes: [.class(.dropdown(.menu)), .style(safe: "margin-left:-40px;")],
       [
-        .li(link(for: .interpolate, class: .dropdownHeader, .dropdownItem)),
+        .li(link(for: .interpolate, class: .dropdown(.header), .dropdown(.item))),
         .li(link(interpolation: .cooling)),
         .li(link(interpolation: .heating)),
         .dropdownDivider,
         .dropdownHeader("Utilities"),
-        .li(link(for: .balancePoint, class: .dropdownItem)),
-        .li(link(for: .derating, class: .dropdownItem)),
-        .li(link(for: .requiredKW, class: .dropdownItem)),
-        .li(link(for: .sizingLimits, class: .dropdownItem)),
+        .li(link(for: .balancePoint, class: .dropdown(.item))),
+        .li(link(for: .derating, class: .dropdown(.item))),
+        .li(link(for: .requiredKW, class: .dropdown(.item))),
+        .li(link(for: .sizingLimits, class: .dropdown(.item))),
       ]
     )
 
     let dropdownList = Node.ul(
-      attributes: [.class(.nav, .navbarNav)],
+      attributes: [.class(.nav, .navbar(.nav))],
       .li(
-        attributes: [.class(.navItem, .dropdown)],
+        attributes: [.class(.nav(.item), .dropdown)],
         [
           .a(
             attributes: [
-              .class(.navLink, .dropdownToggle, .textLight),
+              .class(.nav(.link), .dropdown(.toggle), .text(.light)),
               .role(.button),
               .ariaExpanded(false),
-              .data(.bsToggle, .dropdown),
+              .data("bs-toggle", "dropdown"), // fix.
             ],
             .text("Routes")
           ),

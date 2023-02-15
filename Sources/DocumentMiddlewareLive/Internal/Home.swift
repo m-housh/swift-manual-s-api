@@ -10,10 +10,10 @@ struct Home: Renderable {
   func content() async throws -> Node {
     container {
       [
-        row(class: .alignItemsStart) {
+        row(class: .align(.start)) {
           [
             .h1("\(title)"),
-            .hr(attributes: [.class(.border, .borderSuccess)]),
+            .hr(attributes: [.class(.border, .border(.success))]),
           ]
         },
         body,

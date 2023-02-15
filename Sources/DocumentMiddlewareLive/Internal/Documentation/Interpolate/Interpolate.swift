@@ -26,7 +26,7 @@ struct InterpolateHome: Renderable {
   func content() async throws -> Node {
     container {
       [
-        titleRow(title: title, content: .hr(attributes: [.class(.border, .borderSuccess)])),
+        titleRow(title: title, content: .hr(attributes: [.class(.border, .border(.success))])),
         _content,
         linkRow(title: "Cooling Routes", content: _coolingLinks),
         linkRow(title: "Heating Routes", content: _heatingLinks),

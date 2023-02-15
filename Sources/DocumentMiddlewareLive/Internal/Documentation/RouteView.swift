@@ -67,7 +67,7 @@ struct RouteView {
   }
 
   private func heading(_ string: String) -> Node {
-    .h3(attributes: [.class(.textSecondary)], .text(string))
+    .h3(attributes: [.class(.text(.secondary))], .text(string))
   }
 }
 
@@ -76,10 +76,10 @@ extension RouteView: Renderable {
     let body = try await body()
     return container {
       [
-        row(class: .pt2) {
+        row(class: .padding(.top(2))) {
           [
             .h1("\(title)"),
-            .hr(attributes: [.class(.border, .borderSuccess)]),
+            .hr(attributes: [.class(.border, .border(.success))]),
           ]
         },
         body,
@@ -90,19 +90,19 @@ extension RouteView: Renderable {
   private func body() async throws -> Node {
     let jsonOutput = try await jsonOutput()
     return [
-      row(class: .pt2) {
+      row(class: .padding(.top(2))) {
         description
       },
-      row(class: "pt-3") {
+      row(class: .padding(.top(3))) {
         [
           heading("Route:"),
           .code(.pre([.text("POST "), .text(routeString)])),
         ]
       },
-      row(class: .pt2) {
+      row(class: .padding(.top(2))) {
         [
           heading("JSON Input Example:"),
-          row(class: .alignItemsStart) {
+          row(class: .align(.start)) {
             [
               row(class: .col) {
                 inputDescription
@@ -114,7 +114,7 @@ extension RouteView: Renderable {
           },
         ]
       },
-      row(class: .pt2, .mb5, .pb5) {
+      row(class: .padding(.top(2)), .padding(.bottom(5)), .margin(.bottom(5))) {
         [
           heading("JSON Output Example:"),
           .code(.pre(.text(jsonOutput))),

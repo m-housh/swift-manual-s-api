@@ -17,7 +17,7 @@ struct DocumentHome: Renderable {
       row {
         [
           .h1("\(title)"),
-          .hr(attributes: [.class(.border, .borderSuccess)]),
+          .hr(attributes: [.class(.border, .border(.success))]),
           _content,
           routes,
         ]

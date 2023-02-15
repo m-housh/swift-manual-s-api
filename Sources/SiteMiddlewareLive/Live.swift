@@ -98,17 +98,3 @@ extension Node: AsyncResponseEncodable {
     try await encodeResponse(for: request).get()
   }
 }
-
-/// Transform an either to an encodable type that vapor can use.
-//extension Either: AsyncResponseEncodable
-//where Left: AsyncResponseEncodable, Right: AsyncResponseEncodable {
-//
-//  public func encodeResponse(for request: Request) async throws -> Response {
-//    switch self {
-//    case let .left(left):
-//      return try await left.encodeResponse(for: request)
-//    case let .right(right):
-//      return try await right.encodeResponse(for: request)
-//    }
-//  }
-//}

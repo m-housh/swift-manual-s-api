@@ -2,6 +2,7 @@ import Dependencies
 import Html
 import Models
 import SiteRouter
+import Stylesheet
 
 func layout(title: String, navbar: Navbar = .init(), content: Node) async throws -> Node {
   return [
@@ -50,11 +51,12 @@ private struct Layout {
 
   static var footer: Node {
 
-    let classString = "\(SharedString.textLight) fs-5 pt-3 ms-5"
+    // TODO: Add fs to `Class`
+    let classString = "\(Class.text(.light)) fs-5 pt-3 ms-5"
 
     return [
       .div(
-        attributes: [.class(.fixedBottom, .bgSuccess)],
+        attributes: [.class(.fixedBottom, .bg(.success))],
         .footer(
           attributes: [ /*.class("text-center")*/],
           .p(
@@ -70,13 +72,13 @@ private struct Layout {
   static var navbar: Node {
 
     return .nav(
-      attributes: [.class(.bgSuccess, .navbar, .navbarExpandLg, .textLight)],
+      attributes: [.class(.bg(.success), .navbar, .navbar(.expandLarge), .text(.light))],
       .div(
-        attributes: [.class(.containerFluid)],
+        attributes: [.class(.container(.fluid))],
         [
           navbarBrand(siteRouter),
           .div(
-            attributes: [.class(.justifyContentEnd)],
+            attributes: [.class(.justify(.end))],
             documentDropdown(siteRouter)
           ),
         ])
@@ -86,7 +88,7 @@ private struct Layout {
   private static func navbarBrand(_ router: AnyParserPrinter<URLRequestData, ServerRoute>) -> Node {
     .a(
       attributes: [
-        .class(.navbarBrand, .textLight),
+        .class(.navbar(.brand), .text(.light)),
         .href(router.path(for: .home)),
       ],
       .text("Home")
@@ -99,30 +101,30 @@ private struct Layout {
 
     var documentNavbarItem: Node {
       .ul(
-        attributes: [.class(.dropdownMenu)],
+        attributes: [.class(.dropdown(.menu))],
         [
-          .li(link(for: .documentation(.home), text: "Home", class: .dropdownItem)),
-          .li(link(for: .balancePoint, class: .dropdownItem)),
-          .li(link(for: .derating, class: .dropdownItem)),
-          .li(link(for: .interpolate, class: .dropdownItem)),
-          .li(link(for: .requiredKW, class: .dropdownItem)),
-          .li(link(for: .sizingLimits, class: .dropdownItem)),
+          .li(link(for: .documentation(.home), text: "Home", class: .dropdown(.item))),
+          .li(link(for: .balancePoint, class: .dropdown(.item))),
+          .li(link(for: .derating, class: .dropdown(.item))),
+          .li(link(for: .interpolate, class: .dropdown(.item))),
+          .li(link(for: .requiredKW, class: .dropdown(.item))),
+          .li(link(for: .sizingLimits, class: .dropdown(.item))),
         ]
       )
     }
 
     return .ul(
-      attributes: [.class(.nav, .navbarNav)],
+      attributes: [.class(.nav, .navbar(.nav))],
       [
         .li(
-          attributes: [.class(.navItem, .dropdown)],
+          attributes: [.class(.nav(.item), .dropdown)],
           [
             .a(
               attributes: [
-                .class(.navLink, .dropdownToggle, .textLight),
+                .class(.nav(.link), .dropdown(.toggle), .text(.light)),
                 .role(.button),
                 .ariaExpanded(false),
-                .data(.bsToggle, .dropdown),
+                .data("bs-toggle", "dropdown"),  // fix.
               ],
               .text("Documentation")
             ),

@@ -3,6 +3,7 @@ import Foundation
 import Html
 import Models
 import SiteRouter
+import Stylesheet
 import URLRouting
 
 // MARK: - Links
@@ -14,7 +15,7 @@ func link(for path: ServerRoute, text: any CustomStringConvertible, class: Strin
   )
 }
 
-func link(for path: ServerRoute, text: any CustomStringConvertible, class strings: SharedString...)
+func link(for path: ServerRoute, text: any CustomStringConvertible, class strings: Class...)
   -> Node
 {
   link(for: path, text: text, class: strings.map(\.description).joined(separator: " "))
@@ -24,28 +25,29 @@ func link(for value: any LinkRepresentable, class: String = "") -> Node {
   link(for: value.route, text: value.text, class: `class`)
 }
 
-func link(for key: ServerRoute.Documentation.Route.Key, class strings: SharedString...) -> Node {
+func link(for key: ServerRoute.Documentation.Route.Key, class strings: Class...) -> Node {
   link(for: key, class: strings.map(\.description).joined(separator: " "))
 }
 
 // MARK: - Attributes
 
+// TODO: Fix.
 extension Attribute {
-  static func data(_ name: SharedString, _ value: SharedString) -> Self {
+  static func data(_ name: Class, _ value: Class) -> Self {
     .init("data-\(name.description)", value.description)
   }
 }
 
 // MARK: - Row
 
-func row(class: SharedString..., content: @escaping () -> Node) -> Node {
-  var classString = SharedString.row.description
+func row(class: Class..., content: @escaping () -> Node) -> Node {
+  var classString = Class.row.description
   classString += " \(`class`.map(\.description).joined(separator: " "))"
   return .div(attributes: [.class(classString)], content())
 }
 
 func row(class: (any CustomStringConvertible)..., content: @escaping () -> Node) -> Node {
-  var classString = SharedString.row.description
+  var classString = Class.row.description
   classString += " \(`class`.map(\.description).joined(separator: " "))"
   return .div(attributes: [.class(classString)], content())
 }
@@ -56,8 +58,8 @@ func row(content: @escaping () -> Node) -> Node {
 
 // MARK: - Container
 
-func container(class: SharedString..., content: @escaping () -> Node) -> Node {
-  var classString = SharedString.container.description
+func container(class: Class..., content: @escaping () -> Node) -> Node {
+  var classString = Class.container.description
   classString += " \(`class`.map(\.description).joined(separator: " "))"
   return .div(attributes: [.class(classString)], content())
 }

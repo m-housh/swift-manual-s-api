@@ -1,0 +1,16 @@
+public enum Navbar: String, CustomStringConvertible {
+  case brand
+  case expandLarge = "expand-lg"
+  case nav
+
+  @inlinable
+  public var description: String { rawValue }
+}
+
+public enum Nav: String, CustomStringConvertible {
+  case item
+  case link
+
+  @inlinable
+  public var description: String { rawValue }
+}

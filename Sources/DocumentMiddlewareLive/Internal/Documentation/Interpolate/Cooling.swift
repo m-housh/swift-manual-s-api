@@ -206,7 +206,8 @@ private struct InterpolationView: Renderable {
     let exampleSubTexts: [String]
 
     private var exampleUl: Node {
-      exampleSubTexts.reduce(into: Node.ul(attributes: [.class("mb-0")])) { ul, string in
+      exampleSubTexts.reduce(into: Node.ul(attributes: [.class(.margin(.bottom(0)))])) {
+        ul, string in
         ul.append(
           ChildOf<Tag.Ul>.li(
             attributes: [.class("ms-4")],
@@ -218,11 +219,13 @@ private struct InterpolationView: Renderable {
 
     private var exampleNode: Node {
       .div(
-        attributes: [.class(.card, .bgSuccessSubtle)],
+        attributes: [.class(.card, .bg(.success, .subtle))],
         .div(
-          attributes: [.class(.cardBody)],
-          .h5(attributes: [.class(.cardTitle)], .text("Example:")),
-          .h6(attributes: [.class(.cardSubtitle, .mb3, .textMuted)], .text(exampleText)),
+          attributes: [.class(.card(.body))],
+          .h5(attributes: [.class(.card(.title))], .text("Example:")),
+          .h6(
+            attributes: [.class(.card(.subtitle), .margin(.bottom(3)), .text(.muted))],
+            .text(exampleText)),
           exampleUl
         )
       )
@@ -231,7 +234,7 @@ private struct InterpolationView: Renderable {
     var content: Node {
       container {
         [
-          row(class: .pt2) {
+          row(class: .padding(.top(2))) {
             .p(.text(mainDescription))
           },
           exampleNode,
