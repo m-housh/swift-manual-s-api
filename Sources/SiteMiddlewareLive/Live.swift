@@ -46,24 +46,24 @@ extension SiteMiddleware: DependencyKey {
         // TODO: Fix routes to decipher between images and `tools` paths.
         logger.debug("Handling public file: \(file)")
         let filePath = request.application.directory.publicDirectory.appending(file)
-        
+
         logger.debug("File Path: \(filePath)")
-        
+
         let response = try await request.fileio.streamFile(at: filePath) { result in
           do {
             try result.get()
           } catch {
             logger.debug(
               """
-                Error handling public file.
-                File: \(file)
-                Path: \(filePath)
-                Error: \(error)
-                """
+              Error handling public file.
+              File: \(file)
+              Path: \(filePath)
+              Error: \(error)
+              """
             )
           }
         }.encodeResponse(for: request)
-        
+
         let fileName = String(file.split(separator: "/").last ?? file[...])
         response.headers.contentDisposition = .some(.init(.attachment, filename: fileName))
         return response
