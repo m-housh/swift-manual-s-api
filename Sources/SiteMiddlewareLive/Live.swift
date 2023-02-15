@@ -45,24 +45,24 @@ extension SiteMiddleware: DependencyKey {
       case let .public(file: file):
         logger.debug("Handling public file: \(file)")
         let filePath = request.application.directory.publicDirectory.appending(file)
-        
+
         logger.debug("File Path: \(filePath)")
-        
+
         let response = try await request.fileio.streamFile(at: filePath) { result in
           do {
             try result.get()
           } catch {
             logger.debug(
               """
-                Error handling public file.
-                File: \(file)
-                Path: \(filePath)
-                Error: \(error)
-                """
+              Error handling public file.
+              File: \(file)
+              Path: \(filePath)
+              Error: \(error)
+              """
             )
           }
         }.encodeResponse(for: request)
-        
+
         let fileName = String(file.split(separator: "/").last ?? file[...])
         print(response.headers.contentType ?? "none")
         print(fileName)

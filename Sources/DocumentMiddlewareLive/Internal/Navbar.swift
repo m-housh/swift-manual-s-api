@@ -20,9 +20,9 @@ struct Navbar: View {
     var contentDiv = Node.div(attributes: [.class(.containerFluid)], navbarBrand)
     if let contents {
       contentDiv.append(contents)
-//      contentDiv.append(
-//        .div(attributes: [.class(.justifyContentEnd)], contents)
-//      )
+      //      contentDiv.append(
+      //        .div(attributes: [.class(.justifyContentEnd)], contents)
+      //      )
     }
     return .nav(
       attributes: [.class(.bgSuccess, .navbar, .navbarExpandLg, .textLight)],
@@ -40,10 +40,10 @@ struct Navbar: View {
       .text("Home")
     )
   }
-  
+
   @usableFromInline
   static var routesDropdown: Node {
-   
+
     let dropdownItem = Node.ul(
       attributes: [.class(.dropdownMenu), .style(safe: "margin-left:-40px;")],
       [
@@ -58,7 +58,7 @@ struct Navbar: View {
         .li(link(for: .sizingLimits, class: .dropdownItem)),
       ]
     )
-    
+
     let dropdownList = Node.ul(
       attributes: [.class(.nav, .navbarNav)],
       .li(
@@ -69,24 +69,24 @@ struct Navbar: View {
               .class(.navLink, .dropdownToggle, .textLight),
               .role(.button),
               .ariaExpanded(false),
-              .data(.bsToggle, .dropdown)
+              .data(.bsToggle, .dropdown),
             ],
             .text("Routes")
           ),
-          dropdownItem
+          dropdownItem,
         ]
       )
     )
-    
+
     return .div(attributes: [.class("justify-content-end pe-5")], dropdownList)
   }
 }
 
-fileprivate func link(interpolation: ServerRoute.Documentation.Route.Interpolation.Key) -> Node {
+private func link(interpolation: ServerRoute.Documentation.Route.Interpolation.Key) -> Node {
   link(for: interpolation, class: "dropdown-item")
 }
 
-fileprivate func link(cooling: ServerRoute.Documentation.Route.Interpolation.Cooling) -> Node {
+private func link(cooling: ServerRoute.Documentation.Route.Interpolation.Cooling) -> Node {
   link(for: cooling, class: "dropdown-item")
 }
 
@@ -95,7 +95,7 @@ extension ChildOf<Tag.Ul> {
   static var dropdownDivider: Self {
     .li(.hr(attributes: [.class("dropdown-divider")]))
   }
-  
+
   @inlinable
   static func dropdownHeader(_ string: String) -> Self {
     .li(attributes: [.class("dropdown-header")], .h6(.text(string)))
