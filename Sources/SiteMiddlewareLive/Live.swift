@@ -43,6 +43,7 @@ extension SiteMiddleware: DependencyKey {
         logger.debug("Handling home route.")
         return try await documentMiddleware.render(route: .home)
       case let .public(file: file):
+        // TODO: Fix routes to decipher between images and `tools` paths.
         logger.debug("Handling public file: \(file)")
         let filePath = request.application.directory.publicDirectory.appending(file)
         
@@ -64,8 +65,7 @@ extension SiteMiddleware: DependencyKey {
         }.encodeResponse(for: request)
         
         let fileName = String(file.split(separator: "/").last ?? file[...])
-        print(response.headers.contentType ?? "none")
-        print(fileName)
+        response.headers.contentDisposition = .some(.init(.attachment, filename: fileName))
         return response
       }
     }
