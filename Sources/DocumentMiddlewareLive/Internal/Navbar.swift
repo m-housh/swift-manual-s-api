@@ -67,7 +67,7 @@ struct Navbar: View {
               .class(.nav(.link), .dropdown(.toggle), .text(.light)),
               .role(.button),
               .ariaExpanded(false),
-              .data("bs-toggle", "dropdown"), // fix.
+              .data("bs-toggle", "dropdown"),  // fix.
             ],
             .text("Routes")
           ),
