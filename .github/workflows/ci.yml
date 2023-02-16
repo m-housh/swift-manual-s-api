@@ -35,7 +35,7 @@ jobs:
       run: make DOCKER_PLATFORM=linux/amd64 test-linux
 
   # Package / build docker development image if tests succeed.
-  docker:
+  ghcrio-docker-dev-image:
     needs: [ubuntu]
     uses: ./.github/workflows/publish-docker-image.yml
     if: ${{ github.event.name != 'pull_request' }}
@@ -45,3 +45,40 @@ jobs:
       tag: dev
     secrets:
       token: ${{ secrets.GHCRIO_TOKEN }}
+
+  docker-hub-dev-image:
+    needs: [ubuntu]
+    uses: ./.github/workflows/publish-docker-image.yml
+    if: ${{ github.event.name != 'pull_request' }}
+    with:
+      registry: mhoush
+      file: ./Bootstrap/Dockerfile.dev
+      push: ${{ github.event.name != 'pull_request' }}
+      tag: dev
+    secrets:
+      token: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+
+  ghcrio-docker-production-image:
+    needs: [ubuntu]
+    uses: ./.github/workflows/publish-docker-image.yml
+    if: ${{ github.event.name != 'pull_request' }}
+    with:
+      file: ./Bootstrap/Dockerfile.prod
+      push: ${{ github.event.name != 'pull_request' }}
+      tag: dev
+    secrets:
+      token: ${{ secrets.GHCRIO_TOKEN }}
+
+  docker-hub-production-image:
+    needs: [ubuntu]
+    uses: ./.github/workflows/publish-docker-image.yml
+    if: ${{ github.event.name != 'pull_request' }}
+    with:
+      registry: mhoush
+      file: ./Bootstrap/Dockerfile.prod
+      push: ${{ github.event.name != 'pull_request' }}
+      tag: dev
+    secrets:
+      token: ${{ secrets.DOCKER_HUB_TOKEN }}
+

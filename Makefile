@@ -49,14 +49,14 @@ format:
 		./Package.swift \
 		./Sources
 
-build-docker-image:
+build-docker-image: clean
 	docker build \
 		--file $(DOCKERFILE) \
 		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) \
 		--platform $(DOCKER_PLATFORM) \
 		.
 
-build-docker-dev-image:
+build-docker-dev-image: clean
 	$(MAKE) DOCKERFILE="Bootstrap/Dockerfile.dev" \
 		DOCKER_TAG="dev" \
 		build-docker-image
