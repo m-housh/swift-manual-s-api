@@ -8,6 +8,7 @@ public enum Card: String, CustomStringConvertible {
 }
 
 public enum Dropdown: String, CustomStringConvertible {
+  case divider
   case header
   case item
   case menu

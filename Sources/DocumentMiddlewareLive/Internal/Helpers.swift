@@ -25,6 +25,10 @@ func link(for value: any LinkRepresentable, class: String = "") -> Node {
   link(for: value.route, text: value.text, class: `class`)
 }
 
+func link(for value: any LinkRepresentable, class: Class...) -> Node {
+  link(for: value.route, text: value.text, class: `class`.description)
+}
+
 func link(for key: ServerRoute.Documentation.Route.Key, class strings: Class...) -> Node {
   link(for: key, class: strings.map(\.description).joined(separator: " "))
 }

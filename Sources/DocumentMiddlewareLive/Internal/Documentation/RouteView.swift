@@ -96,7 +96,10 @@ extension RouteView: Renderable {
       row(class: .padding(.top(3))) {
         [
           heading("Route:"),
-          .code(.pre([.text("POST "), .text(routeString)])),
+          .code(
+            attributes: [.class(.fontSize(5))],
+            .pre([.text("POST "), .text(routeString)])
+          ),
         ]
       },
       row(class: .padding(.top(2))) {
@@ -108,7 +111,10 @@ extension RouteView: Renderable {
                 inputDescription
               },
               row(class: .col) {
-                .code(.pre(.text(jsonString)))
+                .code(
+                  attributes: [.class(.fontSize(5))],
+                  .pre(.text(jsonString))
+                )
               },
             ]
           },
@@ -117,7 +123,10 @@ extension RouteView: Renderable {
       row(class: .padding(.top(2)), .padding(.bottom(5)), .margin(.bottom(5))) {
         [
           heading("JSON Output Example:"),
-          .code(.pre(.text(jsonOutput))),
+          .code(
+            attributes: [.class(.fontSize(5))],
+            .pre(.text(jsonOutput))
+          ),
         ]
       },
     ]

@@ -23,7 +23,9 @@ struct Navbar: View {
       contentDiv.append(contents)
     }
     return .nav(
-      attributes: [.class(.bg(.success), .navbar, .navbar(.expandLarge), .text(.light))],
+      attributes: [
+        .class(.bg(.success), .navbar, .navbar(.expandLarge), .text(.light), .stickyTop)
+      ],
       contentDiv
     )
   }
@@ -67,7 +69,7 @@ struct Navbar: View {
               .class(.nav(.link), .dropdown(.toggle), .text(.light)),
               .role(.button),
               .ariaExpanded(false),
-              .data("bs-toggle", "dropdown"),  // fix.
+              .data(.bsToggle, .dropdown),
             ],
             .text("Routes")
           ),
@@ -76,26 +78,29 @@ struct Navbar: View {
       )
     )
 
-    return .div(attributes: [.class("justify-content-end pe-5")], dropdownList)
+    return .div(
+      attributes: [.class(.justify(.end), .padding(.end(5)))],
+      dropdownList
+    )
   }
 }
 
 private func link(interpolation: ServerRoute.Documentation.Route.Interpolation.Key) -> Node {
-  link(for: interpolation, class: "dropdown-item")
+  link(for: interpolation, class: .dropdown(.item))
 }
 
 private func link(cooling: ServerRoute.Documentation.Route.Interpolation.Cooling) -> Node {
-  link(for: cooling, class: "dropdown-item")
+  link(for: cooling, class: .dropdown(.item))
 }
 
 extension ChildOf<Tag.Ul> {
   @usableFromInline
   static var dropdownDivider: Self {
-    .li(.hr(attributes: [.class("dropdown-divider")]))
+    .li(.hr(attributes: [.class(.dropdown(.divider))]))
   }
 
   @inlinable
   static func dropdownHeader(_ string: String) -> Self {
-    .li(attributes: [.class("dropdown-header")], .h6(.text(string)))
+    .li(attributes: [.class(.dropdown(.header))], .h6(.text(string)))
   }
 }

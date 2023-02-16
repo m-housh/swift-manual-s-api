@@ -51,16 +51,15 @@ private struct Layout {
 
   static var footer: Node {
 
-    // TODO: Add fs to `Class`
-    let classString = "\(Class.text(.light)) fs-5 pt-3 ms-5"
-
     return [
       .div(
         attributes: [.class(.fixedBottom, .bg(.success))],
         .footer(
           attributes: [ /*.class("text-center")*/],
           .p(
-            attributes: [.class(classString)],
+            attributes: [
+              .class(.text(.light), .fontSize(5), .padding(.top(3)), .margin(.start(5)))
+            ],
             "© 2023 Michael Housh"
           )
         )
@@ -124,7 +123,7 @@ private struct Layout {
                 .class(.nav(.link), .dropdown(.toggle), .text(.light)),
                 .role(.button),
                 .ariaExpanded(false),
-                .data("bs-toggle", "dropdown"),  // fix.
+                .data(.bsToggle, .dropdown),
               ],
               .text("Documentation")
             ),

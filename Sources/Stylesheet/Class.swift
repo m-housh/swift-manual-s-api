@@ -1,128 +1,158 @@
 import Html
 
-public enum Class: CustomStringConvertible {
-  case value(any CustomStringConvertible)
-
+public struct Class: CustomStringConvertible {
+  
+  @usableFromInline
+  var value: any CustomStringConvertible
+  
   @inlinable
-  public static func align(_ position: Alignment) -> Self {
-    .value("align-\(position)")
+  public init(_ value: any CustomStringConvertible) {
+    self.value = value
   }
 
   @inlinable
+  public static func align(_ position: Alignment) -> Self {
+    .init("align-\(position)")
+  }
+
+  @inlinable
+  public static func align(_ side: Alignment.Side) -> Self {
+    self.align(.items(side))
+  }
+  
+  @inlinable
   public static func bg(_ colors: BootstrapColor...) -> Self {
-    .value("bg-\(colors.description)")
+    .init("bg-\(colors.description)")
   }
 
   @inlinable
   public static var border: Self {
-    .value("border")
+    .init("border")
   }
 
   @inlinable
   public static func border(_ color: BootstrapColor) -> Self {
-    .value("border-\(color)")
+    .init("border-\(color)")
   }
 
   @inlinable
   public static var card: Self {
-    .value("card")
+    .init("card")
   }
 
   @inlinable
   public static func card(_ card: Card) -> Self {
-    .value("card-\(card)")
+    .init("card-\(card)")
   }
 
   @inlinable
   public static var col: Self {
-    .value("col")
+    .init("col")
   }
 
   @inlinable
   public static var container: Self {
-    .value("container")
+    .init("container")
   }
 
   @inlinable
   public static func container(_ container: Container) -> Self {
-    .value("container-\(container)")
+    .init("container-\(container)")
   }
 
   @inlinable
   public static var dropdown: Self {
-    .value("dropdown")
+    .init("dropdown")
   }
 
   @inlinable
   public static func dropdown(_ dropdown: Dropdown) -> Self {
-    .value("dropdown-\(dropdown)")
+    .init("dropdown-\(dropdown)")
   }
 
   @inlinable
   public static var fixedBottom: Self {
-    .value("fixed-bottom")
+    .init("fixed-bottom")
+  }
+  
+  @inlinable
+  public static func fontSize(_ size: Int) -> Self {
+    let size = Text.Size(rawValue: size) ?? .default
+    return fontSize(size)
+  }
+  
+  @inlinable
+  public static func fontSize(_ size: Text.Size) -> Self {
+    return .init("fs-\(size)")
   }
 
   @inlinable
-  public static func justify(_ justify: Justify) -> Self {
-    .value("justify-\(justify)")
+  public static func justify(_ justify: Alignment) -> Self {
+    .init("justify-\(justify)")
+  }
+  
+  @inlinable
+  public static func justify(_ side: Alignment.Side) -> Self {
+    self.justify(.contents(side))
   }
 
   @inlinable
   public static func margin(_ side: Side) -> Self {
-    .value("m\(side)")
+    .init("m\(side)")
   }
 
   @inlinable
   public static var nav: Self {
-    .value("nav")
+    .init("nav")
   }
 
   @inlinable
   public static func nav(_ nav: Nav) -> Self {
-    .value("nav-\(nav)")
+    .init("nav-\(nav)")
   }
 
   @inlinable
   public static var navbar: Self {
-    .value("navbar")
+    .init("navbar")
   }
 
   @inlinable
   public static func navbar(_ navbar: Navbar) -> Self {
-    .value("navbar-\(navbar)")
+    .init("navbar-\(navbar)")
   }
 
   @inlinable
   public static func padding(_ side: Side) -> Self {
-    .value("p\(side)")
+    .init("p\(side)")
   }
 
   @inlinable
   public static var row: Self {
-    .value("row")
+    .init("row")
+  }
+  
+  @inlinable
+  public static var stickyTop: Self {
+    .init("sticky-top")
   }
 
   @inlinable
   public static func text(_ color: BootstrapColor) -> Self {
-    .value("text-\(color)")
+    .init("text-\(color)")
   }
 
   @inlinable
   public static func text(_ color: Text) -> Self {
-    .value("text-\(color)")
+    .init("text-\(color)")
   }
+  
   @inlinable
   public static func text(_ color: BootstrapColor, _ secondary: Text) -> Self {
-    .value("text-\(color)-\(secondary)")
+    .init("text-\(color)-\(secondary)")
   }
 
   @inlinable
-  public var description: String {
-    switch self {
-    case .value(let value): return value.description
-    }
-  }
+  public var description: String { value.description }
 
 }
 

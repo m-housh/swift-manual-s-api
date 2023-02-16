@@ -5,8 +5,12 @@ import Stylesheet
 final class StylesheetTests: XCTestCase {
   
   func test_align() {
-    let sut = Class.align(.start)
+    var sut = Class.align(.start)
     XCTAssertEqual(sut.description, "align-items-start")
+    
+    sut = .align(.items(.end))
+    XCTAssertEqual(sut.description, "align-items-end")
+    
   }
   
   func test_bg() {
@@ -49,16 +53,45 @@ final class StylesheetTests: XCTestCase {
     XCTAssertEqual(sut.description, "container-fluid")
   }
   
+  func test_dropdown() {
+    var sut = Class.dropdown
+    XCTAssertEqual(sut.description, "dropdown")
+    
+    sut = .dropdown(.header)
+    XCTAssertEqual(sut.description, "dropdown-header")
+    
+    sut = .dropdown(.item)
+    XCTAssertEqual(sut.description, "dropdown-item")
+    
+    sut = .dropdown(.menu)
+    XCTAssertEqual(sut.description, "dropdown-menu")
+    
+    sut = .dropdown(.toggle)
+    XCTAssertEqual(sut.description, "dropdown-toggle")
+  }
+  
   func test_fixedBottom() {
     let sut = Class.fixedBottom
     XCTAssertEqual(sut.description, "fixed-bottom")
+  }
+  
+  func test_fontSize() {
+    for size in 1...7 {
+      let sut = Class.fontSize(size)
+      if size == 7 {
+        XCTAssertEqual(sut.description, "fs-6")
+      } else {
+        XCTAssertEqual(sut.description, "fs-\(size)")
+      }
+    }
+    
   }
   
   func test_justify() {
     var sut = Class.justify(.start)
     XCTAssertEqual(sut.description, "justify-contents-start")
     
-    sut = .justify(.end)
+    sut = .justify(.contents(.end))
     XCTAssertEqual(sut.description, "justify-contents-end")
   }
   
@@ -115,9 +148,25 @@ final class StylesheetTests: XCTestCase {
     XCTAssertEqual(sut.description, "pt-4")
   }
   
+  func test_margin_and_padding_size() {
+    for size in 0...6 {
+      let sut = Class.padding(.start(size))
+      if size == 6 {
+        XCTAssertEqual(sut.description, "ps-auto")
+      } else {
+        XCTAssertEqual(sut.description, "ps-\(size)")
+      }
+    }
+  }
+  
   func test_row() {
     let sut = Class.row
     XCTAssertEqual(sut.description, "row")
+  }
+  
+  func test_stickyTop() {
+    let sut = Class.stickyTop
+    XCTAssertEqual(sut.description, "sticky-top")
   }
   
   func test_text() {
