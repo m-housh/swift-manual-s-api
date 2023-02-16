@@ -1,5 +1,6 @@
 import Dependencies
 import Html
+import Stylesheet
 
 struct Home: Renderable {
 
@@ -48,6 +49,18 @@ struct Home: Renderable {
         .br,
         .p("Follow the link below to learn about the API routes provided."),
         link(for: .documentation(.home), text: Key.documentation),
+        .br,
+        .br,
+        .br,
+        row(class: .margin(.top(5))) {
+          [
+            .p(
+              attributes: [.class("fs-6 font-monospace")],
+              "Manual-S® is a registerd trademark of ACCA (Air Conditioning Contractors of America)"
+            ),
+            .a(attributes: [.href("https://www.acca.org/home")], .text("ACCA.org"))
+          ]
+        }
       ]
     }
   }
@@ -59,7 +72,7 @@ struct Home: Renderable {
     var description: String {
       switch self {
       case .home:
-        return "Manual-S API"
+        return "Manual-S® API"
       case .documentation:
         return rawValue.capitalized
       }
