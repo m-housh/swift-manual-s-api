@@ -2,7 +2,7 @@ import Foundation
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.BalancePointRequest {
+extension ServerRoute.Api.Route.BalancePoint {
 
   func respond() async throws -> BalancePointResponse {
     switch self {

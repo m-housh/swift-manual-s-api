@@ -1,9 +1,9 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.SizingLimitRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.SizingLimit: AsyncValidatable {
   @inlinable
-  public func validate(_ value: Models.ServerRoute.Api.Route.SizingLimitRequest) async throws {
+  public func validate(_ value: Models.ServerRoute.Api.Route.SizingLimit) async throws {
     if case let .airToAir(type: _, compressor: _, climate: climate) = value.systemType {
       guard case .coldWinterOrNoLatentLoad = climate else { return }
       guard let load = value.houseLoad else {

@@ -1,7 +1,7 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest:
+extension ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation:
   AsyncValidatable
 {
   @inlinable

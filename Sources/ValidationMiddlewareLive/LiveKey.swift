@@ -67,6 +67,8 @@ extension ValidationMiddleware: DependencyKey {
 
       let apiRouteValidator = ApiRouteValidator.liveValue
 
+      // Keep switch here, so that if new routes are added there
+      // will be compile errors here if a case is not handled.
       switch route {
       case .documentation:
         return  // no validations required.

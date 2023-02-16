@@ -2,7 +2,7 @@ import Foundation
 //import UtilsClient
 import Models
 
-extension ServerRoute.Api.Route.DeratingRequest {
+extension ServerRoute.Api.Route.Derating {
   func respond() async throws -> AdjustmentMultiplier {
     try await self.systemType.derating(elevation: self.elevation)
   }

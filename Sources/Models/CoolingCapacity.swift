@@ -1,3 +1,5 @@
+/// Represents the cooling capacity of an appliance.
+///
 public struct CoolingCapacity: Codable, Equatable, Sendable {
 
   /// The total cooling capacity.

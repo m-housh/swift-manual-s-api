@@ -1,7 +1,7 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
+extension ServerRoute.Api.Route.BalancePoint.Thermal: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -21,10 +21,10 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.BalancePointRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.BalancePoint: AsyncValidatable {
 
   @inlinable
-  public func validate(_ value: ServerRoute.Api.Route.BalancePointRequest) async throws {
+  public func validate(_ value: ServerRoute.Api.Route.BalancePoint) async throws {
     switch value {
     case let .thermal(thermal):
       try await thermal.validate()

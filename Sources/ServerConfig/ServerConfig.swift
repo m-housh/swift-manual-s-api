@@ -13,13 +13,11 @@ import VaporRouting
 ///    - app: The vapor application to configure.
 public func configure(_ app: Vapor.Application) async throws {
 
+  let baseURL = await configureBaseURL(app)
+
   await withDependencies(
     {
-      // This doesn't seem to really work.
-      $0.baseURL =
-        app.environment == .production
-        ? "http://localhost:8080"
-        : "http://localhost:8080"
+      $0.baseURL = baseURL
     },
     operation: {
       // configure the vapor middleware(s)
@@ -28,6 +26,21 @@ public func configure(_ app: Vapor.Application) async throws {
       // configure site router.
       await configureSiteRouter(app)
     })
+}
+
+// Configure the base url for the application / router.
+private func configureBaseURL(_ app: Vapor.Application) async -> String {
+  @Dependency(\.logger) var logger
+
+  let baseURL: String =
+    Environment.get("BASE_URL")
+    ?? (app.environment == .production
+      ? "http://localhost:8080"
+      : "http://localhost:8080")
+
+  logger.debug("Base URL: \(baseURL)")
+
+  return baseURL
 }
 
 // Configure the vapor middleware.
@@ -54,17 +67,13 @@ private func configureVaporMiddleware(_ app: Vapor.Application) async {
 
 // Register the site router with the vapor application.
 private func configureSiteRouter(_ app: Vapor.Application) async {
+
+  @Dependency(\.baseURL) var baseURL: String
   @Dependency(\.logger) var logger: Logger
   @Dependency(\.siteRouter) var router: AnyParserPrinter<URLRequestData, ServerRoute>
   @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
-  logger.info("Bootstrapping site router.")
-  app.mount(router, use: siteMiddleware.respond(request:route:))
-}
 
-//private func siteHandler(
-//  request: Request,
-//  route: ServerRoute
-//) async throws -> AsyncResponseEncodable {
-//  @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
-//  return try await siteMiddleware.respond(request: request, route: route)
-//}
+  logger.info("Bootstrapping site router.")
+
+  app.mount(router.baseURL(baseURL), use: siteMiddleware.respond(request:route:))
+}

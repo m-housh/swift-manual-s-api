@@ -23,6 +23,7 @@ extension SiteMiddleware: DependencyKey {
       try await validations.validate(route)
 
       switch route {
+
       case let .api(api):
         logger.debug(
           """
@@ -30,6 +31,7 @@ extension SiteMiddleware: DependencyKey {
           Route: \(api.route)
           """)
         return try await apiMiddleware.respond(api).eraseToAnyEncodable()
+
       case let .documentation(documentationRoute):
         logger.debug(
           """
@@ -42,6 +44,7 @@ extension SiteMiddleware: DependencyKey {
       case .home:
         logger.debug("Handling home route.")
         return try await documentMiddleware.render(route: .home)
+
       case let .public(file: file):
         // TODO: Fix routes to decipher between images and `tools` paths.
         logger.debug("Handling public file: \(file)")

@@ -4,6 +4,8 @@ import Html
 import LoggingDependency
 import Models
 
+// TODO: Add validation errors, currently thinking that we use an
+// invalid value and printing the error.
 struct RouteView {
   @Dependency(\.apiMiddleware) var apiMiddleware
   @Dependency(\.baseURL) var baseURL

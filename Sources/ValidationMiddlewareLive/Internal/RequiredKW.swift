@@ -1,7 +1,7 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.RequiredKWRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.RequiredKW: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {

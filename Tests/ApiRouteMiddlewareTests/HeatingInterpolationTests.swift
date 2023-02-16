@@ -13,7 +13,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
+      let route = ServerRoute.Api.Route.Interpolation.Heating.Furnace(
         elevation: 0,
         houseLoad: .mock,
         input: 60_000,
@@ -21,7 +21,7 @@ final class HeatingInterpolationTests: XCTestCase {
       )
       
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.furnace(route))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(result: .heating(
@@ -43,7 +43,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest(
+      let route = ServerRoute.Api.Route.Interpolation.Heating.Furnace(
         elevation: 0,
         houseLoad: .mock,
         input: 160_000,
@@ -51,7 +51,7 @@ final class HeatingInterpolationTests: XCTestCase {
       )
       
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.furnace(route))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(
@@ -75,14 +75,14 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
+      let request = ServerRoute.Api.Route.Interpolation.Heating.Boiler(
         elevation: 0,
         houseLoad: .mock,
         input: 60_000,
         afue: 96
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.boiler(request))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(result: .heating(.init(
@@ -101,7 +101,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest(
+      let route = ServerRoute.Api.Route.Interpolation.Heating.Boiler(
         elevation: 0,
         houseLoad: .mock,
         input: 160_000,
@@ -109,7 +109,7 @@ final class HeatingInterpolationTests: XCTestCase {
       )
       
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.boiler(route))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(
@@ -133,13 +133,13 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
+      let request = ServerRoute.Api.Route.Interpolation.Heating.Electric(
         houseLoad: .mock,
         inputKW: 15
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.electric(request))))
       
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(result: .heating(
@@ -156,13 +156,13 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest(
+      let request = ServerRoute.Api.Route.Interpolation.Heating.Electric(
         houseLoad: .mock,
         inputKW: 115
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.electric(request))))
       
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(
@@ -181,14 +181,14 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest(
+      let request = ServerRoute.Api.Route.Interpolation.Heating.HeatPump(
         capacity: .mock,
         designInfo: .init(),
         houseLoad: .mock,
         systemType: .mock
       )
       let apiRequest = ServerRoute.Api(isDebug: true, route: .interpolate(.heating(.heatPump(request))))
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponseEnvelope
+      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
       XCTAssertNoDifference(
         sut,
         .init(result: .heating(

@@ -1,10 +1,10 @@
 import Html
 
 public struct Class: CustomStringConvertible {
-  
+
   @usableFromInline
   var value: any CustomStringConvertible
-  
+
   @inlinable
   public init(_ value: any CustomStringConvertible) {
     self.value = value
@@ -19,7 +19,7 @@ public struct Class: CustomStringConvertible {
   public static func align(_ side: Alignment.Side) -> Self {
     self.align(.items(side))
   }
-  
+
   @inlinable
   public static func bg(_ colors: BootstrapColor...) -> Self {
     .init("bg-\(colors.description)")
@@ -74,13 +74,13 @@ public struct Class: CustomStringConvertible {
   public static var fixedBottom: Self {
     .init("fixed-bottom")
   }
-  
+
   @inlinable
   public static func fontSize(_ size: Int) -> Self {
     let size = Text.Size(rawValue: size) ?? .default
     return fontSize(size)
   }
-  
+
   @inlinable
   public static func fontSize(_ size: Text.Size) -> Self {
     return .init("fs-\(size)")
@@ -90,7 +90,7 @@ public struct Class: CustomStringConvertible {
   public static func justify(_ justify: Alignment) -> Self {
     .init("justify-\(justify)")
   }
-  
+
   @inlinable
   public static func justify(_ side: Alignment.Side) -> Self {
     self.justify(.contents(side))
@@ -130,7 +130,7 @@ public struct Class: CustomStringConvertible {
   public static var row: Self {
     .init("row")
   }
-  
+
   @inlinable
   public static var stickyTop: Self {
     .init("sticky-top")
@@ -145,7 +145,7 @@ public struct Class: CustomStringConvertible {
   public static func text(_ color: Text) -> Self {
     .init("text-\(color)")
   }
-  
+
   @inlinable
   public static func text(_ color: BootstrapColor, _ secondary: Text) -> Self {
     .init("text-\(color)-\(secondary)")

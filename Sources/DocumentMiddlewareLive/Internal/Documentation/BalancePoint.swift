@@ -8,7 +8,7 @@ struct BalancePointHome: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Key.balancePoint.text
   let route = ServerRoute.Api.Route.balancePoint(.thermal(.mock))
-  let json = ServerRoute.Api.Route.BalancePointRequest.Thermal.mock
+  let json = ServerRoute.Api.Route.BalancePoint.Thermal.mock
   var description: String {
     #"""
     This route is used to calculate the thermal balance point for the given conditions.

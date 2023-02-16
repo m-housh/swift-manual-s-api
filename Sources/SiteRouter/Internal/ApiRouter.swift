@@ -9,48 +9,48 @@ struct ApiRouter: ParserPrinter {
   @ParserBuilder
   var body: AnyParserPrinter<URLRequestData, ServerRoute.Api.Route> {
     let coolingInterpolationRouter = OneOf {
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.noInterpolation)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.noInterpolation)) {
         Method.post
         Path { CoolingKey.noInterpolation.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest.self,
+            ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
         )
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.oneWayIndoor)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.oneWayIndoor)) {
         Method.post
         Path { CoolingKey.oneWayIndoor.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest.self,
+            ServerRoute.Api.Route.Interpolation.Cooling.OneWay.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
         )
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.oneWayOutdoor)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.oneWayOutdoor)) {
         Method.post
         Path { CoolingKey.oneWayOutdoor.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest.self,
+            ServerRoute.Api.Route.Interpolation.Cooling.OneWay.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
         )
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Cooling.twoWay)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.twoWay)) {
         Method.post
         Path { CoolingKey.twoWay.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest.self,
+            ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
@@ -59,48 +59,48 @@ struct ApiRouter: ParserPrinter {
     }
 
     let heatingInterpolationRouter = OneOf {
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.boiler)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.boiler)) {
         Method.post
         Path { HeatingKey.boiler.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest.self,
+            ServerRoute.Api.Route.Interpolation.Heating.Boiler.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
         )
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.electric)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.electric)) {
         Method.post
         Path { HeatingKey.electric.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest.self,
+            ServerRoute.Api.Route.Interpolation.Heating.Electric.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
         )
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.furnace)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.furnace)) {
         Method.post
         Path { HeatingKey.furnace.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest.self,
+            ServerRoute.Api.Route.Interpolation.Heating.Furnace.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
         )
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.Heating.heatPump)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.heatPump)) {
         Method.post
         Path { HeatingKey.heatPump.key }
         Body(
           .json(
-            ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest.self,
+            ServerRoute.Api.Route.Interpolation.Heating.HeatPump.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
@@ -109,23 +109,23 @@ struct ApiRouter: ParserPrinter {
     }
 
     let interpolationRouter = OneOf {
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.cooling)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.cooling)) {
         Path { InterpolationKey.cooling.key }
         coolingInterpolationRouter
       }
 
-      Route(.case(ServerRoute.Api.Route.InterpolationRequest.heating)) {
+      Route(.case(ServerRoute.Api.Route.Interpolation.heating)) {
         Path { InterpolationKey.heating.key }
         heatingInterpolationRouter
       }
     }
 
-    let balancePointRouter = Route(.case(ServerRoute.Api.Route.BalancePointRequest.thermal)) {
+    let balancePointRouter = Route(.case(ServerRoute.Api.Route.BalancePoint.thermal)) {
       Method.post
       Path { "thermal" }
       Body(
         .json(
-          ServerRoute.Api.Route.BalancePointRequest.Thermal.self,
+          ServerRoute.Api.Route.BalancePoint.Thermal.self,
           decoder: self.decoder,
           encoder: self.encoder
         )
@@ -143,7 +143,7 @@ struct ApiRouter: ParserPrinter {
         Path { RouteKey.derating.key }
         Body(
           .json(
-            ServerRoute.Api.Route.DeratingRequest.self,
+            ServerRoute.Api.Route.Derating.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
@@ -160,7 +160,7 @@ struct ApiRouter: ParserPrinter {
         Path { RouteKey.requiredKW.key }
         Body(
           .json(
-            ServerRoute.Api.Route.RequiredKWRequest.self,
+            ServerRoute.Api.Route.RequiredKW.self,
             decoder: self.decoder,
             encoder: self.encoder
           )
@@ -172,7 +172,7 @@ struct ApiRouter: ParserPrinter {
         Path { RouteKey.sizingLimits.key }
         Body(
           .json(
-            ServerRoute.Api.Route.SizingLimitRequest.self,
+            ServerRoute.Api.Route.SizingLimit.self,
             decoder: decoder,
             encoder: encoder
           )

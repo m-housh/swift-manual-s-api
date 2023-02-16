@@ -2,7 +2,7 @@ import Foundation
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.SizingLimitRequest {
+extension ServerRoute.Api.Route.SizingLimit {
 
   func respond() async throws -> SizingLimits {
     try await self.systemType.sizingLimits(load: self.houseLoad)

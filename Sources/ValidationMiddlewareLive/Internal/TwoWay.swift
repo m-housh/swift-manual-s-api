@@ -7,7 +7,7 @@ import Validations
 struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
 
   @usableFromInline
-  typealias Value = ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest
+  typealias Value = ServerRoute.Api.Route.Interpolation.Cooling.TwoWay
     .CapacityEnvelope
 
   @usableFromInline
@@ -74,7 +74,7 @@ struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {

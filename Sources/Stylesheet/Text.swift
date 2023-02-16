@@ -9,7 +9,7 @@ public enum Text: String, CustomStringConvertible {
 
   @inlinable
   public var description: String { rawValue }
-  
+
   public enum Size: Int, CustomStringConvertible {
     case one = 1
     case two
@@ -17,10 +17,10 @@ public enum Text: String, CustomStringConvertible {
     case four
     case five
     case six
-    
+
     @inlinable
     public static var `default`: Self { .six }
-    
+
     @inlinable
     public var description: String { "\(rawValue)" }
   }

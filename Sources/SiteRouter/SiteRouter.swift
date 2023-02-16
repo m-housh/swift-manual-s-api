@@ -5,7 +5,7 @@ import Models
 
 public struct SiteRouter: ParserPrinter {
 
-  @Dependency(\.baseURL) var baseURL
+  //  @Dependency(\.baseURL) var baseURL
 
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
@@ -50,7 +50,7 @@ public struct SiteRouter: ParserPrinter {
         }
       }
     }
-    .baseURL(baseURL)
+    //    .baseURL(baseURL)
     .eraseToAnyParserPrinter()
 
   }
@@ -72,11 +72,13 @@ public struct SiteRouter: ParserPrinter {
 public enum SiteRouterKey: DependencyKey {
 
   public static var testValue: AnyParserPrinter<URLRequestData, ServerRoute> {
-    SiteRouter(decoder: .init(), encoder: jsonEncoder).eraseToAnyParserPrinter()
+    return SiteRouter(decoder: .init(), encoder: jsonEncoder)
+      .eraseToAnyParserPrinter()
   }
 
   public static var liveValue: AnyParserPrinter<URLRequestData, ServerRoute> {
-    SiteRouter(decoder: .init(), encoder: jsonEncoder).eraseToAnyParserPrinter()
+    return SiteRouter(decoder: .init(), encoder: jsonEncoder)
+      .eraseToAnyParserPrinter()
   }
 }
 

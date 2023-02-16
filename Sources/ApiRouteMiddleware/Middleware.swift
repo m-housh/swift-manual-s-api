@@ -9,46 +9,46 @@ public struct ApiRouteMiddleware {
 
   public var balancePoint:
     HandlerType<
-      ServerRoute.Api.Route.BalancePointRequest,
+      ServerRoute.Api.Route.BalancePoint,
       BalancePointResponse
     >
 
   public var derating:
     HandlerType<
-      ServerRoute.Api.Route.DeratingRequest,
+      ServerRoute.Api.Route.Derating,
       AdjustmentMultiplier
     >
 
   public var interpolate:
     HandlerType<
-      ServerRoute.Api.Route.InterpolationRequest,
-      InterpolationResponseEnvelope
+      ServerRoute.Api.Route.Interpolation,
+      InterpolationResponse
     >
 
   public var requiredKW:
     HandlerType<
-      ServerRoute.Api.Route.RequiredKWRequest,
+      ServerRoute.Api.Route.RequiredKW,
       RequiredKWResponse
     >
 
   public var sizingLimits:
     HandlerType<
-      ServerRoute.Api.Route.SizingLimitRequest,
+      ServerRoute.Api.Route.SizingLimit,
       SizingLimits
     >
 
   public init(
     balancePoint: @escaping HandlerType<
-      ServerRoute.Api.Route.BalancePointRequest,
+      ServerRoute.Api.Route.BalancePoint,
       BalancePointResponse
     >,
-    derating: @escaping HandlerType<ServerRoute.Api.Route.DeratingRequest, AdjustmentMultiplier>,
+    derating: @escaping HandlerType<ServerRoute.Api.Route.Derating, AdjustmentMultiplier>,
     interpolate: @escaping HandlerType<
-      ServerRoute.Api.Route.InterpolationRequest,
-      InterpolationResponseEnvelope
+      ServerRoute.Api.Route.Interpolation,
+      InterpolationResponse
     >,
-    requiredKW: @escaping HandlerType<ServerRoute.Api.Route.RequiredKWRequest, RequiredKWResponse>,
-    sizingLimits: @escaping HandlerType<ServerRoute.Api.Route.SizingLimitRequest, SizingLimits>
+    requiredKW: @escaping HandlerType<ServerRoute.Api.Route.RequiredKW, RequiredKWResponse>,
+    sizingLimits: @escaping HandlerType<ServerRoute.Api.Route.SizingLimit, SizingLimits>
   ) {
     self.balancePoint = balancePoint
     self.derating = derating

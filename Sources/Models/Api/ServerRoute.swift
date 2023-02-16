@@ -9,6 +9,7 @@ public enum ServerRoute: Equatable, Sendable {
   /// HTML document routes.
   case documentation(Documentation)
 
+  // TODO: Update to use the `Public` routes.
   case `public`(file: String)
 
   /// The server root.
@@ -17,6 +18,12 @@ public enum ServerRoute: Equatable, Sendable {
 
 // MARK: - Documentation Routes
 extension ServerRoute {
+
+  /// Represents the public file routes.
+  public enum Public: Equatable, Sendable {
+    case images(file: String)
+    case tools(file: String)
+  }
 
   /// Represents HTML document routes.
   public enum Documentation: Equatable, Sendable {
@@ -89,22 +96,22 @@ extension ServerRoute {
     public enum Route: Equatable, Sendable {
 
       /// A route that calculates the balance point.
-      case balancePoint(BalancePointRequest)
+      case balancePoint(BalancePoint)
 
       /// A route that calculates an applicable derating adjustment.
-      case derating(DeratingRequest)
+      case derating(Derating)
 
       /// A route that interpolates equipment capacities.
-      case interpolate(InterpolationRequest)
+      case interpolate(Interpolation)
 
       /// A  route that calculates the required kilowatt sizing.
-      case requiredKW(RequiredKWRequest)
+      case requiredKW(RequiredKW)
 
       /// A route that can calculate the allowable sizing limits.
-      case sizingLimits(SizingLimitRequest)
+      case sizingLimits(SizingLimit)
 
       /// Represents the balance point requests we can calculate.
-      public enum BalancePointRequest: Codable, Equatable, Sendable {
+      public enum BalancePoint: Codable, Equatable, Sendable {
 
         /// A route that can calculate the thermal balance point.
         case thermal(Thermal)
@@ -137,7 +144,7 @@ extension ServerRoute {
 
       /// Represents the inputs needed for calculating a derating based on the project elevation.
       ///
-      public struct DeratingRequest: Codable, Equatable, Sendable {
+      public struct Derating: Codable, Equatable, Sendable {
 
         /// The project elevation.
         public var elevation: Int
@@ -159,7 +166,7 @@ extension ServerRoute {
       /// Represents the inputs need for a required killowatt request.
       ///
       ///
-      public struct RequiredKWRequest: Codable, Equatable, Sendable {
+      public struct RequiredKW: Codable, Equatable, Sendable {
 
         /// The heat pump's capacity at the winter outdoor design temperature, if applicable.
         public var capacityAtDesign: Double?
@@ -179,7 +186,7 @@ extension ServerRoute {
       }
 
       /// Represents the inputs needed for sizing limit requests.
-      public struct SizingLimitRequest: Codable, Equatable, Sendable {
+      public struct SizingLimit: Codable, Equatable, Sendable {
 
         /// The system type used.
         public var systemType: SystemType
@@ -201,7 +208,7 @@ extension ServerRoute {
       // TODO: Allow an indirect case that interpolates a heating & cooling type during a single request.
       /// Represents the different interpolation requests that can be performed.
       ///
-      public enum InterpolationRequest: Codable, Equatable, Sendable {
+      public enum Interpolation: Codable, Equatable, Sendable {
 
         /// A cooling interpolation.
         case cooling(Cooling)
@@ -215,24 +222,27 @@ extension ServerRoute {
           /// Used when there is no interpolation of the manufacturer's data required.
           ///
           /// This is equivalent to `Form S-1d`.
-          case noInterpolation(NoInterpolationRequest)
+          case noInterpolation(NoInterpolation)
 
           /// Used when there is a one way interpolation of the manufacturer's cooling capacity at indoor design conditions.
           ///
           /// This is equivalent to `Form S-1b`
-          case oneWayIndoor(OneWayRequest)
+          case oneWayIndoor(OneWay)
 
           /// Used when there is a one way interpolation of the manufacturer's cooling capacity at outdoor design conditions.
           ///
           /// This is equivalent to `Form S-1b`
-          case oneWayOutdoor(OneWayRequest)
+          case oneWayOutdoor(OneWay)
 
           /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
           ///
           /// This is equivalent to `Form S-1a`
-          case twoWay(TwoWayRequest)
+          case twoWay(TwoWay)
 
-          public struct TwoWayRequest: CoolingInterpolationRequest {
+          /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
+          ///
+          /// This is equivalent to `Form S-1a`
+          public struct TwoWay: CoolingInterpolationRequest {
             public var aboveDesign: CapacityEnvelope
             public var belowDesign: CapacityEnvelope
             public var designInfo: DesignInfo
@@ -269,7 +279,7 @@ extension ServerRoute {
             }
           }
 
-          public struct OneWayRequest: CoolingInterpolationRequest {
+          public struct OneWay: CoolingInterpolationRequest {
             public var aboveDesign: ManufactuerCoolingCapacity
             public var belowDesign: ManufactuerCoolingCapacity
             public var designInfo: DesignInfo
@@ -294,7 +304,7 @@ extension ServerRoute {
             }
           }
 
-          public struct NoInterpolationRequest: CoolingInterpolationRequest {
+          public struct NoInterpolation: CoolingInterpolationRequest {
             public var capacity: ManufactuerCoolingCapacity
             public var designInfo: DesignInfo
             public var houseLoad: HouseLoad
@@ -319,12 +329,12 @@ extension ServerRoute {
 
         public enum Heating: Codable, Equatable, Sendable {
 
-          case boiler(BoilerRequest)
-          case electric(ElectricRequest)
-          case furnace(FurnaceRequest)
-          case heatPump(HeatPumpRequest)
+          case boiler(Boiler)
+          case electric(Electric)
+          case furnace(Furnace)
+          case heatPump(HeatPump)
 
-          public struct BoilerRequest: Codable, Equatable, Sendable {
+          public struct Boiler: Codable, Equatable, Sendable {
             public var elevation: Int
             public var houseLoad: HouseLoad
             public var input: Int
@@ -343,7 +353,7 @@ extension ServerRoute {
             }
           }
 
-          public struct ElectricRequest: Codable, Equatable, Sendable {
+          public struct Electric: Codable, Equatable, Sendable {
             public var heatPumpCapacity: Int?
             public var houseLoad: HouseLoad
             public var inputKW: Double
@@ -359,7 +369,7 @@ extension ServerRoute {
             }
           }
 
-          public struct FurnaceRequest: Codable, Equatable, Sendable {
+          public struct Furnace: Codable, Equatable, Sendable {
             public var elevation: Int
             public var houseLoad: HouseLoad
             public var input: Int
@@ -378,7 +388,7 @@ extension ServerRoute {
             }
           }
 
-          public struct HeatPumpRequest: Codable, Equatable, Sendable {
+          public struct HeatPump: Codable, Equatable, Sendable {
             public var capacity: HeatPumpCapacity
             public var designInfo: DesignInfo
             public var houseLoad: HouseLoad
@@ -488,7 +498,7 @@ extension ServerRoute {
 
 // MARK: Custom Encoding
 
-extension ServerRoute.Api.Route.BalancePointRequest {
+extension ServerRoute.Api.Route.BalancePoint {
 
   private enum CodingKeys: String, CodingKey {
     case thermal

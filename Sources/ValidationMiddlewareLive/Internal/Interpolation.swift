@@ -1,10 +1,10 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Cooling: AsyncValidatable {
 
   @inlinable
-  public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest.Cooling) async throws {
+  public func validate(_ value: ServerRoute.Api.Route.Interpolation.Cooling) async throws {
     switch value {
     case let .noInterpolation(noInterpolation):
       return try await noInterpolation.validate()
@@ -18,10 +18,10 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Heating: AsyncValidatable {
 
   @inlinable
-  public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest.Heating) async throws {
+  public func validate(_ value: ServerRoute.Api.Route.Interpolation.Heating) async throws {
     switch value {
     case let .boiler(boiler):
       return try await boiler.validate()
@@ -35,10 +35,10 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
 
   @inlinable
-  public func validate(_ value: ServerRoute.Api.Route.InterpolationRequest) async throws {
+  public func validate(_ value: ServerRoute.Api.Route.Interpolation) async throws {
     switch value {
     case let .cooling(cooling):
       return try await cooling.validate()

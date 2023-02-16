@@ -1,26 +1,29 @@
 // TODO: Add pass / fail results.
 
-public struct InterpolationResponseEnvelope: Codable, Equatable, Sendable {
+/// Represents the response for an interpolation request.
+///
+public struct InterpolationResponse: Codable, Equatable, Sendable {
   public let failures: [String]?
-  public let result: InterpolationResponse
+  public let result: InterpolationResult
   // not a computed property, so it get's encoded in json responses.
   public let isFailed: Bool
 
   public init(
     failures: [String]? = nil,
-    result: InterpolationResponse
+    result: InterpolationResult
   ) {
     self.failures = failures
     self.result = result
-    if let failures {
-      self.isFailed = !failures.isEmpty
-    } else {
-      self.isFailed = false
-    }
+    self.isFailed = failures != nil ? failures!.isEmpty : false
+    //    if let failures {
+    //      self.isFailed = !failures.isEmpty
+    //    } else {
+    //      self.isFailed = false
+    //    }
   }
 }
 
-public enum InterpolationResponse: Codable, Equatable, Sendable {
+public enum InterpolationResult: Codable, Equatable, Sendable {
   case cooling(Cooling)
   case heating(Heating)
 
@@ -155,7 +158,7 @@ public enum InterpolationResponse: Codable, Equatable, Sendable {
 
 // MARK: - Encoding
 
-extension InterpolationResponse {
+extension InterpolationResult {
 
   private enum CodingKeys: CodingKey {
     case cooling
@@ -173,7 +176,7 @@ extension InterpolationResponse {
   }
 }
 
-extension InterpolationResponse.Heating.Result {
+extension InterpolationResult.Heating.Result {
 
   private enum CodingKeys: CodingKey {
     case boiler

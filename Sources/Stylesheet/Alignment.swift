@@ -1,5 +1,5 @@
 public enum Alignment: CustomStringConvertible {
-  
+
   case items(Side)
   case contents(Side)
 
@@ -12,11 +12,11 @@ public enum Alignment: CustomStringConvertible {
       return "contents-\(contents)"
     }
   }
-  
+
   public enum Side: String, CustomStringConvertible {
     case end
     case start
-    
+
     @inlinable
     public var description: String { rawValue }
   }

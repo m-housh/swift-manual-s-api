@@ -20,7 +20,7 @@ private struct BoilerView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.boiler.text
   let route = ServerRoute.Api.Route.interpolate(.heating(.boiler(.mock)))
-  let json = ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest.mock
+  let json = ServerRoute.Api.Route.Interpolation.Heating.Boiler.mock
   let description = """
     This route is used to interpolate a boiler for the given conditons.
     """
@@ -47,7 +47,7 @@ private struct ElectricView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.electric.text
   let route = ServerRoute.Api.Route.interpolate(.heating(.electric(.mock)))
-  let json = ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest.mock
+  let json = ServerRoute.Api.Route.Interpolation.Heating.Electric.mock
   let description = """
     This route is used to interpolate an electric furnace for the given conditons.
     """
@@ -78,7 +78,7 @@ private struct FurnaceView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.furnace.text
   let route = ServerRoute.Api.Route.interpolate(.heating(.furnace(.mock)))
-  let json = ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest.mock
+  let json = ServerRoute.Api.Route.Interpolation.Heating.Furnace.mock
   let description = """
     This route is used to interpolate a furnace for the given conditons.
     """
@@ -105,7 +105,7 @@ private struct HeatPumpView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.heatPump.text
   let route = ServerRoute.Api.Route.interpolate(.heating(.heatPump(.mock)))
-  let json = ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest.mock
+  let json = ServerRoute.Api.Route.Interpolation.Heating.HeatPump.mock
   let description = """
     This route is used to interpolate a heat pump for the given conditons.
     """

@@ -5,7 +5,7 @@ import Validations
 enum OneWayRequestValidation: AsyncValidatable {
 
   @usableFromInline
-  typealias OneWayRequest = ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest
+  typealias OneWayRequest = ServerRoute.Api.Route.Interpolation.Cooling.OneWay
 
   case indoor(OneWayRequest)
   case outdoor(OneWayRequest)

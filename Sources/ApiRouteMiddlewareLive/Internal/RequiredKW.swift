@@ -3,7 +3,7 @@ import Foundation
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.RequiredKWRequest {
+extension ServerRoute.Api.Route.RequiredKW {
   @inlinable
   func respond() async throws -> RequiredKWResponse {
     try await RequiredKWRequestEnvelope(request: self).respond()
@@ -17,7 +17,7 @@ struct RequiredKWRequestEnvelope {
   let capacityAtDesign: Double
 
   @usableFromInline
-  init(request: ServerRoute.Api.Route.RequiredKWRequest) {
+  init(request: ServerRoute.Api.Route.RequiredKW) {
     self.heatLoss = request.heatLoss
     self.capacityAtDesign = request.capacityAtDesign ?? 0.0
   }

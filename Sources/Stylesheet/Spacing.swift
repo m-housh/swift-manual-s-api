@@ -5,12 +5,12 @@ public enum Side: CustomStringConvertible {
   case end(Int)
   case start(Int)
   case top(Int)
-  
+
   @inlinable
   public var description: String {
     let prefix: String
     let size: Size?
-    
+
     switch self {
     case let .bottom(bottom):
       prefix = "b"
@@ -25,10 +25,10 @@ public enum Side: CustomStringConvertible {
       prefix = "t"
       size = .init(rawValue: top)
     }
-    
+
     return "\(prefix)-\(size ?? .default)"
   }
-  
+
   /// Represents a valid size value for padding or margins.
   ///
   /// Generally not used directly, but this type ensures that padding or margin values are
@@ -41,10 +41,10 @@ public enum Side: CustomStringConvertible {
     case four
     case five
     case auto
-    
+
     @inlinable
     public static var `default`: Self { .auto }
-    
+
     @inlinable
     public var description: String {
       switch self {

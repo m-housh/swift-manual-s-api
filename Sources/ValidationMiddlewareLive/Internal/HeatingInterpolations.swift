@@ -1,7 +1,7 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Heating.Boiler: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -37,7 +37,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest: Asyn
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Heating.Furnace: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -72,7 +72,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest: Asy
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Heating.Electric: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -107,7 +107,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest: As
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Heating.HeatPump: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {

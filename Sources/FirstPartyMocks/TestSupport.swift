@@ -64,7 +64,7 @@ extension HouseLoad.CoolingLoad {
 
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequest {
+extension ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation {
   public static let zero = Self.init(
     capacity: .zero,
     designInfo: .zero,
@@ -82,7 +82,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.NoInterpolationRequ
   )
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
+extension ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
 
   public static let zero = Self.init(
     aboveDesign: .zero,
@@ -132,7 +132,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.OneWayRequest {
   }
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest {
+extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay {
   public static let zero = Self.init(
     aboveDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero),
     belowDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero),
@@ -181,7 +181,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Cooling.TwoWayRequest {
   )
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
+extension ServerRoute.Api.Route.Interpolation.Heating.Boiler {
 
   public static let zero = Self.init(
     elevation: 0,
@@ -198,7 +198,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.BoilerRequest {
   )
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest {
+extension ServerRoute.Api.Route.Interpolation.Heating.Furnace {
 
   public static let zero = Self.init(
     elevation: 0,
@@ -215,7 +215,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.FurnaceRequest {
   )
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest {
+extension ServerRoute.Api.Route.Interpolation.Heating.Electric {
 
   public static let zero = Self.init(
     heatPumpCapacity: nil,
@@ -230,7 +230,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.ElectricRequest {
   )
 }
 
-extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest {
+extension ServerRoute.Api.Route.Interpolation.Heating.HeatPump {
 
   public static let zero = Self.init(
     capacity: .zero,
@@ -247,7 +247,7 @@ extension ServerRoute.Api.Route.InterpolationRequest.Heating.HeatPumpRequest {
   )
 }
 
-extension ServerRoute.Api.Route.RequiredKWRequest {
+extension ServerRoute.Api.Route.RequiredKW {
   public static let zero = Self.init(
     capacityAtDesign: 0,
     heatLoss: 0
@@ -259,7 +259,7 @@ extension ServerRoute.Api.Route.RequiredKWRequest {
   )
 }
 
-extension ServerRoute.Api.Route.BalancePointRequest.Thermal {
+extension ServerRoute.Api.Route.BalancePoint.Thermal {
   public static let zero = Self.init(
     designTemperature: 0,
     heatLoss: 0,
@@ -273,14 +273,14 @@ extension ServerRoute.Api.Route.BalancePointRequest.Thermal {
   )
 }
 
-extension ServerRoute.Api.Route.DeratingRequest {
+extension ServerRoute.Api.Route.Derating {
 
   public static let zero = Self.init(elevation: 0, systemType: .mock)
 
   public static let mock = Self.init(elevation: 5_000, systemType: .mock)
 }
 
-extension ServerRoute.Api.Route.SizingLimitRequest {
+extension ServerRoute.Api.Route.SizingLimit {
   public static let zero = Self.init(
     systemType: .mock,
     houseLoad: .zero
