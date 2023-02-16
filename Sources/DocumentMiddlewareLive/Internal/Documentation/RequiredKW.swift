@@ -7,6 +7,7 @@ struct RequiredKWHome: Renderable {
   let title: String = ServerRoute.Documentation.Route.Key.requiredKW.text
   let route = ServerRoute.Api.Route.requiredKW(.mock)
   let json = ServerRoute.Api.Route.RequiredKW.mock
+  let failingJson = ServerRoute.Api.Route.requiredKW(.zero)
   var description: String {
     #"""
     This route is used to calculate the required kilowatts for the given conditions.
@@ -23,7 +24,8 @@ struct RequiredKWHome: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 

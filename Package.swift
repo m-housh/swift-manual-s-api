@@ -143,6 +143,7 @@ package.targets.append(contentsOf: [
       "Models",
       "SiteRouter",
       "Stylesheet",
+      "ValidationMiddlewareLive"
     ]
   ),
   .target(

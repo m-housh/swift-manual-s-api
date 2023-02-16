@@ -8,6 +8,8 @@ struct SizingLimitsHome: Renderable {
   let title: String = ServerRoute.Documentation.Route.Key.sizingLimits.text
   let route = ServerRoute.Api.Route.sizingLimits(.mock)
   let json = ServerRoute.Api.Route.SizingLimit.mock
+  let failingJson = ServerRoute.Api.Route.sizingLimits(.zero)
+  
   var description: String {
     #"""
     This route is used to calculate the acceptable sizing limits for the given conditions.
@@ -24,7 +26,8 @@ struct SizingLimitsHome: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 

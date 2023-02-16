@@ -34,7 +34,7 @@ jobs:
     - name: Run Tests
       run: make DOCKER_PLATFORM=linux/amd64 test-linux
 
-  # Package / build docker development image if tests succeed.
+  # Package / build docker images if tests succeed.
   ghcrio-docker-dev-image:
     needs: [ubuntu]
     uses: ./.github/workflows/publish-docker-image.yml
@@ -53,6 +53,7 @@ jobs:
     with:
       registry: docker.io
       username: mhoush
+      image-name: mhoush/swift-manual-s-api
       file: ./Bootstrap/Dockerfile.dev
       push: ${{ github.event.name != 'pull_request' }}
       tag: dev
@@ -67,7 +68,7 @@ jobs:
     with:
       file: ./Bootstrap/Dockerfile.prod
       push: ${{ github.event.name != 'pull_request' }}
-      tag: dev
+      tag: production
     secrets:
       token: ${{ secrets.GHCRIO_TOKEN }}
 
@@ -78,9 +79,10 @@ jobs:
     with:
       registry: docker.io
       username: mhoush
+      image-name: mhoush/swift-manual-s-api
       file: ./Bootstrap/Dockerfile.prod
       push: ${{ github.event.name != 'pull_request' }}
-      tag: dev
+      tag: production
     secrets:
       token: ${{ secrets.DOCKER_HUB_TOKEN }}
 

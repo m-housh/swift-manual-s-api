@@ -3,6 +3,7 @@ import Dependencies
 import Html
 import LoggingDependency
 import Models
+import ValidationMiddleware
 
 // TODO: Add validation errors, currently thinking that we use an
 // invalid value and printing the error.
@@ -11,25 +12,29 @@ struct RouteView {
   @Dependency(\.baseURL) var baseURL
   @Dependency(\.logger) var logger
   @Dependency(\.siteRouter) var siteRouter
+  @Dependency(\.validationMiddleware) var validationMiddleware
 
   let json: AnyEncodable
   let route: ServerRoute.Api.Route
   let title: String
   let description: Node
   let inputDescription: Node
+  let failingJson: ServerRoute.Api.Route
 
   init(
     json: any Encodable,
     route: ServerRoute.Api.Route,
     title: String,
     description: Node,
-    inputDescription: Node
+    inputDescription: Node,
+    failingJson: ServerRoute.Api.Route
   ) {
     self.json = json.eraseToAnyEncodable()
     self.route = route
     self.title = title
     self.description = description
     self.inputDescription = inputDescription
+    self.failingJson = failingJson
   }
 
   private var jsonString: String {
@@ -71,6 +76,20 @@ struct RouteView {
   private func heading(_ string: String) -> Node {
     .h3(attributes: [.class(.text(.secondary))], .text(string))
   }
+  
+  private func failingJson() async -> String {
+    do {
+      try await validationMiddleware.validate(.api(.init(isDebug: false, route: failingJson)))
+      logger.warning("""
+      Failed to fetch validation output.
+      
+      Route: \(routeString)
+      """)
+      return "Failed to fetch validations"
+    } catch {
+      return "\(error)"
+    }
+  }
 }
 
 extension RouteView: Renderable {
@@ -91,7 +110,8 @@ extension RouteView: Renderable {
 
   private func body() async throws -> Node {
     let jsonOutput = try await jsonOutput()
-    return [
+    let failingOutput = await failingJson()
+    var node: Node = [
       row(class: .padding(.top(2))) {
         description
       },
@@ -99,7 +119,7 @@ extension RouteView: Renderable {
         [
           heading("Route:"),
           .code(
-            attributes: [.class(.fontSize(5))],
+            attributes: [.class(.fontSize(6))],
             .pre([.text("POST "), .text(routeString)])
           ),
         ]
@@ -114,7 +134,7 @@ extension RouteView: Renderable {
               },
               row(class: .col) {
                 .code(
-                  attributes: [.class(.fontSize(5))],
+                  attributes: [.class(.fontSize(6))],
                   .pre(.text(jsonString))
                 )
               },
@@ -122,16 +142,31 @@ extension RouteView: Renderable {
           },
         ]
       },
-      row(class: .padding(.top(2)), .padding(.bottom(5)), .margin(.bottom(5))) {
+      row(class: .padding(.top(2)), .margin(.bottom(title == "Derating" ? 5 : 0))) {
         [
           heading("JSON Output Example:"),
           .code(
-            attributes: [.class(.fontSize(5))],
+            attributes: [.class(.fontSize(6))],
             .pre(.text(jsonOutput))
           ),
         ]
       },
+      
     ]
+    
+    if title != "Derating" {
+      node.append(
+        row(class: .padding(.top(2)), .margin(.bottom(5))) {
+          [
+            heading("Validation Errors"),
+            .p("The following is an example of errors if the inputs are not appropriate."),
+            .pre(attributes: [.class(.text(.danger), .fontSize(6))], .text(failingOutput))
+          ]
+        }
+      )
+    }
+    
+    return node
   }
 
 }
