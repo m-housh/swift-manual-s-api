@@ -58,9 +58,9 @@ struct Home: Renderable {
               attributes: [.class("fs-6 font-monospace")],
               "Manual-S® is a registered trademark of ACCA (Air Conditioning Contractors of America)"
             ),
-            .a(attributes: [.href("https://www.acca.org/home")], .text("ACCA.org"))
+            .a(attributes: [.href("https://www.acca.org/home")], .text("ACCA.org")),
           ]
-        }
+        },
       ]
     }
   }
