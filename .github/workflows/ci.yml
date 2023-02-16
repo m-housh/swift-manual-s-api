@@ -51,7 +51,8 @@ jobs:
     uses: ./.github/workflows/publish-docker-image.yml
     if: ${{ github.event.name != 'pull_request' }}
     with:
-      registry: mhoush
+      registry: docker.io
+      username: mhoush
       file: ./Bootstrap/Dockerfile.dev
       push: ${{ github.event.name != 'pull_request' }}
       tag: dev
@@ -75,7 +76,8 @@ jobs:
     uses: ./.github/workflows/publish-docker-image.yml
     if: ${{ github.event.name != 'pull_request' }}
     with:
-      registry: mhoush
+      registry: docker.io
+      username: mhoush
       file: ./Bootstrap/Dockerfile.prod
       push: ${{ github.event.name != 'pull_request' }}
       tag: dev

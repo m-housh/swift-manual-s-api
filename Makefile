@@ -76,6 +76,7 @@ run-server-in-docker:
 		--rm \
 		-p "$(SERVER_PORT):8080" \
 		-e "LOG_LEVEL=$(LOG_LEVEL)" \
+		-e "BASE_URL=$(BASE_URL)" \
 		$(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
 
 build-documentation:
