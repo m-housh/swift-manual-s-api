@@ -21,6 +21,7 @@ private struct OneWayIndoorView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayIndoor.text
   let route = ServerRoute.Api.Route.interpolate(.cooling(.oneWayIndoor(.indoorMock)))
   let json = ServerRoute.Api.Route.Interpolation.Cooling.OneWay.indoorMock
+  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.oneWayIndoor(.zero)))
 
   let mainDescription = """
     This route is used for one way interpolation of manufacturer's capacities at indoor design conditions.
@@ -55,7 +56,8 @@ private struct OneWayIndoorView: Renderable {
       json: json,
       title: title,
       route: route,
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 }
@@ -64,6 +66,7 @@ private struct OneWayOutdoorView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayOutdoor.text
   let route = ServerRoute.Api.Route.interpolate(.cooling(.oneWayOutdoor(.outdoorMock)))
   let json = ServerRoute.Api.Route.Interpolation.Cooling.OneWay.outdoorMock
+  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.oneWayOutdoor(.zero)))
 
   let mainDescription = """
     This route is used for one way interpolation of manufacturer's capacities at outdoor design conditions.
@@ -99,7 +102,8 @@ private struct OneWayOutdoorView: Renderable {
       json: json,
       title: title,
       route: route,
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 }
@@ -108,6 +112,7 @@ private struct NoInterpolationView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.noInterpolation.text
   let route = ServerRoute.Api.Route.interpolate(.cooling(.noInterpolation(.mock)))
   let json = ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation.mock
+  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.noInterpolation(.zero)))
 
   let mainDescription = """
     This route is used for no interpolation of manufacturer's capacities at the design conditions.
@@ -141,7 +146,8 @@ private struct NoInterpolationView: Renderable {
       json: json,
       title: title,
       route: route,
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 }
@@ -150,6 +156,7 @@ private struct TwoWayView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.twoWay.text
   let route = ServerRoute.Api.Route.interpolate(.cooling(.twoWay(.mock)))
   let json = ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.mock
+  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.twoWay(.zero)))
 
   let mainDescription = """
     This route is used for two way interpolation of manufacturer's capacities at the indoor and outdoor design conditions.
@@ -188,7 +195,8 @@ private struct TwoWayView: Renderable {
       json: json,
       title: title,
       route: route,
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 }
@@ -199,6 +207,7 @@ private struct InterpolationView: Renderable {
   let title: String
   let route: ServerRoute.Api.Route
   let inputDescription: Node
+  let failingJson: ServerRoute.Api.Route
 
   struct Description {
     let mainDescription: String
@@ -249,7 +258,8 @@ private struct InterpolationView: Renderable {
       route: route,
       title: title,
       description: description.content,
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 }

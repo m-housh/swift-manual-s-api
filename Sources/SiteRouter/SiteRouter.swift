@@ -5,8 +5,6 @@ import Models
 
 public struct SiteRouter: ParserPrinter {
 
-  //  @Dependency(\.baseURL) var baseURL
-
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
 
@@ -50,7 +48,6 @@ public struct SiteRouter: ParserPrinter {
         }
       }
     }
-    //    .baseURL(baseURL)
     .eraseToAnyParserPrinter()
 
   }
@@ -77,19 +74,26 @@ public enum SiteRouterKey: DependencyKey {
   }
 
   public static var liveValue: AnyParserPrinter<URLRequestData, ServerRoute> {
+    @Dependency(\.baseURL) var baseURL
+
     return SiteRouter(decoder: .init(), encoder: jsonEncoder)
+      .baseURL(baseURL)
       .eraseToAnyParserPrinter()
   }
 }
 
+// TODO: BaseURL needs to be more robust so that it can use `staging`, `production`, etc.
 private enum BaseUrlKey: DependencyKey {
+
+  private static let key = "BASE_URL"
 
   static var testValue: String {
     "http://localhost:8080"
   }
 
   static var liveValue: String {
-    "http://localhost:8080"
+    ProcessInfo.processInfo.environment[key]
+      ?? "http://localhost:8080"
   }
 }
 

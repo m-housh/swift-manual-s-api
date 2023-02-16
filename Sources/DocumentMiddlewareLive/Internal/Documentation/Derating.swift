@@ -9,6 +9,7 @@ struct DeratingHome: Renderable {
   let title: String = ServerRoute.Documentation.Route.Key.derating.text
   let route = ServerRoute.Api.Route.derating(.mock)
   let json = ServerRoute.Api.Route.Derating.mock
+  let failingJson = ServerRoute.Api.Route.derating(.zero)
   var description: String {
     #"""
     This route is used to calculate the elevation deratings for the given conditions.
@@ -26,7 +27,8 @@ struct DeratingHome: Renderable {
       route: route,
       title: title,
       description: .text(description),
-      inputDescription: inputDescription
+      inputDescription: inputDescription,
+      failingJson: failingJson
     ).content()
   }
 

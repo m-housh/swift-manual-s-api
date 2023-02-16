@@ -75,5 +75,5 @@ private func configureSiteRouter(_ app: Vapor.Application) async {
 
   logger.info("Bootstrapping site router.")
 
-  app.mount(router.baseURL(baseURL), use: siteMiddleware.respond(request:route:))
+  app.mount(router, use: siteMiddleware.respond(request:route:))
 }

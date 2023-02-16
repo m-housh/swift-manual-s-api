@@ -3,8 +3,6 @@ import Html
 import Models
 import Vapor
 
-// TODO: Add vapor requests in the respond method, to serve public files??
-
 /// Handle a server route, responding with either an html node or an encodable response.
 ///
 public struct SiteMiddleware {
@@ -36,30 +34,3 @@ extension DependencyValues {
     set { self[SiteMiddleware.self] = newValue }
   }
 }
-
-/// A helper type that holds  onto either a left or right value.
-///
-//public enum Either<Left, Right> {
-//  case left(Left)
-//  case right(Right)
-//
-//  /// Access the left value.
-//  public var left: Left? {
-//    switch self {
-//    case let .left(left):
-//      return left
-//    case .right:
-//      return nil
-//    }
-//  }
-//
-//  /// Access the right value.
-//  public var right: Right? {
-//    switch self {
-//    case .left:
-//      return nil
-//    case let .right(right):
-//      return right
-//    }
-//  }
-//}

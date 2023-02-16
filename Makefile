@@ -49,14 +49,14 @@ format:
 		./Package.swift \
 		./Sources
 
-build-docker-image:
+build-docker-image: clean
 	docker build \
 		--file $(DOCKERFILE) \
 		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) \
 		--platform $(DOCKER_PLATFORM) \
 		.
 
-build-docker-dev-image:
+build-docker-dev-image: clean
 	$(MAKE) DOCKERFILE="Bootstrap/Dockerfile.dev" \
 		DOCKER_TAG="dev" \
 		build-docker-image
@@ -76,6 +76,7 @@ run-server-in-docker:
 		--rm \
 		-p "$(SERVER_PORT):8080" \
 		-e "LOG_LEVEL=$(LOG_LEVEL)" \
+		-e "BASE_URL=$(BASE_URL)" \
 		$(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
 
 build-documentation:
