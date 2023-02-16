@@ -76,15 +76,16 @@ struct RouteView {
   private func heading(_ string: String) -> Node {
     .h3(attributes: [.class(.text(.secondary))], .text(string))
   }
-  
+
   private func failingJson() async -> String {
     do {
       try await validationMiddleware.validate(.api(.init(isDebug: false, route: failingJson)))
-      logger.warning("""
-      Failed to fetch validation output.
-      
-      Route: \(routeString)
-      """)
+      logger.warning(
+        """
+        Failed to fetch validation output.
+
+        Route: \(routeString)
+        """)
       return "Failed to fetch validations"
     } catch {
       return "\(error)"
@@ -151,21 +152,21 @@ extension RouteView: Renderable {
           ),
         ]
       },
-      
+
     ]
-    
+
     if title != "Derating" {
       node.append(
         row(class: .padding(.top(2)), .margin(.bottom(5))) {
           [
             heading("Validation Errors"),
             .p("The following is an example of errors if the inputs are not appropriate."),
-            .pre(attributes: [.class(.text(.danger), .fontSize(6))], .text(failingOutput))
+            .pre(attributes: [.class(.text(.danger), .fontSize(6))], .text(failingOutput)),
           ]
         }
       )
     }
-    
+
     return node
   }
 
