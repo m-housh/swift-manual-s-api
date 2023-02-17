@@ -5,8 +5,6 @@ import LoggingDependency
 import Models
 import ValidationMiddleware
 
-// TODO: Add validation errors, currently thinking that we use an
-// invalid value and printing the error.
 struct RouteView {
   @Dependency(\.apiMiddleware) var apiMiddleware
   @Dependency(\.baseURL) var baseURL
@@ -36,6 +34,153 @@ struct RouteView {
     self.inputDescription = inputDescription
     self.failingJson = failingJson
   }
+
+  enum IdKey: String, CaseIterable {
+    case input
+    case output
+    case route
+    case validation
+    case navigation
+
+    var id: String { rawValue }
+    var linkId: String { "#\(id)" }
+
+    var description: String {
+      let value = rawValue.capitalized
+      switch self {
+      case .input, .output, .validation:
+        return value.appending("s")
+      case .route, .navigation:
+        return value
+      }
+    }
+  }
+}
+
+extension RouteView: Renderable {
+  func content() async throws -> Node {
+    let body = try await body()
+    return container {
+      row {
+        [
+          routeNav,
+          .div(
+            attributes: [.class(.col(8))],
+            [
+              row(class: .padding(.top(2))) {
+                [
+                  .h1("\(title)"),
+                  .hr(attributes: [.class(.border, .border(.success))]),
+                ]
+              },
+              .div(
+                attributes: [
+                  .class(.padding(.start(2))),
+                  .data("bs-spy", "scroll"),
+                  .data("bs-target", IdKey.navigation.linkId),
+                  .tabindex(0),
+
+                ],
+                body
+              ),
+            ]
+          ),
+        ]
+
+      }
+    }
+  }
+
+  private var routeNavLinks: [Node] {
+    IdKey.allCases.compactMap { id in
+      guard id != .navigation else { return nil }
+      return Node.a(
+        attributes: [.class(.nav(.link), .padding(2)), .href(id.linkId)],
+        .text(id.description)
+      )
+    }
+  }
+
+  private var routeNav: Node {
+    .div(
+      attributes: [
+        .class(.col(2), .bg(.light), .card, .position(.sticky), .top(50)),
+        .style(safe: "height: 200px;"),
+        .id(IdKey.navigation.description),
+      ],
+      routeNavLinks.reduce(
+        into: Node.nav(attributes: [.class(.nav, .nav(.pills), .flex(.column))])
+      ) { nav, link in
+        nav.append(link)
+      }
+    )
+  }
+
+  private func body() async throws -> Node {
+    let jsonOutput = try await jsonOutput()
+    let failingOutput = await failingJson()
+    var node: Node = [
+      row(class: .padding(.top(2))) {
+        description
+      },
+      row(class: .padding(.top(3))) {
+        [
+          heading("Route:", id: .route),
+          .code(
+            attributes: [.class(.fontSize(6))],
+            .pre([.text("POST "), .text(routeString)])
+          ),
+        ]
+      },
+      row(class: .padding(.top(2))) {
+        [
+          heading("JSON Input Example:", id: .input),
+          row(class: .align(.start)) {
+            [
+              row(class: .col) {
+                inputDescription
+              },
+              row(class: .col) {
+                .code(
+                  attributes: [.class(.fontSize(6))],
+                  .pre(.text(jsonString))
+                )
+              },
+            ]
+          },
+        ]
+      },
+      row(class: .padding(.top(2)), .margin(.bottom(title == "Derating" ? 5 : 0))) {
+        [
+          heading("JSON Output Example:", id: .output),
+          .code(
+            attributes: [.class(.fontSize(6))],
+            .pre(.text(jsonOutput))
+          ),
+        ]
+      },
+
+    ]
+
+    if title != "Derating" {
+      node.append(
+        row(class: .padding(.top(2)), .margin(.bottom(5))) {
+          [
+            heading("Validation Errors", id: .validation),
+            .p("The following is an example of errors if the inputs are not appropriate."),
+            .pre(attributes: [.class(.text(.danger), .fontSize(6))], .text(failingOutput)),
+          ]
+        }
+      )
+    }
+
+    return node
+  }
+}
+
+// MARK: - Helpers
+
+extension RouteView {
 
   private var jsonString: String {
     guard let data = try? jsonEncoder.encode(json),
@@ -73,8 +218,8 @@ struct RouteView {
     return string
   }
 
-  private func heading(_ string: String) -> Node {
-    .h3(attributes: [.class(.text(.secondary))], .text(string))
+  private func heading(_ string: String, id: IdKey) -> Node {
+    .h3(attributes: [.class(.text(.secondary)), .id(id.id)], .text(string))
   }
 
   private func failingJson() async -> String {
@@ -91,83 +236,4 @@ struct RouteView {
       return "\(error)"
     }
   }
-}
-
-extension RouteView: Renderable {
-  func content() async throws -> Node {
-    let body = try await body()
-    return container {
-      [
-        row(class: .padding(.top(2))) {
-          [
-            .h1("\(title)"),
-            .hr(attributes: [.class(.border, .border(.success))]),
-          ]
-        },
-        body,
-      ]
-    }
-  }
-
-  private func body() async throws -> Node {
-    let jsonOutput = try await jsonOutput()
-    let failingOutput = await failingJson()
-    var node: Node = [
-      row(class: .padding(.top(2))) {
-        description
-      },
-      row(class: .padding(.top(3))) {
-        [
-          heading("Route:"),
-          .code(
-            attributes: [.class(.fontSize(6))],
-            .pre([.text("POST "), .text(routeString)])
-          ),
-        ]
-      },
-      row(class: .padding(.top(2))) {
-        [
-          heading("JSON Input Example:"),
-          row(class: .align(.start)) {
-            [
-              row(class: .col) {
-                inputDescription
-              },
-              row(class: .col) {
-                .code(
-                  attributes: [.class(.fontSize(6))],
-                  .pre(.text(jsonString))
-                )
-              },
-            ]
-          },
-        ]
-      },
-      row(class: .padding(.top(2)), .margin(.bottom(title == "Derating" ? 5 : 0))) {
-        [
-          heading("JSON Output Example:"),
-          .code(
-            attributes: [.class(.fontSize(6))],
-            .pre(.text(jsonOutput))
-          ),
-        ]
-      },
-
-    ]
-
-    if title != "Derating" {
-      node.append(
-        row(class: .padding(.top(2)), .margin(.bottom(5))) {
-          [
-            heading("Validation Errors"),
-            .p("The following is an example of errors if the inputs are not appropriate."),
-            .pre(attributes: [.class(.text(.danger), .fontSize(6))], .text(failingOutput)),
-          ]
-        }
-      )
-    }
-
-    return node
-  }
-
 }

@@ -36,6 +36,11 @@ public struct Class: CustomStringConvertible {
   }
 
   @inlinable
+  public static func border(_ side: Alignment.Side) -> Self {
+    .init("border-\(side)")
+  }
+
+  @inlinable
   public static var card: Self {
     .init("card")
   }
@@ -48,6 +53,11 @@ public struct Class: CustomStringConvertible {
   @inlinable
   public static var col: Self {
     .init("col")
+  }
+
+  @inlinable
+  public static func col(_ col: Int) -> Self {
+    .init("col-\(col)")
   }
 
   @inlinable
@@ -73,6 +83,16 @@ public struct Class: CustomStringConvertible {
   @inlinable
   public static var fixedBottom: Self {
     .init("fixed-bottom")
+  }
+
+  @inlinable
+  public static func flex(_ flex: Flex) -> Self {
+    .init("flex-\(flex)")
+  }
+
+  @inlinable
+  public static func float(_ float: Float) -> Self {
+    .init("float-\(float)")
   }
 
   @inlinable
@@ -127,6 +147,16 @@ public struct Class: CustomStringConvertible {
   }
 
   @inlinable
+  public static func padding(_ value: Int) -> Self {
+    .init("p-\(Side.Size(rawValue: value) ?? .auto)")
+  }
+
+  @inlinable
+  public static func position(_ position: Position) -> Self {
+    .init("position-\(position)")
+  }
+
+  @inlinable
   public static var row: Self {
     .init("row")
   }
@@ -149,6 +179,11 @@ public struct Class: CustomStringConvertible {
   @inlinable
   public static func text(_ color: BootstrapColor, _ secondary: Text) -> Self {
     .init("text-\(color)-\(secondary)")
+  }
+
+  @inlinable
+  public static func top(_ top: Int) -> Self {
+    .init(Position.Edge.top(top).description)
   }
 
   @inlinable

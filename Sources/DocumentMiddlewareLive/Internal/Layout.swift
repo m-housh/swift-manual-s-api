@@ -14,8 +14,15 @@ func layout(title: String, navbar: Navbar = .init(), content: Node) async throws
         Layout.bootstrapStyleSheet
       ),
       .body(
+        attributes: [
+          //          .data("bs-spy", "scroll"),
+          //          .data("bs-target", "#navigation"),
+          //          .tabindex(0)
+        ],
         try await navbar.content(),
-        .main(content),
+        container {
+          .main(content)
+        },
         Layout.footer,
         Layout.bootstrapScript
       )

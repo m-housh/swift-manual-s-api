@@ -5,6 +5,8 @@ public enum Side: CustomStringConvertible {
   case end(Int)
   case start(Int)
   case top(Int)
+  case x(Int)
+  case y(Int)
 
   @inlinable
   public var description: String {
@@ -24,6 +26,12 @@ public enum Side: CustomStringConvertible {
     case let .top(top):
       prefix = "t"
       size = .init(rawValue: top)
+    case let .x(x):
+      prefix = "x"
+      size = .init(rawValue: x)
+    case let .y(y):
+      prefix = "y"
+      size = .init(rawValue: y)
     }
 
     return "\(prefix)-\(size ?? .default)"

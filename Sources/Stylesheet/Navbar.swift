@@ -13,6 +13,7 @@ public enum Navbar: String, CustomStringConvertible {
 public enum Nav: String, CustomStringConvertible {
   case item
   case link
+  case pills
 
   @inlinable
   public var description: String { rawValue }

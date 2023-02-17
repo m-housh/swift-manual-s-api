@@ -79,6 +79,23 @@ var package = Package(
   ]
 )
 
+// MARK: - Client
+if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
+  package.products.append(contentsOf: [
+    .library(name: "ApiClient", targets: ["ApiClient"])
+  ])
+
+  package.targets.append(contentsOf: [
+    .target(
+      name: "ApiClient",
+      dependencies: [
+        "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
+    )
+  ])
+}
+
 // MARK: - Server
 package.dependencies.append(contentsOf: [
   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
