@@ -27,7 +27,8 @@ struct Home: Renderable {
       [
         .p(
           """
-          Manual-S is used by heating and cooling professionals and designers to ensure the selected
+          This equipment selection API implements Manual-S®, calculations, which is used by heating
+          and cooling professionals and designers to ensure the selected
           equipment is sized appropriately for the house load and design conditions.
           """
         ),
@@ -43,7 +44,7 @@ struct Home: Renderable {
           """
           The api routes provided can be used to interpolate manufacturer's heating and cooling data sets and provide
           results of the capacity at your design conditions, offering pass / fail results based on sizing limits set forth
-          in the ACCA Manual-S 2014 edition for your given design conditions.
+          in the ACCA Manual-S® 2014 edition for your given design conditions.
           """
         ),
         .br,
