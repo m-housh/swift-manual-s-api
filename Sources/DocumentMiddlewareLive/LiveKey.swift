@@ -11,11 +11,11 @@ extension DocumentMiddleware: DependencyKey {
 
   public static var liveValue: DocumentMiddleware {
     return DocumentMiddleware { route in
-      
+
       @Dependency(\.apiMiddleware) var apiMiddleware
       @Dependency(\.siteRouter) var siteRouter
       @Dependency(\.validationMiddleware) var validationMiddleware
-      
+
       switch route {
       case .home:
         return try await layout(Home())
@@ -25,4 +25,3 @@ extension DocumentMiddleware: DependencyKey {
     }
   }
 }
-

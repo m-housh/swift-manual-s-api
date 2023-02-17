@@ -6,7 +6,7 @@ import Models
 public struct SiteRouter: ParserPrinter {
 
   @Dependency(\.baseURL) var baseURL
-  
+
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
 

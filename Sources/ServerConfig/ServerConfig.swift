@@ -20,7 +20,7 @@ public func configure(_ app: Vapor.Application) async throws {
   let apiMiddleware = ApiRouteMiddleware.liveValue
   let validationMiddleware = ValidationMiddleware.liveValue
   configureVaporMiddleware(app)
-  
+
   let siteRouter = configureSiteRouter(app, baseUrl: baseURL)
   let documentMiddleware = configureDocumentMiddleware(
     apiMiddleware: apiMiddleware,
@@ -81,7 +81,7 @@ private func configureSiteRouter(
 ) -> AnyParserPrinter<URLRequestData, ServerRoute> {
 
   @Dependency(\.logger) var logger: Logger
-  
+
   logger.info("Bootstrapping site router.")
   return withDependencies {
     $0.baseURL = baseUrl

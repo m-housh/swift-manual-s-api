@@ -9,7 +9,7 @@ import XCTestDynamicOverlay
 /// A middleware that returns html documents for the given routes.
 ///
 public struct DocumentMiddleware {
-  
+
   public var render: (Route) async throws -> Node
 
   @inlinable
