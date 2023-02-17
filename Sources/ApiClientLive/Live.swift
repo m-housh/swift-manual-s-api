@@ -109,4 +109,51 @@ import SiteRouter
       router: router
     )
   }
+}
+
+private let baseUrlKey = "com.hvacmath.swiftManualS.apiClient.baseUrl"
+private let jsonEncoder = JSONEncoder()
+private let jsonDecoder = JSONDecoder()
+
+#if DEBUG
+  private let isDebug = true
+#else
+  private let isDebug = false
+#endif
+
+private func request(
+  baseUrl: URL,
+  route: ServerRoute,
+  router: SiteRouter
+) async throws -> (Data, URLResponse) {
+  guard let request = try? router.baseURL(baseUrl.absoluteString).request(for: route) else {
+    throw URLError(.badURL)
+  }
+  #if os(Linux)
+  return try await URLSession.shared.asyncData(for: request)
+  #else
+  if #available(macOS 12.0, iOS 15.0, *) {
+    return try await URLSession.shared.data(for: request)
+  } else {
+    fatalError()
+  }
+  #endif
+}
+
+private func apiRequest(
+  baseUrl: URL,
+  route: ServerRoute.Api.Route,
+  router: SiteRouter
+) async throws -> (Data, URLResponse) {
+  try await request(
+    baseUrl: baseUrl,
+    route: .api(
+      .init(
+        isDebug: isDebug,
+        route: route
+      )
+    ),
+    router: router
+  )
+}
 #endif
