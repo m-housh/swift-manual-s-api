@@ -5,6 +5,8 @@ import Models
 
 public struct SiteRouter: ParserPrinter {
 
+  @Dependency(\.baseURL) var baseURL
+  
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
 
@@ -31,7 +33,6 @@ public struct SiteRouter: ParserPrinter {
         Query {
           Field("file")
         }
-        //        Parse(.memberwise(<#T##(Values) -> Struct#>))
       }
 
       // matches /api/v1
@@ -48,6 +49,7 @@ public struct SiteRouter: ParserPrinter {
         }
       }
     }
+    .baseURL(baseURL)
     .eraseToAnyParserPrinter()
 
   }
@@ -74,10 +76,8 @@ public enum SiteRouterKey: DependencyKey {
   }
 
   public static var liveValue: AnyParserPrinter<URLRequestData, ServerRoute> {
-    @Dependency(\.baseURL) var baseURL
 
     return SiteRouter(decoder: .init(), encoder: jsonEncoder)
-      .baseURL(baseURL)
       .eraseToAnyParserPrinter()
   }
 }

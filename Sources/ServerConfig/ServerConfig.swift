@@ -1,9 +1,12 @@
+import ApiRouteMiddlewareLive
 import Dependencies
+import DocumentMiddlewareLive
 import Logging
 import LoggingDependency
 import Models
 import SiteMiddlewareLive
 import SiteRouter
+import ValidationMiddlewareLive
 import Vapor
 import VaporRouting
 
@@ -14,18 +17,24 @@ import VaporRouting
 public func configure(_ app: Vapor.Application) async throws {
 
   let baseURL = await configureBaseURL(app)
-
-  await withDependencies(
-    {
-      $0.baseURL = baseURL
-    },
-    operation: {
-      // configure the vapor middleware(s)
-      await configureVaporMiddleware(app)
-
-      // configure site router.
-      await configureSiteRouter(app)
-    })
+  let apiMiddleware = ApiRouteMiddleware.liveValue
+  let validationMiddleware = ValidationMiddleware.liveValue
+  configureVaporMiddleware(app)
+  
+  let siteRouter = configureSiteRouter(app, baseUrl: baseURL)
+  let documentMiddleware = configureDocumentMiddleware(
+    apiMiddleware: apiMiddleware,
+    siteRouter: siteRouter,
+    validationMiddleware: validationMiddleware
+  )
+  let siteHandler = siteHandler(
+    baseURL: baseURL,
+    siteRouter: siteRouter,
+    apiMiddleware: apiMiddleware,
+    validationMiddleware: validationMiddleware,
+    documentMiddleware: documentMiddleware
+  )
+  app.mount(siteRouter, use: siteHandler)
 }
 
 // Configure the base url for the application / router.
@@ -44,7 +53,7 @@ private func configureBaseURL(_ app: Vapor.Application) async -> String {
 }
 
 // Configure the vapor middleware.
-private func configureVaporMiddleware(_ app: Vapor.Application) async {
+private func configureVaporMiddleware(_ app: Vapor.Application) {
   @Dependency(\.logger) var logger: Logger
 
   logger.info("Bootstrapping vapor middleware.")
@@ -66,14 +75,53 @@ private func configureVaporMiddleware(_ app: Vapor.Application) async {
 }
 
 // Register the site router with the vapor application.
-private func configureSiteRouter(_ app: Vapor.Application) async {
+private func configureSiteRouter(
+  _ app: Vapor.Application,
+  baseUrl: String
+) -> AnyParserPrinter<URLRequestData, ServerRoute> {
 
-  @Dependency(\.baseURL) var baseURL: String
   @Dependency(\.logger) var logger: Logger
-  @Dependency(\.siteRouter) var router: AnyParserPrinter<URLRequestData, ServerRoute>
-  @Dependency(\.siteMiddleware) var siteMiddleware: SiteMiddleware
-
+  
   logger.info("Bootstrapping site router.")
+  return withDependencies {
+    $0.baseURL = baseUrl
+  } operation: {
+    return SiteRouterKey.liveValue
+  }
+}
 
-  app.mount(router, use: siteMiddleware.respond(request:route:))
+private func configureDocumentMiddleware(
+  apiMiddleware: ApiRouteMiddleware,
+  siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>,
+  validationMiddleware: ValidationMiddleware
+) -> DocumentMiddleware {
+  withDependencies {
+    $0.apiMiddleware = apiMiddleware
+    $0.siteRouter = siteRouter
+    $0.validationMiddleware = validationMiddleware
+  } operation: {
+    return .liveValue
+  }
+}
+
+private func siteHandler(
+  baseURL: String,
+  siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>,
+  apiMiddleware: ApiRouteMiddleware,
+  validationMiddleware: ValidationMiddleware,
+  documentMiddleware: DocumentMiddleware
+) -> (Request, ServerRoute) async throws -> AsyncResponseEncodable {
+  return { request, route in
+    try await withDependencies { dependencies in
+      dependencies.baseURL = baseURL
+      dependencies.siteRouter = siteRouter
+      dependencies.apiMiddleware = apiMiddleware
+      dependencies.validationMiddleware = validationMiddleware
+      dependencies.documentMiddleware = documentMiddleware
+    } operation: {
+      let siteMiddleware = SiteMiddleware.liveValue
+      return try await siteMiddleware.respond(request: request, route: route)
+    }
+  }
+
 }
