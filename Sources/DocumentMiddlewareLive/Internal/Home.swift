@@ -72,7 +72,7 @@ struct Home: Renderable {
     var description: String {
       switch self {
       case .home:
-        return "Manual-S® API"
+        return "Equipment Selection API"
       case .documentation:
         return rawValue.capitalized
       }
