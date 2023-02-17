@@ -4,6 +4,7 @@ import Foundation
 import Models
 import SiteRouter
 
+#if !os(Linux)
 extension ApiClient: DependencyKey {
 
   public static var liveValue: ApiClient {
@@ -85,7 +86,11 @@ private func request(
   guard let request = try? router.baseURL(baseUrl.absoluteString).request(for: route) else {
     throw URLError(.badURL)
   }
-  return try await URLSession.shared.data(for: request)
+  if #available(macOS 12.0, iOS 15.0, *) {
+    return try await URLSession.shared.data(for: request)
+  } else {
+    fatalError()
+  }
 }
 
 private func apiRequest(
@@ -104,3 +109,4 @@ private func apiRequest(
     router: router
   )
 }
+#endif

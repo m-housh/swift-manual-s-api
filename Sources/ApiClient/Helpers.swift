@@ -1,6 +1,10 @@
 #if DEBUG
   import Foundation
 
+  #if canImport(FoundationNetworking)
+    import FoundationNetworking
+  #endif
+
   public func OK<A: Encodable>(
     _ value: A, encoder: JSONEncoder = .init()
   ) async throws -> (Data, URLResponse) {

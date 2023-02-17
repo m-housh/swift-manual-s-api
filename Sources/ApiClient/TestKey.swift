@@ -5,6 +5,10 @@ import Models
 import XCTestDebugSupport
 import XCTestDynamicOverlay
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 extension DependencyValues {
   public var apiClient: ApiClient {
     get { self[ApiClient.self] }
