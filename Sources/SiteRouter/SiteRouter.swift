@@ -5,7 +5,7 @@ import Models
 
 public struct SiteRouter: ParserPrinter {
 
-  @Dependency(\.baseURL) var baseURL
+  //  @Dependency(\.baseURL) var baseURL
 
   public var encoder: JSONEncoder
   public var decoder: JSONDecoder
@@ -49,7 +49,7 @@ public struct SiteRouter: ParserPrinter {
         }
       }
     }
-    .baseURL(baseURL)
+    //    .baseURL(baseURL)
     .eraseToAnyParserPrinter()
 
   }

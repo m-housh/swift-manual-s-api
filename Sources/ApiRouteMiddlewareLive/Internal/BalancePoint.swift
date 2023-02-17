@@ -1,6 +1,5 @@
 import Foundation
 import Models
-import Validations
 
 extension ServerRoute.Api.Route.BalancePoint {
 
@@ -22,8 +21,6 @@ extension ServerRoute.Api.Route.BalancePoint {
   }
 }
 
-//extension ServerRoute.Api.Route.BalancePointRequest {
-
 private func thermalBalancePoint(
   heatLoss: Double,
   at47: Double,
@@ -34,13 +31,3 @@ private func thermalBalancePoint(
     - ((designTemperature - 65.0) * (at47 - at17) * 47.0))
     / ((30.0 * heatLoss) - ((designTemperature - 65.0) * (at47 - at17)))
 }
-
-//extension ServerRoute.Api.Route.BalancePointRequest.Thermal: AsyncValidatable {
-//
-//  public var body: some AsyncValidator<Self> {
-//    AsyncValidation {
-//      GreaterThan(\.heatLoss, 0)
-//      Validate(\.capacity)
-//    }
-//  }
-//}

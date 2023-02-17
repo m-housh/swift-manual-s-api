@@ -7,19 +7,19 @@ import Models
 
 public struct ApiClient {
   public var apiRequest: @Sendable (ServerRoute.Api.Route) async throws -> (Data, URLResponse)
-  public var baseURL: @Sendable () async -> URL
-  public var setBaseURL: @Sendable (URL) async -> Void
+  public var baseUrl: @Sendable () -> URL
   public var request: @Sendable (ServerRoute) async throws -> (Data, URLResponse)
+  public var setBaseUrl: @Sendable (URL) async -> Void
 
   public init(
-    apiRequest: @Sendable @escaping (ServerRoute.Api.Route) -> (Data, URLResponse),
-    baseURL: @Sendable @escaping () -> URL,
-    setBaseURL: @Sendable @escaping (URL) -> Void,
-    request: @Sendable @escaping (ServerRoute) -> (Data, URLResponse)
+    apiRequest: @Sendable @escaping (ServerRoute.Api.Route) async throws -> (Data, URLResponse),
+    baseUrl: @Sendable @escaping () -> URL,
+    request: @Sendable @escaping (ServerRoute) async throws -> (Data, URLResponse),
+    setBaseUrl: @Sendable @escaping (URL) async -> Void
   ) {
     self.apiRequest = apiRequest
-    self.baseURL = baseURL
-    self.setBaseURL = setBaseURL
+    self.baseUrl = baseUrl
+    self.setBaseUrl = setBaseUrl
     self.request = request
   }
 

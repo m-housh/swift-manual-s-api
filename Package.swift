@@ -13,6 +13,7 @@ var package = Package(
     .library(name: "SiteRouter", targets: ["SiteRouter"]),
     .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
     .library(name: "ValidationMiddlewareLive", targets: ["ValidationMiddlewareLive"]),
+    .library(name: "XCTestDebugSupport", targets: ["XCTestDebugSupport"]),
   ],
   dependencies: [
     .package(
@@ -76,11 +77,20 @@ var package = Package(
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
+    .target(
+      name: "XCTestDebugSupport",
+      dependencies: []
+    ),
   ]
 )
 
 // MARK: - Client
 if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
+
+  package.dependencies.append(contentsOf: [
+    .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "0.12.0")
+  ])
+
   package.products.append(contentsOf: [
     .library(name: "ApiClient", targets: ["ApiClient"])
   ])
@@ -90,9 +100,20 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "ApiClient",
       dependencies: [
         "Models",
+        "XCTestDebugSupport",
+        .product(name: "CasePaths", package: "swift-case-paths"),
         .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
-    )
+    ),
+    .target(
+      name: "ApiClientLive",
+      dependencies: [
+        "ApiClient",
+        "Models",
+        "SiteRouter",
+      ]
+    ),
   ])
 }
 
@@ -208,6 +229,8 @@ package.targets.append(contentsOf: [
     name: "SiteMiddlewareLive",
     dependencies: [
       "ApiRouteMiddleware",
+      "DocumentMiddleware",
+      "LoggingDependency",
       "SiteMiddleware",
       "ValidationMiddleware",
       .product(name: "HtmlVaporSupport", package: "swift-html-vapor"),
