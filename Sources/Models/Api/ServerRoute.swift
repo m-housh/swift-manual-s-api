@@ -3,17 +3,27 @@ import Foundation
 /// Represents the routes for the server.
 public enum ServerRoute: Equatable, Sendable {
 
+  // NOTE: Add routes here, you need to handle validations (``ValidationMiddlewareLive``),
+  // site router (``SiteRouter``) and site middleware (``SiteMiddlewareLive``).
+  
   /// Api routes.
   case api(Api)
 
   /// HTML document routes.
   case documentation(Documentation)
 
-  // TODO: Update to use the `Public` routes.
-  case `public`(file: String)
+  case `public`(Public)
 
   /// The server root.
   case home
+  
+  case favicon
+  
+  case siteManifest
+  
+  case appleTouchIcon
+  
+  case appleTouchIconPrecomposed
 }
 
 // MARK: - Documentation Routes
@@ -21,6 +31,7 @@ extension ServerRoute {
 
   /// Represents the public file routes.
   public enum Public: Equatable, Sendable {
+    case favicon
     case images(file: String)
     case tools(file: String)
   }

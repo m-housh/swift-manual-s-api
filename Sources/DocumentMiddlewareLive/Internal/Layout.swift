@@ -10,7 +10,54 @@ func layout(title: String, navbar: Navbar = .init(), content: Node) async throws
     .html(
       .head(
         .meta(name: "viewport", content: "width=device-width, initial-scale=1"),
+        .meta(name: "theme-color", content: "#ffffff"),
+        .meta(name: "msapplication-TileColor", content: "#da532c"),
         .title(title),
+        .link(
+          attributes: [
+            .rel(.appleTouchIcon),
+            .type(.image(.png)),
+            .sizes("180x180"),
+            .href("/public/images?file=apple-touch-icon.png")
+          ]
+        ),
+        .link(
+          attributes: [
+            .rel(.appleTouchIconPrecomposed),
+            .type(.image(.png)),
+            .sizes("180x180"),
+            .href("/public/images?file=apple-touch-icon.png")
+          ]
+        ),
+        .link(
+          attributes: [
+            .rel(.icon),
+            .type(.image(.png)),
+            .sizes("32x32"),
+            .href("/public/images?file=favicon-32x32.png")
+          ]
+        ),
+        .link(
+          attributes: [
+            .rel(.icon),
+            .type(.image(.png)),
+            .sizes("16x16"),
+            .href("/public/images?file=favicon-16x16.png")
+          ]
+        ),
+        .link(
+          attributes: [
+            .rel(.maskIcon),
+            .href("/public/images?file=safari-pinned-tab.svg"),
+            .color("#5bbad5")
+          ]
+        ),
+        .link(
+          attributes: [
+            .rel(.manifest),
+            .href("/site.webmanifest")
+          ]
+        ),
         Layout.bootstrapStyleSheet
       ),
       .body(
@@ -74,4 +121,32 @@ private struct Layout {
     ]
   }
 
+}
+
+extension Attribute.Rel {
+  public static var appleTouchIcon: Self {
+    .init(rawValue: "apple-touch-icon")
+  }
+  
+  public static var appleTouchIconPrecomposed: Self {
+    .init(rawValue: "apple-touch-icon-precomposed")
+  }
+  
+  public static var maskIcon: Self {
+    .init(rawValue: "mask-icon")
+  }
+  
+  public static var manifest: Self {
+    .init(rawValue: "manifest")
+  }
+}
+
+extension Attribute {
+  public static func sizes(_ value: String) -> Self {
+    .init("sizes", value)
+  }
+  
+  public static func color(_ value: String) -> Self {
+    .init("color", value)
+  }
 }

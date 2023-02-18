@@ -70,13 +70,15 @@ extension ValidationMiddleware: DependencyKey {
       // Keep switch here, so that if new routes are added there
       // will be compile errors here if a case is not handled.
       switch route {
-      case .documentation:
-        return  // no validations required.
-      case .home:
-        // no validations required.
-        return
-      case .public:
-        return  // no validations required.
+      case .appleTouchIcon,
+          .appleTouchIconPrecomposed,
+          .documentation,
+          .favicon,
+          .home,
+          .public,
+          .siteManifest:
+        
+        return // no validations required.
       case let .api(api):
         return try await apiRouteValidator.validate(api.route)
       }

@@ -44,32 +44,22 @@ extension SiteMiddleware: DependencyKey {
       case .home:
         logger.debug("Handling home route.")
         return try await documentMiddleware.render(route: .home)
+        
+      case .appleTouchIcon, .appleTouchIconPrecomposed:
+        return try await PublicFileMiddleware.respond(request: request, route: .images(file: "apple-touch-icon.png"))
+        
+      case .favicon:
+        return try await PublicFileMiddleware.respond(request: request, route: .favicon)
+        
+      case .siteManifest:
+        return try await request.fileio.streamFile(
+          at: request.application.directory.publicDirectory.appending("site.manifest")
+        )
+        .encodeResponse(for: request)
 
-      case let .public(file: file):
-        // TODO: Fix routes to decipher between images and `tools` paths.
-        logger.debug("Handling public file: \(file)")
-        let filePath = request.application.directory.publicDirectory.appending(file)
-
-        logger.debug("File Path: \(filePath)")
-
-        let response = try await request.fileio.streamFile(at: filePath) { result in
-          do {
-            try result.get()
-          } catch {
-            logger.debug(
-              """
-              Error handling public file.
-              File: \(file)
-              Path: \(filePath)
-              Error: \(error)
-              """
-            )
-          }
-        }.encodeResponse(for: request)
-
-        let fileName = String(file.split(separator: "/").last ?? file[...])
-        response.headers.contentDisposition = .some(.init(.attachment, filename: fileName))
-        return response
+      case let .public(publicRoute):
+        logger.debug("Handling public route: \(publicRoute)")
+        return try await PublicFileMiddleware.respond(request: request, route: publicRoute)
       }
     }
   }
