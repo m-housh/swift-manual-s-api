@@ -22,40 +22,40 @@ public struct SiteRouter: ParserPrinter {
   public var body: AnyParserPrinter<URLRequestData, ServerRoute> {
     OneOf {
       Route(.case(ServerRoute.home))
-      
+
       Route(.case(ServerRoute.favicon)) {
         Path { "favicon.ico" }
       }
-      
+
       Route(.case(ServerRoute.appleTouchIcon)) {
         Path { "apple-touch-icon.png" }
       }
-      
+
       Route(.case(ServerRoute.appleTouchIcon)) {
         Path { "apple-touch-icon-precomposed.png" }
       }
-      
+
       Route(.case(ServerRoute.siteManifest)) {
         Path { "site.webmanifest" }
       }
-      
-//      let imagesRouter = Route(.case(ServerRoute.public)) {
-//        Path { "public" }
-//        Route(.case(ServerRoute.Public.images(file:))) {
-//          Path { "images" }
-//          OneOf {
-//            Path { "android-chrome-192x192.png" }
-//            Path { "android-chrome-512x512.png" }
-//            Path { "apple-touch-icon.png" }
-//            Path { "favicon-16x16.png" }
-//            Path { "favicon-32x32.png" }
-//            Path { "favicon" }
-//            Path { "mstile-150x150.png" }
-//            Path { "safari-pinned-tab.svg" }
-//          }
-//        }
-//      }
-     
+
+      //      let imagesRouter = Route(.case(ServerRoute.public)) {
+      //        Path { "public" }
+      //        Route(.case(ServerRoute.Public.images(file:))) {
+      //          Path { "images" }
+      //          OneOf {
+      //            Path { "android-chrome-192x192.png" }
+      //            Path { "android-chrome-512x512.png" }
+      //            Path { "apple-touch-icon.png" }
+      //            Path { "favicon-16x16.png" }
+      //            Path { "favicon-32x32.png" }
+      //            Path { "favicon" }
+      //            Path { "mstile-150x150.png" }
+      //            Path { "safari-pinned-tab.svg" }
+      //          }
+      //        }
+      //      }
+
       Route(.case(ServerRoute.documentation)) {
         Path { ServerRoute.Key.documentation.key }
         DocumentRouter()
@@ -67,27 +67,25 @@ public struct SiteRouter: ParserPrinter {
           Route(.case(ServerRoute.Public.favicon)) {
             Path { "favicon.png" }
           }
-          
-          
-          
+
           Route(.case(ServerRoute.Public.images(file:))) {
             Path { "images" }
-            
+
             Query {
               Field("file")
             }
-//            OneOf {
-//              Path { "android-chrome-192x192.png" }
-//              Path { "android-chrome-512x512.png" }
-//              Path { "apple-touch-icon.png" }
-//              Path { "favicon-16x16.png" }
-//              Path { "favicon-32x32.png" }
-//              Path { "favicon" }
-//              Path { "mstile-150x150.png" }
-//              Path { "safari-pinned-tab.svg" }
-//            }
+            //            OneOf {
+            //              Path { "android-chrome-192x192.png" }
+            //              Path { "android-chrome-512x512.png" }
+            //              Path { "apple-touch-icon.png" }
+            //              Path { "favicon-16x16.png" }
+            //              Path { "favicon-32x32.png" }
+            //              Path { "favicon" }
+            //              Path { "mstile-150x150.png" }
+            //              Path { "safari-pinned-tab.svg" }
+            //            }
           }
-          
+
           Route(.case(ServerRoute.Public.tools(file:))) {
             Path { "tools" }
             Query {

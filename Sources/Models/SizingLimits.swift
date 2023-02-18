@@ -32,15 +32,15 @@ public struct SizingLimits: Codable, Equatable, Sendable {
 
     /// Hold the oversizing limit for a gas / propane furnace system.
     case furnace(Int = 140)
-    
+
     public static func cooling(total: Int, latent: Int = 150) -> Self {
       .cooling(.init(total: total, latent: latent))
     }
-    
+
     public struct Cooling: Codable, Equatable, Sendable {
       public var total: Int
       public var latent: Int
-      
+
       public init(
         total: Int,
         latent: Int = 150
@@ -65,7 +65,7 @@ public struct SizingLimits: Codable, Equatable, Sendable {
 
     /// Hold the undersizing limit for a gas / propane furnace system.
     case furnace(Int = 90)
-    
+
     public static func cooling(
       total: Int = 90,
       sensible: Int = 90,
@@ -73,12 +73,12 @@ public struct SizingLimits: Codable, Equatable, Sendable {
     ) -> Self {
       .cooling(.init(total: total, sensible: sensible, latent: latent))
     }
-    
+
     public struct Cooling: Codable, Equatable, Sendable {
       public var total: Int
       public var sensible: Int
       public var latent: Int
-      
+
       public init(
         total: Int = 90,
         sensible: Int = 90,
@@ -93,7 +93,7 @@ public struct SizingLimits: Codable, Equatable, Sendable {
 }
 
 // MARK: Coding
-struct DecodingError: Error { }
+struct DecodingError: Error {}
 
 extension SizingLimits.Oversizing {
 
@@ -117,7 +117,7 @@ extension SizingLimits.Oversizing {
       try container.encode(furnace, forKey: .furnace)
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     if let boiler = try? container.decode(Int.self, forKey: .boiler) {
@@ -159,7 +159,7 @@ extension SizingLimits.Undersizing {
       try container.encode(furnace, forKey: .furnace)
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     if let boiler = try? container.decode(Int.self, forKey: .boiler) {
@@ -177,5 +177,5 @@ extension SizingLimits.Undersizing {
     }
     throw DecodingError()
   }
-  
+
 }

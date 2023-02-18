@@ -169,17 +169,21 @@ extension InterpolationResult {
       try container.encode(heating.result, forKey: .heating)
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    if let cooling = try? container.decode(InterpolationResult.Cooling.Result.self, forKey: .cooling) {
+    if let cooling = try? container.decode(
+      InterpolationResult.Cooling.Result.self, forKey: .cooling)
+    {
       self = .cooling(.init(result: cooling))
       return
-    } else if let heating = try? container.decode(InterpolationResult.Heating.Result.self, forKey: .heating) {
+    } else if let heating = try? container.decode(
+      InterpolationResult.Heating.Result.self, forKey: .heating)
+    {
       self = .heating(.init(result: heating))
       return
     }
-    struct DecodingError: Error { }
+    struct DecodingError: Error {}
     throw DecodingError()
   }
 }
@@ -207,25 +211,33 @@ extension InterpolationResult.Heating.Result {
 
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    
-    if let boiler = try? container.decode(InterpolationResult.Heating.Result.Boiler.self, forKey: .boiler) {
+
+    if let boiler = try? container.decode(
+      InterpolationResult.Heating.Result.Boiler.self, forKey: .boiler)
+    {
       self = .boiler(boiler)
       return
-    } else if let electric = try? container.decode(InterpolationResult.Heating.Result.Electric.self, forKey: .electric) {
+    } else if let electric = try? container.decode(
+      InterpolationResult.Heating.Result.Electric.self, forKey: .electric)
+    {
       self = .electric(electric)
       return
-    } else if let furnace = try? container.decode(InterpolationResult.Heating.Result.Furnace.self, forKey: .furnace) {
+    } else if let furnace = try? container.decode(
+      InterpolationResult.Heating.Result.Furnace.self, forKey: .furnace)
+    {
       self = .furnace(furnace)
       return
-    } else if let heatPump = try? container.decode(InterpolationResult.Heating.Result.HeatPump.self, forKey: .heatPump) {
+    } else if let heatPump = try? container.decode(
+      InterpolationResult.Heating.Result.HeatPump.self, forKey: .heatPump)
+    {
       self = .heatPump(heatPump)
       return
     }
-    
-    struct DecodingError: Error { }
+
+    struct DecodingError: Error {}
     throw DecodingError()
   }
 }

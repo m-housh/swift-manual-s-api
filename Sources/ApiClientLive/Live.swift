@@ -9,11 +9,11 @@ import SiteRouter
 #endif
 
 extension ApiClient: DependencyKey {
-  
+
   public static var liveValue: ApiClient {
     .live()
   }
-  
+
   public static func live(
     baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
   ) -> Self {
@@ -22,13 +22,13 @@ extension ApiClient: DependencyKey {
     #else
       let baseUrl = URL(string: "https://hvacmath.com")!
     #endif
- 
+
     let router = SiteRouter(decoder: jsonDecoder, encoder: jsonEncoder)
-    
+
     actor Session {
       nonisolated let baseUrl: Isolated<URL>
       private let router: SiteRouter
-      
+
       init(baseUrl: URL, router: SiteRouter) {
         self.baseUrl = .init(
           baseUrl,
@@ -38,7 +38,7 @@ extension ApiClient: DependencyKey {
         )
         self.router = router
       }
-      
+
       func apiRequest(route: ServerRoute.Api.Route) async throws -> (Data, URLResponse) {
         try await ApiClientLive.apiRequest(
           baseUrl: baseUrl.value,
@@ -46,7 +46,7 @@ extension ApiClient: DependencyKey {
           router: router
         )
       }
-      
+
       func request(route: ServerRoute) async throws -> (Data, URLResponse) {
         try await ApiClientLive.request(
           baseUrl: baseUrl.value,
@@ -54,14 +54,14 @@ extension ApiClient: DependencyKey {
           router: router
         )
       }
-      
+
       func setBaseUrl(_ url: URL) {
         self.baseUrl.value = url
       }
     }
-    
+
     let session = Session(baseUrl: baseUrl, router: router)
-    
+
     return Self(
       apiRequest: { try await session.apiRequest(route: $0) },
       baseUrl: { session.baseUrl.value },
@@ -76,9 +76,9 @@ private let jsonEncoder = JSONEncoder()
 private let jsonDecoder = JSONDecoder()
 
 #if DEBUG
-private let isDebug = true
+  private let isDebug = true
 #else
-private let isDebug = false
+  private let isDebug = false
 #endif
 
 private func request(

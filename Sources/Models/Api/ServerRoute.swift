@@ -5,7 +5,7 @@ public enum ServerRoute: Equatable, Sendable {
 
   // NOTE: Add routes here, you need to handle validations (``ValidationMiddlewareLive``),
   // site router (``SiteRouter``) and site middleware (``SiteMiddlewareLive``).
-  
+
   /// Api routes.
   case api(Api)
 
@@ -16,13 +16,13 @@ public enum ServerRoute: Equatable, Sendable {
 
   /// The server root.
   case home
-  
+
   case favicon
-  
+
   case siteManifest
-  
+
   case appleTouchIcon
-  
+
   case appleTouchIconPrecomposed
 }
 

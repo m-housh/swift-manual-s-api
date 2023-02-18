@@ -44,13 +44,14 @@ extension SiteMiddleware: DependencyKey {
       case .home:
         logger.debug("Handling home route.")
         return try await documentMiddleware.render(route: .home)
-        
+
       case .appleTouchIcon, .appleTouchIconPrecomposed:
-        return try await PublicFileMiddleware.respond(request: request, route: .images(file: "apple-touch-icon.png"))
-        
+        return try await PublicFileMiddleware.respond(
+          request: request, route: .images(file: "apple-touch-icon.png"))
+
       case .favicon:
         return try await PublicFileMiddleware.respond(request: request, route: .favicon)
-        
+
       case .siteManifest:
         return try await request.fileio.streamFile(
           at: request.application.directory.publicDirectory.appending("site.manifest")

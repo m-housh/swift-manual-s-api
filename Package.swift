@@ -118,7 +118,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "ApiClientLiveTests",
       dependencies: [
         "ApiClientLive",
-        "FirstPartyMocks"
+        "FirstPartyMocks",
       ]
     ),
   ])
