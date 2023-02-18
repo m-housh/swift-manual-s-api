@@ -114,6 +114,13 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "SiteRouter",
       ]
     ),
+    .testTarget(
+      name: "ApiClientLiveTests",
+      dependencies: [
+        "ApiClientLive",
+        "FirstPartyMocks"
+      ]
+    ),
   ])
 }
 

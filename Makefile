@@ -10,6 +10,7 @@ SERVER_PORT ?= 8080
 SWIFT_VERSION ?= 5.7
 LOG_LEVEL ?= info
 DOCC_TARGET ?= SiteMiddlewareLive
+TEST_SERVER ?= 1
 
 default: test-swift
 
@@ -21,6 +22,7 @@ test-linux:
 		--volume "$(PWD):$(PWD)" \
 		--workdir "$(PWD)" \
 		--platform "$(DOCKER_PLATFORM)" \
+		--env "TEST_SERVER=$(TEST_SERVER)" \
 		"swift:$(SWIFT_VERSION)-focal" swift test
 
 test-dev-image: build-docker-dev-image
@@ -33,9 +35,30 @@ test-library:
 		xcodebuild test \
 			-configuration $(CONFIG) \
 			-workspace .swiftpm/xcode/package.xcworkspace \
+			-scheme server \
+			-destination platform="$$platform" || exit 1; \
+	done;
+
+# Runs a server in docker, then test's the
+# live api client.
+test-client: remove-client-test-container
+	docker run \
+		--name "api-client-test" \
+		--detach \
+		-p "$(SERVER_PORT):8080" \
+		-e "LOG_LEVEL=$(LOG_LEVEL)" \
+		-e "BASE_URL=$(BASE_URL)" \
+		$(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
+
+	for platform in "$(PLATFORM_MACOS)" "$(PLATFORM_MAC_CATALYST)"; do \
+		xcodebuild test \
+			-configuration $(CONFIG) \
+			-workspace .swiftpm/xcode/package.xcworkspace \
 			-scheme swift-manual-s-api-Package \
 			-destination platform="$$platform" || exit 1; \
 	done;
+
+	$(MAKE) remove-client-test-container
 
 test-all: test-linux
 	$(MAKE) CONFIG=debug test-library
@@ -66,6 +89,15 @@ push-docker-image:
 
 push-docker-dev-image:
 	$(MAKE) DOCKER_TAG="dev" push-docker-image
+
+remove-client-test-container:
+	docker container kill \
+		$(shell docker container ls --all --quiet --filter name=^/api-client-test$) \
+		|| true
+
+	docker container rm \
+		$(shell docker container ls --all --quiet --filter name=^/api-client-test$) \
+		|| true
 
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server

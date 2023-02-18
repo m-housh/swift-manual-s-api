@@ -297,39 +297,35 @@ extension SizingLimits {
   
   private func validateOversizing(_ capacity: CapacityAsPercentOfLoad) -> [String]? {
     
-    guard case let .cooling(total: oversizingTotal, latent: oversizingLatent) = self.oversizing else {
+    guard case let .cooling(oversizing) = self.oversizing else {
       return ["Invalid sizing limits: \(self)"]
     }
     
     var failures = [String]()
     
-    if capacity.total > Double(oversizingTotal) {
+    if capacity.total > Double(oversizing.total) {
       failures.append("Oversizing total failure")
     }
-    if capacity.latent > Double(oversizingLatent) {
+    if capacity.latent > Double(oversizing.latent) {
       failures.append("Oversizing latent failure.")
     }
     return failures.isEmpty ? nil : failures
   }
   
   private func validateUndersizing(_ capacity: CapacityAsPercentOfLoad) -> [String]? {
-    guard case let .cooling(
-      total: undersizingTotal,
-      sensible: undersizingSensible,
-      latent: undersizingLatent
-    ) = self.undersizing else {
+    guard case let .cooling(undersizing) = self.undersizing else {
       return ["Invalid sizing limits: \(self)"]
     }
     
     var failures = [String]()
     
-    if capacity.total < Double(undersizingTotal) {
+    if capacity.total < Double(undersizing.total) {
       failures.append("Undersizing total failure.")
     }
-    if capacity.sensible < Double(undersizingSensible) {
+    if capacity.sensible < Double(undersizing.sensible) {
       failures.append("Undersizing sensible failure.")
     }
-    if capacity.latent < Double(undersizingLatent) {
+    if capacity.latent < Double(undersizing.latent) {
       failures.append("Undersizing latent failure.")
     }
     

@@ -496,7 +496,7 @@ extension ServerRoute {
   }
 }
 
-// MARK: Custom Encoding
+// MARK: Coding
 
 extension ServerRoute.Api.Route.BalancePoint {
 
