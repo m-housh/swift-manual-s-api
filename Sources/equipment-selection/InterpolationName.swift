@@ -12,18 +12,18 @@ enum InterpolationName: String, EnumerableFlag {
   case oneWayIndoor
   case oneWayOutdoor
   case twoWay
-  
+
   var defaultOutputPath: String {
     "./\(rawValue).json"
   }
-  
+
   func parseUrl(url: URL?) -> URL {
     guard let url else {
       return URL(fileURLWithPath: defaultOutputPath)
     }
     return url
   }
-  
+
   var template: any Encodable {
     switch self {
     case .boiler:
@@ -44,6 +44,5 @@ enum InterpolationName: String, EnumerableFlag {
       return ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.mock
     }
   }
-  
 
 }
