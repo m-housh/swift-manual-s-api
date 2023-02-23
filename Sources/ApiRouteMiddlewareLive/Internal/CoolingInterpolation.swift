@@ -72,7 +72,7 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling {
 fileprivate extension InterpolationResponse {
   
   init(envelope: CoolingInterpolationEnvelope) async throws {
-    let coolingResult = InterpolationResult.Cooling(envelope: envelope)
+    let coolingResult = InterpolationResponse.Result.Cooling(envelope: envelope)
     let failures = envelope.sizingLimits.validate(envelope.capacityAsPercentOfLoad)
     self.init(
       failures: failures,
@@ -81,7 +81,7 @@ fileprivate extension InterpolationResponse {
   }
 }
 
-fileprivate extension InterpolationResult.Cooling.Result {
+fileprivate extension InterpolationResponse.Result.Cooling.Result {
   
   init(envelope: CoolingInterpolationEnvelope) {
     self.init(
@@ -95,7 +95,7 @@ fileprivate extension InterpolationResult.Cooling.Result {
   }
 }
 
-fileprivate extension InterpolationResult.Cooling {
+fileprivate extension InterpolationResponse.Result.Cooling {
   init(envelope: CoolingInterpolationEnvelope) {
     self.init(result: .init(envelope: envelope))
   }
@@ -168,8 +168,8 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.Capacit
 
 fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay {
   func outdoorRequest(
-    above: InterpolationResult.Cooling.Result,
-    below: InterpolationResult.Cooling.Result
+    above: InterpolationResponse.Result.Cooling.Result,
+    below: InterpolationResponse.Result.Cooling.Result
   ) -> ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
     .init(
       aboveDesign: .init(

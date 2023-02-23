@@ -4,7 +4,7 @@ import Models
 extension ServerRoute.Api.Route.Interpolation.Heating {
 
   func respond() async throws -> InterpolationResponse {
-    let result: InterpolationResult.Heating.Result
+    let result: InterpolationResponse.Result.Heating.Result
     switch self {
     case let .boiler(boiler):
       result = try await interpolate(furnace: boiler.furnaceRequest).boilerResult()
@@ -23,7 +23,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
 // MARK: - Interpolations
 extension InterpolationResponse {
 
-  init(result: InterpolationResult.Heating.Result) {
+  init(result: InterpolationResponse.Result.Heating.Result) {
     self.init(
       failures: result.validateSizingLimits(),
       result: .heating(.init(result: result))
@@ -34,7 +34,7 @@ extension InterpolationResponse {
 extension ServerRoute.Api.Route.Interpolation.Heating {
 
   fileprivate func interpolate(furnace: Furnace) async throws
-    -> InterpolationResult.Heating.Result
+    -> InterpolationResponse.Result.Heating.Result
   {
 
     let output = Double(furnace.input) * (furnace.afue / 100)
@@ -61,7 +61,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
   }
 
   fileprivate func interpolate(electric: Electric) async throws
-    -> InterpolationResult.Heating.Result
+    -> InterpolationResponse.Result.Heating.Result
   {
     //    try await electric.validate()
     let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
@@ -82,7 +82,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
 
   // TODO: FIX DERATINGS.
   fileprivate func interpolate(heatPump: HeatPump) async throws
-    -> InterpolationResult.Heating.Result
+    -> InterpolationResponse.Result.Heating.Result
   {
 
     var finalCapacity = heatPump.capacity
@@ -150,7 +150,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Boiler {
   }
 }
 
-extension InterpolationResult.Heating.Result {
+extension InterpolationResponse.Result.Heating.Result {
 
   fileprivate func boilerResult() async throws -> Self {
     switch self {
@@ -168,7 +168,7 @@ extension InterpolationResult.Heating.Result {
   }
 }
 
-extension InterpolationResult.Heating.Result {
+extension InterpolationResponse.Result.Heating.Result {
   var sizingLimits: SizingLimits? {
     switch self {
     case let .boiler(boiler):
@@ -189,7 +189,7 @@ extension InterpolationResult.Heating.Result {
 
 extension SizingLimits {
 
-  private func validateBoiler(_ boiler: InterpolationResult.Heating.Result.Boiler) -> [String]? {
+  private func validateBoiler(_ boiler: InterpolationResponse.Result.Heating.Result.Boiler) -> [String]? {
     guard case let .boiler(oversizing) = self.oversizing,
       case let .boiler(undersizing) = self.undersizing
     else {
@@ -206,7 +206,7 @@ extension SizingLimits {
     return failures.isEmpty ? nil : failures
   }
 
-  private func validateFurnace(_ furnace: InterpolationResult.Heating.Result.Furnace) -> [String]? {
+  private func validateFurnace(_ furnace: InterpolationResponse.Result.Heating.Result.Furnace) -> [String]? {
     guard case let .furnace(oversizing) = self.oversizing,
       case let .furnace(undersizing) = self.undersizing
     else {
@@ -223,7 +223,7 @@ extension SizingLimits {
     return failures.isEmpty ? nil : failures
   }
 
-  private func validateElectric(_ furnace: InterpolationResult.Heating.Result.Electric)
+  private func validateElectric(_ furnace: InterpolationResponse.Result.Heating.Result.Electric)
     -> [String]?
   {
     guard case let .electric(oversizing) = self.oversizing,
@@ -242,7 +242,7 @@ extension SizingLimits {
     return failures.isEmpty ? nil : failures
   }
 
-  fileprivate func validate(result: InterpolationResult.Heating.Result) -> [String]? {
+  fileprivate func validate(result: InterpolationResponse.Result.Heating.Result) -> [String]? {
     switch result {
     case let .boiler(boiler):
       return validateBoiler(boiler)

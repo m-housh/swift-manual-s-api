@@ -2,6 +2,7 @@ import ArgumentParser
 import Foundation
 import Models
 
+// TODO: Move CLI to it's own package.
 @main
 struct EquipmentSelection: AsyncParsableCommand {
 
