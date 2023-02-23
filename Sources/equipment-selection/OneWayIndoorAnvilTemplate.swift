@@ -196,12 +196,17 @@ extension OneWayIndoorAnvilTemplate {
   }
 }
 
+struct AnvilKeyNotFound: Error { }
+
 func apiRequest(_ template: OneWayIndoorAnvilTemplate) async throws -> (Data, URLResponse) {
   var request = URLRequest(url: URL(string: "https://app.useanvil.com/api/v1/fill/MP60yOfB4EWSrq0DOGwn.pdf")!)
   request.httpMethod = "POST"
   request.httpBody = try JSONEncoder().encode(template)
   request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-  let b64Auth = Data("ArmzSwDMaPsqvYArKbecMSscAA4GHn3u".utf8).base64EncodedString()
+  guard let apiKey = ProcessInfo.processInfo.environment["ANVIL_API_KEY"] else {
+    throw AnvilKeyNotFound()
+  }
+  let b64Auth = Data("\(apiKey)".utf8).base64EncodedString()
   let authString = "Basic \(b64Auth)"
   request.setValue(authString, forHTTPHeaderField: "Authorization")
   return try await URLSession.shared.data(for: request)
