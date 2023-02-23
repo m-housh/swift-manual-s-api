@@ -124,6 +124,27 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
   ])
 }
 
+// MARK: - CLI
+if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
+  package.dependencies.append(contentsOf: [
+    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0")
+  ])
+  package.products.append(contentsOf: [
+    .executable(name: "equipment-selection", targets: ["equipment-selection"])
+  ])
+  package.targets.append(contentsOf: [
+    .executableTarget(
+      name: "equipment-selection",
+      dependencies: [
+        "ApiClientLive",
+        "FirstPartyMocks",
+        "Models",
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+      ]
+    )
+  ])
+}
+
 // MARK: - Server
 package.dependencies.append(contentsOf: [
   .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
