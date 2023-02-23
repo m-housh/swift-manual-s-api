@@ -26,7 +26,7 @@ extension EquipmentSelection {
       let path = interpolation.parseUrl(url: inputPath)
       let outputPath = outputPath ?? URL(fileURLWithPath: "./result.json")
 
-      let result = try await withDependencies {
+      let (route, result) = try await withDependencies {
         $0.apiClient = .live(baseUrl: URL(string: "https://hvacmath.com")!)
       } operation: {
         return try await InterpolateRunner(interpolation: interpolation, inputPath: path).run()
@@ -38,10 +38,27 @@ extension EquipmentSelection {
         print()
         print("\(result)")
       }
-
-      let data = try jsonEncoder.encode(result)
-      try data.write(to: outputPath)
-      print("Wrote result to: \(outputPath.absoluteString)")
+      
+      guard case let .interpolate(.cooling(.oneWayIndoor(request))) = route else {
+        let data = try jsonEncoder.encode(result)
+        try data.write(to: outputPath)
+        print("Wrote result to: \(outputPath.absoluteString)")
+        return
+      }
+      
+      guard result.failures == nil else {
+        print("Failed:")
+        print("\(result.failures!)")
+        return
+      }
+      
+      let template = try OneWayIndoorAnvilTemplate(request: request, result: result.result)
+      let (data, _) = try await apiRequest(template)
+      
+      // FIX.
+      let pdfPath = URL(fileURLWithPath: "./result.pdf")
+      try data.write(to: pdfPath)
+      print("Done")
     }
   }
 }
@@ -54,13 +71,16 @@ private struct InterpolateRunner {
   let interpolation: InterpolationName
   let inputPath: URL
 
-  func run() async throws -> InterpolationResponse {
+  func run() async throws -> (ServerRoute.Api.Route, InterpolationResponse) {
     // do something.
     let data = try Data(contentsOf: inputPath)
     let route = try interpolation.route(data: data)
-    return try await apiClient.apiRequest(
-      route: route,
-      as: InterpolationResponse.self
+    return try await (
+      route,
+      apiClient.apiRequest(
+        route: route,
+        as: InterpolationResponse.self
+      )
     )
   }
 }
