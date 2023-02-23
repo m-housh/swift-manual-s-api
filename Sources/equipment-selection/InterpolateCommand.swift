@@ -38,23 +38,23 @@ extension EquipmentSelection {
         print()
         print("\(result)")
       }
-      
+
       guard case let .interpolate(.cooling(.oneWayIndoor(request))) = route else {
         let data = try jsonEncoder.encode(result)
         try data.write(to: outputPath)
         print("Wrote result to: \(outputPath.absoluteString)")
         return
       }
-      
+
       guard result.failures == nil else {
         print("Failed:")
         print("\(result.failures!)")
         return
       }
-      
+
       let template = try OneWayIndoorAnvilTemplate(request: request, result: result.result)
       let (data, _) = try await apiRequest(template)
-      
+
       // FIX.
       let pdfPath = URL(fileURLWithPath: "./result.pdf")
       try data.write(to: pdfPath)

@@ -7,7 +7,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
   public let result: Result
   // not a computed property, so it get's encoded in json responses.
   public let isFailed: Bool
-  
+
   public init(
     failures: [String]? = nil,
     result: Result
@@ -20,18 +20,18 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
       self.isFailed = false
     }
   }
-  
+
   public enum Result: Codable, Equatable, Sendable {
     case cooling(Cooling)
     case heating(Heating)
-    
+
     public struct Cooling: Codable, Equatable, Sendable {
       public let result: Result
-      
+
       public init(result: Result) {
         self.result = result
       }
-      
+
       public struct Result: Codable, Equatable, Sendable {
         public let interpolatedCapacity: CoolingCapacity
         public let excessLatent: Int
@@ -39,7 +39,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
         public let altitudeDerating: AdjustmentMultiplier?
         public let capacityAsPercentOfLoad: CapacityAsPercentOfLoad
         public let sizingLimits: SizingLimits
-        
+
         public init(
           interpolatedCapacity: CoolingCapacity,
           excessLatent: Int,
@@ -57,28 +57,28 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
         }
       }
     }
-    
+
     public struct Heating: Codable, Equatable, Sendable {
-      
+
       public let result: Result
-      
+
       public init(result: Result) {
         self.result = result
       }
-      
+
       public enum Result: Codable, Equatable, Sendable {
         case boiler(Boiler)
         case electric(Electric)
         case furnace(Furnace)
         case heatPump(HeatPump)
-        
+
         public struct Boiler: Codable, Equatable, Sendable {
           public let altitudeDeratings: AdjustmentMultiplier
           public let outputCapacity: Int
           public let finalCapacity: Int
           public let percentOfLoad: Double
           public let sizingLimits: SizingLimits
-          
+
           public init(
             altitudeDeratings: AdjustmentMultiplier,
             outputCapacity: Int,
@@ -92,14 +92,14 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
             self.sizingLimits = .init(oversizing: .boiler(), undersizing: .boiler())
           }
         }
-        
+
         public struct Furnace: Codable, Equatable, Sendable {
           public let altitudeDeratings: AdjustmentMultiplier
           public let outputCapacity: Int
           public let finalCapacity: Int
           public let percentOfLoad: Double
           public let sizingLimits: SizingLimits
-          
+
           public init(
             altitudeDeratings: AdjustmentMultiplier,
             outputCapacity: Int,
@@ -113,12 +113,12 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
             self.sizingLimits = .init(oversizing: .furnace(), undersizing: .furnace())
           }
         }
-        
+
         public struct Electric: Codable, Equatable, Sendable {
           public let requiredKW: Double
           public let percentOfLoad: Double
           public let sizingLimits: SizingLimits
-          
+
           public init(
             requiredKW: Double,
             percentOfLoad: Double
@@ -128,14 +128,14 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
             self.sizingLimits = .init(oversizing: .electric(), undersizing: .electric())
           }
         }
-        
+
         public struct HeatPump: Codable, Equatable, Sendable {
           public let altitudeDeratings: AdjustmentMultiplier
           public let finalCapacity: HeatPumpCapacity
           public let capacityAtDesign: Int
           public let balancePointTemperature: Double
           public let requiredKW: Double
-          
+
           public init(
             altitudeDeratings: AdjustmentMultiplier,
             finalCapacity: HeatPumpCapacity,
@@ -157,12 +157,12 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
 // MARK: - Coding
 
 extension InterpolationResponse.Result {
-  
+
   private enum CodingKeys: CodingKey {
     case cooling
     case heating
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
@@ -172,7 +172,7 @@ extension InterpolationResponse.Result {
       try container.encode(heating.result, forKey: .heating)
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     if let cooling = try? container.decode(
@@ -192,14 +192,14 @@ extension InterpolationResponse.Result {
 }
 
 extension InterpolationResponse.Result.Heating.Result {
-  
+
   private enum CodingKeys: CodingKey {
     case boiler
     case electric
     case furnace
     case heatPump
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
@@ -211,13 +211,13 @@ extension InterpolationResponse.Result.Heating.Result {
       try container.encode(furnace, forKey: .furnace)
     case let .heatPump(heatPump):
       try container.encode(heatPump, forKey: .heatPump)
-      
+
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    
+
     if let boiler = try? container.decode(
       InterpolationResponse.Result.Heating.Result.Boiler.self, forKey: .boiler)
     {
@@ -239,7 +239,7 @@ extension InterpolationResponse.Result.Heating.Result {
       self = .heatPump(heatPump)
       return
     }
-    
+
     struct DecodingError: Error {}
     throw DecodingError()
   }

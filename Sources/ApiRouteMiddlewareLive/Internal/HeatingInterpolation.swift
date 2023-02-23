@@ -189,7 +189,9 @@ extension InterpolationResponse.Result.Heating.Result {
 
 extension SizingLimits {
 
-  private func validateBoiler(_ boiler: InterpolationResponse.Result.Heating.Result.Boiler) -> [String]? {
+  private func validateBoiler(_ boiler: InterpolationResponse.Result.Heating.Result.Boiler)
+    -> [String]?
+  {
     guard case let .boiler(oversizing) = self.oversizing,
       case let .boiler(undersizing) = self.undersizing
     else {
@@ -206,7 +208,9 @@ extension SizingLimits {
     return failures.isEmpty ? nil : failures
   }
 
-  private func validateFurnace(_ furnace: InterpolationResponse.Result.Heating.Result.Furnace) -> [String]? {
+  private func validateFurnace(_ furnace: InterpolationResponse.Result.Heating.Result.Furnace)
+    -> [String]?
+  {
     guard case let .furnace(oversizing) = self.oversizing,
       case let .furnace(undersizing) = self.undersizing
     else {
