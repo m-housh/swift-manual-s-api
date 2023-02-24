@@ -56,6 +56,19 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler: AsyncValidat
           label: ErrorLabel.input,
           summary: "Input should be greater than 0."
         )
+
+      // FIX.
+      //      AsyncValidator.validate(
+      //        \.houseLoad,
+      //        with: HouseLoadValidator(style: .heating)
+      //      )
+
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
+
     }
   }
 }
@@ -79,6 +92,18 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace: AsyncValida
           label: ErrorLabel.input,
           summary: "Input should be greater than 0."
         )
+
+      // FIX.
+      //      AsyncValidator.validate(
+      //        \.houseLoad,
+      //        with: HouseLoadValidator(style: .heating)
+      //      )
+
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
     }
   }
 }
@@ -93,6 +118,17 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Electric: AsyncValid
           label: ErrorLabel.inputKW,
           summary: "Input KW should be greater than 0."
         )
+
+      //      AsyncValidator.validate(
+      //        \.houseLoad,
+      //        with: HouseLoadValidator(style: .heating)
+      //      )
+
+      //      AsyncValidator.validate(
+      //        \.altitudeDeratings,
+      //        with: AdjustmentMultiplierValidation(style: .heating, label: ErrorLabel.altitudeDeratings)
+      //          .optional()
+      //      )
 
       AsyncValidator.validate(
         \.heatPumpCapacity,
