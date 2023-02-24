@@ -44,6 +44,14 @@ extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
       return try await cooling.validate()
     case let .heating(heating):
       return try await heating.validate()
+    case let .keyed(keyed):
+      for value in keyed {
+        if let cooling = value.route.left {
+          try await cooling.validate()
+        } else if let heating = value.route.right {
+          try await heating.validate()
+        }
+      }
     }
   }
 }

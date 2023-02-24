@@ -1,6 +1,10 @@
 import Foundation
 import Models
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 struct OneWayIndoorAnvilTemplate: Codable {
   let title: String
   let fontSize: Int

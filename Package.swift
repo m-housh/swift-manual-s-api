@@ -28,8 +28,17 @@ var package = Package(
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
     .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-either.git", branch: "main")
   ],
   targets: [
+    .target(
+      name: "AnvilClient",
+      dependencies: [
+        "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "URLRouting", package: "swift-url-routing"),
+      ]
+    ),
     .target(
       name: "FirstPartyMocks",
       dependencies: [
@@ -45,7 +54,9 @@ var package = Package(
     ),
     .target(
       name: "Models",
-      dependencies: []
+      dependencies: [
+        .product(name: "Either", package: "swift-either")
+      ]
     ),
     .target(
       name: "SiteRouter",

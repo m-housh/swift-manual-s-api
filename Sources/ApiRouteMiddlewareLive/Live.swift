@@ -14,6 +14,10 @@ extension ApiRouteMiddleware: DependencyKey {
           return try await coolingRequest.respond()
         case let .heating(heatingRequest):
           return try await heatingRequest.respond()
+        case let .keyed(keyed):
+          print("FIX ME: \(keyed)")
+          // fix.
+          fatalError()
         }
       },
       requiredKW: { try await $0.respond() },

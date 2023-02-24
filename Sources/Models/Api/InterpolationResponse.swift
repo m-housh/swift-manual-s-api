@@ -1,4 +1,4 @@
-// TODO: Add pass / fail results.
+import Either
 
 /// Represents the response for an interpolation request.
 ///
@@ -24,6 +24,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
   public enum Result: Codable, Equatable, Sendable {
     case cooling(Cooling)
     case heating(Heating)
+    case keyed([Keyed])
 
     public struct Cooling: Codable, Equatable, Sendable {
       public let result: Result
@@ -152,6 +153,19 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
         }
       }
     }
+    
+    public struct Keyed: Codable, Equatable, Sendable {
+      public let key: String
+      public let result: Either<InterpolationResponse.Result.Cooling, InterpolationResponse.Result.Heating>
+      
+      public init(
+        key: String,
+        result: Either<InterpolationResponse.Result.Cooling, InterpolationResponse.Result.Heating>
+      ) {
+        self.key = key
+        self.result = result
+      }
+    }
   }
 }
 // MARK: - Coding
@@ -161,6 +175,7 @@ extension InterpolationResponse.Result {
   private enum CodingKeys: CodingKey {
     case cooling
     case heating
+    case keyed
   }
 
   public func encode(to encoder: Encoder) throws {
@@ -170,6 +185,8 @@ extension InterpolationResponse.Result {
       try container.encode(cooling.result, forKey: .cooling)
     case let .heating(heating):
       try container.encode(heating.result, forKey: .heating)
+    case let .keyed(keyed):
+      try container.encode(keyed, forKey: .keyed)
     }
   }
 
@@ -185,6 +202,10 @@ extension InterpolationResponse.Result {
     {
       self = .heating(.init(result: heating))
       return
+    } else if let keyed = try? container.decode(
+      [InterpolationResponse.Result.Keyed].self, forKey: .keyed)
+    {
+      self = .keyed(keyed)
     }
     struct DecodingError: Error {}
     throw DecodingError()

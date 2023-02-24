@@ -1,3 +1,4 @@
+import Either
 import Foundation
 
 /// Represents the routes for the server.
@@ -226,6 +227,9 @@ extension ServerRoute {
 
         /// A heating interpolation.
         case heating(Heating)
+        
+        /// Multiple interpolations with a key identifier.
+        case keyed([Keyed])
 
         /// Represents the cooling interpolations that can be performed.
         public enum Cooling: Codable, Equatable, Sendable {
@@ -418,6 +422,22 @@ extension ServerRoute {
             }
           }
         }
+        
+        public struct Keyed: Codable, Equatable, Sendable {
+          public var key: String
+          public var route: Either<
+            ServerRoute.Api.Route.Interpolation.Cooling,
+            ServerRoute.Api.Route.Interpolation.Heating
+          >
+          
+          public init(
+            key: String,
+            route: Either<ServerRoute.Api.Route.Interpolation.Cooling, ServerRoute.Api.Route.Interpolation.Heating>
+          ) {
+            self.key = key
+            self.route = route
+          }
+        }
       }
     }
   }
@@ -523,3 +543,5 @@ extension ServerRoute.Api.Route.BalancePoint {
     }
   }
 }
+
+extension Either: @unchecked Sendable where Left: Sendable, Right: Sendable { }
