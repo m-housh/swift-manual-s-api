@@ -1,4 +1,5 @@
 import Models
+import Tagged
 
 // This file contains extension on model types to be used in tests, these are generally not needed,
 // however they need to be public to test release builds.
@@ -64,32 +65,23 @@ extension HouseLoad.CoolingLoad {
 
 }
 
-extension ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation {
+extension ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation {
   public static let zero = Self.init(
     capacity: .zero,
-    designInfo: .zero,
-    houseLoad: .zero,
-    manufacturerAdjustments: nil,
-    systemType: .mock
+    manufacturerAdjustments: nil
   )
 
   public static let mock = Self.init(
     capacity: .mock,
-    designInfo: .mock,
-    houseLoad: .mock,
-    manufacturerAdjustments: .mock,
-    systemType: .mock
+    manufacturerAdjustments: .mock
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
+extension ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
 
   public static let zero = Self.init(
     aboveDesign: .zero,
-    belowDesign: .zero,
-    designInfo: .zero,
-    houseLoad: .zero,
-    systemType: .mock
+    belowDesign: .zero
   )
 
   public static var outdoorMock: Self {
@@ -103,10 +95,7 @@ extension ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
     return .init(
       aboveDesign: aboveDesign,
       belowDesign: belowDesign,
-      designInfo: .mock,
-      houseLoad: .mock,
-      manufacturerAdjustments: .airToAir(total: 0.98, sensible: 0.95, heating: 1.0),
-      systemType: .mock
+      manufacturerAdjustments: .airToAir(total: 0.98, sensible: 0.95, heating: 1.0)
     )
   }
 
@@ -124,126 +113,103 @@ extension ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
     return .init(
       aboveDesign: aboveDesign,
       belowDesign: belowDesign,
-      designInfo: .mock,
-      houseLoad: .mock,
-      manufacturerAdjustments: .airToAir(total: 0.98, sensible: 0.95, heating: 1.0),
-      systemType: .mock
+      manufacturerAdjustments: .airToAir(total: 0.98, sensible: 0.95, heating: 1.0)
     )
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay {
+extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay {
   public static let zero = Self.init(
-    aboveDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero),
-    belowDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero),
-    designInfo: .zero,
-    houseLoad: .zero,
-    systemType: .mock
+    aboveDesign: .init(.init(aboveWetBulb: .zero, belowWetBulb: .zero)),
+    belowDesign: .init(.init(aboveWetBulb: .zero, belowWetBulb: .zero))
   )
 
   public static let mock = Self.init(
     aboveDesign: .init(
-      aboveWetBulb: .init(
-        cfm: 800,
-        indoorTemperature: 75,
-        indoorWetBulb: 67,
-        outdoorTemperature: 95,
-        capacity: .init(total: 24_828, sensible: 15_937)
-      ),
-      belowWetBulb: .init(
-        cfm: 800,
-        indoorTemperature: 75,
-        indoorWetBulb: 62,
-        outdoorTemperature: 95,
-        capacity: .init(total: 23_046, sensible: 19_078)
-      )
-    ),
+      .init(
+        aboveWetBulb: .init(
+          cfm: 800,
+          indoorTemperature: 75,
+          indoorWetBulb: 67,
+          outdoorTemperature: 95,
+          capacity: .init(total: 24_828, sensible: 15_937)
+        ),
+        belowWetBulb: .init(
+          cfm: 800,
+          indoorTemperature: 75,
+          indoorWetBulb: 62,
+          outdoorTemperature: 95,
+          capacity: .init(total: 23_046, sensible: 19_078)
+        )
+      )),
     belowDesign: .init(
-      aboveWetBulb: .init(
-        cfm: 800,
-        indoorTemperature: 75,
-        indoorWetBulb: 67,
-        outdoorTemperature: 85,
-        capacity: .init(total: 25_986, sensible: 16_330)
-      ),
-      belowWetBulb: .init(
-        cfm: 800,
-        indoorTemperature: 75,
-        indoorWetBulb: 62,
-        outdoorTemperature: 85,
-        capacity: .init(total: 24_029, sensible: 19_605)
-      )
-    ),
-    designInfo: .mock,
-    houseLoad: .mock,
-    manufacturerAdjustments: .airToAir(total: 1.0, sensible: 1.0, heating: 1.0),
-    systemType: .mock
+      .init(
+        aboveWetBulb: .init(
+          cfm: 800,
+          indoorTemperature: 75,
+          indoorWetBulb: 67,
+          outdoorTemperature: 85,
+          capacity: .init(total: 25_986, sensible: 16_330)
+        ),
+        belowWetBulb: .init(
+          cfm: 800,
+          indoorTemperature: 75,
+          indoorWetBulb: 62,
+          outdoorTemperature: 85,
+          capacity: .init(total: 24_029, sensible: 19_605)
+        )
+      )),
+    manufacturerAdjustments: .airToAir(total: 1.0, sensible: 1.0, heating: 1.0)
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Boiler {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler {
 
   public static let zero = Self.init(
-    elevation: 0,
-    houseLoad: .zero,
     input: 0,
     afue: 0
   )
 
   public static let mock = Self.init(
-    elevation: 5000,
-    houseLoad: .mock,
     input: 60_000,
     afue: 96.5
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Furnace {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace {
 
   public static let zero = Self.init(
-    elevation: 0,
-    houseLoad: .zero,
     input: 0,
     afue: 0
   )
 
   public static let mock = Self.init(
-    elevation: 5_000,
-    houseLoad: .mock,
     input: 60_000,
     afue: 96.5
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Electric {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Electric {
 
   public static let zero = Self.init(
     heatPumpCapacity: nil,
-    houseLoad: .zero,
     inputKW: 0
   )
 
   public static let mock = Self.init(
     heatPumpCapacity: 23_200,
-    houseLoad: .mock,
     inputKW: 15
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.HeatPump {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump {
 
   public static let zero = Self.init(
-    capacity: .zero,
-    designInfo: .zero,
-    houseLoad: .zero,
-    systemType: .mock
+    capacity: .zero
   )
 
   public static let mock = Self.init(
-    capacity: .mock,
-    designInfo: .mock,
-    houseLoad: .mock,
-    systemType: .mock
+    capacity: .mock
   )
 }
 

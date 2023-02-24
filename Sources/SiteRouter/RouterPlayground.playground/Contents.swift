@@ -2,17 +2,25 @@ import FirstPartyMocks
 import Foundation
 import Models
 
-let model = ServerRoute.Api.Route.InterpolationRequest.Heating.heatPump(
-  .init(
-    altitudeDeratings: .airToAir(total: 1, sensible: 1, heating: 1),
-    capacity: .mock,
-    designInfo: .mock,
-    houseLoad: .mock
-  ))
-
+let model = ServerRoute.Api.Route.Interpolation.init(
+  designInfo: .mock,
+  houseLoad: .mock,
+  systemType: .mock,
+  route: .cooling(
+    route: .noInterpolation(
+      .init(
+        capacity: .mock,
+        manufacturerAdjustments: nil
+      )))
+)
+//let model = ServerRoute.Api.Route.Interpolation.Route.Cooling.noInterpolation(.init(capacity: .mock, manufacturerAdjustments: nil))
 let encoder = JSONEncoder()
 encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
 
 let encoded = try encoder.encode(model)
 
 print(String(data: encoded, encoding: .utf8)!)
+
+let decoder = JSONDecoder()
+let decoded = try decoder.decode(ServerRoute.Api.Route.Interpolation.self, from: encoded)
+print("\(decoded)")

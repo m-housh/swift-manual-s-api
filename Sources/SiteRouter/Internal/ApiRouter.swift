@@ -8,117 +8,118 @@ struct ApiRouter: ParserPrinter {
 
   @ParserBuilder
   var body: AnyParserPrinter<URLRequestData, ServerRoute.Api.Route> {
-    let coolingInterpolationRouter = OneOf {
-      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.noInterpolation)) {
-        Method.post
-        Path { CoolingKey.noInterpolation.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
+    //    let coolingInterpolationRouter = OneOf {
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Cooling.noInterpolation)) {
+    //        Method.post
+    //        Path { CoolingKey.noInterpolation.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Cooling.oneWayIndoor)) {
+    //        Method.post
+    //        Path { CoolingKey.oneWayIndoor.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Cooling.oneWayOutdoor)) {
+    //        Method.post
+    //        Path { CoolingKey.oneWayOutdoor.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Cooling.twoWay)) {
+    //        Method.post
+    //        Path { CoolingKey.twoWay.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //    }
 
-      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.oneWayIndoor)) {
-        Method.post
-        Path { CoolingKey.oneWayIndoor.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Cooling.OneWay.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
+    //    let heatingInterpolationRouter = OneOf {
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Heating.boiler)) {
+    //        Method.post
+    //        Path { HeatingKey.boiler.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Heating.electric)) {
+    //        Method.post
+    //        Path { HeatingKey.electric.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Heating.Electric.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Heating.furnace)) {
+    //        Method.post
+    //        Path { HeatingKey.furnace.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.Heating.heatPump)) {
+    //        Method.post
+    //        Path { HeatingKey.heatPump.key }
+    //        Body(
+    //          .json(
+    //            ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump.self,
+    //            decoder: self.decoder,
+    //            encoder: self.encoder
+    //          )
+    //        )
+    //      }
+    //    }
 
-      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.oneWayOutdoor)) {
-        Method.post
-        Path { CoolingKey.oneWayOutdoor.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Cooling.OneWay.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
-
-      Route(.case(ServerRoute.Api.Route.Interpolation.Cooling.twoWay)) {
-        Method.post
-        Path { CoolingKey.twoWay.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
-    }
-
-    let heatingInterpolationRouter = OneOf {
-      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.boiler)) {
-        Method.post
-        Path { HeatingKey.boiler.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Heating.Boiler.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
-
-      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.electric)) {
-        Method.post
-        Path { HeatingKey.electric.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Heating.Electric.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
-
-      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.furnace)) {
-        Method.post
-        Path { HeatingKey.furnace.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Heating.Furnace.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
-
-      Route(.case(ServerRoute.Api.Route.Interpolation.Heating.heatPump)) {
-        Method.post
-        Path { HeatingKey.heatPump.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.Heating.HeatPump.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
-      }
-    }
-
-    let interpolationRouter = OneOf {
-      Route(.case(ServerRoute.Api.Route.Interpolation.cooling)) {
-        Path { InterpolationKey.cooling.key }
-        coolingInterpolationRouter
-      }
-
-      Route(.case(ServerRoute.Api.Route.Interpolation.heating)) {
-        Path { InterpolationKey.heating.key }
-        heatingInterpolationRouter
-      }
-    }
+    //    let interpolationRouter = OneOf {
+    //      Route(
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.cooling)) {
+    //        Path { InterpolationKey.cooling.key }
+    //        coolingInterpolationRouter
+    //      }
+    //
+    //      Route(.case(ServerRoute.Api.Route.Interpolation.Route.heating)) {
+    //        Path { InterpolationKey.heating.key }
+    //        heatingInterpolationRouter
+    //      }
+    //    }
 
     let balancePointRouter = Route(.case(ServerRoute.Api.Route.BalancePoint.thermal)) {
       Method.post
@@ -151,8 +152,16 @@ struct ApiRouter: ParserPrinter {
       }
 
       Route(.case(ServerRoute.Api.Route.interpolate)) {
+        Method.post
         Path { RouteKey.interpolate.key }
-        interpolationRouter
+        Body(
+          .json(
+            ServerRoute.Api.Route.Interpolation.self,
+            decoder: self.decoder,
+            encoder: self.encoder
+          )
+        )
+        //        interpolationRouter
       }
 
       Route(.case(ServerRoute.Api.Route.requiredKW)) {

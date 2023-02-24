@@ -28,7 +28,7 @@ var package = Package(
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
     .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
-    .package(url: "https://github.com/pointfreeco/swift-either.git", branch: "main")
+    .package(url: "https://github.com/pointfreeco/swift-tagged.git", from: "0.10.0"),
   ],
   targets: [
     .target(
@@ -55,7 +55,7 @@ var package = Package(
     .target(
       name: "Models",
       dependencies: [
-        .product(name: "Either", package: "swift-either")
+        .product(name: "Tagged", package: "swift-tagged")
       ]
     ),
     .target(
