@@ -11,8 +11,14 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_twoWay_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.zero
-      request.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
+      var twoWay = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.zero
+      twoWay.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
+      let request = ServerRoute.Api.Route.Interpolation(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .cooling(route: .twoWay(twoWay))
+      )
       let expected = """
       Two Way Request Errors:
       General:
@@ -54,7 +60,7 @@ final class SiteRouteValidationTests: XCTestCase {
       """
 
       do {
-        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.twoWay(request))))))
+        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(request))))
       } catch {
         let description = errorString(error)
         XCTAssertNoDifference(expected, description)
@@ -65,13 +71,20 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_oneWay_indoor_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.Interpolation.Cooling.OneWay.zero
+      var route = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.zero
+      
+      let request = ServerRoute.Api.Route.Interpolation(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .cooling(route: .oneWayIndoor(.init(route)))
+      )
       let expected1 = """
       One Way Indoor Request Errors:
       House Load:
       houseLoad.total: Total cooling load should be greater than 0.
       houseLoad.sensible: Sensible cooling load should be greater than 0.
-      
+
       Above Design:
       aboveDesign.indoorWetBulb: Above design indoor wet-bulb should be greater than 63°.
       aboveDesign.cfm: Cfm should be greater than 0.
@@ -84,20 +97,20 @@ final class SiteRouteValidationTests: XCTestCase {
       belowDesign.indoorTemperature: Indoor temperature should be greater than 0.
       belowDesign.capacity.total: Total capacity should be greater than 0
       belowDesign.capacity.sensible: Sensible capacity should be greater than 0
-      
-      
+
+
       """
-      
+
       do {
-        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.oneWayIndoor(request))))))
+        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(request))))
       } catch {
         let description = errorString(error)
         XCTAssertNoDifference(expected1, description)
       }
-      
-      request.aboveDesign.indoorTemperature = 1
-      request.aboveDesign.cfm = 1
-      request.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
+
+      route.aboveDesign.indoorTemperature = 1
+      route.aboveDesign.cfm = 1
+      route.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
 
       // test general errors.
       let expected2 = """
@@ -105,7 +118,7 @@ final class SiteRouteValidationTests: XCTestCase {
       General:
       (aboveDesign, belowDesign).indoorTemperature: Above design indoor temperature should equal the below design indoor temperature.
       (aboveDesign, belowDesign).cfm: Above design cfm should equal below design cfm.
-      
+
       Manufacturer Adjustments:
       manufacturerAdjustments.total: Total adjustment multiplier should be greater than 0.
       manufacturerAdjustments.sensible: Sensible adjustment multiplier should be greater than 0.
@@ -113,7 +126,7 @@ final class SiteRouteValidationTests: XCTestCase {
       House Load:
       houseLoad.total: Total cooling load should be greater than 0.
       houseLoad.sensible: Sensible cooling load should be greater than 0.
-      
+
       Above Design:
       aboveDesign.indoorWetBulb: Above design indoor wet-bulb should be greater than 63°.
       aboveDesign.capacity.total: Total capacity should be greater than 0
@@ -127,32 +140,45 @@ final class SiteRouteValidationTests: XCTestCase {
 
 
       """
+      
+      let request2 = ServerRoute.Api.Route.Interpolation(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .cooling(route: .oneWayIndoor(.init(route)))
+      )
 
       do {
 
-        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.oneWayIndoor(request))))))
+        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(request2))))
       } catch {
         let description = errorString(error)
         XCTAssertNoDifference(expected2, description)
       }
     }
   }
-  
+
   func test_oneWay_outdoor_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.Interpolation.Cooling.OneWay.zero
-      request.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
+      var route = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.zero
+      route.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
+      let request = ServerRoute.Api.Route.Interpolation(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .cooling(route: .oneWayOutdoor(.init(route)))
+      )
       let expected1 = """
       One Way Outdoor Request Errors:
       General:
       (belowDesign, designInfo.summer).outdoorTemperature: Below design outdoor temperature should be less than the summer design outdoor temperature.
       (aboveDesign, designInfo.summer).outdoorTemperature: Above design outdoor temperature should be greater than the summer design outdoor temperature.
-      
+
       Manufacturer Adjustments:
       manufacturerAdjustments.total: Total adjustment multiplier should be greater than 0.
       manufacturerAdjustments.sensible: Sensible adjustment multiplier should be greater than 0.
-      
+
       House Load:
       houseLoad.total: Total cooling load should be greater than 0.
       houseLoad.sensible: Sensible cooling load should be greater than 0.
@@ -170,23 +196,29 @@ final class SiteRouteValidationTests: XCTestCase {
       belowDesign.indoorTemperature: Indoor temperature should be greater than 0.
       belowDesign.capacity.total: Total capacity should be greater than 0
       belowDesign.capacity.sensible: Sensible capacity should be greater than 0
-      
-      
+
+
       """
-      
+
       do {
-        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.oneWayOutdoor(request))))))
+        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(request))))
       } catch {
         let description = errorString(error)
         XCTAssertNoDifference(expected1, description)
       }
     }
   }
-  
+
   func test_noInterpolation_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation.zero
+      var route = ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation.zero
+      let request = ServerRoute.Api.Route.Interpolation(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .cooling(route: .noInterpolation(route))
+      )
       let expected1 = """
       No Interpolation Request Errors:
       Capacity:
@@ -194,98 +226,106 @@ final class SiteRouteValidationTests: XCTestCase {
       capacity.indoorTemperature: Indoor temperature should be greater than 0.
       capacity.capacity.total: Total capacity should be greater than 0
       capacity.capacity.sensible: Sensible capacity should be greater than 0
-      
+
       House Load:
       houseLoad.total: Total cooling load should be greater than 0.
       houseLoad.sensible: Sensible cooling load should be greater than 0.
-      
-      
+
+
       """
-      
+
       do {
-        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.noInterpolation(request))))))
+        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(request))))
       } catch {
         let description = errorString(error)
         XCTAssertNoDifference(expected1, description)
       }
-      
+
       // test general errors
-      request.capacity.outdoorTemperature = 1
-      request.capacity.indoorTemperature = 1
-      request.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
+      route.capacity.outdoorTemperature = 1
+      route.capacity.indoorTemperature = 1
+      route.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
       
+      let request2 = ServerRoute.Api.Route.Interpolation(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .cooling(route: .noInterpolation(route))
+      )
+
       // TODO: - For some reason manufacturer adjustments don't get a new-line seperation??
        let expected2 = """
       No Interpolation Request Errors:
       General:
       (capacity, designInfo.summer).outdoorTemperature: Capacity outdoor temperature should equal the summer design outdoor temperature.
       (capacity, designInfo.summer).indoorTemperature: Capacity indoor temperature should equal the summer design indoor temperature.
-      
+
       Manufacturer Adjustments:
       manufacturerAdjustments.total: Total adjustment multiplier should be greater than 0.
       manufacturerAdjustments.sensible: Sensible adjustment multiplier should be greater than 0.
-      
+
       Capacity:
       capacity.cfm: Cfm should be greater than 0.
       capacity.capacity.total: Total capacity should be greater than 0
       capacity.capacity.sensible: Sensible capacity should be greater than 0
-      
+
       House Load:
       houseLoad.total: Total cooling load should be greater than 0.
       houseLoad.sensible: Sensible cooling load should be greater than 0.
-      
-      
+
+
       """
       do {
-        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(.cooling(.noInterpolation(request))))))
+        try await validator.validate(.api(.init(isDebug: true, route: .interpolate(request2))))
       } catch {
         let description = errorString(error)
         XCTAssertNoDifference(expected2, description)
       }
-      
+
     }
   }
-  
+
   func test_boiler_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      let request = ServerRoute.Api.Route.Interpolation.Heating.Boiler.zero
+      let request = ServerRoute.Api.Route.Interpolation.zero(route: .heating(route: .boiler(.zero)))
       let expected1 = """
       Boiler Request Errors:
       houseLoad.heating: Heating load should be greater than 0.
       afue: Afue should be greater than 0 or less than 100.
       input: Input should be greater than 0.
-      
+
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
-          route: .interpolate(.heating(.boiler(request)))
+          route: .interpolate(request)
         )))
       } catch {
         let description = errorString(error)
+        print(description)
         XCTAssertNoDifference(expected1, description)
       }
     }
   }
-  
+
   func test_furnace_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      let request = ServerRoute.Api.Route.Interpolation.Heating.Furnace.zero
+      let request = ServerRoute.Api.Route.Interpolation.zero(route: .heating(route: .furnace(.zero)))
       let expected1 = """
       Furnace Request Errors:
       houseLoad.heating: Heating load should be greater than 0.
       afue: Afue should be greater than 0 or less than 100.
       input: Input should be greater than 0.
-      
+
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
-          route: .interpolate(.heating(.furnace(request)))
+          route: .interpolate(request)
         )))
       } catch {
         let description = errorString(error)
@@ -293,24 +333,25 @@ final class SiteRouteValidationTests: XCTestCase {
       }
     }
   }
-  
+
   func test_electric_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var request = ServerRoute.Api.Route.Interpolation.Heating.Electric.zero
-      request.heatPumpCapacity = 0
+      var route = ServerRoute.Api.Route.Interpolation.Route.Heating.Electric.zero
+      route.heatPumpCapacity = 0
+      let request = ServerRoute.Api.Route.Interpolation.zero(route: .heating(route: .electric(route)))
       let expected1 = """
       Electric Request Errors:
-      heatPumpCapacity: Heat pump capacity should be greater than 0.
-      inputKW: Input KW should be greater than 0.
       houseLoad.heating: Heating load should be greater than 0.
-      
+      inputKW: Input KW should be greater than 0.
+      heatPumpCapacity: Heat pump capacity should be greater than 0.
+
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
-          route: .interpolate(.heating(.electric(request)))
+          route: .interpolate(request)
         )))
       } catch {
         let description = errorString(error)
@@ -318,23 +359,23 @@ final class SiteRouteValidationTests: XCTestCase {
       }
     }
   }
-  
+
   func test_heatPump_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      let request = ServerRoute.Api.Route.Interpolation.Heating.HeatPump.zero
+      let request = ServerRoute.Api.Route.Interpolation.zero(route: .heating(route: .heatPump(.zero)))
       let expected1 = """
       Heat Pump Request Errors:
       houseLoad.heating: Heating load should be greater than 0.
       capacity.at47: Capacity at 47° should be greater than 0.
       capacity.at17: Capacity at 47° should be greater than 0.
-      
+
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
-          route: .interpolate(.heating(.heatPump(request)))
+          route: .interpolate(request)
         )))
       } catch {
         let description = errorString(error)
@@ -342,7 +383,7 @@ final class SiteRouteValidationTests: XCTestCase {
       }
     }
   }
-  
+
   func test_thermal_balancePoint_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
@@ -352,9 +393,9 @@ final class SiteRouteValidationTests: XCTestCase {
       heatLoss: Heat loss should be greater than 0.
       capacity.at47: Capacity at 47° should be greater than 0.
       capacity.at17: Capacity at 47° should be greater than 0.
-      
+
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
@@ -366,7 +407,7 @@ final class SiteRouteValidationTests: XCTestCase {
       }
     }
   }
-  
+
   func test_requiredKW_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
@@ -376,9 +417,9 @@ final class SiteRouteValidationTests: XCTestCase {
       Required KW Request Errors:
       heatLoss: Heat loss should be greater than 0.
       capacityAtDesign: Capacity at design should be greater than or equal to 0.
-      
+
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
@@ -390,7 +431,7 @@ final class SiteRouteValidationTests: XCTestCase {
       }
     }
   }
-  
+
   func test_sizingLimit_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
@@ -400,7 +441,7 @@ final class SiteRouteValidationTests: XCTestCase {
       Sizing Limit Request Errors:
       load.cooling.total: Total cooling load should be greater than 0.
       """
-      
+
       do {
         try await validator.validate(.api(.init(
           isDebug: true,
@@ -411,5 +452,17 @@ final class SiteRouteValidationTests: XCTestCase {
         XCTAssertNoDifference(expected1, description)
       }
     }
+  }
+}
+
+extension ServerRoute.Api.Route.Interpolation {
+  
+  static func zero(route: ServerRoute.Api.Route.Interpolation.Route) -> Self {
+    .init(
+      designInfo: .zero,
+      houseLoad: .zero,
+      systemType: .default,
+      route: route
+    )
   }
 }

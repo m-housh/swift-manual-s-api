@@ -76,13 +76,13 @@ struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
 
 @usableFromInline
 struct TwoWayValidation: AsyncValidatable {
-  
+
   @usableFromInline
   let request: ServerRoute.Api.Route.Interpolation
-  
+
   @usableFromInline
   let twoWay: ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
-  
+
   @usableFromInline
   init(
     request: ServerRoute.Api.Route.Interpolation,
@@ -91,36 +91,37 @@ struct TwoWayValidation: AsyncValidatable {
     self.request = request
     self.twoWay = twoWay
   }
-  
+
   @usableFromInline
   var body: some AsyncValidation<Self> {
     AsyncValidator<Self>.accumulating {
       AsyncValidator.validate(
         \.twoWay.aboveDesign.rawValue,
-         with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.aboveDesign)
+        with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.aboveDesign)
       )
       .errorLabel("Above Design")
-      
+
       AsyncValidator.validate(
         \.twoWay.belowDesign.rawValue,
-         with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.belowDesign)
+        with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.belowDesign)
       )
       .errorLabel("Below Design")
-      
+
       AsyncValidator.validate(\.request.houseLoad, with: HouseLoadValidator(style: .cooling))
         .errorLabel("House Load")
-      
+
       AsyncValidator.validate(
         \.twoWay.manufacturerAdjustments,
-         with: AdjustmentMultiplierValidation(
+        with: AdjustmentMultiplierValidation(
           style: .cooling, label: ErrorLabel.manufacturerAdjustments
-         ).optional()
+        ).optional()
       )
       .errorLabel("Manufacturer Adjustments")
-      
+
       AsyncValidatorOf<Value>.accumulating {
         AsyncValidator.lessThan(
-          \.twoWay.belowDesign.belowWetBulb.outdoorTemperature, \.request.designInfo.summer.outdoorTemperature
+          \.twoWay.belowDesign.belowWetBulb.outdoorTemperature,
+          \.request.designInfo.summer.outdoorTemperature
         )
         .mapError(
           nested: ErrorLabel.parenthesize(ErrorLabel.belowDesignBelow, ErrorLabel.designInfoSummer),
@@ -129,7 +130,8 @@ struct TwoWayValidation: AsyncValidatable {
             "Below design below outdoorTemperature should be less than the summer design outdoor temperature."
         )
         AsyncValidator.equals(
-          \.twoWay.belowDesign.belowWetBulb.indoorTemperature, \.request.designInfo.summer.indoorTemperature
+          \.twoWay.belowDesign.belowWetBulb.indoorTemperature,
+          \.request.designInfo.summer.indoorTemperature
         )
         .mapError(
           nested: ErrorLabel.parenthesize(ErrorLabel.belowDesignBelow, ErrorLabel.designInfoSummer),
@@ -138,7 +140,8 @@ struct TwoWayValidation: AsyncValidatable {
             "Below design below indoorTemperature should be less than the summer design indoor temperature."
         )
         AsyncValidator.equals(
-          \.twoWay.aboveDesign.belowWetBulb.indoorTemperature, \.request.designInfo.summer.indoorTemperature
+          \.twoWay.aboveDesign.belowWetBulb.indoorTemperature,
+          \.request.designInfo.summer.indoorTemperature
         )
         .mapError(
           nested: ErrorLabel.parenthesize(ErrorLabel.aboveDesignBelow, ErrorLabel.designInfoSummer),
@@ -146,18 +149,20 @@ struct TwoWayValidation: AsyncValidatable {
           summary:
             "Above design below indoor temperature should be less than the summer design indoor temperature."
         )
-        AsyncValidator.equals(\.twoWay.aboveDesign.belowWetBulb.cfm, \.twoWay.belowDesign.belowWetBulb.cfm)
-          .mapError(
-            nested: ErrorLabel.parenthesize(
-              ErrorLabel.aboveDesignBelow, ErrorLabel.belowDesignBelow),
-            ErrorLabel.cfm,
-            summary: "Above design below.cfm should equal the below design below.cfm."
-          )
+        AsyncValidator.equals(
+          \.twoWay.aboveDesign.belowWetBulb.cfm, \.twoWay.belowDesign.belowWetBulb.cfm
+        )
+        .mapError(
+          nested: ErrorLabel.parenthesize(
+            ErrorLabel.aboveDesignBelow, ErrorLabel.belowDesignBelow),
+          ErrorLabel.cfm,
+          summary: "Above design below.cfm should equal the below design below.cfm."
+        )
       }
       .errorLabel("General")
-      
+
     }
     .errorLabel("Two Way Request Errors")
-    
+
   }
 }
