@@ -3,25 +3,27 @@ public enum SystemType: Codable, Equatable, Sendable {
 
   /// Represents air-conditioner or heat-pump system types.
   case airToAir(AirToAir)
-  
+
   case heatingOnly(HeatingOnly)
 
   /// Represents a gas / propane / oil furnace system type.
-//  case furnaceOnly
+  //  case furnaceOnly
   public static var furnaceOnly: Self { .heatingOnly(.furnace) }
 
   /// Represents a gas / propane / oil boiler system type.
-//  case boilerOnly
+  //  case boilerOnly
   public static var boilerOnly: Self { .heatingOnly(.boiler) }
-  
+
   public static var electricOnly: Self { .heatingOnly(.electric) }
 
   /// A default system type.
   public static var `default`: Self {
     .airToAir(type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad)
   }
-  
-  public static func airToAir(type: EquipmentType, compressor: CompressorType, climate: ClimateType) -> Self {
+
+  public static func airToAir(type: EquipmentType, compressor: CompressorType, climate: ClimateType)
+    -> Self
+  {
     .airToAir(.init(type: type, compressor: compressor, climate: climate))
   }
 
@@ -35,18 +37,19 @@ public enum SystemType: Codable, Equatable, Sendable {
     case .heatingOnly(.electric):
       return "Electric Heating Only"
     case let .airToAir(airToAir):
-      return "Air-Air, \(airToAir.type.description), \(airToAir.compressor.description), \(airToAir.climate.description)"
+      return
+        "Air-Air, \(airToAir.type.description), \(airToAir.compressor.description), \(airToAir.climate.description)"
     }
   }
 
   /// Represents a ``SystemType/Tag`` for the given system type.
   public var tag: Tag { .init(systemType: self) }
-  
+
   public struct AirToAir: Codable, Equatable, Sendable {
     public var type: EquipmentType
     public var compressor: CompressorType
     public var climate: ClimateType
-    
+
     public init(
       type: EquipmentType,
       compressor: CompressorType,
@@ -57,7 +60,7 @@ public enum SystemType: Codable, Equatable, Sendable {
       self.climate = climate
     }
   }
-  
+
   public enum HeatingOnly: String, Codable, Equatable, Sendable {
     case boiler
     case electric
@@ -188,11 +191,11 @@ extension SystemType.Tag {
   init(systemType: SystemType) {
     switch systemType {
     case let .airToAir(airToAir):
-      
+
       let type = airToAir.type
       let compressor = airToAir.compressor
       let climate = airToAir.climate
-      
+
       if case .airConditioner = type,
         case .singleSpeed = compressor,
         case .mildWinterOrLatentLoad = climate

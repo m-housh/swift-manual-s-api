@@ -3,14 +3,15 @@ import Validations
 
 // TODO: Add basic validations for houseLoad, designInfo, etc.
 extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
-  
+
   @inlinable
   public func validate(_ value: ServerRoute.Api.Route.Interpolation) async throws {
     switch value.route {
     case let .cooling(route: cooling):
       switch cooling {
       case let .noInterpolation(noInterpolation):
-        try await NoInterpolationValidator(request: self, noInterpolation: noInterpolation).validate()
+        try await NoInterpolationValidator(request: self, noInterpolation: noInterpolation)
+          .validate()
       case let .oneWayIndoor(indoor):
         try await OneWayIndoorValidation(request: self, oneWayIndoor: indoor.rawValue).validate()
       case let .oneWayOutdoor(outdoor):
@@ -18,7 +19,7 @@ extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
       case let .twoWay(twoWay):
         try await TwoWayValidation(request: self, twoWay: twoWay).validate()
       }
-    case .heating(route:_):
+    case .heating(route: _):
       fatalError()
     case .keyed(_):
       fatalError()

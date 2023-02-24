@@ -812,14 +812,14 @@ extension Interpolation2.Route.Cooling {
 }
 
 extension Interpolation2.Route.Heating {
-  
+
   private enum CodingKeys: CodingKey {
     case boiler
     case electric
     case furnace
     case heatPump
   }
-  
+
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
@@ -833,7 +833,7 @@ extension Interpolation2.Route.Heating {
       try container.encode(heatPump, forKey: .heatPump)
     }
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     if let boiler = try? container.decode(Boiler.self, forKey: .boiler) {

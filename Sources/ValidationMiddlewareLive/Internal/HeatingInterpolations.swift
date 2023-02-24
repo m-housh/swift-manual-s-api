@@ -22,10 +22,10 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler: AsyncValidat
         )
 
       // FIX.
-//      AsyncValidator.validate(
-//        \.houseLoad,
-//        with: HouseLoadValidator(style: .heating)
-//      )
+      //      AsyncValidator.validate(
+      //        \.houseLoad,
+      //        with: HouseLoadValidator(style: .heating)
+      //      )
 
       //      AsyncValidator.validate(
       //        \.altitudeDeratings,
@@ -59,10 +59,10 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace: AsyncValida
         )
 
       // FIX.
-//      AsyncValidator.validate(
-//        \.houseLoad,
-//        with: HouseLoadValidator(style: .heating)
-//      )
+      //      AsyncValidator.validate(
+      //        \.houseLoad,
+      //        with: HouseLoadValidator(style: .heating)
+      //      )
 
       //      AsyncValidator.validate(
       //        \.altitudeDeratings,
@@ -85,10 +85,10 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Electric: AsyncValid
           summary: "Input KW should be greater than 0."
         )
 
-//      AsyncValidator.validate(
-//        \.houseLoad,
-//        with: HouseLoadValidator(style: .heating)
-//      )
+      //      AsyncValidator.validate(
+      //        \.houseLoad,
+      //        with: HouseLoadValidator(style: .heating)
+      //      )
 
       //      AsyncValidator.validate(
       //        \.altitudeDeratings,
@@ -123,7 +123,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump: AsyncValid
       AsyncValidator.validate(
         \.capacity, with: HeatPumpCapacityValidation(label: ErrorLabel.capacity))
 
-//      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .heating))
+      //      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .heating))
 
     }
     .errorLabel("Heat Pump Request Errors")
