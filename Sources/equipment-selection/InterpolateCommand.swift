@@ -48,7 +48,6 @@ extension EquipmentSelection {
     
     func run() async throws {
       try await withDependencies {
-        $0.apiClient = .live(baseUrl: URL(string: "https://hvacmath.com")!)
         if verbose {
           $0.logger.logLevel = .debug
         }
@@ -112,8 +111,7 @@ fileprivate extension EquipmentSelection.Interpolate {
       logger.info("Done")
     }
     
-    
-    func interpolate(interpolation: InterpolationName, inputPath: URL) async throws -> (ServerRoute.Api.Route.Interpolation, InterpolationResponse) {
+    private func interpolate(interpolation: InterpolationName, inputPath: URL) async throws -> (ServerRoute.Api.Route.Interpolation, InterpolationResponse) {
       let data = try await cliMiddleware.readFile(inputPath)
       let route = try interpolation.route(data: data)
       let response = try await cliMiddleware.interpolate(route)

@@ -8,13 +8,8 @@ struct EquipmentSelection: AsyncParsableCommand {
 
   static var configuration = CommandConfiguration(
     abstract: "A utility for performing equipment selection requests.",
-    subcommands: [Template.self, Interpolate.self]
+    subcommands: [Template.self, Interpolate.self, Config.self]
   )
-
-  func run() async throws {
-    // do something
-    print("FIX ME.")
-  }
 }
 
 let jsonEncoder: JSONEncoder = {

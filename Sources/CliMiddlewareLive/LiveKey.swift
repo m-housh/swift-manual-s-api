@@ -14,7 +14,10 @@ extension CliMiddleware: DependencyKey {
     @Dependency(\.apiClient) var apiClient
     
     return .init(
-      baseUrl: apiClient.baseUrl,
+      baseUrl: {
+        UserDefaults.standard.url(forKey: baseUrlKey)
+        ?? apiClient.baseUrl()
+      },
       generatePdf: { _, _ in
         throw FixMeError()
       },
@@ -27,7 +30,10 @@ extension CliMiddleware: DependencyKey {
       readFile: { fileUrl in
         try Data(contentsOf: fileUrl)
       },
-      setBaseUrl: apiClient.setBaseUrl,
+      setBaseUrl: { baseUrl in
+        UserDefaults.standard.set(baseUrl, forKey: baseUrlKey)
+        await apiClient.setBaseUrl(baseUrl)
+      },
       writeFile: { data, fileUrl in
         try data.write(to: fileUrl)
       }
@@ -38,3 +44,5 @@ extension CliMiddleware: DependencyKey {
     .live()
   }
 }
+
+private let baseUrlKey = "com.hvacmatho.equipment-selection.baseUrl"
