@@ -1,6 +1,6 @@
 import Dependencies
 import Foundation
-import Logging
+@_exported import Logging
 
 extension DependencyValues {
   public var logger: Logger {

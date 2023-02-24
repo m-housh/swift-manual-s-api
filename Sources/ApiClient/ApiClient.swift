@@ -1,4 +1,6 @@
+import Dependencies
 import Foundation
+import LoggingDependency
 import Models
 
 #if canImport(FoundationNetworking)
@@ -6,6 +8,8 @@ import Models
 #endif
 
 public struct ApiClient {
+  @Dependency(\.logger) var logger
+  
   public var apiRequest: @Sendable (ServerRoute.Api.Route) async throws -> (Data, URLResponse)
   public var baseUrl: @Sendable () -> URL
   public var request: @Sendable (ServerRoute) async throws -> (Data, URLResponse)
@@ -30,15 +34,13 @@ public struct ApiClient {
   ) async throws -> (Data, URLResponse) {
     do {
       let (data, response) = try await apiRequest(route)
-      #if DEBUG
-        print(
+      logger.debug(
           """
           API: route: \(route) \
           status: \((response as? HTTPURLResponse)?.statusCode ?? 0) \
           data: \(String(decoding: data, as: UTF8.self))
           """
-        )
-      #endif
+      )
       return (data, response)
     } catch {
       throw ApiError(error: error, file: file, line: line)
@@ -66,15 +68,13 @@ public struct ApiClient {
   ) async throws -> (Data, URLResponse) {
     do {
       let (data, response) = try await self.request(route)
-      #if DEBUG
-        print(
+      logger.debug(
           """
           API: route: \(route), \
           status: \((response as? HTTPURLResponse)?.statusCode ?? 0), \
           data: \(String(decoding: data, as: UTF8.self))
           """
-        )
-      #endif
+      )
       return (data, response)
     } catch {
       throw ApiError(error: error, file: file, line: line)

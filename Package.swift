@@ -27,12 +27,20 @@ var package = Package(
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "0.1.0"),
     .package(url: "https://github.com/m-housh/swift-validations.git", from: "0.3.2"),
     .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.0.0"),
+    .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
   ],
   targets: [
     .target(
       name: "FirstPartyMocks",
       dependencies: [
         "Models"
+      ]
+    ),
+    .target(
+      name: "LoggingDependency",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "Logging", package: "swift-log"),
       ]
     ),
     .target(
@@ -99,6 +107,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .target(
       name: "ApiClient",
       dependencies: [
+        "LoggingDependency",
         "Models",
         "XCTestDebugSupport",
         .product(name: "CasePaths", package: "swift-case-paths"),
@@ -130,14 +139,33 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0")
   ])
   package.products.append(contentsOf: [
+    .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
+    .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
     .executable(name: "equipment-selection", targets: ["equipment-selection"])
   ])
   package.targets.append(contentsOf: [
+    .target(
+      name: "CliMiddleware",
+      dependencies: [
+        "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
+      name: "CliMiddlewareLive",
+      dependencies: [
+        "ApiClient",
+        "CliMiddleware",
+      ]
+    ),
     .executableTarget(
       name: "equipment-selection",
       dependencies: [
         "ApiClientLive",
+        "CliMiddlewareLive",
         "FirstPartyMocks",
+        "LoggingDependency",
         "Models",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ]
@@ -151,7 +179,6 @@ package.dependencies.append(contentsOf: [
   .package(url: "https://github.com/pointfreeco/vapor-routing.git", from: "0.1.0"),
   .package(url: "https://github.com/pointfreeco/swift-html.git", from: "0.4.0"),
   .package(url: "https://github.com/pointfreeco/swift-html-vapor.git", from: "0.4.0"),
-  .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
 ])
 
 package.products.append(contentsOf: [
@@ -210,13 +237,6 @@ package.targets.append(contentsOf: [
       "SiteRouter",
       "Stylesheet",
       "ValidationMiddlewareLive",
-    ]
-  ),
-  .target(
-    name: "LoggingDependency",
-    dependencies: [
-      .product(name: "Dependencies", package: "swift-dependencies"),
-      .product(name: "Logging", package: "swift-log"),
     ]
   ),
   .executableTarget(
