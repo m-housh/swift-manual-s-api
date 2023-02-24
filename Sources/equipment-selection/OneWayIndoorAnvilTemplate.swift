@@ -1,12 +1,12 @@
-import Models
 import Foundation
+import Models
 
 struct OneWayIndoorAnvilTemplate: Codable {
   let title: String
   let fontSize: Int
   let textColor: String
   let data: Data
-  
+
   struct Data: Codable {
     let customerName: String
     let customerAddress: String
@@ -91,21 +91,21 @@ struct OneWayIndoorAnvilTemplate: Codable {
   }
 }
 
-struct ConversionError: Error { }
+struct ConversionError: Error {}
 
 extension OneWayIndoorAnvilTemplate {
-  
+
   init(
     request: ServerRoute.Api.Route.Interpolation.Cooling.OneWay,
     result: InterpolationResponse.Result
   ) throws {
-    
+
     guard case let .cooling(cooling) = result,
-          case let .cooling(oversizingLimits) = cooling.result.sizingLimits.oversizing
+      case let .cooling(oversizingLimits) = cooling.result.sizingLimits.oversizing
     else {
       throw ConversionError()
     }
-    
+
     self.init(
       title: "Manual S",
       fontSize: 10,
@@ -136,13 +136,13 @@ extension OneWayIndoorAnvilTemplate {
         hspf: 12345,
         fanSpeed: "FIX ME",
         heatLoad: request.houseLoad.heating,
-        heatAdjustmentMultiplier: 1, // fix me
+        heatAdjustmentMultiplier: 1,  // fix me
         coolingTotalLoad: request.houseLoad.cooling.total,
         coolingSensibleLoad: request.houseLoad.cooling.sensible,
         coolingLatentLoad: request.houseLoad.cooling.latent,
         coolingSHR: request.houseLoad.cooling.sensibleHeatRatio,
-        coolingTotalAdjustmentMultiplier: 1, // fix me
-        coolingSensibleAdjustmentMultiplier: 1, // fix me
+        coolingTotalAdjustmentMultiplier: 1,  // fix me
+        coolingSensibleAdjustmentMultiplier: 1,  // fix me
         outdoorBelowDesignTemperature: request.belowDesign.outdoorTemperature,
         indoorBelowDesignTemperature: request.belowDesign.indoorTemperature,
         belowDesignCFM: request.belowDesign.cfm,
@@ -151,13 +151,13 @@ extension OneWayIndoorAnvilTemplate {
         belowDesignSensibleBTU: request.belowDesign.capacity.sensible,
         belowDesignLatentBTU: request.belowDesign.capacity.sensible,
         belowDesignSHR: request.belowDesign.capacity.sensibleHeatRatio,
-        belowDesignAdjustedTotalBTU: request.belowDesign.capacity.total, // fix me
-        belowDesignAdjustedSensibleBTU: request.belowDesign.capacity.sensible, // fix me
+        belowDesignAdjustedTotalBTU: request.belowDesign.capacity.total,  // fix me
+        belowDesignAdjustedSensibleBTU: request.belowDesign.capacity.sensible,  // fix me
         belowDesignWetBulb: request.belowDesign.indoorWetBulb,
-        belowDesignInterpolatedTotalBTU: 1, // fix me
-        belowDesignInterpolatedSensibeBTU: 1, // fix me
-        belowDesignInterpolatedLatentBTU: 1, // fix me
-        belowDesignInterpolatedSHR: 0.1, // fix me
+        belowDesignInterpolatedTotalBTU: 1,  // fix me
+        belowDesignInterpolatedSensibeBTU: 1,  // fix me
+        belowDesignInterpolatedLatentBTU: 1,  // fix me
+        belowDesignInterpolatedSHR: 0.1,  // fix me
         indoorAboveDesignTemperature: request.aboveDesign.indoorTemperature,
         outdoorAboveDesignTemperature: request.aboveDesign.outdoorTemperature,
         aboveDesignCFM: request.aboveDesign.cfm,
@@ -165,11 +165,11 @@ extension OneWayIndoorAnvilTemplate {
         aboveDesignSensibleBTU: request.aboveDesign.capacity.sensible,
         aboveDesignLatentBTU: request.aboveDesign.capacity.latent,
         aboveDesignSHR: request.aboveDesign.capacity.sensibleHeatRatio,
-        aboveDesignInterpolatedSHR: 1, // fix me
-        aboveDesignAdjustedTotalBTU: 1, // fix me
-        aboveDesignInterpolatedTotalBTU: 1, // fix me
-        aboveDesignInterpolatedSensibeBTU: 1, // fix me
-        aboveDesignInterpolatedLatentBTU: 1, // fix me
+        aboveDesignInterpolatedSHR: 1,  // fix me
+        aboveDesignAdjustedTotalBTU: 1,  // fix me
+        aboveDesignInterpolatedTotalBTU: 1,  // fix me
+        aboveDesignInterpolatedSensibeBTU: 1,  // fix me
+        aboveDesignInterpolatedLatentBTU: 1,  // fix me
         indoorFinalDesignTemperature: request.designInfo.summer.indoorTemperature,
         outdoorFInalDesignTemperature: request.designInfo.summer.outdoorTemperature,
         interpolatedDesignTotalBTU: cooling.result.interpolatedCapacity.total,
@@ -178,9 +178,9 @@ extension OneWayIndoorAnvilTemplate {
         interpolatedDesignSHR: cooling.result.interpolatedCapacity.sensibleHeatRatio,
         excessLatent: cooling.result.excessLatent,
         finalInterpolatedDesignSensibleBTU: cooling.result.finalCapacityAtDesign.total,
-        finalInterpolatedDesignLatentBTU: 1, // fix me
-        coolingTotalAltitudeAdjustmentMultiplier: 1, // fix me
-        coolingSensibleAltitudeAdjustmentMultiplier: 1, // fix me
+        finalInterpolatedDesignLatentBTU: 1,  // fix me
+        coolingTotalAltitudeAdjustmentMultiplier: 1,  // fix me
+        coolingSensibleAltitudeAdjustmentMultiplier: 1,  // fix me
         finalSHR: cooling.result.finalCapacityAtDesign.sensibleHeatRatio,
         finalTotalBTU: cooling.result.finalCapacityAtDesign.total,
         finalSensibeBTU: cooling.result.finalCapacityAtDesign.sensible,
@@ -196,10 +196,11 @@ extension OneWayIndoorAnvilTemplate {
   }
 }
 
-struct AnvilKeyNotFound: Error { }
+struct AnvilKeyNotFound: Error {}
 
 func apiRequest(_ template: OneWayIndoorAnvilTemplate) async throws -> (Data, URLResponse) {
-  var request = URLRequest(url: URL(string: "https://app.useanvil.com/api/v1/fill/MP60yOfB4EWSrq0DOGwn.pdf")!)
+  var request = URLRequest(
+    url: URL(string: "https://app.useanvil.com/api/v1/fill/MP60yOfB4EWSrq0DOGwn.pdf")!)
   request.httpMethod = "POST"
   request.httpBody = try JSONEncoder().encode(template)
   request.setValue("application/json", forHTTPHeaderField: "Content-Type")
