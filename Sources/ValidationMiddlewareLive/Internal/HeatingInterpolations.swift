@@ -1,7 +1,7 @@
 import Models
 import Validations
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Boiler: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -21,10 +21,11 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Boiler: AsyncValidatable {
           summary: "Input should be greater than 0."
         )
 
-      AsyncValidator.validate(
-        \.houseLoad,
-        with: HouseLoadValidator(style: .heating)
-      )
+      // FIX.
+//      AsyncValidator.validate(
+//        \.houseLoad,
+//        with: HouseLoadValidator(style: .heating)
+//      )
 
       //      AsyncValidator.validate(
       //        \.altitudeDeratings,
@@ -37,7 +38,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Boiler: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Furnace: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -57,10 +58,11 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Furnace: AsyncValidatable 
           summary: "Input should be greater than 0."
         )
 
-      AsyncValidator.validate(
-        \.houseLoad,
-        with: HouseLoadValidator(style: .heating)
-      )
+      // FIX.
+//      AsyncValidator.validate(
+//        \.houseLoad,
+//        with: HouseLoadValidator(style: .heating)
+//      )
 
       //      AsyncValidator.validate(
       //        \.altitudeDeratings,
@@ -72,7 +74,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Furnace: AsyncValidatable 
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Electric: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Electric: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -83,10 +85,10 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Electric: AsyncValidatable
           summary: "Input KW should be greater than 0."
         )
 
-      AsyncValidator.validate(
-        \.houseLoad,
-        with: HouseLoadValidator(style: .heating)
-      )
+//      AsyncValidator.validate(
+//        \.houseLoad,
+//        with: HouseLoadValidator(style: .heating)
+//      )
 
       //      AsyncValidator.validate(
       //        \.altitudeDeratings,
@@ -107,7 +109,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating.Electric: AsyncValidatable
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.HeatPump: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -121,7 +123,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating.HeatPump: AsyncValidatable
       AsyncValidator.validate(
         \.capacity, with: HeatPumpCapacityValidation(label: ErrorLabel.capacity))
 
-      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .heating))
+//      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .heating))
 
     }
     .errorLabel("Heat Pump Request Errors")

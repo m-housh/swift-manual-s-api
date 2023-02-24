@@ -7,7 +7,7 @@ import Validations
 struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
 
   @usableFromInline
-  typealias Value = ServerRoute.Api.Route.Interpolation.Cooling.TwoWay
+  typealias Value = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
     .CapacityEnvelope
 
   @usableFromInline
@@ -74,37 +74,53 @@ struct TwoWayCapacityEnvelopeValidation: AsyncValidation {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay: AsyncValidatable {
-
-  @inlinable
-  public var body: some AsyncValidation<Self> {
+@usableFromInline
+struct TwoWayValidation: AsyncValidatable {
+  
+  @usableFromInline
+  let request: ServerRoute.Api.Route.Interpolation
+  
+  @usableFromInline
+  let twoWay: ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
+  
+  @usableFromInline
+  init(
+    request: ServerRoute.Api.Route.Interpolation,
+    twoWay: ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
+  ) {
+    self.request = request
+    self.twoWay = twoWay
+  }
+  
+  @usableFromInline
+  var body: some AsyncValidation<Self> {
     AsyncValidator<Self>.accumulating {
       AsyncValidator.validate(
-        \.aboveDesign,
-        with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.aboveDesign)
+        \.twoWay.aboveDesign.rawValue,
+         with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.aboveDesign)
       )
       .errorLabel("Above Design")
-
+      
       AsyncValidator.validate(
-        \.belowDesign,
-        with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.belowDesign)
+        \.twoWay.belowDesign.rawValue,
+         with: TwoWayCapacityEnvelopeValidation(errorLabel: ErrorLabel.belowDesign)
       )
       .errorLabel("Below Design")
-
-      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .cooling))
+      
+      AsyncValidator.validate(\.request.houseLoad, with: HouseLoadValidator(style: .cooling))
         .errorLabel("House Load")
-
+      
       AsyncValidator.validate(
-        \.manufacturerAdjustments,
-        with: AdjustmentMultiplierValidation(
+        \.twoWay.manufacturerAdjustments,
+         with: AdjustmentMultiplierValidation(
           style: .cooling, label: ErrorLabel.manufacturerAdjustments
-        ).optional()
+         ).optional()
       )
       .errorLabel("Manufacturer Adjustments")
-
+      
       AsyncValidatorOf<Value>.accumulating {
         AsyncValidator.lessThan(
-          \.belowDesign.belowWetBulb.outdoorTemperature, \.designInfo.summer.outdoorTemperature
+          \.twoWay.belowDesign.belowWetBulb.outdoorTemperature, \.request.designInfo.summer.outdoorTemperature
         )
         .mapError(
           nested: ErrorLabel.parenthesize(ErrorLabel.belowDesignBelow, ErrorLabel.designInfoSummer),
@@ -113,7 +129,7 @@ extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay: AsyncValidatable {
             "Below design below outdoorTemperature should be less than the summer design outdoor temperature."
         )
         AsyncValidator.equals(
-          \.belowDesign.belowWetBulb.indoorTemperature, \.designInfo.summer.indoorTemperature
+          \.twoWay.belowDesign.belowWetBulb.indoorTemperature, \.request.designInfo.summer.indoorTemperature
         )
         .mapError(
           nested: ErrorLabel.parenthesize(ErrorLabel.belowDesignBelow, ErrorLabel.designInfoSummer),
@@ -122,7 +138,7 @@ extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay: AsyncValidatable {
             "Below design below indoorTemperature should be less than the summer design indoor temperature."
         )
         AsyncValidator.equals(
-          \.aboveDesign.belowWetBulb.indoorTemperature, \.designInfo.summer.indoorTemperature
+          \.twoWay.aboveDesign.belowWetBulb.indoorTemperature, \.request.designInfo.summer.indoorTemperature
         )
         .mapError(
           nested: ErrorLabel.parenthesize(ErrorLabel.aboveDesignBelow, ErrorLabel.designInfoSummer),
@@ -130,7 +146,7 @@ extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay: AsyncValidatable {
           summary:
             "Above design below indoor temperature should be less than the summer design indoor temperature."
         )
-        AsyncValidator.equals(\.aboveDesign.belowWetBulb.cfm, \.belowDesign.belowWetBulb.cfm)
+        AsyncValidator.equals(\.twoWay.aboveDesign.belowWetBulb.cfm, \.twoWay.belowDesign.belowWetBulb.cfm)
           .mapError(
             nested: ErrorLabel.parenthesize(
               ErrorLabel.aboveDesignBelow, ErrorLabel.belowDesignBelow),
@@ -139,8 +155,9 @@ extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay: AsyncValidatable {
           )
       }
       .errorLabel("General")
-
+      
     }
     .errorLabel("Two Way Request Errors")
+    
   }
 }

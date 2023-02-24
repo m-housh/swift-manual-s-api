@@ -1,54 +1,55 @@
 import Models
 
-extension ServerRoute.Api.Route.Interpolation.Cooling {
+extension ServerRoute.Api.Route.Interpolation.Route.Cooling {
   
-  func respond() async throws ->  InterpolationResponse {
+  func respond(request: ServerRoute.Api.Route.Interpolation) async throws ->  InterpolationResponse {
     switch self {
     case let .noInterpolation(noInterpolation):
-      return try await interpolate(noInterpolation: noInterpolation)
+      return try await interpolate(request: request, noInterpolation: noInterpolation)
     case let .oneWayIndoor(oneWayIndoor):
-      return try await interpolate(oneWayIndoor: oneWayIndoor)
+      return try await interpolate(request: request, oneWayIndoor: oneWayIndoor.rawValue)
     case let .oneWayOutdoor(oneWayOutdoor):
-      return try await interpolate(oneWayOutdoor: oneWayOutdoor)
+      return try await interpolate(request: request, oneWayOutdoor: oneWayOutdoor.rawValue)
     case let .twoWay(twoWay):
-      return try await interpolate(twoWay: twoWay)
+      return try await interpolate(request: request, twoWay: twoWay)
     }
   }
 }
 
 // MARK: - Interpolations
 
-fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling {
+fileprivate extension ServerRoute.Api.Route.Interpolation.Route.Cooling {
   
-  func interpolate(noInterpolation: NoInterpolation) async throws -> InterpolationResponse {
+  func interpolate(request: ServerRoute.Api.Route.Interpolation, noInterpolation: NoInterpolation) async throws -> InterpolationResponse {
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: noInterpolation.capacity.capacity,
-      request: noInterpolation
+      request: request
     )
     return try await .init(envelope: envelope)
   }
   
-  func interpolate(oneWayOutdoor: OneWay) async throws -> InterpolationResponse {
-    let inerpolatedCapacity = await oneWayOutdoor.interpolated(for: .outdoor)
+  func interpolate(request: ServerRoute.Api.Route.Interpolation, oneWayOutdoor: OneWay) async throws -> InterpolationResponse {
+    let inerpolatedCapacity = await oneWayOutdoor.interpolated(designInfo: request.designInfo, for: .outdoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: inerpolatedCapacity,
-      request: oneWayOutdoor
+      request: request
     )
     return try await .init(envelope: envelope)
   }
   
-  func interpolate(oneWayIndoor: OneWay) async throws -> InterpolationResponse {
-    let interpolatedCapacity = await oneWayIndoor.interpolated(for: .indoor)
+  func interpolate(request: ServerRoute.Api.Route.Interpolation, oneWayIndoor: OneWay) async throws -> InterpolationResponse {
+    let interpolatedCapacity = await oneWayIndoor.interpolated(designInfo: request.designInfo, for: .indoor)
     let envelope = try await CoolingInterpolationEnvelope(
       interpolatedCapacity: interpolatedCapacity,
-      request: oneWayIndoor
+      request: request
     )
     return try await .init(envelope: envelope)
   }
   
-  func interpolate(twoWay: TwoWay) async throws -> InterpolationResponse {
+  func interpolate(request: ServerRoute.Api.Route.Interpolation, twoWay: TwoWay) async throws -> InterpolationResponse {
     guard case let .cooling(aboveIndoorResult) = try await interpolate(
-      oneWayIndoor: twoWay.aboveDesign.oneWayIndoorRequest(twoWay)
+      request: request,
+      oneWayIndoor: twoWay.aboveDesign.rawValue.oneWayIndoorRequest()
     ).result
     else {
       // throw an error
@@ -56,14 +57,15 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling {
     }
     
     guard case let .cooling(belowIndoorResult) = try await interpolate(
-      oneWayIndoor: twoWay.belowDesign.oneWayIndoorRequest(twoWay)
+      request: request,
+      oneWayIndoor: twoWay.belowDesign.rawValue.oneWayIndoorRequest()
     ).result
     else {
       fatalError()
     }
     
     let outdoorRequest = twoWay.outdoorRequest(above: aboveIndoorResult.result, below: belowIndoorResult.result)
-    let outdoorResult = try await interpolate(oneWayOutdoor: outdoorRequest)
+    let outdoorResult = try await interpolate(request: request, oneWayOutdoor: outdoorRequest)
     return outdoorResult
   }
 }
@@ -101,6 +103,28 @@ fileprivate extension InterpolationResponse.Result.Cooling {
   }
 }
 
+fileprivate extension ServerRoute.Api.Route.Interpolation {
+  var manufacturerAdjustments: AdjustmentMultiplier? {
+    switch route {
+    case .cooling(route: let route):
+      switch route {
+      case let .noInterpolation(noInterpolation):
+        return noInterpolation.manufacturerAdjustments
+      case let .oneWayIndoor(indoor):
+        return indoor.manufacturerAdjustments
+      case let .oneWayOutdoor(outdoor):
+        return outdoor.manufacturerAdjustments
+      case let .twoWay(twoWay):
+        return twoWay.manufacturerAdjustments
+      }
+    case .heating:
+      return nil
+    case .keyed:
+      return nil
+    }
+  }
+}
+
 fileprivate struct CoolingInterpolationEnvelope {
   let interpolatedCapacity: CoolingCapacity
   let excessLatent: Int
@@ -112,7 +136,7 @@ fileprivate struct CoolingInterpolationEnvelope {
   
   init(
     interpolatedCapacity: CoolingCapacity,
-    request: any CoolingInterpolationRequest
+    request: ServerRoute.Api.Route.Interpolation
   ) async throws {
     
     let excessLatent = await request.excessLatent(interpolatedCapacity: interpolatedCapacity)
@@ -136,7 +160,7 @@ fileprivate struct CoolingInterpolationEnvelope {
   
 }
 
-fileprivate extension CoolingInterpolationRequest {
+fileprivate extension ServerRoute.Api.Route.Interpolation {
   
   func excessLatent(interpolatedCapacity: CoolingCapacity) async -> Int {
     (interpolatedCapacity.latent - houseLoad.cooling.latent) / 2
@@ -151,26 +175,27 @@ fileprivate extension CoolingInterpolationRequest {
   }
 }
 
-fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.CapacityEnvelope {
+fileprivate extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.CapacityEnvelope {
   
   func oneWayIndoorRequest(
-    _ request: any CoolingInterpolationRequest
-  ) -> ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
+//    _ request: any CoolingInterpolationRequest
+  ) -> ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
     .init(
       aboveDesign: aboveWetBulb,
-      belowDesign: belowWetBulb,
-      designInfo: request.designInfo,
-      houseLoad: request.houseLoad,
-      systemType: request.systemType
+      belowDesign: belowWetBulb
+//      ,
+//      designInfo: request.designInfo,
+//      houseLoad: request.houseLoad,
+//      systemType: request.systemType
     )
   }
 }
 
-fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay {
+fileprivate extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay {
   func outdoorRequest(
     above: InterpolationResponse.Result.Cooling.Result,
     below: InterpolationResponse.Result.Cooling.Result
-  ) -> ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
+  ) -> ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
     .init(
       aboveDesign: .init(
         cfm: aboveDesign.aboveWetBulb.cfm,
@@ -185,27 +210,28 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.TwoWay {
         indoorWetBulb: 63,
         outdoorTemperature: belowDesign.belowWetBulb.outdoorTemperature,
         capacity: below.interpolatedCapacity
-      ),
-      designInfo: designInfo,
-      houseLoad: houseLoad,
-      systemType: systemType
+      )
+//      ,
+//      designInfo: designInfo,
+//      houseLoad: houseLoad,
+//      systemType: systemType
     )
   }
 }
 
-fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
+fileprivate extension ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
   
   enum InterpolationType {
     case indoor
     case outdoor
   }
   
-  func interpolated(for location: InterpolationType) async -> CoolingCapacity {
+  func interpolated(designInfo: DesignInfo, for location: InterpolationType) async -> CoolingCapacity {
     switch location {
     case .indoor:
       return await _interpolatedIndoorCapacity()
     case .outdoor:
-      return await _interpolatedOutdoorCapacity()
+      return await _interpolatedOutdoorCapacity(designInfo: designInfo)
     }
   }
   
@@ -225,7 +251,7 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Cooling.OneWay {
     return .init(total: total, sensible: sensible)
   }
 
-  private func _interpolatedOutdoorCapacity() async -> CoolingCapacity {
+  private func _interpolatedOutdoorCapacity(designInfo: DesignInfo) async -> CoolingCapacity {
     let total = await OneWayOutdoorEnvelope.interpolateCapacity(
       outdoorDesignTemperature: designInfo.summer.outdoorTemperature,
       below: .total(belowDesign),

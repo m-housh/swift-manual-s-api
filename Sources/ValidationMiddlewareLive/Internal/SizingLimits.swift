@@ -4,10 +4,10 @@ import Validations
 extension ServerRoute.Api.Route.SizingLimit: AsyncValidatable {
   @inlinable
   public func validate(_ value: Models.ServerRoute.Api.Route.SizingLimit) async throws {
-    if case let .airToAir(type: _, compressor: _, climate: climate) = value.systemType {
-      guard case .coldWinterOrNoLatentLoad = climate else { return }
+    if case let .airToAir(airToAir) = value.systemType {
+      guard case .coldWinterOrNoLatentLoad = airToAir.climate else { return }
       guard let load = value.houseLoad else {
-        throw ValidationError(summary: "House load is required for \(climate).")
+        throw ValidationError(summary: "House load is required for \(airToAir.climate).")
       }
       try await SizingLimitValidator(load: load).validate()
     }

@@ -810,3 +810,45 @@ extension Interpolation2.Route.Cooling {
     }
   }
 }
+
+extension Interpolation2.Route.Heating {
+  
+  private enum CodingKeys: CodingKey {
+    case boiler
+    case electric
+    case furnace
+    case heatPump
+  }
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case let .boiler(boiler):
+      try container.encode(boiler, forKey: .boiler)
+    case let .electric(electric):
+      try container.encode(electric, forKey: .electric)
+    case let .furnace(furnace):
+      try container.encode(furnace, forKey: .furnace)
+    case let .heatPump(heatPump):
+      try container.encode(heatPump, forKey: .heatPump)
+    }
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    if let boiler = try? container.decode(Boiler.self, forKey: .boiler) {
+      self = .boiler(boiler)
+      return
+    } else if let electric = try? container.decode(Electric.self, forKey: .electric) {
+      self = .electric(electric)
+      return
+    } else if let furnace = try? container.decode(Furnace.self, forKey: .furnace) {
+      self = .furnace(furnace)
+      return
+    } else if let heatPump = try? container.decode(HeatPump.self, forKey: .heatPump) {
+      self = .heatPump(heatPump)
+      return
+    }
+    throw DecodingError()
+  }
+}
