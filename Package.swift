@@ -141,7 +141,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
   package.products.append(contentsOf: [
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
     .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
-    .executable(name: "equipment-selection", targets: ["equipment-selection"])
+    .executable(name: "equipment-selection", targets: ["equipment-selection"]),
   ])
   package.targets.append(contentsOf: [
     .target(
@@ -149,7 +149,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
     .target(
@@ -169,7 +169,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "Models",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ]
-    )
+    ),
   ])
 }
 

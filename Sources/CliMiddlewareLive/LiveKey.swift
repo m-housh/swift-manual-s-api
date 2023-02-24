@@ -4,19 +4,19 @@ import Dependencies
 import Foundation
 import Models
 
-struct FixMeError: Error  { }
+struct FixMeError: Error {}
 
 extension CliMiddleware: DependencyKey {
-  
+
   public static func live(
     baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
   ) -> Self {
     @Dependency(\.apiClient) var apiClient
-    
+
     return .init(
       baseUrl: {
         UserDefaults.standard.url(forKey: baseUrlKey)
-        ?? apiClient.baseUrl()
+          ?? apiClient.baseUrl()
       },
       generatePdf: { _, _ in
         throw FixMeError()
@@ -39,7 +39,7 @@ extension CliMiddleware: DependencyKey {
       }
     )
   }
-  
+
   public static var liveValue: CliMiddleware {
     .live()
   }

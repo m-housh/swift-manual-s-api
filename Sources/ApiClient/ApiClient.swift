@@ -9,7 +9,7 @@ import Models
 
 public struct ApiClient {
   @Dependency(\.logger) var logger
-  
+
   public var apiRequest: @Sendable (ServerRoute.Api.Route) async throws -> (Data, URLResponse)
   public var baseUrl: @Sendable () -> URL
   public var request: @Sendable (ServerRoute) async throws -> (Data, URLResponse)
@@ -35,11 +35,11 @@ public struct ApiClient {
     do {
       let (data, response) = try await apiRequest(route)
       logger.debug(
-          """
-          API: route: \(route) \
-          status: \((response as? HTTPURLResponse)?.statusCode ?? 0) \
-          data: \(String(decoding: data, as: UTF8.self))
-          """
+        """
+        API: route: \(route) \
+        status: \((response as? HTTPURLResponse)?.statusCode ?? 0) \
+        data: \(String(decoding: data, as: UTF8.self))
+        """
       )
       return (data, response)
     } catch {
@@ -69,11 +69,11 @@ public struct ApiClient {
     do {
       let (data, response) = try await self.request(route)
       logger.debug(
-          """
-          API: route: \(route), \
-          status: \((response as? HTTPURLResponse)?.statusCode ?? 0), \
-          data: \(String(decoding: data, as: UTF8.self))
-          """
+        """
+        API: route: \(route), \
+        status: \((response as? HTTPURLResponse)?.statusCode ?? 0), \
+        data: \(String(decoding: data, as: UTF8.self))
+        """
       )
       return (data, response)
     } catch {
