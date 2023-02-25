@@ -9,11 +9,11 @@ extension ApiRouteMiddleware: DependencyKey {
       balancePoint: { try await $0.respond() },
       derating: { try await $0.respond() },
       interpolate: { request in
-        switch request {
+        switch request.route {
         case let .cooling(coolingRequest):
-          return try await coolingRequest.respond()
+          return try await coolingRequest.respond(request: request)
         case let .heating(heatingRequest):
-          return try await heatingRequest.respond()
+          return try await heatingRequest.respond(request: request)
         case let .keyed(keyed):
           print("FIX ME: \(keyed)")
           // fix.

@@ -1,6 +1,7 @@
 import XCTest
 import Dependencies
 import ApiRouteMiddlewareLive
+import Models
 
 extension XCTest {
   func XCTAssertThrowsError<T: Sendable>(
@@ -28,4 +29,16 @@ func withLiveSiteHandler(
   }, operation: {
     try await operation()
   })
+}
+
+extension ServerRoute.Api.Route.Interpolation {
+  
+  static func mock(route: ServerRoute.Api.Route.Interpolation.Route) -> Self {
+    .init(
+      designInfo: .mock,
+      houseLoad: .mock,
+      systemType: .default,
+      route: route
+    )
+  }
 }

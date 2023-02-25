@@ -1,19 +1,19 @@
 import Foundation
 import Models
 
-extension ServerRoute.Api.Route.Interpolation.Heating {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating {
 
-  func respond() async throws -> InterpolationResponse {
+  func respond(request: ServerRoute.Api.Route.Interpolation) async throws -> InterpolationResponse {
     let result: InterpolationResponse.Result.Heating.Result
     switch self {
     case let .boiler(boiler):
-      result = try await interpolate(furnace: boiler.furnaceRequest).boilerResult()
+      result = try await interpolate(furnace: boiler.furnaceRequest, request: request).boilerResult()
     case let .electric(electric):
-      result = try await interpolate(electric: electric)
+      result = try await interpolate(electric: electric, request: request)
     case let .furnace(furnace):
-      result = try await interpolate(furnace: furnace)
+      result = try await interpolate(furnace: furnace, request: request)
     case let .heatPump(heatPump):
-      result = try await interpolate(heatPump: heatPump)
+      result = try await interpolate(heatPump: heatPump, request: request)
     }
     return .init(result: result)
   }
@@ -31,9 +31,9 @@ extension InterpolationResponse {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating {
 
-  fileprivate func interpolate(furnace: Furnace) async throws
+  fileprivate func interpolate(furnace: Furnace, request: ServerRoute.Api.Route.Interpolation) async throws
     -> InterpolationResponse.Result.Heating.Result
   {
 
@@ -41,7 +41,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
     var finalCapacity = output
 
     let altitudeDerating = try await ServerRoute.Api.Route.Derating(
-      elevation: furnace.elevation,
+      elevation: request.designInfo.elevation,
       systemType: .furnaceOnly
     ).respond()
 
@@ -49,7 +49,7 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
       finalCapacity *= derating
     }
 
-    let percentOfLoad = finalCapacity / Double(furnace.houseLoad.heating)
+    let percentOfLoad = finalCapacity / Double(request.houseLoad.heating)
 
     return .furnace(
       .init(
@@ -60,13 +60,13 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
       ))
   }
 
-  fileprivate func interpolate(electric: Electric) async throws
+  fileprivate func interpolate(electric: Electric, request: ServerRoute.Api.Route.Interpolation) async throws
     -> InterpolationResponse.Result.Heating.Result
   {
     //    try await electric.validate()
     let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
       capacityAtDesign: Double(electric.heatPumpCapacity ?? 0),
-      heatLoss: Double(electric.houseLoad.heating)
+      heatLoss: Double(request.houseLoad.heating)
     )
     let requiredKW = try await requredKWRequest.respond().requiredKW
 
@@ -81,15 +81,15 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
   }
 
   // TODO: FIX DERATINGS.
-  fileprivate func interpolate(heatPump: HeatPump) async throws
+  fileprivate func interpolate(heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation) async throws
     -> InterpolationResponse.Result.Heating.Result
   {
 
     var finalCapacity = heatPump.capacity
 
     let altitudeDeratings = try await ServerRoute.Api.Route.Derating(
-      elevation: heatPump.designInfo.elevation,
-      systemType: heatPump.systemType
+      elevation: request.designInfo.elevation,
+      systemType: request.systemType
     ).respond()
 
     if case let .airToAir(total: _, sensible: _, heating: derating) = altitudeDeratings {
@@ -97,16 +97,16 @@ extension ServerRoute.Api.Route.Interpolation.Heating {
     }
     let balancePointRequest = ServerRoute.Api.Route.BalancePoint.thermal(
       .init(
-        designTemperature: Double(heatPump.designInfo.winter.outdoorTemperature),
-        heatLoss: Double(heatPump.houseLoad.heating),
+        designTemperature: Double(request.designInfo.winter.outdoorTemperature),
+        heatLoss: Double(request.houseLoad.heating),
         capacity: finalCapacity
       ))
     let balancePoint = try await balancePointRequest.respond().balancePoint
     let capacityAtDesign = await finalCapacity.capacity(
-      at: heatPump.designInfo.winter.outdoorTemperature)
+      at: request.designInfo.winter.outdoorTemperature)
     let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
       capacityAtDesign: capacityAtDesign,
-      heatLoss: Double(heatPump.houseLoad.heating)
+      heatLoss: Double(request.houseLoad.heating)
     )
     let requiredKW = try await requredKWRequest.respond().requiredKW
 
@@ -139,11 +139,9 @@ extension HeatPumpCapacity {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Heating.Boiler {
-  fileprivate var furnaceRequest: ServerRoute.Api.Route.Interpolation.Heating.Furnace {
+extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler {
+  fileprivate var furnaceRequest: ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace {
     .init(
-      elevation: self.elevation,
-      houseLoad: self.houseLoad,
       input: self.input,
       afue: self.afue
     )

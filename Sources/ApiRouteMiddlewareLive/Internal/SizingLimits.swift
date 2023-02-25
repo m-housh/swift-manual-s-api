@@ -12,9 +12,9 @@ extension SystemType {
 
   func sizingLimits(load: HouseLoad?) async throws -> SizingLimits {
     switch self {
-    case let .airToAir(type: _, compressor: compressor, climate: climate):
+    case let .airToAir(airToAir):
       let coolingTotal: Int
-      switch (compressor, climate) {
+      switch (airToAir.compressor, airToAir.climate) {
       case (.singleSpeed, .mildWinterOrLatentLoad):
         coolingTotal = 115
       case (.multiSpeed, .mildWinterOrLatentLoad):
@@ -29,10 +29,15 @@ extension SystemType {
         coolingTotal = Int(round(decimal * 100))
       }
       return .init(oversizing: .cooling(total: coolingTotal), undersizing: .cooling())
-    case .furnaceOnly:
-      return .init(oversizing: .furnace(), undersizing: .furnace())
-    case .boilerOnly:
-      return .init(oversizing: .boiler(), undersizing: .boiler())
+    case let .heatingOnly(heatingOnly):
+      switch heatingOnly {
+      case .boiler:
+        return .init(oversizing: .boiler(), undersizing: .boiler())
+      case .furnace:
+        return .init(oversizing: .furnace(), undersizing: .furnace())
+      case .electric:
+        return .init(oversizing: .furnace(), undersizing: .furnace())
+      }
     }
   }
 }

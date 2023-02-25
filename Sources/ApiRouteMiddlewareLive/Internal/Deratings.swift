@@ -22,6 +22,13 @@ extension SystemType {
       return .heating(multiplier: furnaceDerating(elevation: elevation))
     case .boilerOnly:
       return .heating(multiplier: furnaceDerating(elevation: elevation))
+    case let .heatingOnly(heatingOnly):
+      switch heatingOnly {
+      case .boiler, .furnace:
+        return .heating(multiplier: furnaceDerating(elevation: elevation))
+      case .electric:
+        return .heating(multiplier: 1) // ne derating.
+      }
     }
   }
 
