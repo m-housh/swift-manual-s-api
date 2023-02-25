@@ -97,108 +97,108 @@ struct OneWayIndoorAnvilTemplate: Codable {
 
 struct ConversionError: Error {}
 
-extension OneWayIndoorAnvilTemplate {
-
-  init(
-    request: ServerRoute.Api.Route.Interpolation.Cooling.OneWay,
-    result: InterpolationResponse.Result
-  ) throws {
-
-    guard case let .cooling(cooling) = result,
-      case let .cooling(oversizingLimits) = cooling.result.sizingLimits.oversizing
-    else {
-      throw ConversionError()
-    }
-
-    self.init(
-      title: "Manual S",
-      fontSize: 10,
-      textColor: "#333333",
-      data: .init(
-        customerName: "FIX ME",
-        customerAddress: "1234 FIX ME Street",
-        summerOutdoorDesignTemperature: request.designInfo.summer.outdoorTemperature,
-        customerCity: "FIX ME",
-        customerState: "FIX ME",
-        customerZipCode: 12345,
-        systemID: "FIX ME",
-        summerIndoorDesignTemperature: request.designInfo.summer.indoorTemperature,
-        summerIndoorDesignHumidity: Double(request.designInfo.summer.indoorHumidity),
-        winterOutdoorDesignTemperature: request.designInfo.winter.outdoorTemperature,
-        projectElevation: request.designInfo.elevation,
-        systemType: request.systemType.label,
-        furnaceManufacturer: "FIX ME",
-        ahuOrCoilManufacturer: "FIX ME",
-        condenserManufacturer: "FIX ME",
-        packageManufacturer: "FIX ME",
-        furnaceModel: "FIX ME",
-        ahuOrCoilModel: "FIX ME",
-        condenserModel: "FIX ME",
-        packageModel: "FIX ME",
-        afue: 12345,
-        seer: 12345,
-        hspf: 12345,
-        fanSpeed: "FIX ME",
-        heatLoad: request.houseLoad.heating,
-        heatAdjustmentMultiplier: 1,  // fix me
-        coolingTotalLoad: request.houseLoad.cooling.total,
-        coolingSensibleLoad: request.houseLoad.cooling.sensible,
-        coolingLatentLoad: request.houseLoad.cooling.latent,
-        coolingSHR: request.houseLoad.cooling.sensibleHeatRatio,
-        coolingTotalAdjustmentMultiplier: 1,  // fix me
-        coolingSensibleAdjustmentMultiplier: 1,  // fix me
-        outdoorBelowDesignTemperature: request.belowDesign.outdoorTemperature,
-        indoorBelowDesignTemperature: request.belowDesign.indoorTemperature,
-        belowDesignCFM: request.belowDesign.cfm,
-        aboveDesignWetBulb: request.belowDesign.indoorWetBulb,
-        belowDesignTotalBTU: request.belowDesign.capacity.total,
-        belowDesignSensibleBTU: request.belowDesign.capacity.sensible,
-        belowDesignLatentBTU: request.belowDesign.capacity.sensible,
-        belowDesignSHR: request.belowDesign.capacity.sensibleHeatRatio,
-        belowDesignAdjustedTotalBTU: request.belowDesign.capacity.total,  // fix me
-        belowDesignAdjustedSensibleBTU: request.belowDesign.capacity.sensible,  // fix me
-        belowDesignWetBulb: request.belowDesign.indoorWetBulb,
-        belowDesignInterpolatedTotalBTU: 1,  // fix me
-        belowDesignInterpolatedSensibeBTU: 1,  // fix me
-        belowDesignInterpolatedLatentBTU: 1,  // fix me
-        belowDesignInterpolatedSHR: 0.1,  // fix me
-        indoorAboveDesignTemperature: request.aboveDesign.indoorTemperature,
-        outdoorAboveDesignTemperature: request.aboveDesign.outdoorTemperature,
-        aboveDesignCFM: request.aboveDesign.cfm,
-        aboveDesignTotalBTU: request.aboveDesign.capacity.total,
-        aboveDesignSensibleBTU: request.aboveDesign.capacity.sensible,
-        aboveDesignLatentBTU: request.aboveDesign.capacity.latent,
-        aboveDesignSHR: request.aboveDesign.capacity.sensibleHeatRatio,
-        aboveDesignInterpolatedSHR: 1,  // fix me
-        aboveDesignAdjustedTotalBTU: 1,  // fix me
-        aboveDesignInterpolatedTotalBTU: 1,  // fix me
-        aboveDesignInterpolatedSensibeBTU: 1,  // fix me
-        aboveDesignInterpolatedLatentBTU: 1,  // fix me
-        indoorFinalDesignTemperature: request.designInfo.summer.indoorTemperature,
-        outdoorFInalDesignTemperature: request.designInfo.summer.outdoorTemperature,
-        interpolatedDesignTotalBTU: cooling.result.interpolatedCapacity.total,
-        interpolatedDesignSensibleBTU: cooling.result.interpolatedCapacity.sensible,
-        interpolatedDesignLatentBTU: cooling.result.interpolatedCapacity.latent,
-        interpolatedDesignSHR: cooling.result.interpolatedCapacity.sensibleHeatRatio,
-        excessLatent: cooling.result.excessLatent,
-        finalInterpolatedDesignSensibleBTU: cooling.result.finalCapacityAtDesign.total,
-        finalInterpolatedDesignLatentBTU: 1,  // fix me
-        coolingTotalAltitudeAdjustmentMultiplier: 1,  // fix me
-        coolingSensibleAltitudeAdjustmentMultiplier: 1,  // fix me
-        finalSHR: cooling.result.finalCapacityAtDesign.sensibleHeatRatio,
-        finalTotalBTU: cooling.result.finalCapacityAtDesign.total,
-        finalSensibeBTU: cooling.result.finalCapacityAtDesign.sensible,
-        finalLatentBTU: cooling.result.finalCapacityAtDesign.latent,
-        coolingTotalOversizingLimit: Double(oversizingLimits.total),
-        coolingLatentOversizingLimit: Double(oversizingLimits.latent),
-        totalCapacityOfDesign: cooling.result.capacityAsPercentOfLoad.total,
-        latentCapacityOfDesign: cooling.result.capacityAsPercentOfLoad.latent,
-        sensibleCapacityOfDesign: cooling.result.capacityAsPercentOfLoad.sensible,
-        finalInterpolatedDesignSHR: cooling.result.finalCapacityAtDesign.sensibleHeatRatio
-      )
-    )
-  }
-}
+//extension OneWayIndoorAnvilTemplate {
+//
+//  init(
+//    request: ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay,
+//    result: InterpolationResponse.Result
+//  ) throws {
+//
+//    guard case let .cooling(cooling) = result,
+//      case let .cooling(oversizingLimits) = cooling.result.sizingLimits.oversizing
+//    else {
+//      throw ConversionError()
+//    }
+//
+//    self.init(
+//      title: "Manual S",
+//      fontSize: 10,
+//      textColor: "#333333",
+//      data: .init(
+//        customerName: "FIX ME",
+//        customerAddress: "1234 FIX ME Street",
+//        summerOutdoorDesignTemperature: request.designInfo.summer.outdoorTemperature,
+//        customerCity: "FIX ME",
+//        customerState: "FIX ME",
+//        customerZipCode: 12345,
+//        systemID: "FIX ME",
+//        summerIndoorDesignTemperature: request.designInfo.summer.indoorTemperature,
+//        summerIndoorDesignHumidity: Double(request.designInfo.summer.indoorHumidity),
+//        winterOutdoorDesignTemperature: request.designInfo.winter.outdoorTemperature,
+//        projectElevation: request.designInfo.elevation,
+//        systemType: request.systemType.label,
+//        furnaceManufacturer: "FIX ME",
+//        ahuOrCoilManufacturer: "FIX ME",
+//        condenserManufacturer: "FIX ME",
+//        packageManufacturer: "FIX ME",
+//        furnaceModel: "FIX ME",
+//        ahuOrCoilModel: "FIX ME",
+//        condenserModel: "FIX ME",
+//        packageModel: "FIX ME",
+//        afue: 12345,
+//        seer: 12345,
+//        hspf: 12345,
+//        fanSpeed: "FIX ME",
+//        heatLoad: request.houseLoad.heating,
+//        heatAdjustmentMultiplier: 1,  // fix me
+//        coolingTotalLoad: request.houseLoad.cooling.total,
+//        coolingSensibleLoad: request.houseLoad.cooling.sensible,
+//        coolingLatentLoad: request.houseLoad.cooling.latent,
+//        coolingSHR: request.houseLoad.cooling.sensibleHeatRatio,
+//        coolingTotalAdjustmentMultiplier: 1,  // fix me
+//        coolingSensibleAdjustmentMultiplier: 1,  // fix me
+//        outdoorBelowDesignTemperature: request.belowDesign.outdoorTemperature,
+//        indoorBelowDesignTemperature: request.belowDesign.indoorTemperature,
+//        belowDesignCFM: request.belowDesign.cfm,
+//        aboveDesignWetBulb: request.belowDesign.indoorWetBulb,
+//        belowDesignTotalBTU: request.belowDesign.capacity.total,
+//        belowDesignSensibleBTU: request.belowDesign.capacity.sensible,
+//        belowDesignLatentBTU: request.belowDesign.capacity.sensible,
+//        belowDesignSHR: request.belowDesign.capacity.sensibleHeatRatio,
+//        belowDesignAdjustedTotalBTU: request.belowDesign.capacity.total,  // fix me
+//        belowDesignAdjustedSensibleBTU: request.belowDesign.capacity.sensible,  // fix me
+//        belowDesignWetBulb: request.belowDesign.indoorWetBulb,
+//        belowDesignInterpolatedTotalBTU: 1,  // fix me
+//        belowDesignInterpolatedSensibeBTU: 1,  // fix me
+//        belowDesignInterpolatedLatentBTU: 1,  // fix me
+//        belowDesignInterpolatedSHR: 0.1,  // fix me
+//        indoorAboveDesignTemperature: request.aboveDesign.indoorTemperature,
+//        outdoorAboveDesignTemperature: request.aboveDesign.outdoorTemperature,
+//        aboveDesignCFM: request.aboveDesign.cfm,
+//        aboveDesignTotalBTU: request.aboveDesign.capacity.total,
+//        aboveDesignSensibleBTU: request.aboveDesign.capacity.sensible,
+//        aboveDesignLatentBTU: request.aboveDesign.capacity.latent,
+//        aboveDesignSHR: request.aboveDesign.capacity.sensibleHeatRatio,
+//        aboveDesignInterpolatedSHR: 1,  // fix me
+//        aboveDesignAdjustedTotalBTU: 1,  // fix me
+//        aboveDesignInterpolatedTotalBTU: 1,  // fix me
+//        aboveDesignInterpolatedSensibeBTU: 1,  // fix me
+//        aboveDesignInterpolatedLatentBTU: 1,  // fix me
+//        indoorFinalDesignTemperature: request.designInfo.summer.indoorTemperature,
+//        outdoorFInalDesignTemperature: request.designInfo.summer.outdoorTemperature,
+//        interpolatedDesignTotalBTU: cooling.result.interpolatedCapacity.total,
+//        interpolatedDesignSensibleBTU: cooling.result.interpolatedCapacity.sensible,
+//        interpolatedDesignLatentBTU: cooling.result.interpolatedCapacity.latent,
+//        interpolatedDesignSHR: cooling.result.interpolatedCapacity.sensibleHeatRatio,
+//        excessLatent: cooling.result.excessLatent,
+//        finalInterpolatedDesignSensibleBTU: cooling.result.finalCapacityAtDesign.total,
+//        finalInterpolatedDesignLatentBTU: 1,  // fix me
+//        coolingTotalAltitudeAdjustmentMultiplier: 1,  // fix me
+//        coolingSensibleAltitudeAdjustmentMultiplier: 1,  // fix me
+//        finalSHR: cooling.result.finalCapacityAtDesign.sensibleHeatRatio,
+//        finalTotalBTU: cooling.result.finalCapacityAtDesign.total,
+//        finalSensibeBTU: cooling.result.finalCapacityAtDesign.sensible,
+//        finalLatentBTU: cooling.result.finalCapacityAtDesign.latent,
+//        coolingTotalOversizingLimit: Double(oversizingLimits.total),
+//        coolingLatentOversizingLimit: Double(oversizingLimits.latent),
+//        totalCapacityOfDesign: cooling.result.capacityAsPercentOfLoad.total,
+//        latentCapacityOfDesign: cooling.result.capacityAsPercentOfLoad.latent,
+//        sensibleCapacityOfDesign: cooling.result.capacityAsPercentOfLoad.sensible,
+//        finalInterpolatedDesignSHR: cooling.result.finalCapacityAtDesign.sensibleHeatRatio
+//      )
+//    )
+//  }
+//}
 
 struct AnvilKeyNotFound: Error {}
 
