@@ -27,7 +27,7 @@ extension SystemType {
       case .boiler, .furnace:
         return .heating(multiplier: furnaceDerating(elevation: elevation))
       case .electric:
-        return .heating(multiplier: 1) // ne derating.
+        return .heating(multiplier: 1)  // ne derating.
       }
     }
   }

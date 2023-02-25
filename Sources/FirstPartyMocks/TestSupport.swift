@@ -118,11 +118,13 @@ extension ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
   }
 }
 
-extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay, Tag == IndoorTag {
+extension Tagged
+where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay, Tag == IndoorTag {
   public static var mock: Self { .init(.indoorMock) }
 }
 
-extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay, Tag == OutdoorTag {
+extension Tagged
+where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay, Tag == OutdoorTag {
   public static var mock: Self { .init(.outdoorMock) }
 }
 
@@ -138,37 +140,37 @@ extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay {
 
   public static let mock = Self.init(
     aboveDesign: .init(
-        aboveWetBulb: .init(
-          cfm: 800,
-          indoorTemperature: 75,
-          indoorWetBulb: 67,
-          outdoorTemperature: 95,
-          capacity: .init(total: 24_828, sensible: 15_937)
-        ),
-        belowWetBulb: .init(
-          cfm: 800,
-          indoorTemperature: 75,
-          indoorWetBulb: 62,
-          outdoorTemperature: 95,
-          capacity: .init(total: 23_046, sensible: 19_078)
-        )
+      aboveWetBulb: .init(
+        cfm: 800,
+        indoorTemperature: 75,
+        indoorWetBulb: 67,
+        outdoorTemperature: 95,
+        capacity: .init(total: 24_828, sensible: 15_937)
       ),
+      belowWetBulb: .init(
+        cfm: 800,
+        indoorTemperature: 75,
+        indoorWetBulb: 62,
+        outdoorTemperature: 95,
+        capacity: .init(total: 23_046, sensible: 19_078)
+      )
+    ),
     belowDesign: .init(
-        aboveWetBulb: .init(
-          cfm: 800,
-          indoorTemperature: 75,
-          indoorWetBulb: 67,
-          outdoorTemperature: 85,
-          capacity: .init(total: 25_986, sensible: 16_330)
-        ),
-        belowWetBulb: .init(
-          cfm: 800,
-          indoorTemperature: 75,
-          indoorWetBulb: 62,
-          outdoorTemperature: 85,
-          capacity: .init(total: 24_029, sensible: 19_605)
-        )
+      aboveWetBulb: .init(
+        cfm: 800,
+        indoorTemperature: 75,
+        indoorWetBulb: 67,
+        outdoorTemperature: 85,
+        capacity: .init(total: 25_986, sensible: 16_330)
       ),
+      belowWetBulb: .init(
+        cfm: 800,
+        indoorTemperature: 75,
+        indoorWetBulb: 62,
+        outdoorTemperature: 85,
+        capacity: .init(total: 24_029, sensible: 19_605)
+      )
+    ),
     manufacturerAdjustments: .airToAir(total: 1.0, sensible: 1.0, heating: 1.0)
   )
 }
@@ -274,7 +276,7 @@ extension SystemType {
 }
 
 extension ServerRoute.Api.Route.Interpolation {
-  
+
   public static func mock(route: ServerRoute.Api.Route.Interpolation.Route) -> Self {
     .init(designInfo: .mock, houseLoad: .mock, systemType: .default, route: route)
   }

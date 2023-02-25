@@ -47,7 +47,8 @@ private struct ElectricView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.electric.text
   let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .electric(.mock)))
-  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .electric(.zero)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(
+    route: .heating(route: .electric(.zero)))
   let description = """
     This route is used to interpolate an electric furnace for the given conditons.
     """
@@ -79,7 +80,8 @@ private struct FurnaceView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.furnace.text
   let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .furnace(.mock)))
-  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .furnace(.zero)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(
+    route: .heating(route: .furnace(.zero)))
   let description = """
     This route is used to interpolate a furnace for the given conditons.
     """
@@ -107,7 +109,8 @@ private struct HeatPumpView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.heatPump.text
   let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .heatPump(.mock)))
-  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .heatPump(.zero)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(
+    route: .heating(route: .heatPump(.zero)))
   let description = """
     This route is used to interpolate a heat pump for the given conditons.
     """

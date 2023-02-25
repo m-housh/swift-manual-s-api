@@ -870,14 +870,16 @@ extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Coo
   }
 }
 
-extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.CapacityEnvelope {
+extension Tagged
+where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.CapacityEnvelope {
   public init(
     aboveWetBulb: ManufactuerCoolingCapacity,
     belowWetBulb: ManufactuerCoolingCapacity
   ) {
-    self.init(.init(
-      aboveWetBulb: aboveWetBulb,
-      belowWetBulb: belowWetBulb
-    ))
+    self.init(
+      .init(
+        aboveWetBulb: aboveWetBulb,
+        belowWetBulb: belowWetBulb
+      ))
   }
 }

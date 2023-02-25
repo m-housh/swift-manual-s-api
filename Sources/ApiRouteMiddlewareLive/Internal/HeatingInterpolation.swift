@@ -7,7 +7,8 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating {
     let result: InterpolationResponse.Result.Heating.Result
     switch self {
     case let .boiler(boiler):
-      result = try await interpolate(furnace: boiler.furnaceRequest, request: request).boilerResult()
+      result = try await interpolate(furnace: boiler.furnaceRequest, request: request)
+        .boilerResult()
     case let .electric(electric):
       result = try await interpolate(electric: electric, request: request)
     case let .furnace(furnace):
@@ -33,7 +34,8 @@ extension InterpolationResponse {
 
 extension ServerRoute.Api.Route.Interpolation.Route.Heating {
 
-  fileprivate func interpolate(furnace: Furnace, request: ServerRoute.Api.Route.Interpolation) async throws
+  fileprivate func interpolate(furnace: Furnace, request: ServerRoute.Api.Route.Interpolation)
+    async throws
     -> InterpolationResponse.Result.Heating.Result
   {
 
@@ -60,7 +62,8 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating {
       ))
   }
 
-  fileprivate func interpolate(electric: Electric, request: ServerRoute.Api.Route.Interpolation) async throws
+  fileprivate func interpolate(electric: Electric, request: ServerRoute.Api.Route.Interpolation)
+    async throws
     -> InterpolationResponse.Result.Heating.Result
   {
     //    try await electric.validate()
@@ -81,7 +84,8 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating {
   }
 
   // TODO: FIX DERATINGS.
-  fileprivate func interpolate(heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation) async throws
+  fileprivate func interpolate(heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation)
+    async throws
     -> InterpolationResponse.Result.Heating.Result
   {
 

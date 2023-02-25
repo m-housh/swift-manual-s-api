@@ -141,7 +141,7 @@ private struct NoInterpolationView: Renderable {
 }
 
 private struct TwoWayView: Renderable {
-  
+
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.twoWay.text
 
   let mainDescription = """
@@ -192,7 +192,7 @@ private struct InterpolationView: Renderable {
   let route: ServerRoute.Api.Route.Interpolation
   let inputDescription: Node
   let failingJson: ServerRoute.Api.Route.Interpolation
-  
+
   init(
     description: Description,
     title: String,
