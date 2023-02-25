@@ -852,3 +852,32 @@ extension Interpolation2.Route.Heating {
     throw DecodingError()
   }
 }
+
+// MARK: - Tagged Extensions
+extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
+  public init(
+    aboveDesign: ManufactuerCoolingCapacity,
+    belowDesign: ManufactuerCoolingCapacity,
+    manufacturerAdjustments: AdjustmentMultiplier? = nil
+  ) {
+    self.init(
+      .init(
+        aboveDesign: aboveDesign,
+        belowDesign: belowDesign,
+        manufacturerAdjustments: manufacturerAdjustments
+      )
+    )
+  }
+}
+
+extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.CapacityEnvelope {
+  public init(
+    aboveWetBulb: ManufactuerCoolingCapacity,
+    belowWetBulb: ManufactuerCoolingCapacity
+  ) {
+    self.init(.init(
+      aboveWetBulb: aboveWetBulb,
+      belowWetBulb: belowWetBulb
+    ))
+  }
+}

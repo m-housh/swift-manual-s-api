@@ -88,7 +88,7 @@ class ApiClientLiveTests: XCTestCase {
   func test_interpolate_boiler() async throws {
     @Dependency(\.apiClient) var client
     let response = try await client.apiRequest(
-      route: .interpolate(.heating(.boiler(.mock))),
+      route: .interpolate(.mock(route: .heating(route: .boiler(.mock)))),
       as: InterpolationResponse.self
     )
     XCTAssertFalse(response.isFailed)

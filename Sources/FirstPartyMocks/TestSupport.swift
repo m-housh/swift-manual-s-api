@@ -118,15 +118,26 @@ extension ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
   }
 }
 
+extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay, Tag == IndoorTag {
+  public static var mock: Self { .init(.indoorMock) }
+}
+
+extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay, Tag == OutdoorTag {
+  public static var mock: Self { .init(.outdoorMock) }
+}
+
+extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
+  public static var zero: Self { .init(.zero) }
+}
+
 extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay {
   public static let zero = Self.init(
-    aboveDesign: .init(.init(aboveWetBulb: .zero, belowWetBulb: .zero)),
-    belowDesign: .init(.init(aboveWetBulb: .zero, belowWetBulb: .zero))
+    aboveDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero),
+    belowDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero)
   )
 
   public static let mock = Self.init(
     aboveDesign: .init(
-      .init(
         aboveWetBulb: .init(
           cfm: 800,
           indoorTemperature: 75,
@@ -141,9 +152,8 @@ extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay {
           outdoorTemperature: 95,
           capacity: .init(total: 23_046, sensible: 19_078)
         )
-      )),
+      ),
     belowDesign: .init(
-      .init(
         aboveWetBulb: .init(
           cfm: 800,
           indoorTemperature: 75,
@@ -158,7 +168,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay {
           outdoorTemperature: 85,
           capacity: .init(total: 24_029, sensible: 19_605)
         )
-      )),
+      ),
     manufacturerAdjustments: .airToAir(total: 1.0, sensible: 1.0, heating: 1.0)
   )
 }
@@ -261,4 +271,11 @@ extension ServerRoute.Api.Route.SizingLimit {
 extension SystemType {
   public static let mock: Self = .airToAir(
     type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad)
+}
+
+extension ServerRoute.Api.Route.Interpolation {
+  
+  public static func mock(route: ServerRoute.Api.Route.Interpolation.Route) -> Self {
+    .init(designInfo: .mock, houseLoad: .mock, systemType: .default, route: route)
+  }
 }

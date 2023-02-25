@@ -19,9 +19,6 @@ func renderCooling(
 
 private struct OneWayIndoorView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayIndoor.text
-  let route = ServerRoute.Api.Route.interpolate(.cooling(.oneWayIndoor(.indoorMock)))
-  let json = ServerRoute.Api.Route.Interpolation.Cooling.OneWay.indoorMock
-  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.oneWayIndoor(.zero)))
 
   let mainDescription = """
     This route is used for one way interpolation of manufacturer's capacities at indoor design conditions.
@@ -53,20 +50,16 @@ private struct OneWayIndoorView: Renderable {
         exampleText: exampleText,
         exampleSubTexts: exampleSubTexts
       ),
-      json: json,
       title: title,
-      route: route,
+      route: .mock(route: .cooling(route: .oneWayIndoor(.mock))),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .mock(route: .cooling(route: .oneWayIndoor(.zero)))
     ).content()
   }
 }
 
 private struct OneWayOutdoorView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.oneWayOutdoor.text
-  let route = ServerRoute.Api.Route.interpolate(.cooling(.oneWayOutdoor(.outdoorMock)))
-  let json = ServerRoute.Api.Route.Interpolation.Cooling.OneWay.outdoorMock
-  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.oneWayOutdoor(.zero)))
 
   let mainDescription = """
     This route is used for one way interpolation of manufacturer's capacities at outdoor design conditions.
@@ -99,20 +92,16 @@ private struct OneWayOutdoorView: Renderable {
         exampleText: exampleText,
         exampleSubTexts: exampleSubTexts
       ),
-      json: json,
       title: title,
-      route: route,
+      route: .mock(route: .cooling(route: .oneWayOutdoor(.mock))),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .mock(route: .cooling(route: .oneWayOutdoor(.zero)))
     ).content()
   }
 }
 
 private struct NoInterpolationView: Renderable {
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.noInterpolation.text
-  let route = ServerRoute.Api.Route.interpolate(.cooling(.noInterpolation(.mock)))
-  let json = ServerRoute.Api.Route.Interpolation.Cooling.NoInterpolation.mock
-  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.noInterpolation(.zero)))
 
   let mainDescription = """
     This route is used for no interpolation of manufacturer's capacities at the design conditions.
@@ -143,20 +132,17 @@ private struct NoInterpolationView: Renderable {
         exampleText: exampleText,
         exampleSubTexts: exampleSubTexts
       ),
-      json: json,
       title: title,
-      route: route,
+      route: .mock(route: .cooling(route: .noInterpolation(.mock))),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .mock(route: .cooling(route: .noInterpolation(.zero)))
     ).content()
   }
 }
 
 private struct TwoWayView: Renderable {
+  
   let title: String = ServerRoute.Documentation.Route.Interpolation.Cooling.twoWay.text
-  let route = ServerRoute.Api.Route.interpolate(.cooling(.twoWay(.mock)))
-  let json = ServerRoute.Api.Route.Interpolation.Cooling.TwoWay.mock
-  let failingJson = ServerRoute.Api.Route.interpolate(.cooling(.twoWay(.zero)))
 
   let mainDescription = """
     This route is used for two way interpolation of manufacturer's capacities at the indoor and outdoor design conditions.
@@ -192,22 +178,34 @@ private struct TwoWayView: Renderable {
         exampleText: exampleText,
         exampleSubTexts: exampleSubTexts
       ),
-      json: json,
       title: title,
-      route: route,
+      route: .mock(route: .cooling(route: .twoWay(.mock))),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .mock(route: .cooling(route: .twoWay(.zero)))
     ).content()
   }
 }
 
 private struct InterpolationView: Renderable {
   let description: Description
-  let json: any Encodable
   let title: String
-  let route: ServerRoute.Api.Route
+  let route: ServerRoute.Api.Route.Interpolation
   let inputDescription: Node
-  let failingJson: ServerRoute.Api.Route
+  let failingJson: ServerRoute.Api.Route.Interpolation
+  
+  init(
+    description: Description,
+    title: String,
+    route: ServerRoute.Api.Route.Interpolation,
+    inputDescription: Node,
+    failingJson: ServerRoute.Api.Route.Interpolation
+  ) {
+    self.description = description
+    self.title = title
+    self.route = route
+    self.inputDescription = inputDescription
+    self.failingJson = failingJson
+  }
 
   struct Description {
     let mainDescription: String
@@ -254,12 +252,12 @@ private struct InterpolationView: Renderable {
 
   func content() async throws -> Node {
     try await RouteView(
-      json: json,
-      route: route,
+      json: route,
+      route: .interpolate(route),
       title: title,
       description: description.content,
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .interpolate(failingJson)
     ).content()
   }
 }

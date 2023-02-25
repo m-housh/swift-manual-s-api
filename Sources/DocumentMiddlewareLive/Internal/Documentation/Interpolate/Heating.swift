@@ -19,9 +19,8 @@ func renderHeating(_ route: ServerRoute.Documentation.Route.Interpolation.Heatin
 private struct BoilerView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.boiler.text
-  let route = ServerRoute.Api.Route.interpolate(.heating(.boiler(.mock)))
-  let json = ServerRoute.Api.Route.Interpolation.Heating.Boiler.mock
-  let failingJson = ServerRoute.Api.Route.interpolate(.heating(.boiler(.zero)))
+  let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .boiler(.mock)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .boiler(.zero)))
   let description = """
     This route is used to interpolate a boiler for the given conditons.
     """
@@ -34,12 +33,12 @@ private struct BoilerView: Renderable {
 
   func content() async throws -> Node {
     try await RouteView(
-      json: json,
-      route: route,
+      json: route,
+      route: .interpolate(route),
       title: title,
       description: .text(description),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .interpolate(failingJson)
     ).content()
   }
 }
@@ -47,9 +46,8 @@ private struct BoilerView: Renderable {
 private struct ElectricView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.electric.text
-  let route = ServerRoute.Api.Route.interpolate(.heating(.electric(.mock)))
-  let json = ServerRoute.Api.Route.Interpolation.Heating.Electric.mock
-  let failingJson = ServerRoute.Api.Route.interpolate(.heating(.electric(.zero)))
+  let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .electric(.mock)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .electric(.zero)))
   let description = """
     This route is used to interpolate an electric furnace for the given conditons.
     """
@@ -67,12 +65,12 @@ private struct ElectricView: Renderable {
 
   func content() async throws -> Node {
     try await RouteView(
-      json: json,
-      route: route,
+      json: route,
+      route: .interpolate(route),
       title: title,
       description: .text(description),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .interpolate(failingJson)
     ).content()
   }
 }
@@ -80,9 +78,8 @@ private struct ElectricView: Renderable {
 private struct FurnaceView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.furnace.text
-  let route = ServerRoute.Api.Route.interpolate(.heating(.furnace(.mock)))
-  let json = ServerRoute.Api.Route.Interpolation.Heating.Furnace.mock
-  let failingJson = ServerRoute.Api.Route.interpolate(.heating(.furnace(.zero)))
+  let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .furnace(.mock)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .furnace(.zero)))
   let description = """
     This route is used to interpolate a furnace for the given conditons.
     """
@@ -96,12 +93,12 @@ private struct FurnaceView: Renderable {
 
   func content() async throws -> Node {
     try await RouteView(
-      json: json,
-      route: route,
+      json: route,
+      route: .interpolate(route),
       title: title,
       description: .text(description),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .interpolate(failingJson)
     ).content()
   }
 }
@@ -109,9 +106,8 @@ private struct FurnaceView: Renderable {
 private struct HeatPumpView: Renderable {
 
   let title: String = ServerRoute.Documentation.Route.Interpolation.Heating.heatPump.text
-  let route = ServerRoute.Api.Route.interpolate(.heating(.heatPump(.mock)))
-  let json = ServerRoute.Api.Route.Interpolation.Heating.HeatPump.mock
-  let failingJson = ServerRoute.Api.Route.interpolate(.heating(.heatPump(.zero)))
+  let route = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .heatPump(.mock)))
+  let failingJson = ServerRoute.Api.Route.Interpolation.mock(route: .heating(route: .heatPump(.zero)))
   let description = """
     This route is used to interpolate a heat pump for the given conditons.
     """
@@ -125,12 +121,12 @@ private struct HeatPumpView: Renderable {
 
   func content() async throws -> Node {
     try await RouteView(
-      json: json,
-      route: route,
+      json: route,
+      route: .interpolate(route),
       title: title,
       description: .text(description),
       inputDescription: inputDescription,
-      failingJson: failingJson
+      failingJson: .interpolate(failingJson)
     ).content()
   }
 }
