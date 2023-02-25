@@ -453,6 +453,48 @@ final class SiteRouteValidationTests: XCTestCase {
       }
     }
   }
+  
+  func test_keyed_validations() async throws {
+    try await withLiveSiteValidator {
+      @Dependency(\.validationMiddleware) var validator
+      let request = ServerRoute.Api.Route.Interpolation.init(
+        designInfo: .zero,
+        houseLoad: .zero,
+        systemType: .default,
+        route: .keyed([.zeros.first!])
+      )
+      let expected = """
+      No Interpolation Request Errors:
+      Capacity:
+      capacity.cfm: Cfm should be greater than 0.
+      capacity.indoorTemperature: Indoor temperature should be greater than 0.
+      capacity.capacity.total: Total capacity should be greater than 0
+      capacity.capacity.sensible: Sensible capacity should be greater than 0
+
+      House Load:
+      houseLoad.total: Total cooling load should be greater than 0.
+      houseLoad.sensible: Sensible cooling load should be greater than 0.
+
+
+      Furnace Request Errors:
+      houseLoad.heating: Heating load should be greater than 0.
+      afue: Afue should be greater than 0 or less than 100.
+      input: Input should be greater than 0.
+      
+      
+      """
+      
+      do {
+        try await validator.validate(.api(.init(
+          isDebug: false,
+          route: .interpolate(request)
+        )))
+      } catch {
+        let description = errorString(error)
+        XCTAssertNoDifference(expected, description)
+      }
+    }
+  }
 }
 
 extension ServerRoute.Api.Route.Interpolation {

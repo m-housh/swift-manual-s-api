@@ -281,3 +281,63 @@ extension ServerRoute.Api.Route.Interpolation {
     .init(designInfo: .mock, houseLoad: .mock, systemType: .default, route: route)
   }
 }
+
+extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
+  
+  public static let mocks: [Self] = [
+    .init(
+      key: "system-1",
+      cooling: .noInterpolation(.mock),
+      heating: [
+        .furnace(.mock)
+      ]
+    ),
+    .init(
+      key: "system-2",
+      cooling: .oneWayIndoor(.mock),
+      heating: [
+        .heatPump(.mock),
+        .furnace(.mock)
+      ]
+    ),
+    .init(
+      key: "system-3",
+      cooling: .twoWay(.mock),
+      heating: [
+        .heatPump(.mock),
+        .furnace(.mock)
+      ]
+    )
+  ]
+  
+  public static let zeros: [Self] = [
+    .init(
+      key: "system-1",
+      cooling: .noInterpolation(.zero),
+      heating: [
+        .furnace(.zero)
+      ]
+    ),
+    .init(
+      key: "system-2",
+      cooling: .oneWayIndoor(.zero),
+      heating: [
+        .heatPump(.mock),
+        .furnace(.mock)
+      ]
+    ),
+    .init(
+      key: "system-3",
+      cooling: .twoWay(.zero),
+      heating: [
+        .heatPump(.zero),
+        .furnace(.zero)
+      ]
+    )
+  ]
+}
+
+extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Keyed {
+  public static var mocks: Self { ServerRoute.Api.Route.Interpolation.Route.Keyed.mocks }
+  public static var zeros: Self { ServerRoute.Api.Route.Interpolation.Route.Keyed.zeros }
+}

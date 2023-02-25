@@ -1,6 +1,10 @@
 import Foundation
 import Models
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 public struct AnvilClient {
   public var baseUrl: () -> URL
   // TODO: Make a different input / request type.

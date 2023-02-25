@@ -6,9 +6,7 @@ let model = ServerRoute.Api.Route.Interpolation.init(
   designInfo: .mock,
   houseLoad: .mock,
   systemType: .default,
-  route: .heating(
-    route: .heatPump(.mock)
-  )
+  route: .keyed(.mocks)
 )
 //let model = ServerRoute.Api.Route.Interpolation.Route.Cooling.noInterpolation(.init(capacity: .mock, manufacturerAdjustments: nil))
 let encoder = JSONEncoder()

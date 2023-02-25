@@ -447,16 +447,6 @@ extension ServerRoute {
   }
 }
 
-// MARK: - Helpers
-
-/// A helper protocol to ensure that cooling interpolation requests carry these values.
-//public protocol CoolingInterpolationRequest: Codable, Equatable, Sendable {
-//  var designInfo: DesignInfo { get }
-//  var houseLoad: HouseLoad { get }
-//  var manufacturerAdjustments: AdjustmentMultiplier? { get }
-//  var systemType: SystemType { get }
-//}
-
 // MARK: - Route Keys
 
 /// A helper protocol to return a route key to be used in routers.
