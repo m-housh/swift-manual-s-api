@@ -93,7 +93,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating {
 
     let altitudeDeratings = try await ServerRoute.Api.Route.Derating(
       elevation: request.designInfo.elevation,
-      systemType: request.systemType
+      systemType: request.systemType ?? .default
     ).respond()
 
     if case let .airToAir(total: _, sensible: _, heating: derating) = altitudeDeratings {

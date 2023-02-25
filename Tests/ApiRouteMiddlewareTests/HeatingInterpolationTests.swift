@@ -23,7 +23,6 @@ final class HeatingInterpolationTests: XCTestCase {
         route: .interpolate(.init(
           designInfo: .mock,
           houseLoad: .mock,
-          systemType: .default,
           route: .heating(route: .furnace(route))
         ))
       )
@@ -59,7 +58,6 @@ final class HeatingInterpolationTests: XCTestCase {
         route: .interpolate(.init(
           designInfo: .mock,
           houseLoad: .mock,
-          systemType: .default,
           route: .heating(route: .furnace(route))
         ))
       )
@@ -97,7 +95,6 @@ final class HeatingInterpolationTests: XCTestCase {
         route: .interpolate(.init(
           designInfo: .mock,
           houseLoad: .mock,
-          systemType: .default,
           route: .heating(route: .boiler(request))
         ))
       )

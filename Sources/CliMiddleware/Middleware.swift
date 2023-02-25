@@ -3,25 +3,28 @@ import Foundation
 import Models
 import XCTestDynamicOverlay
 
+// TODO: Add configuration for file templates loaded from disk.
 public struct CliMiddleware {
-
+  
   public var baseUrl: () -> URL
   public var generatePdf:
-    (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws -> Data
+  (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws -> Data
   public var interpolate:
-    (ServerRoute.Api.Route.Interpolation) async throws -> InterpolationResponse
+  (ServerRoute.Api.Route.Interpolation) async throws -> InterpolationResponse
   public var readFile: (URL) async throws -> Data
   public var setBaseUrl: (URL) async -> Void
+  public var template: (InterpolationName) async throws -> Data
   public var writeFile: (Data, URL) async throws -> Void
-
+  
   public init(
     baseUrl: @escaping () -> URL,
     generatePdf: @escaping (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws
-      -> Data,
+    -> Data,
     interpolate: @escaping (ServerRoute.Api.Route.Interpolation) async throws ->
-      InterpolationResponse,
+    InterpolationResponse,
     readFile: @escaping (URL) async throws -> Data,
     setBaseUrl: @escaping (URL) async -> Void,
+    template: @escaping (InterpolationName) async throws -> Data,
     writeFile: @escaping (Data, URL) async throws -> Void
   ) {
     self.baseUrl = baseUrl
@@ -29,9 +32,25 @@ public struct CliMiddleware {
     self.interpolate = interpolate
     self.readFile = readFile
     self.setBaseUrl = setBaseUrl
+    self.template = template
     self.writeFile = writeFile
   }
+  
+  public enum InterpolationName: String, CaseIterable {
+    case boiler
+    case electric
+    case furnace
+    case heatPump
+    case noInterpolation
+    case oneWayIndoor
+    case oneWayOutdoor
+    case twoWay
+    case keyed
+  }
+  
+}
 
+extension CliMiddleware {
   public func readFile<D: Decodable>(
     from url: URL,
     as type: D.Type
@@ -53,6 +72,7 @@ extension CliMiddleware: TestDependencyKey {
     interpolate: XCTestDynamicOverlay.unimplemented("\(Self.self).interpolate"),
     readFile: XCTestDynamicOverlay.unimplemented("\(Self.self).readFile"),
     setBaseUrl: XCTestDynamicOverlay.unimplemented("\(Self.self).setBaseUrl"),
+    template: XCTestDynamicOverlay.unimplemented("\(Self.self).template"),
     writeFile: XCTestDynamicOverlay.unimplemented("\(Self.self).writeFile")
   )
 

@@ -222,227 +222,7 @@ extension ServerRoute {
       // TODO: Model interpolations differently, so that designInfo, systemType, and houseLoad are held differently.
       /// Represents the different interpolation requests that can be performed.
       ///
-      public typealias Interpolation = Interpolation2
-      //      public enum Interpolation: Codable, Equatable, Sendable {
-      //
-      //        /// A cooling interpolation.
-      //        case cooling(Cooling)
-      //
-      //        /// A heating interpolation.
-      //        case heating(Heating)
-      //
-      //        /// Multiple interpolations with a key identifier.
-      //        case keyed([Keyed])
-      //
-      //        /// Represents the cooling interpolations that can be performed.
-      //        public enum Cooling: Codable, Equatable, Sendable {
-      //
-      //          /// Used when there is no interpolation of the manufacturer's data required.
-      //          ///
-      //          /// This is equivalent to `Form S-1d`.
-      //          case noInterpolation(NoInterpolation)
-      //
-      //          /// Used when there is a one way interpolation of the manufacturer's cooling capacity at indoor design conditions.
-      //          ///
-      //          /// This is equivalent to `Form S-1b`
-      //          case oneWayIndoor(OneWay)
-      //
-      //          /// Used when there is a one way interpolation of the manufacturer's cooling capacity at outdoor design conditions.
-      //          ///
-      //          /// This is equivalent to `Form S-1b`
-      //          case oneWayOutdoor(OneWay)
-      //
-      //          /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
-      //          ///
-      //          /// This is equivalent to `Form S-1a`
-      //          case twoWay(TwoWay)
-      //
-      //          /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
-      //          ///
-      //          /// This is equivalent to `Form S-1a`
-      //          public struct TwoWay: CoolingInterpolationRequest {
-      //            public var aboveDesign: CapacityEnvelope
-      //            public var belowDesign: CapacityEnvelope
-      //            public var designInfo: DesignInfo
-      //            public var houseLoad: HouseLoad
-      //            public var manufacturerAdjustments: AdjustmentMultiplier?
-      //            public var systemType: SystemType
-      //
-      //            public init(
-      //              aboveDesign: CapacityEnvelope,
-      //              belowDesign: CapacityEnvelope,
-      //              designInfo: DesignInfo,
-      //              houseLoad: HouseLoad,
-      //              manufacturerAdjustments: AdjustmentMultiplier? = nil,
-      //              systemType: SystemType
-      //            ) {
-      //              self.aboveDesign = aboveDesign
-      //              self.belowDesign = belowDesign
-      //              self.designInfo = designInfo
-      //              self.houseLoad = houseLoad
-      //              self.manufacturerAdjustments = manufacturerAdjustments
-      //              self.systemType = systemType
-      //            }
-      //
-      //            public struct CapacityEnvelope: Codable, Equatable, Sendable {
-      //              public var aboveWetBulb: ManufactuerCoolingCapacity
-      //              public var belowWetBulb: ManufactuerCoolingCapacity
-      //
-      //              public init(
-      //                aboveWetBulb: ManufactuerCoolingCapacity, belowWetBulb: ManufactuerCoolingCapacity
-      //              ) {
-      //                self.aboveWetBulb = aboveWetBulb
-      //                self.belowWetBulb = belowWetBulb
-      //              }
-      //            }
-      //          }
-      //
-      //          public struct OneWay: CoolingInterpolationRequest {
-      //            public var aboveDesign: ManufactuerCoolingCapacity
-      //            public var belowDesign: ManufactuerCoolingCapacity
-      //            public var designInfo: DesignInfo
-      //            public var houseLoad: HouseLoad
-      //            public var manufacturerAdjustments: AdjustmentMultiplier?
-      //            public var systemType: SystemType
-      //
-      //            public init(
-      //              aboveDesign: ManufactuerCoolingCapacity,
-      //              belowDesign: ManufactuerCoolingCapacity,
-      //              designInfo: DesignInfo,
-      //              houseLoad: HouseLoad,
-      //              manufacturerAdjustments: AdjustmentMultiplier? = nil,
-      //              systemType: SystemType
-      //            ) {
-      //              self.aboveDesign = aboveDesign
-      //              self.belowDesign = belowDesign
-      //              self.designInfo = designInfo
-      //              self.houseLoad = houseLoad
-      //              self.manufacturerAdjustments = manufacturerAdjustments
-      //              self.systemType = systemType
-      //            }
-      //          }
-      //
-      //          public struct NoInterpolation: CoolingInterpolationRequest {
-      //            public var capacity: ManufactuerCoolingCapacity
-      //            public var designInfo: DesignInfo
-      //            public var houseLoad: HouseLoad
-      //            public var manufacturerAdjustments: AdjustmentMultiplier?
-      //            public var systemType: SystemType
-      //
-      //            public init(
-      //              capacity: ManufactuerCoolingCapacity,
-      //              designInfo: DesignInfo,
-      //              houseLoad: HouseLoad,
-      //              manufacturerAdjustments: AdjustmentMultiplier?,
-      //              systemType: SystemType
-      //            ) {
-      //              self.capacity = capacity
-      //              self.designInfo = designInfo
-      //              self.houseLoad = houseLoad
-      //              self.manufacturerAdjustments = manufacturerAdjustments
-      //              self.systemType = systemType
-      //            }
-      //          }
-      //        }
-      //
-      //        public enum Heating: Codable, Equatable, Sendable {
-      //
-      //          case boiler(Boiler)
-      //          case electric(Electric)
-      //          case furnace(Furnace)
-      //          case heatPump(HeatPump)
-      //
-      //          public struct Boiler: Codable, Equatable, Sendable {
-      //            public var elevation: Int
-      //            public var houseLoad: HouseLoad
-      //            public var input: Int
-      //            public var afue: Double
-      //
-      //            public init(
-      //              elevation: Int = 0,
-      //              houseLoad: HouseLoad,
-      //              input: Int,
-      //              afue: Double
-      //            ) {
-      //              self.elevation = elevation
-      //              self.houseLoad = houseLoad
-      //              self.input = input
-      //              self.afue = afue
-      //            }
-      //          }
-      //
-      //          public struct Electric: Codable, Equatable, Sendable {
-      //            public var heatPumpCapacity: Int?
-      //            public var houseLoad: HouseLoad
-      //            public var inputKW: Double
-      //
-      //            public init(
-      //              heatPumpCapacity: Int? = nil,
-      //              houseLoad: HouseLoad,
-      //              inputKW: Double
-      //            ) {
-      //              self.heatPumpCapacity = heatPumpCapacity
-      //              self.houseLoad = houseLoad
-      //              self.inputKW = inputKW
-      //            }
-      //          }
-      //
-      //          public struct Furnace: Codable, Equatable, Sendable {
-      //            public var elevation: Int
-      //            public var houseLoad: HouseLoad
-      //            public var input: Int
-      //            public var afue: Double
-      //
-      //            public init(
-      //              elevation: Int = 0,
-      //              houseLoad: HouseLoad,
-      //              input: Int,
-      //              afue: Double
-      //            ) {
-      //              self.elevation = elevation
-      //              self.houseLoad = houseLoad
-      //              self.input = input
-      //              self.afue = afue
-      //            }
-      //          }
-      //
-      //          public struct HeatPump: Codable, Equatable, Sendable {
-      //            public var capacity: HeatPumpCapacity
-      //            public var designInfo: DesignInfo
-      //            public var houseLoad: HouseLoad
-      //            public var systemType: SystemType
-      //
-      //            public init(
-      //              capacity: HeatPumpCapacity,
-      //              designInfo: DesignInfo,
-      //              houseLoad: HouseLoad,
-      //              systemType: SystemType
-      //            ) {
-      //              self.capacity = capacity
-      //              self.designInfo = designInfo
-      //              self.houseLoad = houseLoad
-      //              self.systemType = systemType
-      //            }
-      //          }
-      //        }
-      //
-      //        // TODO: This needs to hold onto designInfo, houseLoad, and possibly systemType.
-      //        public struct Keyed: Codable, Equatable, Sendable {
-      //          public var key: String
-      //          public var route: Either<
-      //            ServerRoute.Api.Route.Interpolation.Cooling,
-      //            ServerRoute.Api.Route.Interpolation.Heating
-      //          >
-      //
-      //          public init(
-      //            key: String,
-      //            route: Either<ServerRoute.Api.Route.Interpolation.Cooling, ServerRoute.Api.Route.Interpolation.Heating>
-      //          ) {
-      //            self.key = key
-      //            self.route = route
-      //          }
-      //        }
-      //      }
+      public typealias Interpolation = Models.Interpolation
     }
   }
 }
@@ -544,17 +324,19 @@ public enum BelowTag {}
 public enum IndoorTag {}
 public enum OutdoorTag {}
 
-public struct Interpolation2: Codable, Equatable, Sendable {
+// TODO: - Need cooling and heating interpolations to hold onto optional systemType
+//        if they are called stand-alone and not embedded in a keyed interpolation.
+public struct Interpolation: Codable, Equatable, Sendable {
 
   public var designInfo: DesignInfo
   public var houseLoad: HouseLoad
-  public var systemType: SystemType
+  public var systemType: SystemType?
   public var route: Route
 
   public init(
     designInfo: DesignInfo,
     houseLoad: HouseLoad,
-    systemType: SystemType,
+    systemType: SystemType? = nil,
     route: Route
   ) {
     self.designInfo = designInfo
@@ -710,25 +492,39 @@ public struct Interpolation2: Codable, Equatable, Sendable {
     }
 
     public struct Keyed: Codable, Equatable, Sendable {
-      public var key: String
+      public var name: String
+      public var systemType: SystemType
       public var cooling: Cooling
       public var heating: [Heating]
 
       public init(
-        key: String,
+        name: String,
+        systemType: SystemType = .default,
         cooling: Cooling,
         heating: [Heating] = []
       ) {
-        self.key = key
+        self.name = name
+        self.systemType = systemType
         self.cooling = cooling
         self.heating = heating
       }
     }
   }
-
 }
 
-extension Interpolation2.Route {
+// MARK: - Coding
+extension Interpolation {
+  
+  // Encode in specific order.
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(houseLoad, forKey: .houseLoad)
+    try container.encode(designInfo, forKey: .designInfo)
+    try container.encode(route, forKey: .route)
+  }
+}
+
+extension Interpolation.Route {
   private enum CodingKeys: CodingKey {
     case cooling
     case heating
@@ -762,7 +558,18 @@ extension Interpolation2.Route {
   }
 }
 
-extension Interpolation2.Route.Cooling {
+//extension Interpolation.Route.Keyed {
+//
+//  public func encode(to encoder: Encoder) throws {
+//    var container = encoder.container(keyedBy: CodingKeys.self)
+//    try container.encode(name, forKey: .name)
+//    try container.encode(systemType, forKey: .systemType)
+//    try container.encode(cooling, forKey: .cooling)
+//    try container.encode(heating, forKey: .heating)
+//  }
+//}
+
+extension Interpolation.Route.Cooling {
 
   private enum CodingKeys: CodingKey {
     case noInterpolation
@@ -801,7 +608,7 @@ extension Interpolation2.Route.Cooling {
   }
 }
 
-extension Interpolation2.Route.Heating {
+extension Interpolation.Route.Heating {
 
   private enum CodingKeys: CodingKey {
     case boiler

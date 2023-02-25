@@ -16,7 +16,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .cooling(route: .twoWay(twoWay))
       )
       let expected = """
@@ -76,7 +75,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .cooling(route: .oneWayIndoor(.init(route)))
       )
       let expected1 = """
@@ -144,7 +142,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request2 = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .cooling(route: .oneWayIndoor(.init(route)))
       )
 
@@ -166,7 +163,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .cooling(route: .oneWayOutdoor(.init(route)))
       )
       let expected1 = """
@@ -216,7 +212,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .cooling(route: .noInterpolation(route))
       )
       let expected1 = """
@@ -249,7 +244,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request2 = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .cooling(route: .noInterpolation(route))
       )
 
@@ -460,7 +454,6 @@ final class SiteRouteValidationTests: XCTestCase {
       let request = ServerRoute.Api.Route.Interpolation.init(
         designInfo: .zero,
         houseLoad: .zero,
-        systemType: .default,
         route: .keyed([.zeros.first!])
       )
       let expected = """
@@ -503,7 +496,6 @@ extension ServerRoute.Api.Route.Interpolation {
     .init(
       designInfo: .zero,
       houseLoad: .zero,
-      systemType: .default,
       route: route
     )
   }

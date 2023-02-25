@@ -1,5 +1,7 @@
 import ArgumentParser
 import Foundation
+import Logging
+import LoggingFormatAndPipe
 import Models
 
 // TODO: Move CLI to it's own package.
@@ -17,3 +19,17 @@ let jsonEncoder: JSONEncoder = {
   encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
   return encoder
 }()
+
+let loggerWithLevel = Logger(label: "equipment-selection") { _ in
+  return LoggingFormatAndPipe.Handler(
+    formatter: BasicFormatter([.level, .message]),
+    pipe: LoggerTextOutputStreamPipe.standardError
+  )
+}
+
+let logger = Logger(label: "equipment-selection") { _ in
+  return LoggingFormatAndPipe.Handler(
+    formatter: BasicFormatter([.message]),
+    pipe: LoggerTextOutputStreamPipe.standardError
+  )
+}

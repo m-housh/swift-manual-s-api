@@ -147,7 +147,8 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
 // MARK: - CLI
 if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
   package.dependencies.append(contentsOf: [
-    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0")
+    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
+    .package(url: "https://github.com/adorkable/swift-log-format-and-pipe.git", from: "0.1.0"),
   ])
   package.products.append(contentsOf: [
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
@@ -168,6 +169,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "ApiClient",
         "CliMiddleware",
+        "FirstPartyMocks",
       ]
     ),
     .executableTarget(
@@ -179,6 +181,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "LoggingDependency",
         "Models",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        .product(name: "LoggingFormatAndPipe", package: "swift-log-format-and-pipe")
       ]
     ),
   ])

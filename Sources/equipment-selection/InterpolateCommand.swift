@@ -16,7 +16,7 @@ extension EquipmentSelection {
     )
 
     @Flag(help: "The interpolation to run.")
-    var interpolation: InterpolationName
+    var interpolation: CliMiddleware.InterpolationName
 
     @Option(
       name: .shortAndLong,
@@ -113,7 +113,7 @@ extension EquipmentSelection.Interpolate {
     }
 
     // TODO: Fix.
-    private func interpolate(interpolation: InterpolationName, inputPath: URL) async throws -> (
+    private func interpolate(interpolation: CliMiddleware.InterpolationName, inputPath: URL) async throws -> (
       ServerRoute.Api.Route.Interpolation, InterpolationResponse
     ) {
       let data = try await cliMiddleware.readFile(inputPath)
@@ -127,74 +127,80 @@ extension EquipmentSelection.Interpolate {
 }
 
 // TODO: remove
-extension InterpolationName {
-  fileprivate func route(data: Data) throws -> ServerRoute.Api.Route.Interpolation.Route {
+extension CliMiddleware.InterpolationName {
+
+  fileprivate func route(data: Data) throws -> ServerRoute.Api.Route.Interpolation {
     let decoder = JSONDecoder()
-    switch self {
-    case .boiler:
-      return try .heating(
-        route: .boiler(
-          decoder.decode(
-            ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler.self,
-            from: data
-          )
-        ))
-    case .electric:
-      return try .heating(
-        route: .electric(
-          decoder.decode(
-            ServerRoute.Api.Route.Interpolation.Route.Heating.Electric.self,
-            from: data
-          )
-        ))
-    case .furnace:
-      return try .heating(
-        route: .furnace(
-          decoder.decode(
-            ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace.self,
-            from: data
-          )
-        ))
-    case .heatPump:
-      return try .heating(
-        route: .heatPump(
-          decoder.decode(
-            ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump.self,
-            from: data
-          )
-        ))
-    case .noInterpolation:
-      return try .cooling(
-        route: .noInterpolation(
-          decoder.decode(
-            ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation.self,
-            from: data
-          )
-        ))
-    case .oneWayIndoor:
-      return try .cooling(
-        route: .oneWayIndoor(
-          decoder.decode(
-            Tagged<IndoorTag, ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay>.self,
-            from: data
-          )
-        ))
-    case .oneWayOutdoor:
-      return try .cooling(
-        route: .oneWayOutdoor(
-          decoder.decode(
-            Tagged<OutdoorTag, ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay>.self,
-            from: data
-          )
-        ))
-    case .twoWay:
-      return try .cooling(
-        route: .twoWay(
-          decoder.decode(
-            ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.self,
-            from: data
-          )
-        ))
-    }
+    return try decoder.decode(ServerRoute.Api.Route.Interpolation.self, from: data)
+//    switch self {
+//    case .boiler:
+//      return try .heating(
+//        route: .boiler(
+//          decoder.decode(
+//            ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler.self,
+//            from: data
+//          )
+//        ))
+//    case .electric:
+//      return try .heating(
+//        route: .electric(
+//          decoder.decode(
+//            ServerRoute.Api.Route.Interpolation.Route.Heating.Electric.self,
+//            from: data
+//          )
+//        ))
+//    case .furnace:
+//      return try .heating(
+//        route: .furnace(
+//          decoder.decode(
+//            ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace.self,
+//            from: data
+//          )
+//        ))
+//    case .heatPump:
+//      return try .heating(
+//        route: .heatPump(
+//          decoder.decode(
+//            ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump.self,
+//            from: data
+//          )
+//        ))
+//    case .noInterpolation:
+//      return try .cooling(
+//        route: .noInterpolation(
+//          decoder.decode(
+//            ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation.self,
+//            from: data
+//          )
+//        ))
+//    case .oneWayIndoor:
+//      return try .cooling(
+//        route: .oneWayIndoor(
+//          decoder.decode(
+//            Tagged<IndoorTag, ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay>.self,
+//            from: data
+//          )
+//        ))
+//    case .oneWayOutdoor:
+//      return try .cooling(
+//        route: .oneWayOutdoor(
+//          decoder.decode(
+//            Tagged<OutdoorTag, ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay>.self,
+//            from: data
+//          )
+//        ))
+//    case .twoWay:
+//      return try .cooling(
+//        route: .twoWay(
+//          decoder.decode(
+//            ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.self,
+//            from: data
+//          )
+//        ))
+//    case .keyed:
+//      return try .keyed(
+//        decoder.decode(ServerRoute.Api.Route.Interpolation.self, from: data)
+//      )
+//    }
   }
 }

@@ -1,5 +1,8 @@
+#if canImport(AppKit)
 import AppKit
+#endif
 import ArgumentParser
+import CliMiddleware
 import Dependencies
 import FirstPartyMocks
 import Foundation
@@ -14,7 +17,8 @@ extension EquipmentSelection {
       abstract: "Generate a template file to be used for equipment selection requests."
     )
 
-    @Flag var templateName: InterpolationName
+    @Flag
+    var templateName: CliMiddleware.InterpolationName = .keyed
     
     @Flag var copy: Bool = false
     
@@ -33,24 +37,21 @@ extension EquipmentSelection {
     }
     
     func run() async throws {
-      try withDependencies {
+      try await withDependencies {
+        $0.logger = logger
         if verbose {
           $0.logger.logLevel = .debug
         }
       } operation: {
+        @Dependency(\.cliMiddleware) var cliMiddleware: CliMiddleware
         @Dependency(\.logger) var logger: Logger
         
         logger.debug("Preparing to \(operationString) template: \(templateName)")
         
-        let data = try jsonEncoder.encode(templateName.template)
-        if !copy && !echo {
+        let data = try await cliMiddleware.template(templateName)
+        if let outputPath {
           let path = self.templateName.parseUrl(url: outputPath)
-          
-          if let outputPath {
-            logger.debug("Using path: \(outputPath.absoluteString).")
-          } else {
-            logger.debug("Using default path: \(path.absoluteString)")
-          }
+          logger.debug("Using path: \(path.absoluteString).")
           try data.write(to: path)
           logger.info("Wrote file to path: \(path.absoluteString)")
         } else {
@@ -59,13 +60,15 @@ extension EquipmentSelection {
             return
           }
           if copy {
+            #if canImport(AppKit)
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(string, forType: .string)
             logger.info("Copied template to pasteboard.")
+            #else
+            logger.info("Copying not supported in this context.")
+            #endif
           } else {
-            // don't use a logger here, so that it prints the string without
-            // logger metadata.
-            print(string)
+            logger.info("\(string)")
           }
         }
       }

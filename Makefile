@@ -72,14 +72,14 @@ format:
 		./Package.swift \
 		./Sources
 
-build-docker-image: clean
+build-docker-image:
 	docker build \
 		--file $(DOCKERFILE) \
 		--tag $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) \
 		--platform $(DOCKER_PLATFORM) \
 		.
 
-build-docker-dev-image: clean
+build-docker-dev-image:
 	$(MAKE) DOCKERFILE="Bootstrap/Dockerfile.dev" \
 		DOCKER_TAG="dev" \
 		build-docker-image
@@ -128,6 +128,6 @@ preview-documentation:
 		--target $(DOCC_TARGET)
 
 clean:
-	rm -rf .build
+	rm -rf .build || true
 
 .PHONY: format test-swift test-linux test-library

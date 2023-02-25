@@ -174,14 +174,14 @@ final class RouterTests: XCTestCase {
               "indoorWetBulb" : 63,
               "outdoorTemperature" : 90
             }
+          },
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
           }
-        }
-      },
-      "systemType" : {
-        "airToAir" : {
-          "climate" : "mildWinterOrLatentLoad",
-          "compressor" : "variableSpeed",
-          "type" : "heatPump"
         }
       }
     }
@@ -200,7 +200,6 @@ final class RouterTests: XCTestCase {
           route: .interpolate(.init(
             designInfo: .init(),
             houseLoad: .init(heating: 49_667, cooling: .init(total: 17_872, sensible: 13_894)),
-            systemType: .airToAir(type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad),
             route: .cooling(
               route: .noInterpolation(.init(
                 capacity: .init(
@@ -270,14 +269,14 @@ final class RouterTests: XCTestCase {
                 "total" : 0.97999999999999998
               }
             }
+          },
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
           }
-        }
-      },
-      "systemType" : {
-        "airToAir" : {
-          "climate" : "mildWinterOrLatentLoad",
-          "compressor" : "variableSpeed",
-          "type" : "heatPump"
         }
       }
     }
@@ -297,7 +296,6 @@ final class RouterTests: XCTestCase {
           route: .interpolate(.init(
             designInfo: .mock,
             houseLoad: .mock,
-            systemType: .default,
             route: .cooling(
               route: .oneWayIndoor(.init(.init(
                 aboveDesign: .init(
@@ -377,14 +375,14 @@ final class RouterTests: XCTestCase {
                 "total" : 0.97999999999999998
               }
             }
+          },
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
           }
-        }
-      },
-      "systemType" : {
-        "airToAir" : {
-          "climate" : "mildWinterOrLatentLoad",
-          "compressor" : "variableSpeed",
-          "type" : "heatPump"
         }
       }
     }
@@ -405,7 +403,6 @@ final class RouterTests: XCTestCase {
             
             designInfo: .mock,
             houseLoad: .mock,
-            systemType: .default,
             route: .cooling(
               route: .oneWayOutdoor(.init(.init(
                 aboveDesign: .init(
@@ -505,15 +502,15 @@ final class RouterTests: XCTestCase {
                 "sensible" : 1,
                 "total" : 1
               }
+            },
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
             }
           }
-        }
-      },
-      "systemType" : {
-        "airToAir" : {
-          "climate" : "mildWinterOrLatentLoad",
-          "compressor" : "variableSpeed",
-          "type" : "heatPump"
+          }
         }
       }
     }
@@ -533,7 +530,6 @@ final class RouterTests: XCTestCase {
           route: .interpolate(.init(
             designInfo: .mock,
             houseLoad: .mock,
-            systemType: .default,
             route: .cooling(
               route: .twoWay(.init(
                 aboveDesign: .init(.init(
@@ -622,7 +618,7 @@ final class RouterTests: XCTestCase {
         route: .interpolate(.init(
           designInfo: .init(),
           houseLoad: .mock,
-          systemType: .boilerOnly,
+          systemType: .heatingOnly(.boiler),
           route: .heating(
             route: .boiler(.init(
               input: 100_000,
@@ -680,7 +676,7 @@ final class RouterTests: XCTestCase {
         route: .interpolate(.init(
           designInfo: .init(),
           houseLoad: .mock,
-          systemType: .furnaceOnly,
+          systemType: .heatingOnly(.furnace),
           route: .heating(
             route: .furnace(.init(
               input: 100_000,
@@ -739,7 +735,7 @@ final class RouterTests: XCTestCase {
         route: .interpolate(.init(
           designInfo: .init(),
           houseLoad: .mock,
-          systemType: .electricOnly,
+          systemType: .heatingOnly(.electric),
           route: .heating(
             route: .electric(.init(
               heatPumpCapacity: 23_200,
@@ -866,7 +862,14 @@ final class RouterTests: XCTestCase {
                 }
               }
             ],
-            "key" : "system-1"
+            "name" : "bronze",
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "singleSpeed",
+              "type" : "airConditioner"
+            }
+          }
           },
           {
             "cooling" : {
@@ -916,7 +919,14 @@ final class RouterTests: XCTestCase {
                 }
               }
             ],
-            "key" : "system-2"
+            "name" : "silver",
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
+          }
           },
           {
             "cooling" : {
@@ -990,16 +1000,16 @@ final class RouterTests: XCTestCase {
                 }
               }
             ],
-            "key" : "system-3"
+            "name" : "gold",
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
+          }
           }
         ]
-      },
-      "systemType" : {
-        "airToAir" : {
-          "climate" : "mildWinterOrLatentLoad",
-          "compressor" : "variableSpeed",
-          "type" : "heatPump"
-        }
       }
     }
     """

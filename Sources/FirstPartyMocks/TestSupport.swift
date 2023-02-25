@@ -278,7 +278,7 @@ extension SystemType {
 extension ServerRoute.Api.Route.Interpolation {
 
   public static func mock(route: ServerRoute.Api.Route.Interpolation.Route) -> Self {
-    .init(designInfo: .mock, houseLoad: .mock, systemType: .default, route: route)
+    .init(designInfo: .mock, houseLoad: .mock, route: route)
   }
 }
 
@@ -286,14 +286,16 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
   
   public static let mocks: [Self] = [
     .init(
-      key: "system-1",
+      name: "bronze",
+      systemType: .airToAir(type: .airConditioner, compressor: .singleSpeed, climate: .mildWinterOrLatentLoad),
       cooling: .noInterpolation(.mock),
       heating: [
         .furnace(.mock)
       ]
     ),
     .init(
-      key: "system-2",
+      name: "silver",
+      systemType: .airToAir(type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad),
       cooling: .oneWayIndoor(.mock),
       heating: [
         .heatPump(.mock),
@@ -301,7 +303,8 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
       ]
     ),
     .init(
-      key: "system-3",
+      name: "gold",
+      systemType: .airToAir(type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad),
       cooling: .twoWay(.mock),
       heating: [
         .heatPump(.mock),
@@ -312,14 +315,14 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
   
   public static let zeros: [Self] = [
     .init(
-      key: "system-1",
+      name: "bronze",
       cooling: .noInterpolation(.zero),
       heating: [
         .furnace(.zero)
       ]
     ),
     .init(
-      key: "system-2",
+      name: "silver",
       cooling: .oneWayIndoor(.zero),
       heating: [
         .heatPump(.mock),
@@ -327,7 +330,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
       ]
     ),
     .init(
-      key: "system-3",
+      name: "gold",
       cooling: .twoWay(.zero),
       heating: [
         .heatPump(.zero),
