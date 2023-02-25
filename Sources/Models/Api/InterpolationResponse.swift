@@ -24,7 +24,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
   public enum Result: Codable, Equatable, Sendable {
     case cooling(Cooling)
     case heating(Heating)
-    //    case keyed([Keyed])
+    case keyed([Keyed])
 
     public struct Cooling: Codable, Equatable, Sendable {
       public let result: Result
@@ -153,19 +153,22 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
         }
       }
     }
-
-    //    public struct Keyed: Codable, Equatable, Sendable {
-    //      public let key: String
-    //      public let result: Either<InterpolationResponse.Result.Cooling, InterpolationResponse.Result.Heating>
-    //
-    //      public init(
-    //        key: String,
-    //        result: Either<InterpolationResponse.Result.Cooling, InterpolationResponse.Result.Heating>
-    //      ) {
-    //        self.key = key
-    //        self.result = result
-    //      }
-    //    }
+    
+    public struct Keyed: Codable, Equatable, Sendable {
+      public let key: String
+      public let cooling: InterpolationResponse
+      public let heating: [InterpolationResponse]
+      
+      public init(
+        key: String,
+        cooling: InterpolationResponse,
+        heating: [InterpolationResponse]
+      ) {
+        self.key = key
+        self.cooling = cooling
+        self.heating = heating
+      }
+    }
   }
 }
 // MARK: - Coding
@@ -185,8 +188,8 @@ extension InterpolationResponse.Result {
       try container.encode(cooling.result, forKey: .cooling)
     case let .heating(heating):
       try container.encode(heating.result, forKey: .heating)
-    //    case let .keyed(keyed):
-    //      try container.encode(keyed, forKey: .keyed)
+    case let .keyed(keyed):
+      try container.encode(keyed, forKey: .keyed)
     }
   }
 
@@ -202,12 +205,12 @@ extension InterpolationResponse.Result {
     {
       self = .heating(.init(result: heating))
       return
+    } else if let keyed = try? container.decode(
+      [InterpolationResponse.Result.Keyed].self, forKey: .keyed)
+    {
+      self = .keyed(keyed)
+      return
     }
-    //    else if let keyed = try? container.decode(
-    //      [InterpolationResponse.Result.Keyed].self, forKey: .keyed)
-    //    {
-    //      self = .keyed(keyed)
-    //    }
     struct DecodingError: Error {}
     throw DecodingError()
   }
