@@ -11,7 +11,7 @@ struct FixMeError: Error {}
 
 extension CliMiddleware: DependencyKey {
 
-  public static func live(//    baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
+  public static func live(  //    baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
     ) -> Self
   {
     @Dependency(\.apiClient) var apiClient
