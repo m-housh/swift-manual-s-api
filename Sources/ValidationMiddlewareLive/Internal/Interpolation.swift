@@ -19,7 +19,7 @@ extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
 }
 
 extension ServerRoute.Api.Route.Interpolation.Route.Cooling {
-  
+
   @usableFromInline
   func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
     switch self {
@@ -29,11 +29,12 @@ extension ServerRoute.Api.Route.Interpolation.Route.Cooling {
     case let .oneWayIndoor(indoor):
       try await OneWayIndoorValidation(request: request, oneWayIndoor: indoor.rawValue).validate()
     case let .oneWayOutdoor(outdoor):
-      try await OneWayOutdoorValidation(request: request, oneWayOutdoor: outdoor.rawValue).validate()
+      try await OneWayOutdoorValidation(request: request, oneWayOutdoor: outdoor.rawValue)
+        .validate()
     case let .twoWay(twoWay):
       try await TwoWayValidation(request: request, twoWay: twoWay).validate()
     }
-    
+
   }
 }
 

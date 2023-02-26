@@ -11,26 +11,26 @@ import XCTestDynamicOverlay
 /// Represents interactions with the file system.
 ///
 public struct FileClient {
-  
+
   /// Create a directory at the given url.
   public var createDirectory: (URL) async throws -> Void
-  
+
   /// Read the contents from the given url.
   public var read: (URL) async throws -> Data
-  
+
   /// Write the data to the given url.
   public var write: (Data, URL) async throws -> Void
-  
+
   public init(
     createDirectory: @escaping (URL) async throws -> Void,
     read: @escaping (URL) async throws -> Data,
-    write: @escaping (Data, URL) async throws -> Void)
-  {
+    write: @escaping (Data, URL) async throws -> Void
+  ) {
     self.createDirectory = createDirectory
     self.read = read
     self.write = write
   }
-  
+
   /// Create a directory at the given url.
   ///
   /// - Parameters:
@@ -38,7 +38,7 @@ public struct FileClient {
   public func createDirectory(at url: URL) async throws {
     try await self.createDirectory(url)
   }
-  
+
   /// Create a directory at the given url.
   ///
   /// - Parameters:
@@ -46,7 +46,7 @@ public struct FileClient {
   public func createDirectory(at path: String) async throws {
     try await self.createDirectory(URL(fileURLWithPath: path))
   }
-  
+
   /// Read the contents of a file from the given url.
   ///
   /// - Parameters:
@@ -54,7 +54,7 @@ public struct FileClient {
   public func read(from url: URL) async throws -> Data {
     try await self.read(url)
   }
-  
+
   /// Read the contents of a file from the given path.
   ///
   /// - Parameters:
@@ -65,7 +65,7 @@ public struct FileClient {
     let url = URL(fileURLWithPath: path)
     return try await self.read(url)
   }
-  
+
   /// Write the data to a file at the given url.
   ///
   /// - Parameters:
@@ -76,7 +76,7 @@ public struct FileClient {
   ) async throws {
     try await self.write(data, url)
   }
-  
+
   /// Write the data to a file at the given path.
   ///
   /// - Parameters:
@@ -91,24 +91,24 @@ public struct FileClient {
 }
 
 extension FileClient: DependencyKey {
-  
+
   /// A ``FileClient/FileClient`` that does not perform any actions.
   public static let noop = Self.init(
     createDirectory: { _ in },
     read: { _ in Data() },
     write: { _, _ in }
   )
-  
+
   public static let testValue: FileClient = .init(
     createDirectory: unimplemented("\(Self.self).createDirectory"),
     read: unimplemented("\(Self.self).read"),
     write: unimplemented("\(Self.self).write")
   )
-  
+
   public static var liveValue: FileClient {
-    
+
     @Dependency(\.logger) var logger
-    
+
     return .init(
       createDirectory: { url in
         logger.debug("Creating directory at: \(url.absoluteString)")

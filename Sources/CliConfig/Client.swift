@@ -11,22 +11,22 @@ import XCTestDynamicOverlay
 ///
 ///
 public struct CliConfigClient {
-  
+
   /// Return the current configuration being used.
   public var config: () async throws -> CliConfig
-  
+
   /// Generate the default configuration and write it at the url.
   public var generateConfig: (URL?) async throws -> Void
-  
+
   /// Generate the default templates and write them at the url.
   public var generateTemplates: (URL?) async throws -> Void
-  
+
   /// Save / update the command line configuration.
   public var save: (CliConfig) async throws -> Void
-  
+
   /// Retrieve a template for the given template path.
   public var template: (KeyPath<CliConfig.TemplatePaths, String>) async throws -> Data
-  
+
   public init(
     config: @escaping () async throws -> CliConfig,
     generateConfig: @escaping (URL?) async throws -> Void,
@@ -40,7 +40,7 @@ public struct CliConfigClient {
     self.save = save
     self.template = template
   }
-  
+
   /// Generate the default configuration in the given parent directory, if applicable.
   ///
   /// If a parent directory is not provided, then it will default to the ``CliConfig/CliConfig/configDirectory``.
@@ -52,7 +52,7 @@ public struct CliConfigClient {
   ) async throws {
     try await generateConfig(parentDirectory)
   }
-  
+
   /// Generate the default templates and write them at the url.
   ///
   /// If a parent directory is not provided, then it will default to the ``CliConfig/CliConfig/templateDirectoryPath``
@@ -64,7 +64,7 @@ public struct CliConfigClient {
   ) async throws {
     try await generateTemplates(parentDirectory)
   }
-  
+
   /// Retrieve a template for the given template path.
   ///
   /// - Parameters:
@@ -77,7 +77,7 @@ public struct CliConfigClient {
 }
 
 extension CliConfigClient: TestDependencyKey {
-  
+
   public static var noop: CliConfigClient {
     .init(
       config: { .init() },
@@ -87,7 +87,7 @@ extension CliConfigClient: TestDependencyKey {
       template: { _ in Data() }
     )
   }
-  
+
   public static let testValue: CliConfigClient = .init(
     config: unimplemented("\(Self.self).config"),
     generateConfig: unimplemented("\(Self.self).generateConfig"),

@@ -10,22 +10,22 @@ import XCTestDynamicOverlay
 ///
 ///
 public struct UserDefaultsClient {
-  
+
   /// Remove a value for the given key.
   public var removeValue: (Key) -> Void
-  
+
   /// Set a string value for the given key.
   public var setString: (String, Key) -> Void
-  
+
   /// Set a url value for the given key.
   public var setUrl: (URL, Key) -> Void
-  
+
   /// Retrieve a string for the given key.
   public var string: (Key) -> String?
-  
+
   /// Retrieve a url for the given key.
   public var url: (Key) -> URL?
-  
+
   public init(
     removeValue: @escaping (Key) -> Void,
     setString: @escaping (String, Key) -> Void,
@@ -39,8 +39,8 @@ public struct UserDefaultsClient {
     self.string = string
     self.url = url
   }
-  
-  public enum Key: String {
+
+  public enum Key: String, CaseIterable {
     case apiBaseUrl = "com.hvacmath.api-base-url"
     case anvilBaseUrl = "com.hvacmath.anvil-base-url"
     case configDirectory = "com.hvacmath.config-directory"
@@ -49,31 +49,31 @@ public struct UserDefaultsClient {
 }
 
 extension UserDefaultsClient {
-  
+
   public func removeValue(forKey key: Key) {
     self.removeValue(key)
   }
-  
+
   public func setString(_ string: String, forKey key: Key) {
     setString(string, key)
   }
-  
+
   public func setUrl(_ url: URL, forKey key: Key) {
     setUrl(url, key)
   }
-  
+
   public func string(forKey key: Key) -> String? {
     self.string(key)
   }
-  
+
   public func url(forKey key: Key) -> URL? {
     self.url(key)
   }
-  
+
 }
 
 extension UserDefaultsClient: DependencyKey {
-  
+
   public static let noop = Self.init(
     removeValue: { _ in },
     setString: { _, _ in },
@@ -81,15 +81,15 @@ extension UserDefaultsClient: DependencyKey {
     string: { _ in nil },
     url: { _ in nil }
   )
- 
+
   public static let testValue: UserDefaultsClient = .init(
     removeValue: unimplemented("\(Self.self).removeValue"),
     setString: unimplemented("\(Self.self).setString"),
     setUrl: unimplemented("\(Self.self).setUrl"),
     string: unimplemented("\(Self.self).string"),
-    url: unimplemented("\(Self.self).url", placeholder: URL(string: "http://localhost:8080")!)
+    url: unimplemented("\(Self.self).url", placeholder: URL(string: "http://localhost:8080"))
   )
-  
+
   public static let liveValue: UserDefaultsClient = .init(
     removeValue: { key in
       UserDefaults.standard.removeObject(forKey: key.rawValue)

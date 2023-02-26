@@ -3,10 +3,10 @@ import Validations
 
 // TODO: Need to validate houseLoad, designInfo, seperate of the cooling validations.
 extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
-  
+
   @usableFromInline
   func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
-    
+
     try await AsyncValidator.accumulating {
       AnyAsyncValidator {
         try await self.cooling.validate(request: request)
@@ -20,7 +20,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
 }
 
 extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Keyed {
-  
+
   @usableFromInline
   func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
     for keyed in self {
@@ -30,7 +30,7 @@ extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Keyed
 }
 
 extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Heating {
-  
+
   @usableFromInline
   func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
     for heating in self {

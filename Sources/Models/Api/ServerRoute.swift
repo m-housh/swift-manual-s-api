@@ -514,7 +514,7 @@ public struct Interpolation: Codable, Equatable, Sendable {
 
 // MARK: - Coding
 extension Interpolation {
-  
+
   // Encode in specific order.
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)

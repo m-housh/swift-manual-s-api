@@ -83,7 +83,7 @@ var package = Package(
       name: "UserDefaultsClient",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
     .target(
@@ -165,12 +165,12 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .package(url: "https://github.com/adorkable/swift-log-format-and-pipe.git", from: "0.1.0"),
   ])
   package.products.append(contentsOf: [
+    .executable(name: "equipment-selection", targets: ["equipment-selection"]),
     .library(name: "CliConfig", targets: ["CliConfig"]),
     .library(name: "CliConfigLive", targets: ["CliConfigLive"]),
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
     .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
     .library(name: "FileClient", targets: ["FileClient"]),
-    .executable(name: "equipment-selection", targets: ["equipment-selection"]),
   ])
   package.targets.append(contentsOf: [
     .target(
@@ -179,7 +179,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Tagged", package: "swift-tagged"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
     .target(
@@ -195,6 +195,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "CliConfig",
         "CliConfigLive",
+        .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
     .target(
@@ -225,7 +226,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "LoggingDependency",
         "Models",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
-        .product(name: "LoggingFormatAndPipe", package: "swift-log-format-and-pipe")
+        .product(name: "LoggingFormatAndPipe", package: "swift-log-format-and-pipe"),
       ]
     ),
     .target(
@@ -234,7 +235,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "LoggingDependency",
         .product(name: "Logging", package: "swift-log"),
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
   ])

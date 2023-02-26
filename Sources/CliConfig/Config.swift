@@ -9,36 +9,36 @@ import Tagged
 /// Represents configuration / overrides for the command line tool.
 ///
 public struct CliConfig: Codable, Equatable, Sendable {
-  
+
   /// The API key for generating pdf's.
   ///
   /// This can also be set by an environment variable `ANVIL_API_KEY`.
   ///
   public var anvilApiKey: String
-  
+
   /// The base url for the ``ApiClient``.
   public var apiBaseUrl: String?
-  
+
   /// The current directory to read the configuration from.
   ///
   /// This is either set by an environment variable `EQUIPMENT_SELECTION_CONFIG_DIR` or defaults
   /// to `$XDG_CONFIG_HOME/.config/equipment-selection`.
   public var configDirectory: String
-  
+
   /// The current directory to read template files from.
   ///
   /// This can also be set by an environment variable `EQUIPMENT_SELECTION_TEMPLATES` or
   /// it will default to `$XDG_CONFIG_HOME/.config/equipment-selection/templates`.
   ///
   public var templateDirectoryPath: String?
-  
+
   /// The template id's to use to generate pdf's with the anvil client.
   public var templateIds: TemplateIds
-  
+
   /// Override path's / file names for reading templates.
   ///
   public var templatePaths: TemplatePaths
-  
+
   public init(
     anvilApiKey: String = "deadbeef",
     apiBaseUrl: String? = nil,
@@ -54,7 +54,7 @@ public struct CliConfig: Codable, Equatable, Sendable {
     self.templateIds = templateIds
     self.templatePaths = templatePaths
   }
-  
+
   public var configPath: URL {
     let url: URL
     if #available(macOS 13.0, *) {
@@ -76,7 +76,7 @@ private let configFileNameKey = "config.json"
 
 public let defaultConfigPath: String = {
   return ProcessInfo.processInfo.environment[XDG_CONFIG_HOME_KEY]
-  ?? defaultConfigHomeKey
+    ?? defaultConfigHomeKey
 }()
 
 extension CliConfig {
@@ -91,7 +91,7 @@ extension CliConfig {
     public var oneWayIndoor: String
     public var oneWayOutdoor: String
     public var twoWay: String
-    
+
     @inlinable
     public init(
       baseInterpolation: String = "baseInterpolation.json",
@@ -122,7 +122,7 @@ extension CliConfig {
     public var designInfo: DesignInfo
     public var houseLoad: HouseLoad
     public var systemType: SystemType?
-    
+
     @inlinable
     public init(
       designInfo: DesignInfo,
@@ -134,13 +134,13 @@ extension CliConfig {
       self.systemType = systemType
     }
   }
-  
+
   public struct TemplateIds: Codable, Equatable, Sendable {
     public var noInterpolation: String
     public var oneWayIndoor: String
     public var oneWayOutdoor: String
     public var twoWay: String
-    
+
     @inlinable
     public init(
       noInterpolation: String = "deadbeef",

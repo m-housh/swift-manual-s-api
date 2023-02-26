@@ -20,9 +20,9 @@ extension ApiClient: DependencyKey {
   public static func live(
     baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
   ) -> Self {
-    
+
     @Dependency(\.userDefaults) var userDefaults
-    
+
     #if DEBUG
       let baseUrl = userDefaults.url(forKey: .apiBaseUrl) ?? defaultBaseUrl
     #else
@@ -32,7 +32,7 @@ extension ApiClient: DependencyKey {
     let router = SiteRouter(decoder: jsonDecoder, encoder: jsonEncoder)
 
     actor Session {
-      
+
       nonisolated let baseUrl: Isolated<URL>
       private let router: SiteRouter
 

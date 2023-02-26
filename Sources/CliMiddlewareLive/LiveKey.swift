@@ -11,9 +11,9 @@ struct FixMeError: Error {}
 
 extension CliMiddleware: DependencyKey {
 
-  public static func live(
-//    baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
-  ) -> Self {
+  public static func live(//    baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
+    ) -> Self
+  {
     @Dependency(\.apiClient) var apiClient
     @Dependency(\.fileClient) var fileClient
     @Dependency(\.userDefaults) var userDefaults
@@ -59,11 +59,11 @@ private let jsonEncoder: JSONEncoder = {
   return encoder
 }()
 
-fileprivate extension CliMiddleware.InterpolationName {
-  
+extension CliMiddleware.InterpolationName {
+
   // TODO: Allow templates to be embeded in an interpolation?
   //       currently, only keyed is embedded.
-  func template() throws -> Data {
+  fileprivate func template() throws -> Data {
     switch self {
     case .boiler:
       return try jsonEncoder.encode(

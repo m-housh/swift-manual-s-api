@@ -1,6 +1,7 @@
 import XCTest
 import CliConfig
 import CliConfigLive
+import CustomDump
 import Dependencies
 import FileClient
 import Foundation
@@ -21,7 +22,7 @@ final class CliConfigTests: XCTestCase {
     defaults.apiBaseUrl = "http://localhost:8080"
     defaults.configDirectory = "~/.config/custom-equipment-selection"
     
-    XCTAssertEqual(config, defaults)
+    XCTAssertNoDifference(config, defaults)
   }
   
   func test_config_loads_custom() async throws {

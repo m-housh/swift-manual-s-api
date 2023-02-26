@@ -9,23 +9,23 @@ import XCTestDynamicOverlay
 
 // TODO: Add configuration for file templates loaded from disk.
 public struct CliMiddleware {
-  
+
   public var baseUrl: () async -> URL
   public var generatePdf:
-  (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws -> Data
+    (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws -> Data
   public var interpolate:
-  (ServerRoute.Api.Route.Interpolation) async throws -> InterpolationResponse
+    (ServerRoute.Api.Route.Interpolation) async throws -> InterpolationResponse
   public var readFile: (URL) async throws -> Data
   public var setBaseUrl: (URL) async -> Void
   public var template: (InterpolationName) async throws -> Data
   public var writeFile: (Data, URL) async throws -> Void
-  
+
   public init(
     baseUrl: @escaping () async -> URL,
     generatePdf: @escaping (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws
-    -> Data,
+      -> Data,
     interpolate: @escaping (ServerRoute.Api.Route.Interpolation) async throws ->
-    InterpolationResponse,
+      InterpolationResponse,
     readFile: @escaping (URL) async throws -> Data,
     setBaseUrl: @escaping (URL) async -> Void,
     template: @escaping (InterpolationName) async throws -> Data,
@@ -39,7 +39,7 @@ public struct CliMiddleware {
     self.template = template
     self.writeFile = writeFile
   }
-  
+
   public enum InterpolationName: String, CaseIterable {
     case boiler
     case electric
@@ -51,7 +51,7 @@ public struct CliMiddleware {
     case oneWayOutdoor
     case twoWay
   }
-  
+
 }
 
 extension CliMiddleware {

@@ -3,7 +3,7 @@ import Foundation
 @_exported import Logging
 
 extension DependencyValues {
-  
+
   /// Access a ``Logging/Logger`` dependency.
   public var logger: Logger {
     get { self[LoggingKey.self] }
