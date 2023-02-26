@@ -2,6 +2,7 @@ import Models
 import Validations
 
 // TODO: Add basic validations for houseLoad, designInfo, etc.
+// TODO: Add validation that systemType is there if route is not keyed.
 extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
 
   @inlinable

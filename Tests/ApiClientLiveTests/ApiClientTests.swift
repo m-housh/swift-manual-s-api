@@ -93,4 +93,13 @@ class ApiClientLiveTests: XCTestCase {
     )
     XCTAssertFalse(response.isFailed)
   }
+  
+  func test_interpolate_keyed() async throws {
+    @Dependency(\.apiClient) var client
+    let response = try await client.apiRequest(
+      route: .interpolate(.mock(route: .keyed(.mocks))),
+      as: InterpolationResponse.self
+    )
+    XCTAssertFalse(response.isFailed)
+  }
 }

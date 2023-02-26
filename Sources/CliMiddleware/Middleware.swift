@@ -3,6 +3,10 @@ import Foundation
 import Models
 import XCTestDynamicOverlay
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 // TODO: Add configuration for file templates loaded from disk.
 public struct CliMiddleware {
   
@@ -41,11 +45,11 @@ public struct CliMiddleware {
     case electric
     case furnace
     case heatPump
+    case keyed
     case noInterpolation
     case oneWayIndoor
     case oneWayOutdoor
     case twoWay
-    case keyed
   }
   
 }

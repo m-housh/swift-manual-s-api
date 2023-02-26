@@ -16,7 +16,7 @@ extension EquipmentSelection {
     )
 
     @Flag(help: "The interpolation to run.")
-    var interpolation: CliMiddleware.InterpolationName
+    var interpolation: CliMiddleware.InterpolationName = .keyed
 
     @Option(
       name: .shortAndLong,
@@ -118,6 +118,7 @@ extension EquipmentSelection.Interpolate {
     ) {
       let data = try await cliMiddleware.readFile(inputPath)
       let interpolation = try JSONDecoder().decode(ServerRoute.Api.Route.Interpolation.self, from: data)
+      logger.debug("Read interpolation file at: \(inputPath.absoluteString)")
 //      let route = try interpolation.route(data: data)
       let response = try await cliMiddleware.interpolate(interpolation)
       return (interpolation, response)

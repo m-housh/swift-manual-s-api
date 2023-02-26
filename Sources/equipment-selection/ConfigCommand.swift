@@ -1,4 +1,5 @@
 import ArgumentParser
+import CliConfigLive
 import CliMiddlewareLive
 import Dependencies
 import Foundation
@@ -7,7 +8,7 @@ extension EquipmentSelection {
   struct Config: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       abstract: "Configure defaults.",
-      subcommands: [SetCommand.self, ShowCommand.self],
+      subcommands: [GenerateConfigCommand.self, SetCommand.self, ShowCommand.self],
       defaultSubcommand: SetCommand.self
     )
   }
@@ -17,6 +18,27 @@ extension EquipmentSelection.Config {
 
   enum Key: String, EnumerableFlag {
     case baseUrl
+  }
+  
+  struct GenerateConfigCommand: AsyncParsableCommand {
+    static var configuration: CommandConfiguration = .init(
+      commandName: "generate-config",
+      abstract: "Generate a local configuration file."
+    )
+    
+    func run() async throws {
+      try await withDependencies {
+        $0.cliConfigClient = .liveValue
+      } operation: {
+        @Dependency(\.cliConfigClient) var cliConfigClient
+        @Dependency(\.logger) var logger
+        
+        let config = try await cliConfigClient.config()
+        
+        try await cliConfigClient.generateConfig()
+        logger.info("Wrote config to path: \(config.configPath.absoluteString)")
+      }
+    }
   }
 
   struct SetCommand: AsyncParsableCommand {

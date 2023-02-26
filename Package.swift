@@ -8,6 +8,8 @@ var package = Package(
   name: "swift-manual-s-api",
   platforms: [.macOS(.v12)],
   products: [
+    .library(name: "AnvilClient", targets: ["AnvilClient"]),
+    .library(name: "ConcurrencyHelpers", targets: ["ConcurrencyHelpers"]),
     .library(name: "FirstPartyMocks", targets: ["FirstPartyMocks"]),
     .library(name: "Models", targets: ["Models"]),
     .library(name: "SiteRouter", targets: ["SiteRouter"]),
@@ -39,6 +41,7 @@ var package = Package(
         .product(name: "URLRouting", package: "swift-url-routing"),
       ]
     ),
+    .target(name: "ConcurrencyHelpers"),
     .target(
       name: "FirstPartyMocks",
       dependencies: [
@@ -130,6 +133,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "ApiClientLive",
       dependencies: [
         "ApiClient",
+        "ConcurrencyHelpers",
         "Models",
         "SiteRouter",
       ]
@@ -151,11 +155,35 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .package(url: "https://github.com/adorkable/swift-log-format-and-pipe.git", from: "0.1.0"),
   ])
   package.products.append(contentsOf: [
+    .library(name: "CliConfig", targets: ["CliConfig"]),
+    .library(name: "CliConfigLive", targets: ["CliConfigLive"]),
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
     .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
     .executable(name: "equipment-selection", targets: ["equipment-selection"]),
   ])
   package.targets.append(contentsOf: [
+    .target(
+      name: "CliConfig",
+      dependencies: [
+        "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "Tagged", package: "swift-tagged"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
+      name: "CliConfigLive",
+      dependencies: [
+        "CliConfig",
+        "ConcurrencyHelpers",
+      ]
+    ),
+    .testTarget(
+      name: "CliConfigTests",
+      dependencies: [
+        "CliConfigLive",
+      ]
+    ),
     .target(
       name: "CliMiddleware",
       dependencies: [
@@ -176,6 +204,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "equipment-selection",
       dependencies: [
         "ApiClientLive",
+        "CliConfigLive",
         "CliMiddlewareLive",
         "FirstPartyMocks",
         "LoggingDependency",
