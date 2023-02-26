@@ -216,8 +216,8 @@ func apiRequest(_ template: OneWayIndoorAnvilTemplate) async throws -> (Data, UR
   let authString = "Basic \(b64Auth)"
   request.setValue(authString, forHTTPHeaderField: "Authorization")
   #if os(Linux)
-  return try await URLSession.shared.asyncData(for: request)
+    return try await URLSession.shared.asyncData(for: request)
   #else
-  return try await URLSession.shared.data(for: request)
+    return try await URLSession.shared.data(for: request)
   #endif
 }

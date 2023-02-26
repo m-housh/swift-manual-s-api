@@ -58,21 +58,20 @@ public struct CliConfig: Codable, Equatable, Sendable {
   public var configPath: URL {
     let url: URL
     #if !os(Linux)
-    if #available(macOS 13.0, *) {
-      url = URL(fileURLWithPath: configDirectory, isDirectory: true, relativeTo: .homeDirectory)
-    }
-    else {
-      // Fallback on earlier versions
+      if #available(macOS 13.0, *) {
+        url = URL(fileURLWithPath: configDirectory, isDirectory: true, relativeTo: .homeDirectory)
+      } else {
+        // Fallback on earlier versions
+        url = URL(
+          fileURLWithPath: configDirectory,
+          relativeTo: FileManager.default.homeDirectoryForCurrentUser
+        )
+      }
+    #else
       url = URL(
         fileURLWithPath: configDirectory,
         relativeTo: FileManager.default.homeDirectoryForCurrentUser
       )
-    }
-    #else
-    url = URL(
-      fileURLWithPath: configDirectory,
-      relativeTo: FileManager.default.homeDirectoryForCurrentUser
-    )
     #endif
     return url.appendingPathComponent(configFileNameKey)
   }
