@@ -27,7 +27,7 @@ extension CliMiddleware.InterpolationName {
       return URL(fileURLWithPath: defaultOutputPath)
     }
     guard url.isFileURL && url.pathExtension == "json" else {
-      return url.appendingPathComponent(defaultOutputPath, conformingTo: .json)
+      return url.appendingPathComponent(defaultOutputPath)
     }
     return url
   }

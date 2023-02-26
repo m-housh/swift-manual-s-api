@@ -1,3 +1,4 @@
+import ConcurrencyHelpers
 import Foundation
 import Models
 
@@ -214,5 +215,9 @@ func apiRequest(_ template: OneWayIndoorAnvilTemplate) async throws -> (Data, UR
   let b64Auth = Data("\(apiKey)".utf8).base64EncodedString()
   let authString = "Basic \(b64Auth)"
   request.setValue(authString, forHTTPHeaderField: "Authorization")
+  #if os(Linux)
+  return try await URLSession.shared.asyncData(for: request)
+  #else
   return try await URLSession.shared.data(for: request)
+  #endif
 }

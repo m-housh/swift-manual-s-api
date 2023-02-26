@@ -222,6 +222,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "ApiClientLive",
         "CliConfigLive",
         "CliMiddlewareLive",
+        "ConcurrencyHelpers",
         "FirstPartyMocks",
         "LoggingDependency",
         "Models",
