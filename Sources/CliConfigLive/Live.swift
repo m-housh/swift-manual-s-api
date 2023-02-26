@@ -50,11 +50,11 @@ extension CliConfigClient: DependencyKey {
         } else {
           templatesDirectory = config.value.configPath
             .deletingLastPathComponent()
-            .appendingPathComponent("templates", conformingTo: .directory)
+            .appendingPathComponent("templates")
         }
        
         let templatePath = config.templatePaths[keyPath: keyPath]
-        let templateFilePath = templatesDirectory.appendingPathComponent(templatePath, conformingTo: .json)
+        let templateFilePath = templatesDirectory.appendingPathComponent(templatePath)
         return try await fileClient.read(from: templateFilePath)
       }
     }

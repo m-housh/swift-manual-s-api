@@ -96,7 +96,7 @@ extension EquipmentSelection.Interpolate {
 
       // Write the result to as json.
       if command.writeJson {
-        let jsonPath = outputPath.appendingPathComponent("result.json", conformingTo: .json)
+        let jsonPath = outputPath.appendingPathComponent("result.json")
         let data = try jsonEncoder.encode(result.result)
         try await cliMiddleware.writeFile(data, to: jsonPath)
         logger.info("Wrote result to: \(jsonPath.absoluteString)")
@@ -105,7 +105,7 @@ extension EquipmentSelection.Interpolate {
       // Generate a pdf and write to disk.
       if command.generatePdf {
         let pdfData = try await cliMiddleware.generatePdf(route, result)
-        let pdfPath = outputPath.appendingPathComponent("result.pdf", conformingTo: .pdf)
+        let pdfPath = outputPath.appendingPathComponent("result.pdf")
         try await cliMiddleware.writeFile(pdfData, to: pdfPath)
         logger.info("Wrote result to: \(pdfPath.absoluteString)")
       }
