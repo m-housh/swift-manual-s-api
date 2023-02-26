@@ -4,11 +4,13 @@ import Dependencies
 import Foundation
 import Models
 import SiteRouter
+import UserDefaultsClient
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
 #endif
 
+// TODO: Use `UserDefaultsClient`
 extension ApiClient: DependencyKey {
 
   public static var liveValue: ApiClient {
@@ -18,8 +20,11 @@ extension ApiClient: DependencyKey {
   public static func live(
     baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
   ) -> Self {
+    
+    @Dependency(\.userDefaults) var userDefaults
+    
     #if DEBUG
-      let baseUrl = UserDefaults.standard.url(forKey: baseUrlKey) ?? defaultBaseUrl
+      let baseUrl = userDefaults.url(forKey: .apiBaseUrl) ?? defaultBaseUrl
     #else
       let baseUrl = URL(string: "https://hvacmath.com")!
     #endif
@@ -27,14 +32,15 @@ extension ApiClient: DependencyKey {
     let router = SiteRouter(decoder: jsonDecoder, encoder: jsonEncoder)
 
     actor Session {
+      
       nonisolated let baseUrl: Isolated<URL>
       private let router: SiteRouter
 
-      init(baseUrl: URL, router: SiteRouter) {
+      init(baseUrl: URL, router: SiteRouter, userDefaults: UserDefaultsClient) {
         self.baseUrl = .init(
           baseUrl,
           didSet: { _, newValue in
-            UserDefaults.standard.set(newValue, forKey: baseUrlKey)
+            userDefaults.setUrl(newValue, forKey: .apiBaseUrl)
           }
         )
         self.router = router
@@ -61,7 +67,7 @@ extension ApiClient: DependencyKey {
       }
     }
 
-    let session = Session(baseUrl: baseUrl, router: router)
+    let session = Session(baseUrl: baseUrl, router: router, userDefaults: userDefaults)
 
     return Self(
       apiRequest: { try await session.apiRequest(route: $0) },

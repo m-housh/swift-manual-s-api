@@ -68,22 +68,17 @@ extension EquipmentSelection.Config {
   struct ShowCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "show",
-      abstract: "Show a default value."
+      abstract: "Show the current configuration values."
     )
 
-    @Flag
-    var key: Key
-
     func run() async throws {
-      @Dependency(\.cliMiddleware) var cliMiddleware
+      @Dependency(\.cliConfigClient) var cliConfigClient
       @Dependency(\.logger) var logger
+      
+      let config = try await cliConfigClient.config()
+      let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!
+      logger.info("\(string)")
 
-      switch key {
-      case .baseUrl:
-        let url = cliMiddleware.baseUrl()
-        logger.info("\(url.absoluteString)")
-      }
     }
   }
-
 }

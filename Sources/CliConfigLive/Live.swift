@@ -1,12 +1,17 @@
 @_exported import CliConfig
 import ConcurrencyHelpers
 import Dependencies
+import FileClient
 import Foundation
 
 extension CliConfigClient: DependencyKey {
   
   public static var liveValue: CliConfigClient {
+  
     actor Session {
+      
+      @Dependency(\.fileClient) var fileClient
+      
       nonisolated let config: Isolated<CliConfig> = .init(wrappedValue: CliConfigLive.config())
       
       // fix.
@@ -14,23 +19,20 @@ extension CliConfigClient: DependencyKey {
        // do something
       }
       
-      func generateConfig() async throws {
-        try await self.writeConfig()
+      func generateConfig(at path: URL?) async throws {
+        try await self.writeConfig(at: path)
       }
       
-      private func writeConfig() async throws {
+      private func writeConfig(at path: URL? = nil) async throws {
         
-        let configDirectory = config.value.configPath.deletingLastPathComponent()
+        let configDirectory = path
+        ?? config.value.configPath.deletingLastPathComponent()
         
-        try? FileManager.default.createDirectory(
-          at: configDirectory,
-          withIntermediateDirectories: true
-        )
-        
+        try await fileClient.createDirectory(at: configDirectory)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted]
-        let data = try encoder.encode(self.config.value)
-        try data.write(to: config.value.configPath)
+        let data = try encoder.encode(config.value.localConfig)
+        try await fileClient.write(data: data, to: config.value.configPath)
       }
       
       func save(config: CliConfig) async throws {
@@ -53,7 +55,7 @@ extension CliConfigClient: DependencyKey {
        
         let templatePath = config.templatePaths[keyPath: keyPath]
         let templateFilePath = templatesDirectory.appendingPathComponent(templatePath, conformingTo: .json)
-        return try Data(contentsOf: templateFilePath)
+        return try await fileClient.read(from: templateFilePath)
       }
     }
     
@@ -63,7 +65,7 @@ extension CliConfigClient: DependencyKey {
       config: {
         session.config.value
       },
-      generateConfig: session.generateConfig,
+      generateConfig: session.generateConfig(at:),
       generateTemplates: session.generateTemplates(at:),
       save: session.save(config:),
       template: session.template(for:)
@@ -72,28 +74,20 @@ extension CliConfigClient: DependencyKey {
 }
 
 fileprivate func config() -> CliConfig {
-  let defaultConfig = CliConfig()
+  
+  var config = CliConfig()
   let decoder = JSONDecoder()
   let encoder = JSONEncoder()
-  
-  let defaultConfigDict = (try? encoder.encode(defaultConfig))
-    .flatMap { try? decoder.decode([String: String].self, from: $0) }
-  ?? [:]
-  
-  let localConfigDict = (try? Data(contentsOf: defaultConfig.configPath))
-    .flatMap { try? decoder.decode([String: String].self, from: $0) }
-  ?? [:]
+ 
+  if let localConfig = (try? Data(contentsOf: config.configPath))
+    .flatMap({ try? decoder.decode(LocalConfig.self, from: $0) })
+  {
+    localConfig.merge(with: &config)
+  }
   
   let configEnvironment = (try? encoder.encode(ProcessInfo.processInfo.environment))
     .flatMap { try? decoder.decode(ConfigEnvironment.self, from: $0) }
-  
-  let configDict = defaultConfigDict
-    .merging(localConfigDict, uniquingKeysWith: { $1 })
-  
-  var config = (try? JSONSerialization.data(withJSONObject: configDict))
-    .flatMap { try? decoder.decode(CliConfig.self, from: $0) }
-  ?? defaultConfig
- 
+
   if let configEnvironment {
     configEnvironment.merge(with: &config)
   }
@@ -120,4 +114,33 @@ fileprivate struct ConfigEnvironment: Decodable {
     case configDirectory = "EQUIPMENT_SELCTION_CONFIG_DIR"
     case templateDirectoryPath = "EQUIPMENT_SELECTION_TEMPLATES"
   }
+}
+
+// Represents the config values that can be read / saved to disk.
+fileprivate struct LocalConfig: Codable {
+  var anvilApiKey: String?
+  var apiBaseUrl: String?
+  var templateDirectoryPath: String?
+  var templateIds: CliConfig.TemplateIds?
+  var templatePaths: CliConfig.TemplatePaths?
+  
+  init(cliConfig: CliConfig) {
+    self.anvilApiKey = cliConfig.anvilApiKey
+    self.apiBaseUrl = cliConfig.apiBaseUrl
+    self.templateDirectoryPath = cliConfig.templateDirectoryPath
+    self.templateIds = cliConfig.templateIds
+    self.templatePaths = cliConfig.templatePaths
+  }
+  
+  func merge(with config: inout CliConfig) {
+    if let anvilApiKey { config.anvilApiKey = anvilApiKey }
+    if let apiBaseUrl { config.apiBaseUrl = apiBaseUrl }
+    if let templateDirectoryPath { config.templateDirectoryPath = templateDirectoryPath }
+    if let templateIds { config.templateIds = templateIds }
+    if let templatePaths { config.templatePaths = templatePaths}
+  }
+}
+
+fileprivate extension CliConfig {
+  var localConfig: LocalConfig { .init(cliConfig: self) }
 }

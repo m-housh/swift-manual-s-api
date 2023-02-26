@@ -10,7 +10,7 @@ import XCTestDynamicOverlay
 // TODO: Add configuration for file templates loaded from disk.
 public struct CliMiddleware {
   
-  public var baseUrl: () -> URL
+  public var baseUrl: () async -> URL
   public var generatePdf:
   (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws -> Data
   public var interpolate:
@@ -21,7 +21,7 @@ public struct CliMiddleware {
   public var writeFile: (Data, URL) async throws -> Void
   
   public init(
-    baseUrl: @escaping () -> URL,
+    baseUrl: @escaping () async -> URL,
     generatePdf: @escaping (ServerRoute.Api.Route.Interpolation, InterpolationResponse) async throws
     -> Data,
     interpolate: @escaping (ServerRoute.Api.Route.Interpolation) async throws ->

@@ -11,8 +11,10 @@ var package = Package(
     .library(name: "AnvilClient", targets: ["AnvilClient"]),
     .library(name: "ConcurrencyHelpers", targets: ["ConcurrencyHelpers"]),
     .library(name: "FirstPartyMocks", targets: ["FirstPartyMocks"]),
+    .library(name: "LoggingDependency", targets: ["LoggingDependency"]),
     .library(name: "Models", targets: ["Models"]),
     .library(name: "SiteRouter", targets: ["SiteRouter"]),
+    .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
     .library(name: "ValidationMiddleware", targets: ["ValidationMiddleware"]),
     .library(name: "ValidationMiddlewareLive", targets: ["ValidationMiddlewareLive"]),
     .library(name: "XCTestDebugSupport", targets: ["XCTestDebugSupport"]),
@@ -78,6 +80,13 @@ var package = Package(
       ]
     ),
     .target(
+      name: "UserDefaultsClient",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
       name: "ValidationMiddleware",
       dependencies: [
         "Models",
@@ -108,15 +117,15 @@ var package = Package(
 
 // MARK: - Client
 if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
-
+  package.platforms?.append(contentsOf: [
+    .iOS(.v13)
+  ])
   package.dependencies.append(contentsOf: [
     .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "0.12.0")
   ])
-
   package.products.append(contentsOf: [
     .library(name: "ApiClient", targets: ["ApiClient"])
   ])
-
   package.targets.append(contentsOf: [
     .target(
       name: "ApiClient",
@@ -136,6 +145,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "ConcurrencyHelpers",
         "Models",
         "SiteRouter",
+        "UserDefaultsClient",
       ]
     ),
     .testTarget(
@@ -159,6 +169,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .library(name: "CliConfigLive", targets: ["CliConfigLive"]),
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
     .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
+    .library(name: "FileClient", targets: ["FileClient"]),
     .executable(name: "equipment-selection", targets: ["equipment-selection"]),
   ])
   package.targets.append(contentsOf: [
@@ -176,11 +187,13 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "CliConfig",
         "ConcurrencyHelpers",
+        "FileClient",
       ]
     ),
     .testTarget(
       name: "CliConfigTests",
       dependencies: [
+        "CliConfig",
         "CliConfigLive",
       ]
     ),
@@ -197,7 +210,9 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "ApiClient",
         "CliMiddleware",
+        "FileClient",
         "FirstPartyMocks",
+        "UserDefaultsClient",
       ]
     ),
     .executableTarget(
@@ -211,6 +226,15 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "Models",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         .product(name: "LoggingFormatAndPipe", package: "swift-log-format-and-pipe")
+      ]
+    ),
+    .target(
+      name: "FileClient",
+      dependencies: [
+        "LoggingDependency",
+        .product(name: "Logging", package: "swift-log"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
       ]
     ),
   ])
@@ -229,7 +253,6 @@ package.products.append(contentsOf: [
   .library(name: "ApiRouteMiddlewareLive", targets: ["ApiRouteMiddlewareLive"]),
   .library(name: "DocumentMiddleware", targets: ["DocumentMiddleware"]),
   .library(name: "DocumentMiddlewareLive", targets: ["DocumentMiddlewareLive"]),
-  .library(name: "LoggingDependency", targets: ["LoggingDependency"]),
   .executable(name: "server", targets: ["server"]),
   .library(name: "ServerConfig", targets: ["ServerConfig"]),
   .library(name: "SiteMiddleware", targets: ["SiteMiddleware"]),

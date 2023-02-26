@@ -2,6 +2,7 @@ import XCTest
 import CliConfig
 import CliConfigLive
 import Dependencies
+import FileClient
 import Foundation
 
 @MainActor
@@ -17,8 +18,8 @@ final class CliConfigTests: XCTestCase {
     
     var defaults = CliConfig()
     defaults.anvilApiKey = "secret"
-    defaults.apiBaseUrl = URL(string: "http://localhost:8080")!
-    defaults.configDirectory = URL(string: "~/.config/custom-equipment-selection")!
+    defaults.apiBaseUrl = "http://localhost:8080"
+    defaults.configDirectory = "~/.config/custom-equipment-selection"
     
     XCTAssertEqual(config, defaults)
   }
@@ -31,10 +32,11 @@ final class CliConfigTests: XCTestCase {
     try FileManager.default.createDirectory(at: customConfigDirectory, withIntermediateDirectories: false)
     defer { try? FileManager.default.removeItem(at: customConfigDirectory) }
     
-    customConfig.configDirectory = customConfigDirectory
+    customConfig.configDirectory = customConfigDirectory.absoluteString
     XCTAssertFalse(FileManager.default.fileExists(atPath: customConfig.configPath.absoluteString))
     
     let client = try await withDependencies {
+      $0.fileClient = .liveValue
       $0.cliConfigClient = .liveValue
     } operation: {
       @Dependency(\.cliConfigClient) var cliConfigClient

@@ -1,22 +1,26 @@
 import ApiClient
 @_exported import CliMiddleware
 import Dependencies
+import FileClient
 import FirstPartyMocks
 import Foundation
 import Models
+import UserDefaultsClient
 
 struct FixMeError: Error {}
 
 extension CliMiddleware: DependencyKey {
 
   public static func live(
-    baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
+//    baseUrl defaultBaseUrl: URL = URL(string: "http://localhost:8080")!
   ) -> Self {
     @Dependency(\.apiClient) var apiClient
+    @Dependency(\.fileClient) var fileClient
+    @Dependency(\.userDefaults) var userDefaults
 
     return .init(
       baseUrl: {
-        UserDefaults.standard.url(forKey: baseUrlKey)
+        userDefaults.url(forKey: .apiBaseUrl)
           ?? apiClient.baseUrl()
       },
       generatePdf: { _, _ in
@@ -29,17 +33,17 @@ extension CliMiddleware: DependencyKey {
         )
       },
       readFile: { fileUrl in
-        try Data(contentsOf: fileUrl)
+        try await fileClient.read(from: fileUrl)
       },
       setBaseUrl: { baseUrl in
-        UserDefaults.standard.set(baseUrl, forKey: baseUrlKey)
+        userDefaults.setUrl(baseUrl, forKey: .apiBaseUrl)
         await apiClient.setBaseUrl(baseUrl)
       },
       template: { interpolation in
         try interpolation.template()
       },
       writeFile: { data, fileUrl in
-        try data.write(to: fileUrl)
+        try await fileClient.write(data: data, to: fileUrl)
       }
     )
   }
@@ -49,7 +53,6 @@ extension CliMiddleware: DependencyKey {
   }
 }
 
-private let baseUrlKey = "com.hvacmatho.equipment-selection.baseUrl"
 private let jsonEncoder: JSONEncoder = {
   let encoder = JSONEncoder()
   encoder.outputFormatting = [.prettyPrinted]

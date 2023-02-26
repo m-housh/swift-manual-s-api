@@ -4,7 +4,6 @@ import Logging
 import LoggingFormatAndPipe
 import Models
 
-// TODO: Move CLI to it's own package.
 @main
 struct EquipmentSelection: AsyncParsableCommand {
 
@@ -14,6 +13,7 @@ struct EquipmentSelection: AsyncParsableCommand {
   )
 }
 
+// TODO: Setup a CliContext that sets up dependencies for commands.
 let jsonEncoder: JSONEncoder = {
   let encoder = JSONEncoder()
   encoder.outputFormatting = [.prettyPrinted, .sortedKeys]

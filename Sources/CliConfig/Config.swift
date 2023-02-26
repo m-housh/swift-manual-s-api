@@ -6,12 +6,37 @@ import Tagged
   import FoundationNetworking
 #endif
 
+/// Represents configuration / overrides for the command line tool.
+///
 public struct CliConfig: Codable, Equatable, Sendable {
+  
+  /// The API key for generating pdf's.
+  ///
+  /// This can also be set by an environment variable `ANVIL_API_KEY`.
+  ///
   public var anvilApiKey: String
+  
+  /// The base url for the ``ApiClient``.
   public var apiBaseUrl: String?
+  
+  /// The current directory to read the configuration from.
+  ///
+  /// This is either set by an environment variable `EQUIPMENT_SELECTION_CONFIG_DIR` or defaults
+  /// to `$XDG_CONFIG_HOME/.config/equipment-selection`.
   public var configDirectory: String
+  
+  /// The current directory to read template files from.
+  ///
+  /// This can also be set by an environment variable `EQUIPMENT_SELECTION_TEMPLATES` or
+  /// it will default to `$XDG_CONFIG_HOME/.config/equipment-selection/templates`.
+  ///
   public var templateDirectoryPath: String?
+  
+  /// The template id's to use to generate pdf's with the anvil client.
   public var templateIds: TemplateIds
+  
+  /// Override path's / file names for reading templates.
+  ///
   public var templatePaths: TemplatePaths
   
   public init(
@@ -31,23 +56,27 @@ public struct CliConfig: Codable, Equatable, Sendable {
   }
   
   public var configPath: URL {
+    let url: URL
     if #available(macOS 13.0, *) {
-      return URL(fileURLWithPath: configDirectory, isDirectory: true, relativeTo: .homeDirectory)
-        .appendingPathComponent("config.json", conformingTo: .json)
+      url = URL(fileURLWithPath: configDirectory, isDirectory: true, relativeTo: .homeDirectory)
     } else {
       // Fallback on earlier versions
-      return URL(
+      url = URL(
         fileURLWithPath: configDirectory,
         relativeTo: FileManager.default.homeDirectoryForCurrentUser
       )
-      .appendingPathComponent("config.json", conformingTo: .json)
     }
+    return url.appendingPathComponent(configFileNameKey, conformingTo: .json)
   }
 }
 
+private let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
+private let defaultConfigHomeKey = ".config/equipment-selection"
+private let configFileNameKey = "config.json"
+
 public let defaultConfigPath: String = {
-  return ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"]
-  ?? ".config/equipment-selection"
+  return ProcessInfo.processInfo.environment[XDG_CONFIG_HOME_KEY]
+  ?? defaultConfigHomeKey
 }()
 
 extension CliConfig {
@@ -125,28 +154,4 @@ extension CliConfig {
       self.twoWay = twoWay
     }
   }
-}
-
-// MARK: Coding
-extension CliConfig {
-  
-//  public func encode(to encoder: Encoder) throws {
-//    var container = encoder.container(keyedBy: CodingKeys.self)
-//    try container.encode(anvilApiKey, forKey: .anvilApiKey)
-//    try container.encode(apiBaseUrl, forKey: .apiBaseUrl)
-//    
-//    var configString: String = String(configDirectory.absoluteString
-//      .replacingOccurrences(of: "file://", with: "")
-////      .split(separator: "\\/")
-//    )
-//  
-//    
-//    configString = configString.replacingOccurrences(of: "\\", with: "")
-//                            
-//    try container.encode("\(configString)", forKey: .configDirectory)
-//    
-//    try container.encode(templateDirectoryPath, forKey: .templateDirectoryPath)
-//    try container.encode(templateIds, forKey: .templateIds)
-//    try container.encode(templatePaths, forKey: .templatePaths)
-//  }
 }

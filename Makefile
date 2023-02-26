@@ -50,11 +50,11 @@ test-client: remove-client-test-container
 		-e "BASE_URL=$(BASE_URL)" \
 		$(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
 
-	for platform in "$(PLATFORM_MACOS)" "$(PLATFORM_MAC_CATALYST)"; do \
+	for platform in "$(PLATFORM_IOS)" "$(PLATFORM_MACOS)" "$(PLATFORM_MAC_CATALYST)"; do \
 		xcodebuild test \
 			-configuration $(CONFIG) \
 			-workspace .swiftpm/xcode/package.xcworkspace \
-			-scheme swift-manual-s-api-Package \
+			-scheme ApiClient \
 			-destination platform="$$platform" || exit 1; \
 	done;
 
