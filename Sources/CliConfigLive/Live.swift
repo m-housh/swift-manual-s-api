@@ -20,8 +20,10 @@ extension CliConfigClient: DependencyKey {
       
       private func writeConfig() async throws {
         
+        let configDirectory = config.value.configPath.deletingLastPathComponent()
+        
         try? FileManager.default.createDirectory(
-          atPath: config.value.configDirectory,
+          at: configDirectory,
           withIntermediateDirectories: true
         )
         

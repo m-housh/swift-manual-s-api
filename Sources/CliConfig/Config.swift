@@ -39,14 +39,15 @@ public struct CliConfig: Codable, Equatable, Sendable {
       return URL(
         fileURLWithPath: configDirectory,
         relativeTo: FileManager.default.homeDirectoryForCurrentUser
-      ).appendingPathComponent("config.json", conformingTo: .json)
+      )
+      .appendingPathComponent("config.json", conformingTo: .json)
     }
   }
 }
 
 public let defaultConfigPath: String = {
   return ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"]
-  ?? "~/.config/equipment-selection"
+  ?? ".config/equipment-selection"
 }()
 
 extension CliConfig {
