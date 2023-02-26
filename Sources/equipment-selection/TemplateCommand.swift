@@ -1,6 +1,3 @@
-#if canImport(AppKit)
-import AppKit
-#endif
 import ArgumentParser
 import CliMiddleware
 import Dependencies
@@ -9,6 +6,10 @@ import Foundation
 import Logging
 import LoggingDependency
 import Models
+
+#if canImport(AppKit)
+  import AppKit
+#endif
 
 extension EquipmentSelection {
   struct Template: AsyncParsableCommand {
@@ -19,9 +20,9 @@ extension EquipmentSelection {
 
     @Flag
     var templateName: CliMiddleware.InterpolationName = .keyed
-    
+
     @Flag var copy: Bool = false
-    
+
     @Flag(inversion: .prefixedNo)
     var echo: Bool = true
 
@@ -29,13 +30,13 @@ extension EquipmentSelection {
     var outputPath: URL?
 
     @Flag var verbose: Bool = false
-    
+
     var operationString: String {
       if copy { return "copy" }
       if !copy && !echo { return "write" }
       return "echo"
     }
-    
+
     func run() async throws {
       try await withDependencies {
         $0.logger = logger
@@ -45,9 +46,9 @@ extension EquipmentSelection {
       } operation: {
         @Dependency(\.cliMiddleware) var cliMiddleware: CliMiddleware
         @Dependency(\.logger) var logger: Logger
-        
+
         logger.debug("Preparing to \(operationString) template: \(templateName)")
-        
+
         let data = try await cliMiddleware.template(templateName)
         if let outputPath {
           let path = self.templateName.parseUrl(url: outputPath)
@@ -61,11 +62,11 @@ extension EquipmentSelection {
           }
           if copy {
             #if canImport(AppKit)
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(string, forType: .string)
-            logger.info("Copied template to pasteboard.")
+              NSPasteboard.general.clearContents()
+              NSPasteboard.general.setString(string, forType: .string)
+              logger.info("Copied template to pasteboard.")
             #else
-            logger.info("Copying not supported in this context.")
+              logger.info("Copying not supported in this context.")
             #endif
           } else {
             logger.info("\(string)")

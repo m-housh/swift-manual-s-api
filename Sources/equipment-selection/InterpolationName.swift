@@ -15,13 +15,13 @@ import Models
 //  case oneWayOutdoor
 //  case twoWay
 
-extension CliMiddleware.InterpolationName: EnumerableFlag { }
+extension CliMiddleware.InterpolationName: EnumerableFlag {}
 
 extension CliMiddleware.InterpolationName {
   var defaultOutputPath: String {
     "./\(rawValue).json"
   }
-  
+
   func parseUrl(url: URL?) -> URL {
     guard let url else {
       return URL(fileURLWithPath: defaultOutputPath)

@@ -153,12 +153,12 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
         }
       }
     }
-    
+
     public struct Keyed: Codable, Equatable, Sendable {
       public let key: String
       public let cooling: InterpolationResponse
       public let heating: [InterpolationResponse]
-      
+
       public init(
         key: String,
         cooling: InterpolationResponse,
