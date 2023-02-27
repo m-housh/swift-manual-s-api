@@ -21,6 +21,17 @@ public struct FileClient {
   /// Write the data to the given url.
   public var write: (Data, URL) async throws -> Void
 
+  /// Create a new ``FileClient`` instance.
+  ///
+  /// This is generally not interacted with directly, instead use the dependency value.
+  /// ```swift
+  /// @Dependency(\.fileClient) var fileClient
+  /// ```
+  ///
+  /// - Parameters:
+  ///   - createDirectory: Create a  directory at the given url.
+  ///   - read: Read the contents of a file at the given url.
+  ///   - write: Write the data to the given url.
   public init(
     createDirectory: @escaping (URL) async throws -> Void,
     read: @escaping (URL) async throws -> Data,
@@ -99,12 +110,14 @@ extension FileClient: DependencyKey {
     write: { _, _ in }
   )
 
+  /// An unimplemented ``FileClient``.
   public static let testValue: FileClient = .init(
     createDirectory: unimplemented("\(Self.self).createDirectory"),
     read: unimplemented("\(Self.self).read"),
     write: unimplemented("\(Self.self).write")
   )
 
+  /// The live implementation for a ``FileClient``.
   public static var liveValue: FileClient {
 
     @Dependency(\.logger) var logger
@@ -128,6 +141,8 @@ extension FileClient: DependencyKey {
 }
 
 extension DependencyValues {
+
+  /// Access a ``FileClient`` as a dependency.
   public var fileClient: FileClient {
     get { self[FileClient.self] }
     set { self[FileClient.self] = newValue }

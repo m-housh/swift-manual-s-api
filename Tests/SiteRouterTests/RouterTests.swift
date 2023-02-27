@@ -863,6 +863,7 @@ final class RouterTests: XCTestCase {
               }
             ],
             "name" : "bronze",
+            "systemId": "bronze-id",
           "systemType" : {
             "airToAir" : {
               "climate" : "mildWinterOrLatentLoad",
@@ -920,6 +921,7 @@ final class RouterTests: XCTestCase {
               }
             ],
             "name" : "silver",
+            "systemId": "silver-id",
           "systemType" : {
             "airToAir" : {
               "climate" : "mildWinterOrLatentLoad",
@@ -1001,6 +1003,7 @@ final class RouterTests: XCTestCase {
               }
             ],
             "name" : "gold",
+            "systemId": "gold-id",
           "systemType" : {
             "airToAir" : {
               "climate" : "mildWinterOrLatentLoad",

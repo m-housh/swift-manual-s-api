@@ -21,12 +21,11 @@ public struct CliConfigClient {
 
   /// Save / update the command line configuration.
   public var save: (CliConfig) async throws -> Void
-  
+
   public var setApiBaseUrl: (String?) async -> Void
   public var setAnvilApiKey: (String?) async -> Void
   public var setConfigDirectory: (String) async -> Void
   public var setTemplateDirectoryPath: (String?) async -> Void
-  
 
   /// Generate a new ``CliConfigClient``.
   ///

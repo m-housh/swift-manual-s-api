@@ -38,7 +38,7 @@ public struct CliConfig: Codable, Equatable, Sendable {
   /// Override path's / file names for reading templates.
   ///
   public var templatePaths: Template.Path
-  
+
   public init(
     environment: Environment,
     templateIds: TemplateIds = .init(),
@@ -53,7 +53,7 @@ public struct CliConfig: Codable, Equatable, Sendable {
       templatePaths: templatePaths
     )
   }
-  
+
   public init(
     anvilApiKey: String? = nil,
     apiBaseUrl: String? = nil,
@@ -99,7 +99,7 @@ extension CliConfig {
     public var apiBaseUrl: String?
     public var configDirectory: String?
     public var templateDirectoryPath: String?
-    
+
     enum CodingKeys: String, CodingKey {
       case anvilApiKey = "ANVIL_API_KEY"
       case apiBaseUrl = "API_BASE_URL"

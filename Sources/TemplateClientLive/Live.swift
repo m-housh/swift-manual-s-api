@@ -64,10 +64,10 @@ extension TemplateClient: DependencyKey {
       }
 
       func routeTemplate(
-        for keyPath: KeyPath<Template.Path, String>
+        for key: Template.EmbeddableKey
       ) async throws -> ServerRoute.Api.Route.Interpolation.Route {
-        struct RouteTemplateError: Error {}
         let config = try await configClient.config()
+        let keyPath = key.templateKeyPath
 
         let routeData = try await templateData(
           jsonEncoder: jsonEncoder,
@@ -78,7 +78,7 @@ extension TemplateClient: DependencyKey {
           templateDirectory: templateDirectory.value
         )
         let key = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
-        return try key.embedInRoute(routeData)
+        return try key.embeddableKey.embedInRoute(routeData)
       }
 
       func setTemplateDirectory(to url: URL) {
@@ -89,8 +89,6 @@ extension TemplateClient: DependencyKey {
         for keyPath: KeyPath<Template.Path, String>,
         inInterpolation: Bool
       ) async throws -> Data {
-
-        struct TemplateNotFoundError: Error {}
 
         let config = try await configClient.config()
 
@@ -119,7 +117,7 @@ extension TemplateClient: DependencyKey {
         )
 
         return try jsonEncoder.encode(
-          key.embed(data: routeData, in: baseInterpolation)
+          key.embeddableKey.embed(data: routeData, in: baseInterpolation)
         )
       }
     }
@@ -145,12 +143,6 @@ extension TemplateClient: DependencyKey {
   }
 
   public static let liveValue: TemplateClient = .live()
-
-  public func routeTemplate(for pathKey: Template.PathKey) async throws
-    -> ServerRoute.Api.Route.Interpolation.Route
-  {
-    try await self.routeTemplate(pathKey.templateKeyPath)
-  }
 
   /// Load a template for the given path key.
   ///

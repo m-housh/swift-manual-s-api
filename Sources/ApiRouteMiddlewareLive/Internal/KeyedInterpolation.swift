@@ -6,7 +6,8 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
   {
     async let coolingResponse = cooling.respond(request: request)
     async let heatingResponse = heating.respond(request: request)
-    return try await .init(key: name, cooling: coolingResponse, heating: heatingResponse)
+    return try await .init(
+      key: name, systemId: systemId, cooling: coolingResponse, heating: heatingResponse)
   }
 }
 

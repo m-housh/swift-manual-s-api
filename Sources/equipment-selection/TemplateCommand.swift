@@ -35,27 +35,48 @@ extension EquipmentSelection.Template {
       abstract: "Generate a local configuration value or file."
     )
 
-    @Flag
+    @Flag(help: "The template to generate.")
     var templateKey: Template.PathKey = .keyed
 
-    @Flag(inversion: .prefixedNo)
+    @Flag(
+      inversion: .prefixedNo,
+      help: "Copy the value to the pasteboard (only works on macOS)."
+    )
     var copy: Bool = false
 
-    @Flag(inversion: .prefixedNo)
+    @Flag(
+      inversion: .prefixedNo,
+      help: "Print the template to standard-output (default)"
+    )
     var echo: Bool = true
 
-    @Flag(name: [.long, .customShort("i")])
+    @Flag(
+      name: [.long, .customShort("i")],
+      help: "Embeds the template inside an interpolation context."
+    )
     var embedInInterpolation: Bool = false
 
-    @Flag(name: [.long, .customShort("r")])
+    @Flag(
+      name: [.long, .customShort("r")],
+      help: """
+        Embeds the template inside of an interpolation route context (not all template keys are
+        compatible with this option).
+      """
+    )
     var embedInRoute: Bool = false
 
-    @Option(name: .shortAndLong, transform: URL.init(fileURLWithPath:))
+    @Option(
+      name: .shortAndLong,
+      help: "If supplied then the template will be written to a file in the output path.",
+      transform: URL.init(fileURLWithPath:)
+    )
     var outputPath: URL?
 
-    @Flag var verbose: Bool = false
+    @Flag(help: "Print more verbose logs.")
+    var verbose: Bool = false
 
-    var operationString: String {
+    // Represents the operation string, used for verbose logging.
+    private var operationString: String {
       if copy { return "copy" }
       if !copy && !echo { return "write" }
       return "echo"
@@ -84,7 +105,12 @@ extension EquipmentSelection.Template {
             inInterpolation: embedInInterpolation
           )
         } else {
-          let route = try await templateClient.routeTemplate(for: templateKey)
+          
+          guard let embeddableKey = Template.EmbeddableKey(rawValue: templateKey.rawValue) else {
+            struct NotEmbeddableError: Error { }
+            throw NotEmbeddableError()
+          }
+          let route = try await templateClient.routeTemplate(for: embeddableKey)
           switch route {
           case .cooling(route: let cooling):
             templateData = try jsonEncoder.encode(cooling)

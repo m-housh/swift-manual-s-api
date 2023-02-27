@@ -156,15 +156,18 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
 
     public struct Keyed: Codable, Equatable, Sendable {
       public let key: String
+      public let systemId: String
       public let cooling: InterpolationResponse
       public let heating: [InterpolationResponse]
 
       public init(
         key: String,
+        systemId: String,
         cooling: InterpolationResponse,
         heating: [InterpolationResponse]
       ) {
         self.key = key
+        self.systemId = systemId
         self.cooling = cooling
         self.heating = heating
       }

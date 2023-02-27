@@ -29,6 +29,7 @@ final class KeyedInterpolationTests: XCTestCase {
       .init(result: .keyed([
         .init(
           key: "bronze",
+          systemId: "bronze-id",
           cooling: .init(result: .cooling(.init(
             result: .init(
               interpolatedCapacity: .init(total: 22_000, sensible: 16_600),

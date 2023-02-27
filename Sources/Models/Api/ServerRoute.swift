@@ -493,18 +493,21 @@ public struct Interpolation: Codable, Equatable, Sendable {
 
     public struct Keyed: Codable, Equatable, Sendable {
       public var name: String
+      public var systemId: String
       public var systemType: SystemType
       public var cooling: Cooling
       public var heating: [Heating]
 
       public init(
         name: String,
+        systemId: String = "systemId",
         systemType: SystemType = .default,
         cooling: Cooling,
         heating: [Heating] = []
       ) {
         self.name = name
         self.systemType = systemType
+        self.systemId = systemId
         self.cooling = cooling
         self.heating = heating
       }

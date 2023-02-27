@@ -287,6 +287,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
   public static let mocks: [Self] = [
     .init(
       name: "bronze",
+      systemId: "bronze-id",
       systemType: .airToAir(
         type: .airConditioner, compressor: .singleSpeed, climate: .mildWinterOrLatentLoad),
       cooling: .noInterpolation(.mock),
@@ -296,6 +297,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
     ),
     .init(
       name: "silver",
+      systemId: "silver-id",
       systemType: .airToAir(
         type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad),
       cooling: .oneWayIndoor(.mock),
@@ -306,6 +308,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
     ),
     .init(
       name: "gold",
+      systemId: "gold-id",
       systemType: .airToAir(
         type: .heatPump, compressor: .variableSpeed, climate: .mildWinterOrLatentLoad),
       cooling: .twoWay(.mock),
@@ -319,6 +322,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
   public static let zeros: [Self] = [
     .init(
       name: "bronze",
+      systemId: "bronze-id",
       cooling: .noInterpolation(.zero),
       heating: [
         .furnace(.zero)
@@ -326,6 +330,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
     ),
     .init(
       name: "silver",
+      systemId: "silver-id",
       cooling: .oneWayIndoor(.zero),
       heating: [
         .heatPump(.mock),
@@ -334,6 +339,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
     ),
     .init(
       name: "gold",
+      systemId: "gold-id",
       cooling: .twoWay(.zero),
       heating: [
         .heatPump(.zero),

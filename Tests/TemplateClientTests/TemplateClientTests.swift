@@ -81,6 +81,11 @@ final class TemplateClientTests: XCTestCase {
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
+      case .project:
+        typealias type = Template.Project
+        let decoded = try decoder.decode(type.self, from: data)
+        let mock = key.mock as! type
+        XCTAssertEqual(decoded, mock)
       case .twoWay:
         typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
         let decoded = try decoder.decode(type.self, from: data)
@@ -159,6 +164,11 @@ final class TemplateClientTests: XCTestCase {
         XCTAssertEqual(decoded, mock)
       case .oneWayOutdoor:
         typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+        let decoded = try decoder.decode(type.self, from: data)
+        let mock = key.mock as! type
+        XCTAssertEqual(decoded, mock)
+      case .project:
+        typealias type = Template.Project
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)

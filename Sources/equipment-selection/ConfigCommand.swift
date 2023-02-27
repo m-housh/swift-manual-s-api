@@ -15,7 +15,7 @@ extension EquipmentSelection {
         RemoveTemplatesCommand.self,
         SetCommand.self,
         ShowCommand.self,
-        UnSetCommand.self
+        UnSetCommand.self,
       ],
       defaultSubcommand: SetCommand.self
     )
@@ -30,7 +30,7 @@ extension EquipmentSelection.Config {
     case configDirectory
     case templatesDirectory
   }
-  
+
   enum UnSetKey: String, EnumerableFlag {
     case anvilApiKey
     case apiBaseUrl
@@ -149,7 +149,7 @@ extension EquipmentSelection.Config {
 
     }
   }
-  
+
   struct UnSetCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "set",
@@ -158,7 +158,7 @@ extension EquipmentSelection.Config {
 
     @Flag
     var key: UnSetKey
-    
+
     func run() async throws {
       @Dependency(\.cliConfigClient) var configClient
       @Dependency(\.logger) var logger

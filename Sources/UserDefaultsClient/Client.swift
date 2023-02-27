@@ -26,6 +26,19 @@ public struct UserDefaultsClient {
   /// Retrieve a url for the given key.
   public var url: (Key) -> URL?
 
+  /// Create a new ``UserDefaultsClient`` instance.
+  ///
+  /// This is generally not interacted with directly, instead access a client as a dependency.
+  /// ```swift
+  /// @Dependency(\.userDefaults) var userDefaults
+  /// ```
+  ///
+  /// - Parameters:
+  ///   - removeValue: Remove a value for the given key.
+  ///   - setString: Set a string for the given key.
+  ///   - setUrl: Set a url for the given key.
+  ///   - string: Retrieve a string for the given key.
+  ///   - url: Retrive a url for the given key.
   public init(
     removeValue: @escaping (Key) -> Void,
     setString: @escaping (String, Key) -> Void,
@@ -40,6 +53,7 @@ public struct UserDefaultsClient {
     self.url = url
   }
 
+  /// Represents the keys used in user-defaults.
   public enum Key: String, CaseIterable {
     case anvilApiKey = "com.hvacmath.anvil-api-key"
     case apiBaseUrl = "com.hvacmath.api-base-url"
@@ -51,22 +65,27 @@ public struct UserDefaultsClient {
 
 extension UserDefaultsClient {
 
+  /// Remove a value for the given key.
   public func removeValue(forKey key: Key) {
     self.removeValue(key)
   }
 
+  /// Set a string value for the given key.
   public func setString(_ string: String, forKey key: Key) {
     setString(string, key)
   }
 
+  /// Set a url value for the given key.
   public func setUrl(_ url: URL, forKey key: Key) {
     setUrl(url, key)
   }
 
+  /// Retrieve a string for the given key.
   public func string(forKey key: Key) -> String? {
     self.string(key)
   }
 
+  /// Retrieve a url for the given key.
   public func url(forKey key: Key) -> URL? {
     self.url(key)
   }
@@ -75,6 +94,8 @@ extension UserDefaultsClient {
 
 extension UserDefaultsClient: DependencyKey {
 
+  /// A ``UserDefaultsClient`` that does not set or retrieve any values.
+  ///
   public static let noop = Self.init(
     removeValue: { _ in },
     setString: { _, _ in },
@@ -83,6 +104,8 @@ extension UserDefaultsClient: DependencyKey {
     url: { _ in nil }
   )
 
+  /// An unimplemented ``UserDefaultsClient``.
+  ///
   public static let testValue: UserDefaultsClient = .init(
     removeValue: unimplemented("\(Self.self).removeValue"),
     setString: unimplemented("\(Self.self).setString"),
@@ -91,6 +114,8 @@ extension UserDefaultsClient: DependencyKey {
     url: unimplemented("\(Self.self).url", placeholder: nil)
   )
 
+  /// The live ``UserDefaultsClient``.
+  ///
   public static let liveValue: UserDefaultsClient = .init(
     removeValue: { key in
       UserDefaults.standard.removeObject(forKey: key.rawValue)
@@ -111,6 +136,9 @@ extension UserDefaultsClient: DependencyKey {
 }
 
 extension DependencyValues {
+
+  /// Access a ``UserDefaultsClient`` as a dependency.
+  ///
   public var userDefaults: UserDefaultsClient {
     get { self[UserDefaultsClient.self] }
     set { self[UserDefaultsClient.self] = newValue }
