@@ -59,9 +59,9 @@ extension EquipmentSelection.Template {
     @Flag(
       name: [.long, .customShort("r")],
       help: """
-        Embeds the template inside of an interpolation route context (not all template keys are
-        compatible with this option).
-      """
+          Embeds the template inside of an interpolation route context (not all template keys are
+          compatible with this option).
+        """
     )
     var embedInRoute: Bool = false
 
@@ -105,9 +105,9 @@ extension EquipmentSelection.Template {
             inInterpolation: embedInInterpolation
           )
         } else {
-          
+
           guard let embeddableKey = Template.EmbeddableKey(rawValue: templateKey.rawValue) else {
-            struct NotEmbeddableError: Error { }
+            struct NotEmbeddableError: Error {}
             throw NotEmbeddableError()
           }
           let route = try await templateClient.routeTemplate(for: embeddableKey)
