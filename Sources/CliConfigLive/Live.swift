@@ -3,6 +3,7 @@ import ConcurrencyHelpers
 import Dependencies
 import FileClient
 import Foundation
+import Models
 
 extension CliConfigClient: DependencyKey {
 
@@ -13,11 +14,6 @@ extension CliConfigClient: DependencyKey {
       @Dependency(\.fileClient) var fileClient
 
       nonisolated let config: Isolated<CliConfig> = .init(wrappedValue: CliConfigLive.config())
-
-      // fix.
-      func generateTemplates(at path: URL?) async throws {
-        // do something
-      }
 
       func generateConfig(at path: URL?) async throws {
         try await self.writeConfig(at: path)
@@ -40,24 +36,6 @@ extension CliConfigClient: DependencyKey {
         self.config.value = config
         try await self.writeConfig()
       }
-
-      func template(
-        for keyPath: KeyPath<CliConfig.TemplatePaths, String>
-      ) async throws -> Data {
-
-        let templatesDirectory: URL
-        if let directory = config.templateDirectoryPath {
-          templatesDirectory = URL(fileURLWithPath: directory, isDirectory: true)
-        } else {
-          templatesDirectory = config.value.configPath
-            .deletingLastPathComponent()
-            .appendingPathComponent("templates")
-        }
-
-        let templatePath = config.templatePaths[keyPath: keyPath]
-        let templateFilePath = templatesDirectory.appendingPathComponent(templatePath)
-        return try await fileClient.read(from: templateFilePath)
-      }
     }
 
     let session = Session()
@@ -67,13 +45,18 @@ extension CliConfigClient: DependencyKey {
         session.config.value
       },
       generateConfig: session.generateConfig(at:),
-      generateTemplates: session.generateTemplates(at:),
-      save: session.save(config:),
-      template: session.template(for:)
+      save: session.save(config:)
     )
   }
 }
 
+/// Loads the configuration in order.
+///
+/// - `defaults`
+/// - `file`
+/// - `environment`
+///
+/// Merging the results together.
 private func config() -> CliConfig {
 
   var config = CliConfig()
@@ -96,11 +79,12 @@ private func config() -> CliConfig {
   return config
 }
 
+// Represents the values that can be read from the process environment.
 private struct ConfigEnvironment: Decodable {
-  public var anvilApiKey: String?
-  public var apiBaseUrl: String?
-  public var configDirectory: String?
-  public var templateDirectoryPath: String?
+  var anvilApiKey: String?
+  var apiBaseUrl: String?
+  var configDirectory: String?
+  var templateDirectoryPath: String?
 
   func merge(with config: inout CliConfig) {
     if let anvilApiKey { config.anvilApiKey = anvilApiKey }
@@ -118,12 +102,15 @@ private struct ConfigEnvironment: Decodable {
 }
 
 // Represents the config values that can be read / saved to disk.
+// This allows the config value used by the application to have a value
+// for where the configuration files live, but it can't be overwritten in a
+// file.  It can however be overwritten by the environment variables or user defaults.
 private struct LocalConfig: Codable {
   var anvilApiKey: String?
   var apiBaseUrl: String?
   var templateDirectoryPath: String?
   var templateIds: CliConfig.TemplateIds?
-  var templatePaths: CliConfig.TemplatePaths?
+  var templatePaths: Template.Path?
 
   init(cliConfig: CliConfig) {
     self.anvilApiKey = cliConfig.anvilApiKey
@@ -143,5 +130,6 @@ private struct LocalConfig: Codable {
 }
 
 extension CliConfig {
+  // Convert a cli-config to a local-config.
   fileprivate var localConfig: LocalConfig { .init(cliConfig: self) }
 }

@@ -115,6 +115,8 @@ var package = Package(
   ]
 )
 
+// TODO: Add section for shared information between client and cli.
+
 // MARK: - Client
 if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
   package.platforms?.append(contentsOf: [
@@ -171,6 +173,8 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
     .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
     .library(name: "FileClient", targets: ["FileClient"]),
+    .library(name: "TemplateClient", targets: ["TemplateClient"]),
+    .library(name: "TemplateClientLive", targets: ["TemplateClientLive"]),
   ])
   package.targets.append(contentsOf: [
     .target(
@@ -226,6 +230,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "FirstPartyMocks",
         "LoggingDependency",
         "Models",
+        "TemplateClientLive",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         .product(name: "LoggingFormatAndPipe", package: "swift-log-format-and-pipe"),
       ]
@@ -237,6 +242,33 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         .product(name: "Logging", package: "swift-log"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
+      ]
+    ),
+    .target(
+      name: "TemplateClient",
+      dependencies: [
+        "ConcurrencyHelpers",
+        "Models",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
+      name: "TemplateClientLive",
+      dependencies: [
+        "CliConfig",
+        "LoggingDependency",
+        "FileClient",
+        "FirstPartyMocks",
+        "TemplateClient",
+        "UserDefaultsClient"
+      ]
+    ),
+    .testTarget(
+      name: "TemplateClientTests",
+      dependencies: [
+        "CliConfigLive",
+        "TemplateClientLive",
       ]
     ),
   ])

@@ -347,3 +347,11 @@ extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Keyed
   public static var mocks: Self { ServerRoute.Api.Route.Interpolation.Route.Keyed.mocks }
   public static var zeros: Self { ServerRoute.Api.Route.Interpolation.Route.Keyed.zeros }
 }
+
+extension Template.BaseInterpolation {
+  public static var mock = Self.init(
+    designInfo: .mock,
+    houseLoad: .mock,
+    systemType: .mock
+  )
+}

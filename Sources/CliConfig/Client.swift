@@ -7,6 +7,7 @@ import XCTestDynamicOverlay
   import FoundationNetworking
 #endif
 
+// TODO: Remove Template methods to their own module.
 /// Represents the interactions with the ``CliConfig`` for configuring the command line tool.
 ///
 ///
@@ -17,28 +18,29 @@ public struct CliConfigClient {
 
   /// Generate the default configuration and write it at the url.
   public var generateConfig: (URL?) async throws -> Void
-
-  /// Generate the default templates and write them at the url.
-  public var generateTemplates: (URL?) async throws -> Void
-
+  
   /// Save / update the command line configuration.
   public var save: (CliConfig) async throws -> Void
-
-  /// Retrieve a template for the given template path.
-  public var template: (KeyPath<CliConfig.TemplatePaths, String>) async throws -> Data
-
+  
+  /// Generate a new ``CliConfigClient``.
+  ///
+  /// This is usually not interacted with directly, instead use the dependency values.
+  /// ```swift
+  /// @Dependency(\.cliConfigClient) var configClient
+  /// ```
+  ///
+  /// - Parameters:
+  ///   - config: Return the current configuration.
+  ///   - generateConfig: Generate the default configuration and write it to disk.
+  ///   - save: Save the config to disk.
   public init(
     config: @escaping () async throws -> CliConfig,
     generateConfig: @escaping (URL?) async throws -> Void,
-    generateTemplates: @escaping (URL?) async throws -> Void,
-    save: @escaping (CliConfig) async throws -> Void,
-    template: @escaping (KeyPath<CliConfig.TemplatePaths, String>) async throws -> Data
+    save: @escaping (CliConfig) async throws -> Void
   ) {
     self.config = config
     self.generateConfig = generateConfig
-    self.generateTemplates = generateTemplates
     self.save = save
-    self.template = template
   }
 
   /// Generate the default configuration in the given parent directory, if applicable.
@@ -53,27 +55,6 @@ public struct CliConfigClient {
     try await generateConfig(parentDirectory)
   }
 
-  /// Generate the default templates and write them at the url.
-  ///
-  /// If a parent directory is not provided, then it will default to the ``CliConfig/CliConfig/templateDirectoryPath``
-  /// - Parameters:
-  ///   - parentDirectory: A custom directory to write the templates to.
-  ///
-  public func generateTemplates(
-    at parentDirectory: URL? = nil
-  ) async throws {
-    try await generateTemplates(parentDirectory)
-  }
-
-  /// Retrieve a template for the given template path.
-  ///
-  /// - Parameters:
-  ///   - path: The template path to retrieve the template for.
-  public func template(
-    for path: KeyPath<CliConfig.TemplatePaths, String>
-  ) async throws -> Data {
-    try await self.template(path)
-  }
 }
 
 extension CliConfigClient: TestDependencyKey {
@@ -81,19 +62,15 @@ extension CliConfigClient: TestDependencyKey {
   public static var noop: CliConfigClient {
     .init(
       config: { .init() },
-      generateConfig: { _ in },
-      generateTemplates: { _ in },
-      save: { _ in },
-      template: { _ in Data() }
+      generateConfig: { _ in try await Task.never() },
+      save: { _ in try await Task.never() }
     )
   }
 
   public static let testValue: CliConfigClient = .init(
     config: unimplemented("\(Self.self).config"),
     generateConfig: unimplemented("\(Self.self).generateConfig"),
-    generateTemplates: unimplemented("\(Self.self).generateTemplates"),
-    save: unimplemented("\(Self.self).save"),
-    template: unimplemented("\(Self.self).template")
+    save: unimplemented("\(Self.self).save")
   )
 }
 

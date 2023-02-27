@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrelased]
 
-- Command Line Tool `equipment-selection`
-- API Route to interpolate multiple items at one time
+- Command Line Tool `equipment-selection`.
+- Config and templates for command line tool.
+- API Route to interpolate multiple items at one time.
+- APIClient for developers on swift platforms.
 
