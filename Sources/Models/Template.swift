@@ -36,7 +36,7 @@ public enum Template {
       self.twoWay = twoWay
     }
   }
-  
+
   public struct BaseInterpolation: Codable, Equatable, Sendable {
     public var designInfo: DesignInfo
     public var houseLoad: HouseLoad
@@ -53,7 +53,7 @@ public enum Template {
       self.systemType = systemType
     }
   }
-  
+
   public enum PathKey: String, CaseIterable {
     case baseInterpolation
     case boiler
@@ -96,7 +96,7 @@ extension Template.PathKey {
 }
 
 extension Template.Path {
-  
+
   public func fileName(for pathKey: Template.PathKey) -> String {
     self[keyPath: pathKey.templateKeyPath]
   }

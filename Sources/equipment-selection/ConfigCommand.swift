@@ -14,7 +14,7 @@ extension EquipmentSelection {
         GenerateTemplatesCommand.self,
         RemoveTemplatesCommand.self,
         SetCommand.self,
-        ShowCommand.self
+        ShowCommand.self,
       ],
       defaultSubcommand: SetCommand.self
     )
@@ -47,7 +47,7 @@ extension EquipmentSelection.Config {
       }
     }
   }
-  
+
   struct GenerateTemplatesCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "generate-templates",
@@ -67,7 +67,7 @@ extension EquipmentSelection.Config {
       }
     }
   }
-  
+
   struct RemoveTemplatesCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "remove-templates",
@@ -87,7 +87,7 @@ extension EquipmentSelection.Config {
       }
     }
   }
-  
+
   struct SetCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "set",

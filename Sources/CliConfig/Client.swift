@@ -18,10 +18,10 @@ public struct CliConfigClient {
 
   /// Generate the default configuration and write it at the url.
   public var generateConfig: (URL?) async throws -> Void
-  
+
   /// Save / update the command line configuration.
   public var save: (CliConfig) async throws -> Void
-  
+
   /// Generate a new ``CliConfigClient``.
   ///
   /// This is usually not interacted with directly, instead use the dependency values.

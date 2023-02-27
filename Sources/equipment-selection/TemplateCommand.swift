@@ -13,14 +13,14 @@ import Models
 
 extension EquipmentSelection {
   struct Template: AsyncParsableCommand {
-    
+
     static var configuration: CommandConfiguration = .init(
       commandName: "template",
       abstract: "Commands for working with the templates system.",
       subcommands: [
         Config.GenerateTemplatesCommand.self,
         Config.RemoveTemplatesCommand.self,
-        GenerateCommand.self
+        GenerateCommand.self,
       ],
       defaultSubcommand: GenerateCommand.self
     )
@@ -28,7 +28,7 @@ extension EquipmentSelection {
 }
 
 extension EquipmentSelection.Template {
-  
+
   // TODO: Need templates not embedded in an interpolation to have the ability to
   //       generate themselves with they're route key for outputting in vim buffer.
   struct GenerateCommand: AsyncParsableCommand {
@@ -36,19 +36,19 @@ extension EquipmentSelection.Template {
       commandName: "generate",
       abstract: "Generate a local configuration value or file."
     )
-    
+
     @Flag
     var templateKey: Template.PathKey = .keyed
-    
+
     @Flag(inversion: .prefixedNo)
     var copy: Bool = false
-     
+
     @Flag(inversion: .prefixedNo)
     var echo: Bool = true
-    
+
     @Flag(name: [.long, .customShort("i")])
     var embedInInterpolation: Bool = false
-    
+
     @Flag(name: [.long, .customShort("r")])
     var embedInRoute: Bool = false
 
@@ -56,13 +56,13 @@ extension EquipmentSelection.Template {
     var outputPath: URL?
 
     @Flag var verbose: Bool = false
-   
+
     var operationString: String {
       if copy { return "copy" }
       if !copy && !echo { return "write" }
       return "echo"
     }
-    
+
     func run() async throws {
       try await withDependencies {
         let encoder = JSONEncoder()
@@ -77,9 +77,9 @@ extension EquipmentSelection.Template {
         @Dependency(\.fileClient) var fileClient
         @Dependency(\.logger) var logger
         @Dependency(\.templateClient) var templateClient
-        
+
         let templateData: Data
-        
+
         if !embedInRoute {
           templateData = try await templateClient.template(
             for: templateKey,
@@ -96,7 +96,7 @@ extension EquipmentSelection.Template {
             templateData = try jsonEncoder.encode(route)
           }
         }
-        
+
         let config = try await configClient.config()
         if let outputPath {
           let fileName = config.templatePaths.fileName(for: templateKey)
@@ -105,30 +105,30 @@ extension EquipmentSelection.Template {
           logger.info("Wrote template to: \(outputUrl.absoluteString)")
           return
         } else {
-          
+
           guard let templateString = String(data: templateData, encoding: .utf8) else {
-            struct TemplateError: Error { }
+            struct TemplateError: Error {}
             logger.info("Failed to parse template string.")
             throw TemplateError()
           }
-          
+
           if copy {
             #if canImport(AppKit)
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(templateString, forType: .string)
-            logger.info("Copied template to pasteboard.")
+              NSPasteboard.general.clearContents()
+              NSPasteboard.general.setString(templateString, forType: .string)
+              logger.info("Copied template to pasteboard.")
             #else
-            logger.info("Copying not supported in this context.")
+              logger.info("Copying not supported in this context.")
             #endif
           } else {
             logger.info("\(templateString)")
           }
 
         }
-        
+
       }
     }
   }
 }
 
-extension Template.PathKey: EnumerableFlag { }
+extension Template.PathKey: EnumerableFlag {}

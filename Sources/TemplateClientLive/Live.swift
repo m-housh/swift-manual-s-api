@@ -14,21 +14,21 @@ import UserDefaultsClient
 #endif
 
 extension TemplateClient: DependencyKey {
-  
+
   public static func live(
     jsonEncoder: JSONEncoder = .init(),
     templateDirectory defaultTemplateDirectory: URL = .defaultTemplateDirectory
   ) -> Self {
     @Dependency(\.userDefaults) var userDefaults
-    
+
     actor Session {
       @Dependency(\.logger) var logger
       @Dependency(\.cliConfigClient) var configClient
       @Dependency(\.fileClient) var fileClient
-      
+
       private let jsonEncoder: JSONEncoder
       nonisolated let templateDirectory: Isolated<URL>
-      
+
       init(
         jsonEncoder: JSONEncoder,
         templateDirectory: URL,
@@ -42,7 +42,7 @@ extension TemplateClient: DependencyKey {
           }
         )
       }
-      
+
       func generateTemplates() async throws {
         let config = try await configClient.config()
         try await fileClient.createDirectory(at: templateDirectory.value)
@@ -58,17 +58,17 @@ extension TemplateClient: DependencyKey {
           logger.debug("Wrote template at: \(templateUrl.absoluteString)")
         }
       }
-      
+
       func removeTemplates() throws {
         try FileManager.default.removeItem(at: templateDirectory.value)
       }
-      
+
       func routeTemplate(
         for keyPath: KeyPath<Template.Path, String>
       ) async throws -> ServerRoute.Api.Route.Interpolation.Route {
-        struct RouteTemplateError: Error { }
+        struct RouteTemplateError: Error {}
         let config = try await configClient.config()
-        
+
         let routeData = try await templateData(
           jsonEncoder: jsonEncoder,
           keyPath: keyPath,
@@ -80,18 +80,18 @@ extension TemplateClient: DependencyKey {
         let key = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
         return try key.embedInRoute(routeData)
       }
-      
+
       func setTemplateDirectory(to url: URL) {
         self.templateDirectory.value = url
       }
-      
+
       func template(
         for keyPath: KeyPath<Template.Path, String>,
         inInterpolation: Bool
       ) async throws -> Data {
-        
-        struct TemplateNotFoundError: Error { }
-        
+
+        struct TemplateNotFoundError: Error {}
+
         let config = try await configClient.config()
 
         let routeData = try await templateData(
@@ -102,37 +102,38 @@ extension TemplateClient: DependencyKey {
           paths: config.templatePaths,
           templateDirectory: templateDirectory.value
         )
-        
+
         // Early out if we don't need to embed the template in an interpolation.
         if inInterpolation == false {
           return routeData
         }
-        
+
         // Embed in a base interpolation.
         let key = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
-        
+
         let baseInterpolation = await readBaseInterpolation(
           basePath: templateDirectory.value,
           logger: logger,
           fileClient: fileClient,
           paths: config.templatePaths
         )
-        
+
         return try jsonEncoder.encode(
           key.embed(data: routeData, in: baseInterpolation)
         )
       }
     }
-    
-    let templateDirectory = userDefaults.url(forKey: .templateDirectory)
-    ?? defaultTemplateDirectory
-    
+
+    let templateDirectory =
+      userDefaults.url(forKey: .templateDirectory)
+      ?? defaultTemplateDirectory
+
     let session = Session(
       jsonEncoder: jsonEncoder,
       templateDirectory: templateDirectory,
       userDefaults: userDefaults
     )
-    
+
     return .init(
       generateTemplates: session.generateTemplates,
       removeTemplateDirectory: { try await session.removeTemplates() },
@@ -142,18 +143,22 @@ extension TemplateClient: DependencyKey {
       templateDirectory: { session.templateDirectory.value }
     )
   }
-  
+
   public static let liveValue: TemplateClient = .live()
-  
-  public func routeTemplate(for pathKey: Template.PathKey) async throws -> ServerRoute.Api.Route.Interpolation.Route {
+
+  public func routeTemplate(for pathKey: Template.PathKey) async throws
+    -> ServerRoute.Api.Route.Interpolation.Route
+  {
     try await self.routeTemplate(pathKey.templateKeyPath)
   }
-  
+
   /// Load a template for the given path key.
   ///
   /// - Parameters:
   ///   - pathKey: The path key to load the template for.
-  public func template(for pathKey: Template.PathKey, inInterpolation: Bool = false) async throws -> Data {
+  public func template(for pathKey: Template.PathKey, inInterpolation: Bool = false) async throws
+    -> Data
+  {
     try await self.template(
       for: pathKey.templateKeyPath,
       inInterpolation: inInterpolation
@@ -161,15 +166,15 @@ extension TemplateClient: DependencyKey {
   }
 }
 
-fileprivate extension FileClient {
-  
-  func readBaseInterpolation(from url: URL) async throws -> Template.BaseInterpolation {
+extension FileClient {
+
+  fileprivate func readBaseInterpolation(from url: URL) async throws -> Template.BaseInterpolation {
     let data = try await self.read(from: url)
     return try JSONDecoder().decode(Template.BaseInterpolation.self, from: data)
   }
 }
 
-fileprivate func readBaseInterpolation(
+private func readBaseInterpolation(
   basePath: URL,
   logger: Logger,
   fileClient: FileClient,
@@ -187,7 +192,7 @@ fileprivate func readBaseInterpolation(
   }
 }
 
-fileprivate func templateData(
+private func templateData(
   jsonEncoder: JSONEncoder,
   keyPath: KeyPath<Template.Path, String>,
   logger: Logger,
@@ -195,7 +200,7 @@ fileprivate func templateData(
   paths: Template.Path,
   templateDirectory: URL
 ) async throws -> Data {
-  struct TemplateNotFoundError: Error { }
+  struct TemplateNotFoundError: Error {}
   let filePath = paths[keyPath: keyPath]
   let templateUrl = templateDirectory.appendingPathComponent(filePath)
   let routeData: Data
@@ -212,12 +217,13 @@ fileprivate func templateData(
     else {
       throw TemplateNotFoundError()
     }
-    logger.debug("""
+    logger.debug(
+      """
         No file found at: \(templateUrl.absoluteString)
         Returning mock data.
       """)
     routeData = try jsonEncoder.encode(key.mock)
   }
-  
+
   return routeData
 }
