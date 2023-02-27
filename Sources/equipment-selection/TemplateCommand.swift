@@ -29,8 +29,6 @@ extension EquipmentSelection {
 
 extension EquipmentSelection.Template {
 
-  // TODO: Need templates not embedded in an interpolation to have the ability to
-  //       generate themselves with they're route key for outputting in vim buffer.
   struct GenerateCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "generate",

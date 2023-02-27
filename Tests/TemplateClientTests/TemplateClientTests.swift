@@ -13,15 +13,18 @@ import UserDefaultsClient
 final class TemplateClientTests: XCTestCase {
   
   override func invokeTest() {
-    let templateClient = withDependencies {
+    let (configClient, templateClient) = withDependencies {
       $0.fileClient = .liveValue
-      $0.cliConfigClient = .liveValue
-      $0.userDefaults = .liveValue
+      $0.userDefaults = .noop
     } operation: {
-      return TemplateClient.liveValue
+      return (
+        CliConfigClient.liveValue,
+        TemplateClient.liveValue
+      )
     }
     
     withDependencies {
+      $0.cliConfigClient = configClient
       $0.templateClient = templateClient
     } operation: {
       super.invokeTest()
@@ -88,16 +91,19 @@ final class TemplateClientTests: XCTestCase {
   }
   
   func test_generating_templates() async throws {
+    
+    @Dependency(\.cliConfigClient) var configClient
+    
     let tempDirectory = FileManager.default.temporaryDirectory
       .appendingPathComponent("generate-templates-test")
     
     defer { try? FileManager.default.removeItem(at: tempDirectory) }
     
     let templateClient = withDependencies {
-      $0.cliConfigClient = .liveValue
+      $0.cliConfigClient = configClient
       $0.fileClient = .liveValue
       $0.logger.logLevel = .debug
-      $0.userDefaults = .liveValue
+      $0.userDefaults = .noop
     } operation: {
       return TemplateClient.live(templateDirectory: tempDirectory)
     }

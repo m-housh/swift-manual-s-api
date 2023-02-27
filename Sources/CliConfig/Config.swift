@@ -14,7 +14,7 @@ public struct CliConfig: Codable, Equatable, Sendable {
   ///
   /// This can also be set by an environment variable `ANVIL_API_KEY`.
   ///
-  public var anvilApiKey: String
+  public var anvilApiKey: String?
 
   /// The base url for the ``ApiClient``.
   public var apiBaseUrl: String?
@@ -38,19 +38,34 @@ public struct CliConfig: Codable, Equatable, Sendable {
   /// Override path's / file names for reading templates.
   ///
   public var templatePaths: Template.Path
-
+  
   public init(
-    anvilApiKey: String = "deadbeef",
+    environment: Environment,
+    templateIds: TemplateIds = .init(),
+    templatePaths: Template.Path
+  ) {
+    self.init(
+      anvilApiKey: environment.anvilApiKey,
+      apiBaseUrl: environment.apiBaseUrl,
+      configDirectory: environment.configDirectory,
+      templateDirectoryPath: environment.templateDirectoryPath,
+      templateIds: templateIds,
+      templatePaths: templatePaths
+    )
+  }
+  
+  public init(
+    anvilApiKey: String? = nil,
     apiBaseUrl: String? = nil,
-    configDirectory: String = defaultConfigPath,
-    templateDirectorPath: String? = nil,
+    configDirectory: String? = nil,
+    templateDirectoryPath: String? = nil,
     templateIds: TemplateIds = .init(),
     templatePaths: Template.Path = .init()
   ) {
     self.anvilApiKey = anvilApiKey
     self.apiBaseUrl = apiBaseUrl
-    self.configDirectory = configDirectory
-    self.templateDirectoryPath = templateDirectorPath
+    self.configDirectory = configDirectory ?? defaultConfigPath
+    self.templateDirectoryPath = templateDirectoryPath
     self.templateIds = templateIds
     self.templatePaths = templatePaths
   }
@@ -77,6 +92,23 @@ public struct CliConfig: Codable, Equatable, Sendable {
   }
 }
 
+extension CliConfig {
+  // Represents the values that can be read from the process environment.
+  public struct Environment: Codable, Equatable, Sendable {
+    public var anvilApiKey: String?
+    public var apiBaseUrl: String?
+    public var configDirectory: String?
+    public var templateDirectoryPath: String?
+    
+    enum CodingKeys: String, CodingKey {
+      case anvilApiKey = "ANVIL_API_KEY"
+      case apiBaseUrl = "API_BASE_URL"
+      case configDirectory = "EQUIPMENT_SELECTION_CONFIG_DIR"
+      case templateDirectoryPath = "EQUIPMENT_SELECTION_TEMPLATES"
+    }
+  }
+}
+
 public let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
 private let defaultConfigHomeKey = ".config/equipment-selection"
 private let configFileNameKey = "config.json"
@@ -88,6 +120,7 @@ public let defaultConfigPath: String = {
 
 extension CliConfig {
 
+  // TODO: Move to AnvilClient.
   public struct TemplateIds: Codable, Equatable, Sendable {
     public var noInterpolation: String
     public var oneWayIndoor: String

@@ -15,6 +15,7 @@ extension EquipmentSelection {
         RemoveTemplatesCommand.self,
         SetCommand.self,
         ShowCommand.self,
+        UnSetCommand.self
       ],
       defaultSubcommand: SetCommand.self
     )
@@ -23,8 +24,17 @@ extension EquipmentSelection {
 
 extension EquipmentSelection.Config {
 
-  enum Key: String, EnumerableFlag {
-    case baseUrl
+  enum SetKey: String, EnumerableFlag {
+    case anvilApiKey
+    case apiBaseUrl
+    case configDirectory
+    case templatesDirectory
+  }
+  
+  enum UnSetKey: String, EnumerableFlag {
+    case anvilApiKey
+    case apiBaseUrl
+    case templatesDirectory
   }
 
   struct GenerateConfigCommand: AsyncParsableCommand {
@@ -48,6 +58,7 @@ extension EquipmentSelection.Config {
     }
   }
 
+  // TODO: Move template commands.
   struct GenerateTemplatesCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "generate-templates",
@@ -91,22 +102,32 @@ extension EquipmentSelection.Config {
   struct SetCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "set",
-      abstract: "Set a default value."
+      abstract: "Set a configuration value."
     )
 
     @Flag
-    var key: Key
+    var key: SetKey
 
     @Argument
     var value: String
 
     func run() async throws {
-      @Dependency(\.cliMiddleware) var cliMiddleware
+      @Dependency(\.cliConfigClient) var configClient
       @Dependency(\.logger) var logger
 
       switch key {
-      case .baseUrl:
-        await cliMiddleware.setBaseUrl(URL(string: value)!)
+      case .anvilApiKey:
+        logger.debug("Setting anvil api key.")
+        await configClient.setAnvilApiKey(value)
+      case .apiBaseUrl:
+        logger.debug("Setting api base url.")
+        await configClient.setApiBaseUrl(value)
+      case .configDirectory:
+        logger.debug("Setting config directory.")
+        await configClient.setConfigDirectory(value)
+      case .templatesDirectory:
+        logger.debug("Setting templates directory.")
+        await configClient.setTemplateDirectoryPath(value)
       }
       logger.info("Done")
     }
@@ -126,6 +147,34 @@ extension EquipmentSelection.Config {
       let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!
       logger.info("\(string)")
 
+    }
+  }
+  
+  struct UnSetCommand: AsyncParsableCommand {
+    static var configuration: CommandConfiguration = .init(
+      commandName: "set",
+      abstract: "Unset / remove a configuration value."
+    )
+
+    @Flag
+    var key: UnSetKey
+    
+    func run() async throws {
+      @Dependency(\.cliConfigClient) var configClient
+      @Dependency(\.logger) var logger
+
+      switch key {
+      case .anvilApiKey:
+        logger.debug("Unsetting anvil api key.")
+        await configClient.setAnvilApiKey(nil)
+      case .apiBaseUrl:
+        logger.debug("Unsetting api base url.")
+        await configClient.setApiBaseUrl(nil)
+      case .templatesDirectory:
+        logger.debug("Unsetting templates directory.")
+        await configClient.setTemplateDirectoryPath(nil)
+      }
+      logger.info("Done")
     }
   }
 }

@@ -192,6 +192,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "CliConfig",
         "ConcurrencyHelpers",
         "FileClient",
+        "UserDefaultsClient",
       ]
     ),
     .testTarget(

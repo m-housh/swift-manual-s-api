@@ -448,20 +448,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UserDefaultsClient"
-               BuildableName = "UserDefaultsClient"
-               BlueprintName = "UserDefaultsClient"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "TemplateClient"
                BuildableName = "TemplateClient"
                BlueprintName = "TemplateClient"
@@ -479,6 +465,20 @@
                BlueprintIdentifier = "TemplateClientLive"
                BuildableName = "TemplateClientLive"
                BlueprintName = "TemplateClientLive"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserDefaultsClient"
+               BuildableName = "UserDefaultsClient"
+               BlueprintName = "UserDefaultsClient"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -593,18 +593,18 @@
       </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "ANVIL_API_KEY"
+            value = "secret"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "API_BASE_URL"
             value = "http://localhost:8080"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "EQUIPMENT_SELCTION_CONFIG_DIR"
+            key = "EQUIPMENT_SELECTION_CONFIG_DIR"
             value = "~/.config/custom-equipment-selection"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "ANVIL_API_KEY"
-            value = "secret"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

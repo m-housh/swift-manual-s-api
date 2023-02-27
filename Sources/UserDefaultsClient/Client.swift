@@ -41,6 +41,7 @@ public struct UserDefaultsClient {
   }
 
   public enum Key: String, CaseIterable {
+    case anvilApiKey = "com.hvacmath.anvil-api-key"
     case apiBaseUrl = "com.hvacmath.api-base-url"
     case anvilBaseUrl = "com.hvacmath.anvil-base-url"
     case configDirectory = "com.hvacmath.config-directory"
@@ -86,8 +87,8 @@ extension UserDefaultsClient: DependencyKey {
     removeValue: unimplemented("\(Self.self).removeValue"),
     setString: unimplemented("\(Self.self).setString"),
     setUrl: unimplemented("\(Self.self).setUrl"),
-    string: unimplemented("\(Self.self).string"),
-    url: unimplemented("\(Self.self).url", placeholder: URL(string: "http://localhost:8080"))
+    string: unimplemented("\(Self.self).string", placeholder: nil),
+    url: unimplemented("\(Self.self).url", placeholder: nil)
   )
 
   public static let liveValue: UserDefaultsClient = .init(
