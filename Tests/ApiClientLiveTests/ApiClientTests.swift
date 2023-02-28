@@ -22,7 +22,7 @@ class ApiClientLiveTests: XCTestCase {
   
   override func invokeTest() {
     let apiClient = withDependencies {
-      $0.userDefaults = .noop
+      $0.userDefaults = .temporary
     } operation: {
       return ApiClient.live(baseUrl: baseUrl)
     }
@@ -93,22 +93,19 @@ class ApiClientLiveTests: XCTestCase {
     XCTAssertEqual(undersizing.latent, 90)
   }
   
-  // FIXME
-//  func test_interpolate_boiler() async throws {
-//    @Dependency(\.apiClient) var client
-//    let response = try await client.apiRequest(
-//      route: .interpolate(.mock(route: .heating(route: .boiler(.mock)))),
-//      as: InterpolationResponse.self
-//    )
-//    XCTAssertFalse(response.isFailed)
-//  }
-//
-//  func test_interpolate_keyed() async throws {
-//    @Dependency(\.apiClient) var client
-//    let response = try await client.apiRequest(
-//      route: .interpolate(.mock(route: .keyed(.mocks))),
-//      as: InterpolationResponse.self
-//    )
-//    XCTAssertFalse(response.isFailed)
-//  }
+  func test_interpolate_boiler() async throws {
+    @Dependency(\.apiClient) var client
+    let response = try await client.interpolate(
+      .mock(route: .heating(route: .boiler(.mock)))
+    )
+    XCTAssertFalse(response.isFailed)
+  }
+
+  func test_interpolate_keyed() async throws {
+    @Dependency(\.apiClient) var client
+    let response = try await client.interpolate(
+      .mock(route: .keyed(.mocks))
+    )
+    XCTAssertFalse(response.isFailed)
+  }
 }

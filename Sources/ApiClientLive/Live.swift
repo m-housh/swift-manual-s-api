@@ -10,7 +10,7 @@ import UserDefaultsClient
   import FoundationNetworking
 #endif
 
-// TODO: Use `UserDefaultsClient`
+// TODO: Use `ConfigClient`
 extension ApiClient: DependencyKey {
 
   public static var liveValue: ApiClient {

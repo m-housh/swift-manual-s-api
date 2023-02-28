@@ -120,7 +120,7 @@ extension EquipmentSelection.Template {
             }
           }
 
-          let config = try await configClient.config()
+          let config = await configClient.config()
 
           // Check if the caller wants a file to be written.
           if let outputPath {

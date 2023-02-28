@@ -96,6 +96,9 @@ extension UserDefaultsClient: DependencyKey {
 
   /// A ``UserDefaultsClient`` that does not set or retrieve any values.
   ///
+  /// This is useful in tests or previews, when you do not want the client to interact with the defaults system
+  /// at all, however if any of the methods are called it will not produce values or failures.
+  ///
   public static let noop = Self.init(
     removeValue: { _ in },
     setString: { _, _ in },
@@ -133,6 +136,48 @@ extension UserDefaultsClient: DependencyKey {
       UserDefaults.standard.url(forKey: key.rawValue)
     }
   )
+  
+  /// A ``UserDefaultsClient`` that stores and retrieves values, but does not interact with the
+  /// the live defaults system.
+  ///
+  /// This is helpful in tests or previews, when you need a client that will set / return values, but do not want to persist the values.
+  ///
+  public static var temporary: UserDefaultsClient {
+    class Storage {
+      var storage: [UserDefaultsClient.Key: Any]
+      init() { self.storage = [:] }
+      
+      func removeValue(key: UserDefaultsClient.Key) {
+        storage[key] = nil
+      }
+      
+      func setString(_ string: String, forKey key: UserDefaultsClient.Key) {
+        storage[key] = string
+      }
+      
+      func setUrl(_ url: URL, forKey key: UserDefaultsClient.Key) {
+        storage[key] = url
+      }
+      
+      func string(forKey key: UserDefaultsClient.Key) -> String? {
+        storage[key] as? String
+      }
+      
+      func url(forKey key: UserDefaultsClient.Key) -> URL? {
+        storage[key] as? URL
+      }
+    }
+    
+    let storage = Storage()
+    
+    return .init(
+      removeValue: storage.removeValue(key:),
+      setString: storage.setString(_:forKey:),
+      setUrl: storage.setUrl(_:forKey:),
+      string: storage.string(forKey:),
+      url: storage.url(forKey:)
+    )
+  }
 }
 
 extension DependencyValues {

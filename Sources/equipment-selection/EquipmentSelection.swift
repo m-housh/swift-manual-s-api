@@ -8,6 +8,8 @@ import LoggingFormatAndPipe
 import Models
 import TemplateClientLive
 
+// TODO: Add a validation command to check files
+
 @main
 struct EquipmentSelection: AsyncParsableCommand {
 

@@ -68,12 +68,13 @@ extension EquipmentSelection.Interpolate {
     let command: EquipmentSelection.Interpolate
 
     func run() async throws {
-      let config = try await configClient.config()
+      let config = await configClient.config()
       let path =
         command.inputPath
         ?? URL(fileURLWithPath: config.templatePaths.fileName(for: command.interpolation))
       let outputPath = command.outputPath ?? URL(fileURLWithPath: "./")
 
+      // TODO: Fix for projects.
       let (interpolation, response) = try await interpolate(
         inputPath: path
       )
@@ -117,19 +118,38 @@ extension EquipmentSelection.Interpolate {
       logger.info("Done")
     }
 
+    // TODO: Fix for projects
     private func interpolate(inputPath: URL)
       async throws -> (
         ServerRoute.Api.Route.Interpolation, InterpolationResponse
       )
     {
-      let data = try await fileClient.read(inputPath)
-      let interpolation = try jsonDecoder.decode(
-        ServerRoute.Api.Route.Interpolation.self,
-        from: data
-      )
+      let interpolation: ServerRoute.Api.Route.Interpolation
+      do {
+        let data = try await fileClient.read(inputPath)
+        if command.interpolation != .project {
+          interpolation = try jsonDecoder.decode(
+            ServerRoute.Api.Route.Interpolation.self,
+            from: data
+          )
+        } else {
+          logger.debug("Decoding as project.")
+          let project = try jsonDecoder.decode(Template.Project.self, from: data)
+          interpolation = .init(
+            designInfo: project.designInfo,
+            houseLoad: project.houseLoad,
+            systemType: project.systemType,
+            route: project.route
+          )
+        }
+      } catch {
+        logger.info("Invalid json.")
+        throw error
+      }
       logger.debug("Read interpolation file at: \(inputPath.absoluteString)")
       let response = try await apiClient.interpolate(interpolation)
       return (interpolation, response)
+    
     }
 
   }

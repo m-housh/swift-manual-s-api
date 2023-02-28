@@ -47,7 +47,7 @@ extension EquipmentSelection.Config {
         @Dependency(\.configClient) var cliConfigClient
         @Dependency(\.logger) var logger
 
-        let config = try await cliConfigClient.config()
+        let config = await cliConfigClient.config()
 
         try await cliConfigClient.generateConfig()
         logger.info("Wrote config to path: \(config.configPath.absoluteString)")
@@ -109,7 +109,7 @@ extension EquipmentSelection.Config {
         @Dependency(\.logger) var logger
         @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
 
-        let config = try await cliConfigClient.config()
+        let config = await cliConfigClient.config()
         let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!
         logger.info("\(string)")
       }

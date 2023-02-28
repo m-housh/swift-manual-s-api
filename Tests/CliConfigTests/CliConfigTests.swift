@@ -27,11 +27,11 @@ final class CliConfigTests: XCTestCase {
       "EQUIPMENT_SELECTION_TEMPLATES": "/some/custom/template/location"
     ]
     
-     let config = try await withDependencies {
+     let config = await withDependencies {
        $0.configClient = .live(environment: environment)
     } operation: {
       @Dependency(\.configClient) var client
-      return try await client.config()
+      return await client.config()
     }
     
     var defaults = ClientConfig()
@@ -66,8 +66,24 @@ final class CliConfigTests: XCTestCase {
       return cliConfigClient
     }
     
-    let loaded = try await client.config()
+    let loaded = await client.config()
     XCTAssertEqual(loaded, customConfig)
+  }
+  
+  func test_userDefaults_sets_custom_config_directory() async throws {
+    
+    let client = withDependencies {
+      $0.userDefaults = .temporary
+    } operation: {
+      return ConfigClient.liveValue
+    }
+    
+    let configBefore = await client.config()
+    XCTAssertNotEqual(configBefore.configDirectory, "/some/config/directory")
+    await client.setConfigDirectory("/some/config/directory")
+    let configAfter = await client.config()
+    XCTAssertEqual(configAfter.configDirectory, "/some/config/directory")
+
   }
 
 }

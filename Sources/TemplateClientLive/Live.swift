@@ -44,7 +44,7 @@ extension TemplateClient: DependencyKey {
       }
 
       func generateTemplates() async throws {
-        let config = try await configClient.config()
+        let config = await configClient.config()
         try await fileClient.createDirectory(at: templateDirectory.value)
         logger.debug("Generating templates at: \(templateDirectory.value.absoluteURL)")
         for key in Template.PathKey.allCases {
@@ -66,7 +66,7 @@ extension TemplateClient: DependencyKey {
       func routeTemplate(
         for key: Template.EmbeddableKey
       ) async throws -> ServerRoute.Api.Route.Interpolation.Route {
-        let config = try await configClient.config()
+        let config = await configClient.config()
         let keyPath = key.templateKeyPath
 
         let routeData = try await templateData(
@@ -90,7 +90,7 @@ extension TemplateClient: DependencyKey {
         inInterpolation: Bool
       ) async throws -> Data {
 
-        let config = try await configClient.config()
+        let config = await configClient.config()
 
         let routeData = try await templateData(
           jsonEncoder: jsonEncoder,

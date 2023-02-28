@@ -14,7 +14,7 @@ import XCTestDynamicOverlay
 public struct ConfigClient {
 
   /// Return the current configuration being used.
-  public var config: () async throws -> ClientConfig
+  public var config: () async -> ClientConfig
 
   /// Generate the default configuration and write it at the url.
   public var generateConfig: (URL?) async throws -> Void
@@ -39,7 +39,7 @@ public struct ConfigClient {
   ///   - generateConfig: Generate the default configuration and write it to disk.
   ///   - save: Save the config to disk.
   public init(
-    config: @escaping () async throws -> ClientConfig,
+    config: @escaping () async -> ClientConfig,
     generateConfig: @escaping (URL?) async throws -> Void,
     save: @escaping (ClientConfig) async throws -> Void,
     setApiBaseUrl: @escaping (String?) async -> Void,
