@@ -30,7 +30,7 @@ extension Logger {
 }
 
 extension Template.PathKey: EnumerableFlag {}
-extension CliMiddleware.ConfigContext.Key: EnumerableFlag { }
+extension CliMiddleware.ConfigContext.Key: EnumerableFlag {}
 
 extension Template.Path {
 

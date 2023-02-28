@@ -196,7 +196,8 @@ extension ClientConfig {
     case .anvilBaseUrl:
       return
     case .configDirectory:
-      self.configDirectory = config(environment: ProcessInfo.processInfo.environment).configDirectory
+      self.configDirectory =
+        config(environment: ProcessInfo.processInfo.environment).configDirectory
     case .templateDirectory:
       self.templateDirectoryPath = nil
     }

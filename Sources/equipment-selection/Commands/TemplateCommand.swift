@@ -91,7 +91,7 @@ extension EquipmentSelection.Template {
         }
       }.run()
     }
-    
+
     private var outputContext: CliMiddleware.TemplateContext.Template.OutputContext {
       if let outputPath {
         return .write(to: outputPath)
@@ -100,7 +100,7 @@ extension EquipmentSelection.Template {
       }
       return .echo
     }
-    
+
     private var embedInContext: CliMiddleware.TemplateContext.Template.EmbedInContext? {
       if embedInRoute {
         return .route
@@ -109,7 +109,7 @@ extension EquipmentSelection.Template {
       }
       return nil
     }
-    
+
   }
 
   struct GenerateTemplatesCommand: AsyncParsableCommand {
