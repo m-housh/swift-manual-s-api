@@ -213,6 +213,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "LoggingDependency",
         "Models",
         "TemplateClientLive",
+        "ValidationMiddlewareLive",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         .product(name: "LoggingFormatAndPipe", package: "swift-log-format-and-pipe"),
       ]

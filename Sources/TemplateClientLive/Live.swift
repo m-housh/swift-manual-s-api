@@ -78,7 +78,11 @@ extension TemplateClient: DependencyKey {
           templateDirectory: templateDirectory.value
         )
         let key = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
-        return try key.embeddableKey.embedInRoute(routeData)
+        guard let embeddableKey = key.embeddableKey else {
+          struct NotEmbeddableError: Error { }
+          throw NotEmbeddableError()
+        }
+        return try embeddableKey.embedInRoute(routeData)
       }
 
       func setTemplateDirectory(to url: URL) {
@@ -115,9 +119,14 @@ extension TemplateClient: DependencyKey {
           fileClient: fileClient,
           paths: config.templatePaths
         )
+        
+        guard let embeddableKey = key.embeddableKey else {
+          struct NotEmbeddableKeyError: Error { }
+          throw NotEmbeddableKeyError()
+        }
 
         return try jsonEncoder.encode(
-          key.embeddableKey.embed(data: routeData, in: baseInterpolation)
+          embeddableKey.embed(data: routeData, in: baseInterpolation)
         )
       }
     }

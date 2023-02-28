@@ -26,7 +26,7 @@ extension EquipmentSelection {
 
     @Option(
       name: .shortAndLong,
-      help: "The output directory to write files to.",
+      help: "The output directory to write files to, if applicable.",
       transform: URL.init(fileURLWithPath:)
     )
     var outputPath: URL?
@@ -97,7 +97,7 @@ extension EquipmentSelection.Interpolate {
         return
       }
 
-      // Write the result to as json.
+      // Write the result as json.
       if command.writeJson {
         let jsonPath = outputPath.appendingPathComponent("result.json")
         let data = try jsonEncoder.encode(response.result)

@@ -260,8 +260,8 @@ extension Template.PathKey {
 
   /// Convert the path key to an ``Template/EmbeddableKey``.
   ///
-  public var embeddableKey: Template.EmbeddableKey {
-    .init(rawValue: rawValue)!
+  public var embeddableKey: Template.EmbeddableKey? {
+    .init(rawValue: rawValue)
   }
 }
 
@@ -283,5 +283,18 @@ extension Template.Path {
   /// Return the value for the given ``Template/PathKey``.
   public func fileName(for pathKey: Template.PathKey) -> String {
     self[keyPath: pathKey.templateKeyPath]
+  }
+}
+
+extension Template.Project {
+  
+  /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
+  public var interpolation: ServerRoute.Api.Route.Interpolation {
+    .init(
+      designInfo: self.designInfo,
+      houseLoad: self.houseLoad,
+      systemType: self.systemType,
+      route: self.route
+    )
   }
 }
