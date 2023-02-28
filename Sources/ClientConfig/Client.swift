@@ -11,16 +11,16 @@ import XCTestDynamicOverlay
 /// Represents the interactions with the ``CliConfig`` for configuring the command line tool.
 ///
 ///
-public struct CliConfigClient {
+public struct ConfigClient {
 
   /// Return the current configuration being used.
-  public var config: () async throws -> CliConfig
+  public var config: () async throws -> ClientConfig
 
   /// Generate the default configuration and write it at the url.
   public var generateConfig: (URL?) async throws -> Void
 
   /// Save / update the command line configuration.
-  public var save: (CliConfig) async throws -> Void
+  public var save: (ClientConfig) async throws -> Void
 
   public var setApiBaseUrl: (String?) async -> Void
   public var setAnvilApiKey: (String?) async -> Void
@@ -39,9 +39,9 @@ public struct CliConfigClient {
   ///   - generateConfig: Generate the default configuration and write it to disk.
   ///   - save: Save the config to disk.
   public init(
-    config: @escaping () async throws -> CliConfig,
+    config: @escaping () async throws -> ClientConfig,
     generateConfig: @escaping (URL?) async throws -> Void,
-    save: @escaping (CliConfig) async throws -> Void,
+    save: @escaping (ClientConfig) async throws -> Void,
     setApiBaseUrl: @escaping (String?) async -> Void,
     setAnvilApiKey: @escaping (String?) async -> Void,
     setConfigDirectory: @escaping (String) async -> Void,
@@ -70,9 +70,9 @@ public struct CliConfigClient {
 
 }
 
-extension CliConfigClient: TestDependencyKey {
+extension ConfigClient: TestDependencyKey {
 
-  public static var noop: CliConfigClient {
+  public static var noop: ConfigClient {
     .init(
       config: { .init() },
       generateConfig: { _ in try await Task.never() },
@@ -84,7 +84,7 @@ extension CliConfigClient: TestDependencyKey {
     )
   }
 
-  public static let testValue: CliConfigClient = .init(
+  public static let testValue: ConfigClient = .init(
     config: unimplemented("\(Self.self).config"),
     generateConfig: unimplemented("\(Self.self).generateConfig"),
     save: unimplemented("\(Self.self).save"),
@@ -96,8 +96,8 @@ extension CliConfigClient: TestDependencyKey {
 }
 
 extension DependencyValues {
-  public var cliConfigClient: CliConfigClient {
-    get { self[CliConfigClient.self] }
-    set { self[CliConfigClient.self] = newValue }
+  public var configClient: ConfigClient {
+    get { self[ConfigClient.self] }
+    set { self[ConfigClient.self] = newValue }
   }
 }

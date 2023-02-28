@@ -8,7 +8,7 @@ import Tagged
 
 /// Represents configuration / overrides for the command line tool.
 ///
-public struct CliConfig: Codable, Equatable, Sendable {
+public struct ClientConfig: Codable, Equatable, Sendable {
 
   /// The API key for generating pdf's.
   ///
@@ -39,6 +39,15 @@ public struct CliConfig: Codable, Equatable, Sendable {
   ///
   public var templatePaths: Template.Path
 
+  public init() {
+    self.anvilApiKey = nil
+    self.apiBaseUrl = nil
+    self.configDirectory = defaultConfigPath
+    self.templateDirectoryPath = nil
+    self.templateIds = .init()
+    self.templatePaths = .init()
+  }
+  
   public init(
     environment: Environment,
     templateIds: TemplateIds = .init(),
@@ -54,11 +63,11 @@ public struct CliConfig: Codable, Equatable, Sendable {
     )
   }
 
-  public init(
-    anvilApiKey: String? = nil,
-    apiBaseUrl: String? = nil,
-    configDirectory: String? = nil,
-    templateDirectoryPath: String? = nil,
+  internal init(
+    anvilApiKey: String?,
+    apiBaseUrl: String?,
+    configDirectory: String?,
+    templateDirectoryPath: String?,
     templateIds: TemplateIds = .init(),
     templatePaths: Template.Path = .init()
   ) {
@@ -92,13 +101,26 @@ public struct CliConfig: Codable, Equatable, Sendable {
   }
 }
 
-extension CliConfig {
-  // Represents the values that can be read from the process environment.
+extension ClientConfig {
+  /// Represents the values that can be read from the process environment.
+  /// 
   public struct Environment: Codable, Equatable, Sendable {
     public var anvilApiKey: String?
     public var apiBaseUrl: String?
     public var configDirectory: String?
     public var templateDirectoryPath: String?
+    
+    public init(
+      anvilApiKey: String?,
+      apiBaseUrl: String?,
+      configDirectory: String?,
+      templateDirectoryPath: String?
+    ) {
+      self.anvilApiKey = anvilApiKey
+      self.apiBaseUrl = apiBaseUrl
+      self.configDirectory = configDirectory
+      self.templateDirectoryPath = templateDirectoryPath
+    }
 
     enum CodingKeys: String, CodingKey {
       case anvilApiKey = "ANVIL_API_KEY"
@@ -118,7 +140,7 @@ public let defaultConfigPath: String = {
     ?? defaultConfigHomeKey
 }()
 
-extension CliConfig {
+extension ClientConfig {
 
   // TODO: Move to AnvilClient.
   public struct TemplateIds: Codable, Equatable, Sendable {

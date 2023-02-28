@@ -1,4 +1,4 @@
-@_exported import CliConfig
+@_exported import ClientConfig
 import ConcurrencyHelpers
 import Dependencies
 import FileClient
@@ -6,7 +6,7 @@ import Foundation
 import Models
 import UserDefaultsClient
 
-extension CliConfigClient: DependencyKey {
+extension ConfigClient: DependencyKey {
 
   public static func live(environment: [String: String] = [:]) -> Self {
     actor Session {
@@ -14,11 +14,11 @@ extension CliConfigClient: DependencyKey {
       @Dependency(\.fileClient) private var fileClient
       @Dependency(\.userDefaults) private var userDefaults
 
-      nonisolated let config: Isolated<CliConfig>
+      nonisolated let config: Isolated<ClientConfig>
 
       init(environment: [String: String]) {
         self.config = .init(
-          wrappedValue: CliConfigLive.config(environment: environment)
+          wrappedValue: ClientConfigLive.config(environment: environment)
         )
       }
 
@@ -39,7 +39,7 @@ extension CliConfigClient: DependencyKey {
         try await fileClient.write(data: data, to: config.value.configPath)
       }
 
-      func save(config: CliConfig) async throws {
+      func save(config: ClientConfig) async throws {
         self.config.value = config
         try await self.writeConfig()
       }
@@ -76,7 +76,7 @@ extension CliConfigClient: DependencyKey {
     )
   }
 
-  public static var liveValue: CliConfigClient {
+  public static var liveValue: ConfigClient {
     live(environment: ProcessInfo.processInfo.environment)
   }
 }
@@ -89,10 +89,10 @@ extension CliConfigClient: DependencyKey {
 /// - `environment`
 ///
 /// Merging the results together.
-private func config(environment: [String: String]) -> CliConfig {
+private func config(environment: [String: String]) -> ClientConfig {
   @Dependency(\.userDefaults) var userDefaults
 
-  var config = CliConfig()
+  var config = ClientConfig()
   let decoder = JSONDecoder()
   let encoder = JSONEncoder()
 
@@ -105,7 +105,7 @@ private func config(environment: [String: String]) -> CliConfig {
   }
 
   let configEnvironment = (try? encoder.encode(environment))
-    .flatMap { try? decoder.decode(CliConfig.Environment.self, from: $0) }
+    .flatMap { try? decoder.decode(ClientConfig.Environment.self, from: $0) }
 
   if let configEnvironment {
     configEnvironment.merge(with: &config)
@@ -114,9 +114,9 @@ private func config(environment: [String: String]) -> CliConfig {
   return config
 }
 
-extension CliConfig.Environment {
+extension ClientConfig.Environment {
 
-  fileprivate func merge(with config: inout CliConfig) {
+  fileprivate func merge(with config: inout ClientConfig) {
     if let anvilApiKey { config.anvilApiKey = anvilApiKey }
     if let apiBaseUrl { config.apiBaseUrl = apiBaseUrl }
     if let configDirectory { config.configDirectory = configDirectory }
@@ -126,7 +126,7 @@ extension CliConfig.Environment {
 
 extension UserDefaultsClient {
 
-  fileprivate func merge(with config: inout CliConfig) {
+  fileprivate func merge(with config: inout ClientConfig) {
     if let anvilApiKey = string(forKey: .anvilApiKey) { config.anvilApiKey = anvilApiKey }
     if let apiBaseUrl = string(forKey: .apiBaseUrl) { config.apiBaseUrl = apiBaseUrl }
     if let configDirectory = string(forKey: .configDirectory) {
@@ -146,10 +146,10 @@ private struct LocalConfig: Codable {
   var anvilApiKey: String?
   var apiBaseUrl: String?
   var templateDirectoryPath: String?
-  var templateIds: CliConfig.TemplateIds?
+  var templateIds: ClientConfig.TemplateIds?
   var templatePaths: Template.Path?
 
-  init(cliConfig: CliConfig) {
+  init(cliConfig: ClientConfig) {
     self.anvilApiKey = cliConfig.anvilApiKey
     self.apiBaseUrl = cliConfig.apiBaseUrl
     self.templateDirectoryPath = cliConfig.templateDirectoryPath
@@ -157,7 +157,7 @@ private struct LocalConfig: Codable {
     self.templatePaths = cliConfig.templatePaths
   }
 
-  func merge(with config: inout CliConfig) {
+  func merge(with config: inout ClientConfig) {
     if let anvilApiKey { config.anvilApiKey = anvilApiKey }
     if let apiBaseUrl { config.apiBaseUrl = apiBaseUrl }
     if let templateDirectoryPath { config.templateDirectoryPath = templateDirectoryPath }
@@ -166,12 +166,12 @@ private struct LocalConfig: Codable {
   }
 }
 
-extension CliConfig {
+extension ClientConfig {
   // Convert a cli-config to a local-config.
   fileprivate var localConfig: LocalConfig { .init(cliConfig: self) }
 }
 
-extension CliConfig {
+extension ClientConfig {
   fileprivate mutating func setString(string: String, forKey defaultsKey: UserDefaultsClient.Key) {
     switch defaultsKey {
     case .anvilApiKey:

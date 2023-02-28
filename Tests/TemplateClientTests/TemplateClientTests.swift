@@ -1,5 +1,5 @@
 import XCTest
-import CliConfigLive
+import ClientConfigLive
 import Dependencies
 import FileClient
 import Logging
@@ -18,13 +18,13 @@ final class TemplateClientTests: XCTestCase {
       $0.userDefaults = .noop
     } operation: {
       return (
-        CliConfigClient.liveValue,
+        ConfigClient.liveValue,
         TemplateClient.liveValue
       )
     }
     
     withDependencies {
-      $0.cliConfigClient = configClient
+      $0.configClient = configClient
       $0.templateClient = templateClient
     } operation: {
       super.invokeTest()
@@ -97,7 +97,7 @@ final class TemplateClientTests: XCTestCase {
   
   func test_generating_templates() async throws {
     
-    @Dependency(\.cliConfigClient) var configClient
+    @Dependency(\.configClient) var configClient
     
     let tempDirectory = FileManager.default.temporaryDirectory
       .appendingPathComponent("generate-templates-test")
@@ -105,7 +105,7 @@ final class TemplateClientTests: XCTestCase {
     defer { try? FileManager.default.removeItem(at: tempDirectory) }
     
     let templateClient = withDependencies {
-      $0.cliConfigClient = configClient
+      $0.configClient = configClient
       $0.fileClient = .liveValue
       $0.logger.logLevel = .debug
       $0.userDefaults = .noop

@@ -162,23 +162,22 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
 
 // MARK: - CLI
 if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
+//  package.platforms?.append(contentsOf: [.macOS(.v13)])
   package.dependencies.append(contentsOf: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
     .package(url: "https://github.com/adorkable/swift-log-format-and-pipe.git", from: "0.1.0"),
   ])
   package.products.append(contentsOf: [
     .executable(name: "equipment-selection", targets: ["equipment-selection"]),
-    .library(name: "CliConfig", targets: ["CliConfig"]),
-    .library(name: "CliConfigLive", targets: ["CliConfigLive"]),
-    .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
-    .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
+    .library(name: "ClientConfig", targets: ["ClientConfig"]),
+    .library(name: "ClientConfigLive", targets: ["ClientConfigLive"]),
     .library(name: "FileClient", targets: ["FileClient"]),
     .library(name: "TemplateClient", targets: ["TemplateClient"]),
     .library(name: "TemplateClientLive", targets: ["TemplateClientLive"]),
   ])
   package.targets.append(contentsOf: [
     .target(
-      name: "CliConfig",
+      name: "ClientConfig",
       dependencies: [
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -187,9 +186,9 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       ]
     ),
     .target(
-      name: "CliConfigLive",
+      name: "ClientConfigLive",
       dependencies: [
-        "CliConfig",
+        "ClientConfig",
         "ConcurrencyHelpers",
         "FileClient",
         "UserDefaultsClient",
@@ -198,35 +197,16 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .testTarget(
       name: "CliConfigTests",
       dependencies: [
-        "CliConfig",
-        "CliConfigLive",
+        "ClientConfig",
+        "ClientConfigLive",
         .product(name: "CustomDump", package: "swift-custom-dump"),
-      ]
-    ),
-    .target(
-      name: "CliMiddleware",
-      dependencies: [
-        "Models",
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
-      ]
-    ),
-    .target(
-      name: "CliMiddlewareLive",
-      dependencies: [
-        "ApiClient",
-        "CliMiddleware",
-        "FileClient",
-        "FirstPartyMocks",
-        "UserDefaultsClient",
       ]
     ),
     .executableTarget(
       name: "equipment-selection",
       dependencies: [
         "ApiClientLive",
-        "CliConfigLive",
-        "CliMiddlewareLive",
+        "ClientConfigLive",
         "ConcurrencyHelpers",
         "FirstPartyMocks",
         "LoggingDependency",
@@ -257,7 +237,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .target(
       name: "TemplateClientLive",
       dependencies: [
-        "CliConfig",
+        "ClientConfig",
         "LoggingDependency",
         "FileClient",
         "FirstPartyMocks",
@@ -268,7 +248,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .testTarget(
       name: "TemplateClientTests",
       dependencies: [
-        "CliConfigLive",
+        "ClientConfigLive",
         "TemplateClientLive",
       ]
     ),

@@ -1,4 +1,4 @@
-import CliConfig
+import ClientConfig
 import ConcurrencyHelpers
 import Dependencies
 import FileClient
@@ -23,7 +23,7 @@ extension TemplateClient: DependencyKey {
 
     actor Session {
       @Dependency(\.logger) var logger
-      @Dependency(\.cliConfigClient) var configClient
+      @Dependency(\.configClient) var configClient
       @Dependency(\.fileClient) var fileClient
 
       private let jsonEncoder: JSONEncoder

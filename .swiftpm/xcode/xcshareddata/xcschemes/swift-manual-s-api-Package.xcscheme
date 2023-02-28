@@ -448,6 +448,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserDefaultsClient"
+               BuildableName = "UserDefaultsClient"
+               BlueprintName = "UserDefaultsClient"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "TemplateClient"
                BuildableName = "TemplateClient"
                BlueprintName = "TemplateClient"
@@ -476,9 +490,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UserDefaultsClient"
-               BuildableName = "UserDefaultsClient"
-               BlueprintName = "UserDefaultsClient"
+               BlueprintIdentifier = "ClientConfig"
+               BuildableName = "ClientConfig"
+               BlueprintName = "ClientConfig"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ClientConfigLive"
+               BuildableName = "ClientConfigLive"
+               BlueprintName = "ClientConfigLive"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -488,7 +516,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
             skipped = "YES">
@@ -593,18 +622,18 @@
       </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "ANVIL_API_KEY"
-            value = "secret"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
             key = "API_BASE_URL"
             value = "http://localhost:8080"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "EQUIPMENT_SELECTION_CONFIG_DIR"
+            key = "EQUIPMENT_SELCTION_CONFIG_DIR"
             value = "~/.config/custom-equipment-selection"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "ANVIL_API_KEY"
+            value = "secret"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

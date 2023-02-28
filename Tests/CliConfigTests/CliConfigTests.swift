@@ -1,6 +1,6 @@
 import XCTest
-import CliConfig
-import CliConfigLive
+import ClientConfig
+import ClientConfigLive
 import CustomDump
 import Dependencies
 import FileClient
@@ -28,13 +28,13 @@ final class CliConfigTests: XCTestCase {
     ]
     
      let config = try await withDependencies {
-       $0.cliConfigClient = .live(environment: environment)
+       $0.configClient = .live(environment: environment)
     } operation: {
-      @Dependency(\.cliConfigClient) var client
+      @Dependency(\.configClient) var client
       return try await client.config()
     }
     
-    var defaults = CliConfig()
+    var defaults = ClientConfig()
     defaults.anvilApiKey = "secret"
     defaults.apiBaseUrl = "http://localhost:8081"
     defaults.configDirectory = "~/.config/custom-equipment-selection"
@@ -44,7 +44,7 @@ final class CliConfigTests: XCTestCase {
   }
   
   func test_config_loads_custom() async throws {
-    var customConfig = CliConfig()
+    var customConfig = ClientConfig()
     let tempDir = FileManager.default.temporaryDirectory
     let customConfigDirectory = tempDir.appendingPathComponent("equipment-selection", conformingTo: .directory)
     print(customConfigDirectory.absoluteString)
@@ -59,9 +59,9 @@ final class CliConfigTests: XCTestCase {
     let client = try await withDependencies {
       $0.userDefaults = .noop
       $0.fileClient = .liveValue
-      $0.cliConfigClient = .liveValue
+      $0.configClient = .liveValue
     } operation: {
-      @Dependency(\.cliConfigClient) var cliConfigClient
+      @Dependency(\.configClient) var cliConfigClient
       try await cliConfigClient.save(customConfig)
       return cliConfigClient
     }
