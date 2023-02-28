@@ -9,11 +9,11 @@ import XCTestDynamicOverlay
 #endif
 
 public struct CliMiddleware {
-  
+
   public var config: (ConfigContext) async throws -> Void
   public var templates: (TemplateContext) async throws -> Void
   public var validate: (ValidationContext) async throws -> Void
-  
+
   public init(
     config: @escaping (ConfigContext) async throws -> Void,
     templates: @escaping (TemplateContext) async throws -> Void,
@@ -23,20 +23,20 @@ public struct CliMiddleware {
     self.templates = templates
     self.validate = validate
   }
-  
+
   public enum ConfigContext: Sendable {
     case generate
     case set(String, for: SetKey)
     case show
     case unset(UnSetKey)
-    
+
     public enum SetKey: String, CaseIterable, Sendable {
       case anvilApiKey
       case apiBaseUrl
       case configDirectory
       case templatesDirectory
     }
-    
+
     public enum UnSetKey: String, CaseIterable, Sendable {
       case anvilApiKey
       case apiBaseUrl
@@ -45,12 +45,12 @@ public struct CliMiddleware {
     }
 
   }
-  
+
   public enum TemplateContext: Sendable {
     case generate
     case remove(force: Bool)
     case template(Template)
-    
+
     public static func template(
       key: Models.Template.PathKey,
       embedIn: Template.EmbedInContext? = nil,
@@ -58,12 +58,12 @@ public struct CliMiddleware {
     ) -> Self {
       .template(.init(key: key, embedIn: embedIn, outputContext: outputContext))
     }
-    
+
     public struct Template: Sendable {
       public var key: Models.Template.PathKey
       public var embedIn: EmbedInContext?
       public var outputContext: OutputContext
-      
+
       public init(
         key: Models.Template.PathKey,
         embedIn: EmbedInContext? = nil,
@@ -73,12 +73,12 @@ public struct CliMiddleware {
         self.embedIn = embedIn
         self.outputContext = outputContext
       }
-      
+
       public enum EmbedInContext: Sendable {
         case interpolation
         case route
       }
-      
+
       public enum OutputContext: Equatable, Sendable {
         case echo
         case copy
@@ -86,13 +86,13 @@ public struct CliMiddleware {
       }
     }
   }
-  
+
   public struct ValidationContext: Sendable {
-   
+
     public var key: Template.PathKey
     public var inputFile: URL?
-    
-    public  init(
+
+    public init(
       key: Template.PathKey,
       inputFile: URL? = nil
     ) {
@@ -103,7 +103,7 @@ public struct CliMiddleware {
 }
 
 extension CliMiddleware: TestDependencyKey {
-  
+
   public static var testValue: CliMiddleware {
     .init(
       config: unimplemented("\(Self.self).config"),

@@ -29,7 +29,7 @@ extension EquipmentSelection {
 
     @OptionGroup
     var globalOptions: GlobalOptions
-    
+
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
         @Dependency(\.cliMiddleware.validate) var validate

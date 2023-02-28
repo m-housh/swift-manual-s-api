@@ -212,7 +212,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "Models",
         "UserDefaultsClient",
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
     .target(
@@ -225,7 +225,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "JsonDependency",
         "LoggingDependency",
         "TemplateClient",
-        "ValidationMiddleware"
+        "ValidationMiddleware",
       ]
     ),
     .executableTarget(

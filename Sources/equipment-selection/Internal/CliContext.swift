@@ -1,7 +1,7 @@
 import ApiClientLive
 import ArgumentParser
-import ClientConfigLive
 import CliMiddlewareLive
+import ClientConfigLive
 import Dependencies
 import Foundation
 import LoggingDependency

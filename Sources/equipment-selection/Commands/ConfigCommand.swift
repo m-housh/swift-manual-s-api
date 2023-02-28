@@ -20,18 +20,18 @@ extension EquipmentSelection {
 
 extension EquipmentSelection.Config {
 
-//  enum SetKey: String, EnumerableFlag {
-//    case anvilApiKey
-//    case apiBaseUrl
-//    case configDirectory
-//    case templatesDirectory
-//  }
-//
-//  enum UnSetKey: String, EnumerableFlag {
-//    case anvilApiKey
-//    case apiBaseUrl
-//    case templatesDirectory
-//  }
+  //  enum SetKey: String, EnumerableFlag {
+  //    case anvilApiKey
+  //    case apiBaseUrl
+  //    case configDirectory
+  //    case templatesDirectory
+  //  }
+  //
+  //  enum UnSetKey: String, EnumerableFlag {
+  //    case anvilApiKey
+  //    case apiBaseUrl
+  //    case templatesDirectory
+  //  }
 
   struct GenerateConfigCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(

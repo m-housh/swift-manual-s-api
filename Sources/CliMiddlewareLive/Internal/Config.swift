@@ -1,5 +1,5 @@
-import ClientConfig
 import CliMiddleware
+import ClientConfig
 import Dependencies
 import Foundation
 import JsonDependency
@@ -22,19 +22,19 @@ extension CliMiddleware.ConfigContext {
 
 extension CliMiddleware.ConfigContext {
   fileprivate enum Run {
-    
+
     static func generate() async throws {
       @Dependency(\.configClient) var configClient
       @Dependency(\.logger) var logger
-      
+
       let config = await configClient.config()
       try await configClient.generateConfig()
-      
+
       logger.info(
         "Wrote config to path: \(config.configPath.absoluteString)"
       )
     }
-    
+
     static func set(string: String, forKey key: SetKey) async throws {
       @Dependency(\.configClient) var configClient
       @Dependency(\.logger) var logger
@@ -55,17 +55,17 @@ extension CliMiddleware.ConfigContext {
       }
       logger.info("Done")
     }
-    
+
     static func show() async throws {
       @Dependency(\.configClient) var cliConfigClient
       @Dependency(\.logger) var logger
       @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
-      
+
       let config = await cliConfigClient.config()
       let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!
       logger.info("\(string)")
     }
-    
+
     static func unset(key: UnSetKey) async throws {
       @Dependency(\.configClient) var configClient
       @Dependency(\.logger) var logger
@@ -85,6 +85,6 @@ extension CliMiddleware.ConfigContext {
       }
       logger.info("Done")
     }
-    
+
   }
 }

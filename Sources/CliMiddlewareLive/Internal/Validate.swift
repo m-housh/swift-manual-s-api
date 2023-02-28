@@ -1,5 +1,5 @@
-import ClientConfig
 import CliMiddleware
+import ClientConfig
 import Dependencies
 import FileClient
 import FirstPartyMocks
@@ -13,7 +13,7 @@ import ValidationMiddleware
 #endif
 
 extension CliMiddleware.ValidationContext {
-  
+
   static func run(context: Self) async throws {
     try await Run(context: context).run()
   }
@@ -26,9 +26,9 @@ extension CliMiddleware.ValidationContext {
     @Dependency(\.jsonCoders.jsonDecoder) var jsonDecoder
     @Dependency(\.logger) var logger
     @Dependency(\.validationMiddleware) var validationMiddleware
-    
+
     let context: CliMiddleware.ValidationContext
-    
+
     func run() async throws {
       let config = await configClient.config()
       let url = config.templatePaths.parseUrl(
@@ -36,7 +36,7 @@ extension CliMiddleware.ValidationContext {
         with: context.key
       )
       let data = try await fileClient.read(from: url)
-      
+
       // Handle non embeddable key routes.
       guard let embeddableKey = context.key.embeddableKey else {
         // we are either a project or base interpolation, so handle differently.
@@ -48,16 +48,16 @@ extension CliMiddleware.ValidationContext {
           let project = try jsonDecoder.decode(Models.Template.Project.self, from: data)
           try await validate(interpolation: project.interpolation)
           break
-          // Keep here encase other path keys are added, they must be handled.
+        // Keep here encase other path keys are added, they must be handled.
         case .boiler,
-            .electric,
-            .furnace,
-            .heatPump,
-            .keyed,
-            .noInterpolation,
-            .oneWayIndoor,
-            .oneWayOutdoor,
-            .twoWay:
+          .electric,
+          .furnace,
+          .heatPump,
+          .keyed,
+          .noInterpolation,
+          .oneWayIndoor,
+          .oneWayOutdoor,
+          .twoWay:
           logger.debug("Invalid key: \(context.key)")
           break
         }
@@ -67,7 +67,7 @@ extension CliMiddleware.ValidationContext {
       let interpolation = try decodeEmbeddableKey(key: embeddableKey, from: data)
       try await validate(interpolation: interpolation)
     }
-    
+
     func decodeEmbeddableKey(
       key: Models.Template.EmbeddableKey,
       from data: Data
@@ -123,7 +123,7 @@ extension CliMiddleware.ValidationContext {
         throw error
       }
     }
-    
+
     func validate(interpolation: ServerRoute.Api.Route.Interpolation) async throws {
       do {
         try await validationMiddleware.validate(
