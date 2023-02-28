@@ -1,6 +1,7 @@
 import ApiClientLive
 import ArgumentParser
 import ClientConfigLive
+import CliMiddlewareLive
 import Dependencies
 import Foundation
 import LoggingDependency
@@ -40,6 +41,7 @@ struct CliContext {
       $0.jsonCoders = .liveValue
       $0.apiClient = .liveValue
       $0.validationMiddleware = .liveValue
+      $0.cliMiddleware = .liveValue
     } operation: {
       try await self._run()
     }

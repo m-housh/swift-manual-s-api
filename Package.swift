@@ -172,7 +172,10 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .executable(name: "equipment-selection", targets: ["equipment-selection"]),
     .library(name: "ClientConfig", targets: ["ClientConfig"]),
     .library(name: "ClientConfigLive", targets: ["ClientConfigLive"]),
+    .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
+    .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
     .library(name: "FileClient", targets: ["FileClient"]),
+    .library(name: "JsonDependency", targets: ["JsonDependency"]),
     .library(name: "TemplateClient", targets: ["TemplateClient"]),
     .library(name: "TemplateClientLive", targets: ["TemplateClientLive"]),
   ])
@@ -196,11 +199,33 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       ]
     ),
     .testTarget(
-      name: "CliConfigTests",
+      name: "ClientConfigTests",
       dependencies: [
         "ClientConfig",
         "ClientConfigLive",
         .product(name: "CustomDump", package: "swift-custom-dump"),
+      ]
+    ),
+    .target(
+      name: "CliMiddleware",
+      dependencies: [
+        "Models",
+        "UserDefaultsClient",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
+    ),
+    .target(
+      name: "CliMiddlewareLive",
+      dependencies: [
+        "ClientConfig",
+        "CliMiddleware",
+        "FileClient",
+        "FirstPartyMocks",
+        "JsonDependency",
+        "LoggingDependency",
+        "TemplateClient",
+        "ValidationMiddleware"
       ]
     ),
     .executableTarget(
@@ -208,8 +233,10 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "ApiClientLive",
         "ClientConfigLive",
+        "CliMiddlewareLive",
         "ConcurrencyHelpers",
         "FirstPartyMocks",
+        "JsonDependency",
         "LoggingDependency",
         "Models",
         "TemplateClientLive",
@@ -225,6 +252,12 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         .product(name: "Logging", package: "swift-log"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
+      ]
+    ),
+    .target(
+      name: "JsonDependency",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies")
       ]
     ),
     .target(

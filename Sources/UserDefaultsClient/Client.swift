@@ -54,7 +54,7 @@ public struct UserDefaultsClient {
   }
 
   /// Represents the keys used in user-defaults.
-  public enum Key: String, CaseIterable {
+  public enum Key: String, CaseIterable, Sendable {
     case anvilApiKey = "com.hvacmath.anvil-api-key"
     case apiBaseUrl = "com.hvacmath.api-base-url"
     case anvilBaseUrl = "com.hvacmath.anvil-base-url"

@@ -199,7 +199,7 @@ public enum Template {
   /// Represents key's used to access / set template path values in ``Template/Path``.
   ///
   ///
-  public enum PathKey: String, CaseIterable {
+  public enum PathKey: String, CaseIterable, Sendable {
     case baseInterpolation
     case boiler
     case electric
@@ -215,7 +215,7 @@ public enum Template {
 
   /// Represents key's that can be embedded in an interpolation template.
   ///
-  public enum EmbeddableKey: String, CaseIterable {
+  public enum EmbeddableKey: String, CaseIterable, Sendable {
     case boiler
     case electric
     case furnace

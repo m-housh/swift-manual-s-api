@@ -1,0 +1,54 @@
+{
+  "aboveDesign" : {
+    "capacity" : {
+      "sensible" : 16600,
+      "total" : 22000
+    },
+    "cfm" : 800,
+    "indoorTemperature" : 75,
+    "indoorWetBulb" : 63,
+    "outdoorTemperature" : 95
+  },
+  "belowDesign" : {
+    "capacity" : {
+      "sensible" : 17100,
+      "total" : 23200
+    },
+    "cfm" : 800,
+    "indoorTemperature" : 75,
+    "indoorWetBulb" : 63,
+    "outdoorTemperature" : 85
+  },
+  "designInfo" : {
+    "elevation" : 0,
+    "summer" : {
+      "indoorHumidity" : 50,
+      "indoorTemperature" : 75,
+      "outdoorTemperature" : 90
+    },
+    "winter" : {
+      "outdoorTemperature" : 5
+    }
+  },
+  "houseLoad" : {
+    "cooling" : {
+      "sensible" : 13894,
+      "total" : 17872
+    },
+    "heating" : 49667
+  },
+  "manufacturerAdjustments" : {
+    "airToAir" : {
+      "heating" : 1,
+      "sensible" : 0.94999999999999996,
+      "total" : 0.97999999999999998
+    }
+  },
+  "systemType" : {
+    "airToAir" : {
+      "climate" : "mildWinterOrLatentLoad",
+      "compressor" : "variableSpeed",
+      "type" : "heatPump"
+    }
+  }
+}

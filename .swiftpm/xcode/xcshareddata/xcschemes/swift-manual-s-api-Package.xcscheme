@@ -510,6 +510,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "JsonDependency"
+               BuildableName = "JsonDependency"
+               BlueprintName = "JsonDependency"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -585,6 +599,16 @@
                BlueprintIdentifier = "TemplateClientTests"
                BuildableName = "TemplateClientTests"
                BlueprintName = "TemplateClientTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ClientConfigTests"
+               BuildableName = "ClientConfigTests"
+               BlueprintName = "ClientConfigTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

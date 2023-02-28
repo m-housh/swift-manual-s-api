@@ -1,10 +1,12 @@
 import ArgumentParser
+import CliMiddleware
 import Dependencies
-import FirstPartyMocks
 import Foundation
-import Logging
-import LoggingDependency
 import Models
+
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
 
 #if canImport(AppKit)
   import AppKit
@@ -73,91 +75,41 @@ extension EquipmentSelection.Template {
 
     @OptionGroup var globalOptions: GlobalOptions
 
-    // Represents the operation string, used for verbose logging.
-    private var operationString: String {
-      if copy { return "copy" }
-      if !copy && !echo { return "write" }
-      return "echo"
-    }
-
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
         try await withDependencies {
           $0.templateClient = .live(jsonEncoder: .cliEncoder(.prettyPrinted))
         } operation: {
-          @Dependency(\.configClient) var configClient
-          @Dependency(\.fileClient) var fileClient
-          @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
-          @Dependency(\.logger) var logger
-          @Dependency(\.templateClient) var templateClient
-
-          let templateData: Data
-
-          if !embedInRoute {
-            templateData = try await templateClient.template(
-              for: templateKey,
-              inInterpolation: embedInInterpolation
+          @Dependency(\.cliMiddleware.templates) var templates
+          try await templates(
+            .template(
+              key: templateKey,
+              embedIn: embedInContext,
+              outputContext: outputContext
             )
-          } else {
-
-            // convert the template key to an embeddable key or fail if an invalid type.
-            guard let embeddableKey = Template.EmbeddableKey(rawValue: templateKey.rawValue) else {
-              struct NotEmbeddableError: Error {}
-              throw NotEmbeddableError()
-            }
-
-            // Don't include the route name for certain templates that are generally embedded inside
-            // a keyed interpolation.  This allows for using the templated value inside of a vim
-            // buffer more easily.
-            let route = try await templateClient.routeTemplate(for: embeddableKey)
-            switch route {
-            case .cooling(route: let cooling):
-              templateData = try jsonEncoder.encode(cooling)
-            case .heating(route: let heating):
-              templateData = try jsonEncoder.encode(heating)
-            case .keyed(_):
-              templateData = try jsonEncoder.encode(route)
-            }
-          }
-
-          let config = await configClient.config()
-
-          // Check if the caller wants a file to be written.
-          if let outputPath {
-            let fileName = config.templatePaths.fileName(for: templateKey)
-            let outputUrl = outputPath.appendingPathComponent(fileName)
-            try await fileClient.write(data: templateData, to: outputUrl)
-            logger.info("Wrote template to: \(outputUrl.absoluteString)")
-            return
-          } else {
-            // Do not write to a file, instead echo or copy the template.
-
-            // Create a string from the template data.
-            guard let templateString = String(data: templateData, encoding: .utf8) else {
-              struct TemplateError: Error {}
-              logger.info("Failed to parse template string.")
-              throw TemplateError()
-            }
-
-            if copy {
-              // Copy to the clip board if the platform supports it.
-              #if canImport(AppKit)
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(templateString, forType: .string)
-                logger.info("Copied template to pasteboard.")
-                return
-              #else
-                logger.info("Copying not supported in this context.")
-              #endif
-            }
-
-            // Log output to console if not able to copy or `echo` was selected.
-            logger.info("\(templateString)")
-
-          }
+          )
         }
       }.run()
     }
+    
+    private var outputContext: CliMiddleware.TemplateContext.Template.OutputContext {
+      if let outputPath {
+        return .write(to: outputPath)
+      } else if copy {
+        return .copy
+      }
+      return .echo
+    }
+    
+    private var embedInContext: CliMiddleware.TemplateContext.Template.EmbedInContext? {
+      if embedInRoute {
+        return .route
+      } else if embedInInterpolation {
+        return .interpolation
+      }
+      return nil
+    }
+    
   }
 
   struct GenerateTemplatesCommand: AsyncParsableCommand {
@@ -170,12 +122,8 @@ extension EquipmentSelection.Template {
 
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
-        @Dependency(\.templateClient) var templateClient
-        @Dependency(\.logger) var logger
-
-        let templatesPath = templateClient.templateDirectory()
-        try await templateClient.generateTemplates()
-        logger.info("Wrote templates to path: \(templatesPath.absoluteString)")
+        @Dependency(\.cliMiddleware.templates) var templates
+        try await templates(.generate)
       }
       .run()
     }
@@ -197,32 +145,8 @@ extension EquipmentSelection.Template {
 
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
-        @Dependency(\.templateClient) var templateClient
-        @Dependency(\.logger) var logger
-
-        let templatesPath = templateClient.templateDirectory()
-
-        if !force {
-          logger.info("This will delete template files from: \(templatesPath.absoluteString)")
-          logger.info("Would you like to continue: [y/n]?")
-          guard let answer = readLine(),
-            let character = answer.lowercased().first
-          else {
-            logger.info("Did not recieve an answer, aborting.")
-            return
-          }
-          switch character {
-          case "y":
-            break
-          default:
-            logger.info("Did not recieve a yes, not deleting templates.")
-            return
-          }
-        }
-
-        // recieved a yes or the `--force` flag was called.
-        try await templateClient.removeTemplateDirectory()
-        logger.info("Deleted templates at path: \(templatesPath.absoluteString)")
+        @Dependency(\.cliMiddleware.templates) var templates
+        try await templates(.remove(force: force))
       }
       .run()
     }

@@ -7,7 +7,6 @@ import XCTestDynamicOverlay
   import FoundationNetworking
 #endif
 
-// TODO: Allow setting user-defaults values for anvil-api-key, config-directory, template-directory, etc.
 /// Represents the interactions with the ``CliConfig`` for configuring the command line tool.
 ///
 ///
@@ -24,7 +23,7 @@ public struct ConfigClient {
 
   public var setApiBaseUrl: (String?) async -> Void
   public var setAnvilApiKey: (String?) async -> Void
-  public var setConfigDirectory: (String) async -> Void
+  public var setConfigDirectory: (String?) async -> Void
   public var setTemplateDirectoryPath: (String?) async -> Void
 
   /// Generate a new ``CliConfigClient``.
@@ -44,7 +43,7 @@ public struct ConfigClient {
     save: @escaping (ClientConfig) async throws -> Void,
     setApiBaseUrl: @escaping (String?) async -> Void,
     setAnvilApiKey: @escaping (String?) async -> Void,
-    setConfigDirectory: @escaping (String) async -> Void,
+    setConfigDirectory: @escaping (String?) async -> Void,
     setTemplateDirectoryPath: @escaping (String?) async -> Void
   ) {
     self.config = config

@@ -52,7 +52,7 @@ extension ConfigClient: DependencyKey {
         setString(string: string, forKey: defaultsKey)
       }
 
-      func setString(string: String, forKey defaultsKey: UserDefaultsClient.Key) {
+      private func setString(string: String, forKey defaultsKey: UserDefaultsClient.Key) {
         userDefaults.setString(string, forKey: defaultsKey)
         config.value.setString(string: string, forKey: defaultsKey)
       }
@@ -71,7 +71,7 @@ extension ConfigClient: DependencyKey {
       save: session.save(config:),
       setApiBaseUrl: { await session.update(string: $0, forKey: .apiBaseUrl) },
       setAnvilApiKey: { await session.update(string: $0, forKey: .anvilApiKey) },
-      setConfigDirectory: { await session.setString(string: $0, forKey: .configDirectory) },
+      setConfigDirectory: { await session.update(string: $0, forKey: .configDirectory) },
       setTemplateDirectoryPath: { await session.update(string: $0, forKey: .templateDirectory) }
     )
   }
@@ -129,7 +129,7 @@ extension UserDefaultsClient {
   fileprivate func merge(with config: inout ClientConfig) {
     if let anvilApiKey = string(forKey: .anvilApiKey) { config.anvilApiKey = anvilApiKey }
     if let apiBaseUrl = string(forKey: .apiBaseUrl) { config.apiBaseUrl = apiBaseUrl }
-    if let configDirectory = string(forKey: .configDirectory) {
+    if let configDirectory = string(forKey: .configDirectory), configDirectory != "unset" {
       config.configDirectory = configDirectory
     }
     if let templateDirectoryPath = string(forKey: .templateDirectory) {
@@ -196,7 +196,7 @@ extension ClientConfig {
     case .anvilBaseUrl:
       return
     case .configDirectory:
-      return
+      self.configDirectory = config(environment: ProcessInfo.processInfo.environment).configDirectory
     case .templateDirectory:
       self.templateDirectoryPath = nil
     }

@@ -1,0 +1,43 @@
+{
+  "isFailed" : false,
+  "result" : {
+    "cooling" : {
+      "altitudeDerating" : {
+        "airToAir" : {
+          "heating" : 1,
+          "sensible" : 1,
+          "total" : 1
+        }
+      },
+      "capacityAsPercentOfLoad" : {
+        "latent" : 133.19999999999999,
+        "sensible" : 121.3,
+        "total" : 123.90000000000001
+      },
+      "excessLatent" : 886,
+      "finalCapacityAtDesign" : {
+        "sensible" : 16849,
+        "total" : 22148
+      },
+      "interpolatedCapacity" : {
+        "sensible" : 16850,
+        "total" : 22600
+      },
+      "sizingLimits" : {
+        "oversizing" : {
+          "cooling" : {
+            "latent" : 150,
+            "total" : 130
+          }
+        },
+        "undersizing" : {
+          "cooling" : {
+            "latent" : 90,
+            "sensible" : 90,
+            "total" : 90
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import ArgumentParser
-import Foundation
+import CliMiddleware
 import LoggingDependency
 import LoggingFormatAndPipe
 import Models
@@ -30,6 +30,8 @@ extension Logger {
 }
 
 extension Template.PathKey: EnumerableFlag {}
+extension CliMiddleware.ConfigContext.SetKey: EnumerableFlag { }
+extension CliMiddleware.ConfigContext.UnSetKey: EnumerableFlag { }
 
 extension Template.Path {
 
