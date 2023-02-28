@@ -8,7 +8,7 @@ var package = Package(
   name: "swift-manual-s-api",
   platforms: [.macOS(.v12)],
   products: [
-//    .library(name: "AnvilClient", targets: ["AnvilClient"]),
+    //    .library(name: "AnvilClient", targets: ["AnvilClient"]),
     .library(name: "ConcurrencyHelpers", targets: ["ConcurrencyHelpers"]),
     .library(name: "FirstPartyMocks", targets: ["FirstPartyMocks"]),
     .library(name: "LoggingDependency", targets: ["LoggingDependency"]),
@@ -35,14 +35,14 @@ var package = Package(
     .package(url: "https://github.com/pointfreeco/swift-tagged.git", from: "0.10.0"),
   ],
   targets: [
-//    .target(
-//      name: "AnvilClient",
-//      dependencies: [
-//        "Models",
-//        .product(name: "Dependencies", package: "swift-dependencies"),
-//        .product(name: "URLRouting", package: "swift-url-routing"),
-//      ]
-//    ),
+    //    .target(
+    //      name: "AnvilClient",
+    //      dependencies: [
+    //        "Models",
+    //        .product(name: "Dependencies", package: "swift-dependencies"),
+    //        .product(name: "URLRouting", package: "swift-url-routing"),
+    //      ]
+    //    ),
     .target(name: "ConcurrencyHelpers"),
     .target(
       name: "FirstPartyMocks",

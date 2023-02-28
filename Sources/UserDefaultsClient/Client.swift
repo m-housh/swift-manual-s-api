@@ -136,7 +136,7 @@ extension UserDefaultsClient: DependencyKey {
       UserDefaults.standard.url(forKey: key.rawValue)
     }
   )
-  
+
   /// A ``UserDefaultsClient`` that stores and retrieves values, but does not interact with the
   /// the live defaults system.
   ///
@@ -146,30 +146,30 @@ extension UserDefaultsClient: DependencyKey {
     class Storage {
       var storage: [UserDefaultsClient.Key: Any]
       init() { self.storage = [:] }
-      
+
       func removeValue(key: UserDefaultsClient.Key) {
         storage[key] = nil
       }
-      
+
       func setString(_ string: String, forKey key: UserDefaultsClient.Key) {
         storage[key] = string
       }
-      
+
       func setUrl(_ url: URL, forKey key: UserDefaultsClient.Key) {
         storage[key] = url
       }
-      
+
       func string(forKey key: UserDefaultsClient.Key) -> String? {
         storage[key] as? String
       }
-      
+
       func url(forKey key: UserDefaultsClient.Key) -> URL? {
         storage[key] as? URL
       }
     }
-    
+
     let storage = Storage()
-    
+
     return .init(
       removeValue: storage.removeValue(key:),
       setString: storage.setString(_:forKey:),

@@ -149,7 +149,7 @@ extension EquipmentSelection.Interpolate {
       logger.debug("Read interpolation file at: \(inputPath.absoluteString)")
       let response = try await apiClient.interpolate(interpolation)
       return (interpolation, response)
-    
+
     }
 
   }
