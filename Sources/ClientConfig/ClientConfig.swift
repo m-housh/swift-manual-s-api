@@ -47,7 +47,7 @@ public struct ClientConfig: Codable, Equatable, Sendable {
     self.templateIds = .init()
     self.templatePaths = .init()
   }
-  
+
   public init(
     environment: Environment,
     templateIds: TemplateIds = .init(),
@@ -103,13 +103,13 @@ public struct ClientConfig: Codable, Equatable, Sendable {
 
 extension ClientConfig {
   /// Represents the values that can be read from the process environment.
-  /// 
+  ///
   public struct Environment: Codable, Equatable, Sendable {
     public var anvilApiKey: String?
     public var apiBaseUrl: String?
     public var configDirectory: String?
     public var templateDirectoryPath: String?
-    
+
     public init(
       anvilApiKey: String?,
       apiBaseUrl: String?,

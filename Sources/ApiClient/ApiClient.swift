@@ -60,7 +60,7 @@ public struct ApiClient {
       throw ApiError(error: error, file: file, line: line)
     }
   }
-  
+
   public func interpolate(
     _ interpolation: ServerRoute.Api.Route.Interpolation
   ) async throws -> InterpolationResponse {

@@ -39,7 +39,7 @@ extension EquipmentSelection.Config {
       commandName: "generate-config",
       abstract: "Generate a local configuration file."
     )
-    
+
     @OptionGroup var globalOptions: GlobalOptions
 
     func run() async throws {
@@ -56,8 +56,6 @@ extension EquipmentSelection.Config {
     }
   }
 
-
- 
   struct SetCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "set",
@@ -71,12 +69,12 @@ extension EquipmentSelection.Config {
     var value: String
 
     @OptionGroup var globalOptions: GlobalOptions
-    
+
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
         @Dependency(\.configClient) var configClient
         @Dependency(\.logger) var logger
-        
+
         switch key {
         case .anvilApiKey:
           logger.debug("Setting anvil api key.")
@@ -104,13 +102,13 @@ extension EquipmentSelection.Config {
     )
 
     @OptionGroup var globalOptions: GlobalOptions
-    
+
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
         @Dependency(\.configClient) var cliConfigClient
         @Dependency(\.logger) var logger
         @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
-        
+
         let config = try await cliConfigClient.config()
         let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!
         logger.info("\(string)")
@@ -129,12 +127,12 @@ extension EquipmentSelection.Config {
     var key: UnSetKey
 
     @OptionGroup var globalOptions: GlobalOptions
-    
+
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
         @Dependency(\.configClient) var configClient
         @Dependency(\.logger) var logger
-        
+
         switch key {
         case .anvilApiKey:
           logger.debug("Unsetting anvil api key.")

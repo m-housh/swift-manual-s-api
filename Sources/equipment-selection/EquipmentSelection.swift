@@ -1,5 +1,5 @@
-import ArgumentParser
 import ApiClientLive
+import ArgumentParser
 import ClientConfigLive
 import Dependencies
 import Foundation
@@ -29,7 +29,7 @@ struct GlobalOptions: ParsableArguments {
 struct CliContext {
   let globalOptions: GlobalOptions
   let _run: () async throws -> Void
-  
+
   init(
     globalOptions: GlobalOptions,
     run: @escaping () async throws -> Void
@@ -37,7 +37,7 @@ struct CliContext {
     self.globalOptions = globalOptions
     self._run = run
   }
-  
+
   func run() async throws {
     try await withDependencies {
       $0.logger = .cliLogger
@@ -63,11 +63,11 @@ extension JSONEncoder: DependencyKey {
     encoder.outputFormatting = formatting
     return encoder
   }
-  
+
   static var cliEncoder: JSONEncoder {
     self.cliEncoder([.prettyPrinted, .sortedKeys])
   }
-  
+
   public static let liveValue: JSONEncoder = .cliEncoder
 }
 
@@ -78,7 +78,7 @@ extension JSONDecoder: DependencyKey {
 struct JSONCoders: DependencyKey {
   var jsonDecoder: JSONDecoder = .liveValue
   var jsonEncoder: JSONEncoder = .liveValue
-  
+
   static var liveValue: JSONCoders = .init()
 }
 extension DependencyValues {
@@ -89,7 +89,7 @@ extension DependencyValues {
 }
 
 extension Logger {
-  
+
   static var cliLogger: Self {
     Logger(label: "equipment-selection") { _ in
       return LoggingFormatAndPipe.Handler(
@@ -98,7 +98,7 @@ extension Logger {
       )
     }
   }
-  
+
   static var cliLoggerWithLevel: Self {
     Logger(label: "equipment-selection") { _ in
       return LoggingFormatAndPipe.Handler(
@@ -109,4 +109,4 @@ extension Logger {
   }
 }
 
-extension Template.PathKey: EnumerableFlag { }
+extension Template.PathKey: EnumerableFlag {}

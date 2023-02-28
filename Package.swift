@@ -162,7 +162,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
 
 // MARK: - CLI
 if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
-//  package.platforms?.append(contentsOf: [.macOS(.v13)])
+  //  package.platforms?.append(contentsOf: [.macOS(.v13)])
   package.dependencies.append(contentsOf: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
     .package(url: "https://github.com/adorkable/swift-log-format-and-pipe.git", from: "0.1.0"),

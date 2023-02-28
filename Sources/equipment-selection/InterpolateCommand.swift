@@ -30,7 +30,7 @@ extension EquipmentSelection {
       transform: URL.init(fileURLWithPath:)
     )
     var outputPath: URL?
-    
+
     @Flag(
       name: [.customLong("pdf"), .customShort("p")],
       help: "Generate a pdf with the result."
@@ -44,7 +44,7 @@ extension EquipmentSelection {
     var writeJson: Bool = false
 
     @OptionGroup var globalOptions: GlobalOptions
-    
+
     func run() async throws {
       try await CliContext(
         globalOptions: globalOptions,
@@ -69,8 +69,9 @@ extension EquipmentSelection.Interpolate {
 
     func run() async throws {
       let config = try await configClient.config()
-      let path = command.inputPath
-      ?? URL(fileURLWithPath: config.templatePaths.fileName(for: command.interpolation))
+      let path =
+        command.inputPath
+        ?? URL(fileURLWithPath: config.templatePaths.fileName(for: command.interpolation))
       let outputPath = command.outputPath ?? URL(fileURLWithPath: "./")
 
       let (interpolation, response) = try await interpolate(
@@ -89,7 +90,8 @@ extension EquipmentSelection.Interpolate {
       // If caller does not want to write result to json file or generate a pdf
       // log the results to the console.
       if !command.writeJson && !command.generatePdf {
-        let jsonString = try String(data: jsonEncoder.encode(response.result), encoding: .utf8) ?? ""
+        let jsonString =
+          try String(data: jsonEncoder.encode(response.result), encoding: .utf8) ?? ""
         logger.info("\(jsonString)")
         return
       }
@@ -134,10 +136,9 @@ extension EquipmentSelection.Interpolate {
 }
 
 // TODO: Fix with anvil client.
-fileprivate func generatePdfData(
+private func generatePdfData(
   interpolation: ServerRoute.Api.Route.Interpolation,
   response: InterpolationResponse
 ) async throws -> Data {
   fatalError()
 }
-
