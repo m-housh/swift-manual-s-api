@@ -20,19 +20,6 @@ extension EquipmentSelection {
 
 extension EquipmentSelection.Config {
 
-  //  enum SetKey: String, EnumerableFlag {
-  //    case anvilApiKey
-  //    case apiBaseUrl
-  //    case configDirectory
-  //    case templatesDirectory
-  //  }
-  //
-  //  enum UnSetKey: String, EnumerableFlag {
-  //    case anvilApiKey
-  //    case apiBaseUrl
-  //    case templatesDirectory
-  //  }
-
   struct GenerateConfigCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "generate",
@@ -57,7 +44,7 @@ extension EquipmentSelection.Config {
     )
 
     @Flag
-    var key: CliMiddleware.ConfigContext.SetKey
+    var key: CliMiddleware.ConfigContext.Key
 
     @Argument
     var value: String
@@ -97,7 +84,7 @@ extension EquipmentSelection.Config {
     )
 
     @Flag
-    var key: CliMiddleware.ConfigContext.UnSetKey
+    var key: CliMiddleware.ConfigContext.Key
 
     @OptionGroup var globalOptions: GlobalOptions
 

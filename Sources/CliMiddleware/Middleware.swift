@@ -26,24 +26,16 @@ public struct CliMiddleware {
 
   public enum ConfigContext: Sendable {
     case generate
-    case set(String, for: SetKey)
+    case set(String, for: Key)
     case show
-    case unset(UnSetKey)
+    case unset(Key)
 
-    public enum SetKey: String, CaseIterable, Sendable {
+    public enum Key: String, CaseIterable, Sendable {
       case anvilApiKey
       case apiBaseUrl
       case configDirectory
       case templatesDirectory
     }
-
-    public enum UnSetKey: String, CaseIterable, Sendable {
-      case anvilApiKey
-      case apiBaseUrl
-      case configDirectory
-      case templatesDirectory
-    }
-
   }
 
   public enum TemplateContext: Sendable {
