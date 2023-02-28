@@ -1,11 +1,11 @@
 import ArgumentParser
+import Foundation
 import LoggingDependency
 import LoggingFormatAndPipe
-import Foundation
 import Models
 
 #if canImport(FoundationNetworking)
-import FoundationNetworking
+  import FoundationNetworking
 #endif
 
 extension Logger {
@@ -32,7 +32,7 @@ extension Logger {
 extension Template.PathKey: EnumerableFlag {}
 
 extension Template.Path {
-  
+
   func parseUrl(url: URL?, with key: Template.PathKey) -> URL {
     guard let url else {
       return URL(fileURLWithPath: self.fileName(for: key))

@@ -11,7 +11,7 @@ struct EquipmentSelection: AsyncParsableCommand {
       Config.self,
       Interpolate.self,
       Template.self,
-      Validate.self
+      Validate.self,
     ]
   )
 }

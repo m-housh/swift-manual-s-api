@@ -287,7 +287,7 @@ extension Template.Path {
 }
 
 extension Template.Project {
-  
+
   /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
   public var interpolation: ServerRoute.Api.Route.Interpolation {
     .init(

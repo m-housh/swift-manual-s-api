@@ -79,7 +79,7 @@ extension TemplateClient: DependencyKey {
         )
         let key = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
         guard let embeddableKey = key.embeddableKey else {
-          struct NotEmbeddableError: Error { }
+          struct NotEmbeddableError: Error {}
           throw NotEmbeddableError()
         }
         return try embeddableKey.embedInRoute(routeData)
@@ -119,9 +119,9 @@ extension TemplateClient: DependencyKey {
           fileClient: fileClient,
           paths: config.templatePaths
         )
-        
+
         guard let embeddableKey = key.embeddableKey else {
-          struct NotEmbeddableKeyError: Error { }
+          struct NotEmbeddableKeyError: Error {}
           throw NotEmbeddableKeyError()
         }
 

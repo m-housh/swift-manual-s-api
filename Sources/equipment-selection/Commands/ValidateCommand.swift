@@ -9,15 +9,15 @@ import Models
 import ValidationMiddleware
 
 extension EquipmentSelection {
-  
+
   struct Validate: AsyncParsableCommand {
     static let configuration: CommandConfiguration = .init(
       abstract: "Validate a file / template."
     )
-    
+
     @Flag(help: "The file / template type to validate.")
     var key: Models.Template.PathKey = .project
-    
+
     @Argument(
       help: """
         The optional input file to validate, if not supplied we will
@@ -26,10 +26,10 @@ extension EquipmentSelection {
       transform: URL.init(fileURLWithPath:)
     )
     var inputFile: URL?
-    
+
     @OptionGroup
     var globalOptions: GlobalOptions
-    
+
     func run() async throws {
       try await CliContext(
         globalOptions: globalOptions,
@@ -47,9 +47,9 @@ extension EquipmentSelection.Validate {
     @Dependency(\.jsonCoders.jsonDecoder) var jsonDecoder
     @Dependency(\.logger) var logger
     @Dependency(\.validationMiddleware) var validationMiddleware
-    
+
     let command: EquipmentSelection.Validate
-    
+
     func run() async throws {
       let config = await configClient.config()
       let url = config.templatePaths.parseUrl(
@@ -57,7 +57,7 @@ extension EquipmentSelection.Validate {
         with: command.key
       )
       let data = try await fileClient.read(from: url)
-      
+
       // Handle non embeddable key routes.
       guard let embeddableKey = command.key.embeddableKey else {
         // we are either a project or base interpolation, so handle differently.
@@ -72,14 +72,14 @@ extension EquipmentSelection.Validate {
           logger.info("Valid")
         // Keep here encase other path keys are added, they must be handled.
         case .boiler,
-            .electric,
-            .furnace,
-            .heatPump,
-            .keyed,
-            .noInterpolation,
-            .oneWayIndoor,
-            .oneWayOutdoor,
-            .twoWay:
+          .electric,
+          .furnace,
+          .heatPump,
+          .keyed,
+          .noInterpolation,
+          .oneWayIndoor,
+          .oneWayOutdoor,
+          .twoWay:
           logger.debug("Invalid key: \(command.key)")
           break
         }
@@ -90,7 +90,7 @@ extension EquipmentSelection.Validate {
       try await validate(interpolation: interpolation)
       logger.info("Valid")
     }
-    
+
     func decodeEmbeddableKey(
       key: Models.Template.EmbeddableKey,
       from data: Data
@@ -146,7 +146,7 @@ extension EquipmentSelection.Validate {
         throw error
       }
     }
-    
+
     func validate(interpolation: ServerRoute.Api.Route.Interpolation) async throws {
       do {
         try await validationMiddleware.validate(
