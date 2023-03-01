@@ -26,7 +26,7 @@ extension TemplateClient: DependencyKey {
       @Dependency(\.configClient) var configClient
       @Dependency(\.fileClient) var fileClient
       @Dependency(\.json.jsonEncoder) var jsonEncoder
-      
+
       nonisolated let templateDirectory: Isolated<URL>
 
       init(

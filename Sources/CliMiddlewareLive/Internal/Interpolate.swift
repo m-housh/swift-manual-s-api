@@ -1,6 +1,6 @@
 import ApiClient
-import ClientConfig
 import CliMiddleware
+import ClientConfig
 import Dependencies
 import FileClient
 import Foundation
@@ -23,14 +23,14 @@ extension CliMiddleware.InterpolationContext {
     @Dependency(\.logger) var logger: Logger
     @Dependency(\.json.jsonEncoder) var jsonEncoder
     @Dependency(\.json.jsonDecoder) var jsonDecoder
-    
+
     let context: CliMiddleware.InterpolationContext
-    
+
     func run() async throws {
-      
+
       let config = await configClient.config()
       let path =
-      context.inputFile
+        context.inputFile
         ?? URL(fileURLWithPath: config.templatePaths.fileName(for: context.key))
       let outputPath = context.outputPath ?? URL(fileURLWithPath: "./")
 
@@ -77,8 +77,7 @@ extension CliMiddleware.InterpolationContext {
       }
       logger.info("Done")
     }
-    
-    
+
     // TODO: Fix for projects
     private func interpolate(inputPath: URL)
       async throws -> (
@@ -112,7 +111,7 @@ extension CliMiddleware.InterpolationContext {
       return (interpolation, response)
 
     }
-    
+
     // TODO: Fix with anvil client.
     private func generatePdfData(
       interpolation: ServerRoute.Api.Route.Interpolation,

@@ -6,7 +6,7 @@ import JsonDependency
 import LoggingDependency
 
 extension CliMiddleware.ConfigContext {
-  
+
   @Sendable
   static func run(context: Self) async throws {
     switch context {

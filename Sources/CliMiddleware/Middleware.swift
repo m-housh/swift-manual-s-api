@@ -10,18 +10,18 @@ import XCTestDynamicOverlay
 
 /// Represents commands for the ``equipment-selection`` command line tool.
 ///
-///  The 
+///  The
 public struct CliMiddleware {
 
   /// Runs configuration commands.
   public var config: @Sendable (ConfigContext) async throws -> Void
-  
+
   /// Runs interpolation commands.
   public var interpolate: @Sendable (InterpolationContext) async throws -> Void
-  
+
   /// Runs template commands.
   public var templates: @Sendable (TemplateContext) async throws -> Void
-  
+
   /// Runs validation commands.
   public var validate: @Sendable (ValidationContext) async throws -> Void
 
@@ -52,16 +52,16 @@ public struct CliMiddleware {
   /// Represents the configuration commands that can be ran.
   ///
   public enum ConfigContext: Sendable {
-    
+
     /// Generate a local configuration.
     case generate
-    
+
     /// Set a configuration value.
     case set(String, for: Key)
-    
+
     /// Show the current configuration.
     case show
-    
+
     /// Unset a configuration value.
     case unset(Key)
 
@@ -73,26 +73,26 @@ public struct CliMiddleware {
       case templatesDirectory
     }
   }
-  
+
   public struct InterpolationContext: Sendable {
-    
+
     /// The interpolation type key.
     public var key: Models.Template.PathKey
-    
+
     /// Whether to generate a pdf from the results.
     public var generatePdf: Bool
-    
+
     /// The input file path to use for the interpolation, if not supplied then we will
     /// look for a file that matches the name set for the key in the configuration's
     /// template paths.
     public var inputFile: URL?
-    
+
     /// The output path for writing json or pdf results.
     public var outputPath: URL?
-    
+
     /// Whether to write the results as a json file to the output path.
     public var writeJson: Bool
-    
+
     /// Create a new ``CliMiddleware/InterpolationContext`` instance.
     ///
     /// - Parameters:
@@ -118,13 +118,13 @@ public struct CliMiddleware {
 
   /// Represents template commands that can be run.
   public enum TemplateContext: Sendable {
-    
+
     /// Generate local template files for configuration overrides.
     case generate
-    
+
     /// Remove the local templates directory.
     case remove(force: Bool)
-    
+
     /// Generate a template from the local template overrides or the default value, if not found.
     case template(Template)
 
@@ -140,13 +140,13 @@ public struct CliMiddleware {
     /// Represents the context for generating template values.
     ///
     public struct Template: Sendable {
-      
+
       /// The key for the template.
       public var key: Models.Template.PathKey
-      
+
       /// How to embed the template if applicable.
       public var embedIn: EmbedInContext?
-      
+
       /// How to output the template.
       public var outputContext: OutputContext
 
@@ -192,7 +192,7 @@ public struct CliMiddleware {
 
     /// The template type to validate.
     public var key: Template.PathKey
-    
+
     /// The input file to validate as the `key` type, if not provided then we will search for a file
     /// that matches the key in the configuration for template paths.
     public var inputFile: URL?

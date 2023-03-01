@@ -109,7 +109,7 @@ extension FileClient: DependencyKey {
     read: { _ in Data() },
     write: { _, _ in }
   )
-  
+
   public static func mock(readData: Data) -> Self {
     .init(
       createDirectory: { _ in },
