@@ -6,6 +6,8 @@ import JsonDependency
 import LoggingDependency
 
 extension CliMiddleware.ConfigContext {
+  
+  @Sendable
   static func run(context: Self) async throws {
     switch context {
     case .generate:
@@ -35,7 +37,7 @@ extension CliMiddleware.ConfigContext {
       )
     }
 
-    static func set(string: String, forKey key: SetKey) async throws {
+    static func set(string: String, forKey key: Key) async throws {
       @Dependency(\.configClient) var configClient
       @Dependency(\.logger) var logger
 
@@ -66,7 +68,7 @@ extension CliMiddleware.ConfigContext {
       logger.info("\(string)")
     }
 
-    static func unset(key: UnSetKey) async throws {
+    static func unset(key: Key) async throws {
       @Dependency(\.configClient) var configClient
       @Dependency(\.logger) var logger
       switch key {

@@ -140,11 +140,11 @@ public enum Template {
     ///   - systemType: The default system type information.
     ///   - route: The default route to use in projects.
     public init(
-      projectInfo: ProjectInfo = .init(),
-      designInfo: DesignInfo = .init(),
-      houseLoad: HouseLoad = .init(),
+      projectInfo: ProjectInfo,
+      designInfo: DesignInfo,
+      houseLoad: HouseLoad,
       systemType: SystemType? = nil,
-      route: ServerRoute.Api.Route.Interpolation.Route = .keyed([])
+      route: ServerRoute.Api.Route.Interpolation.Route
     ) {
       self.projectInfo = projectInfo
       self.designInfo = designInfo
@@ -181,11 +181,11 @@ public enum Template {
       ///   - state: The customer state.
       ///   - zipCode: The customer zip code.
       public init(
-        name: String = "Blob Esquire",
-        address: String = "1234 Sesame Street",
-        city: String = "Monroe",
-        state: String = "OH",
-        zipCode: Int = 45050
+        name: String,
+        address: String,
+        city: String,
+        state: String,
+        zipCode: Int
       ) {
         self.name = name
         self.address = address

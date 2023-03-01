@@ -16,6 +16,7 @@ import TemplateClient
 
 extension CliMiddleware.TemplateContext {
 
+  @Sendable
   static func run(context: Self) async throws {
     switch context {
     case .generate:

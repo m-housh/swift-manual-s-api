@@ -77,8 +77,9 @@ extension TemplateClient: DependencyKey {
           paths: config.templatePaths,
           templateDirectory: templateDirectory.value
         )
-        let key = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
-        guard let embeddableKey = key.embeddableKey else {
+        let pathKey = Template.PathKey(keyPath: keyPath, paths: config.templatePaths)!
+        guard let embeddableKey = pathKey.embeddableKey else {
+          // this should really never happen.
           struct NotEmbeddableError: Error {}
           throw NotEmbeddableError()
         }

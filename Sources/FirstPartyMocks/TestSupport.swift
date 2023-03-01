@@ -361,3 +361,22 @@ extension Template.BaseInterpolation {
     systemType: .mock
   )
 }
+
+extension Template.Project.ProjectInfo {
+  public static let mock = Self.init(
+    name: "Blob Esquire",
+    address: "1234 Sesame Streat",
+    city: "Monroe",
+    state: "OH",
+    zipCode: 45050
+  )
+}
+
+extension Template.Project {
+  public static let mock = Self.init(
+    projectInfo: .mock,
+    designInfo: .mock,
+    houseLoad: .mock,
+    route: .keyed(.mocks)
+  )
+}

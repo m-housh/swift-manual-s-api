@@ -2,6 +2,7 @@ import XCTest
 import ClientConfigLive
 import Dependencies
 import FileClient
+import FirstPartyMocks
 import Logging
 import LoggingDependency
 import Models
@@ -15,7 +16,7 @@ final class TemplateClientTests: XCTestCase {
   override func invokeTest() {
     let (configClient, templateClient) = withDependencies {
       $0.fileClient = .liveValue
-      $0.userDefaults = .noop
+      $0.userDefaults = .temporary
     } operation: {
       return (
         ConfigClient.liveValue,
@@ -102,7 +103,9 @@ final class TemplateClientTests: XCTestCase {
     let tempDirectory = FileManager.default.temporaryDirectory
       .appendingPathComponent("generate-templates-test")
     
-    defer { try? FileManager.default.removeItem(at: tempDirectory) }
+    defer {
+      try? FileManager.default.removeItem(at: tempDirectory)
+    }
     
     let templateClient = withDependencies {
       $0.configClient = configClient
@@ -179,5 +182,70 @@ final class TemplateClientTests: XCTestCase {
         XCTAssertEqual(decoded, mock)
       }
     }
+    
+    try await templateClient.removeTemplateDirectory()
   }
+  
+  func test_setting_directory() async throws {
+    @Dependency(\.templateClient) var templateClient
+    
+    let customDir = URL(fileURLWithPath: "/some/directory")
+    await templateClient.setTemplateDirectory(customDir)
+    
+    let value = templateClient.templateDirectory()
+    XCTAssertEqual(value, customDir)
+    
+  }
+  
+  func test_embedding_in_interpolation() async throws {
+    @Dependency(\.templateClient) var templateClient
+    
+    let value = try await templateClient.template(
+      for: .furnace, inInterpolation: true
+    )
+    
+    let decodedValue = try JSONDecoder().decode(
+      ServerRoute.Api.Route.Interpolation.self,
+      from: value
+    )
+    
+    XCTAssertEqual(
+      decodedValue,
+      ServerRoute.Api.Route.Interpolation(
+        designInfo: .mock,
+        houseLoad: .mock,
+        route: .heating(route: .furnace(.mock))
+      )
+    )
+  }
+  
+  func test_embedding_in_route() async throws {
+    @Dependency(\.templateClient) var templateClient
+    
+    for key in Template.EmbeddableKey.allCases {
+      let value = try await templateClient.routeTemplate(for: key)
+      switch key {
+      case .boiler:
+        XCTAssertEqual(value, .heating(route: .boiler(.mock)))
+      case .electric:
+        XCTAssertEqual(value, .heating(route: .electric(.mock)))
+      case .furnace:
+        XCTAssertEqual(value, .heating(route: .furnace(.mock)))
+      case .heatPump:
+        XCTAssertEqual(value, .heating(route: .heatPump(.mock)))
+      case .keyed:
+        XCTAssertEqual(value, .keyed(.mocks))
+      case .noInterpolation:
+        XCTAssertEqual(value, .cooling(route: .noInterpolation(.mock)))
+      case .oneWayIndoor:
+        XCTAssertEqual(value, .cooling(route: .oneWayIndoor(.mock)))
+      case .oneWayOutdoor:
+        XCTAssertEqual(value, .cooling(route: .oneWayOutdoor(.mock)))
+      case .twoWay:
+        XCTAssertEqual(value, .cooling(route: .twoWay(.mock)))
+      }
+    }
+    
+  }
+
 }

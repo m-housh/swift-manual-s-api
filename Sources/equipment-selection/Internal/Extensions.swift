@@ -1,5 +1,6 @@
 import ArgumentParser
 import CliMiddleware
+import Foundation
 import LoggingDependency
 import LoggingFormatAndPipe
 import Models

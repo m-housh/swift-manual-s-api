@@ -14,6 +14,7 @@ import ValidationMiddleware
 
 extension CliMiddleware.ValidationContext {
 
+  @Sendable
   static func run(context: Self) async throws {
     try await Run(context: context).run()
   }

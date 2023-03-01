@@ -36,7 +36,7 @@ extension Template.PathKey {
     case .oneWayOutdoor:
       return ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.outdoorMock
     case .project:
-      return Template.Project()
+      return Template.Project.mock
     case .twoWay:
       return ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.mock
     }
@@ -77,7 +77,7 @@ extension Template.EmbeddableKey {
     case .oneWayOutdoor:
       let type = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.self
       route = try .cooling(
-        route: .oneWayIndoor(
+        route: .oneWayOutdoor(
           .init(decoder.decode(type, from: data)))
       )
     case .twoWay:

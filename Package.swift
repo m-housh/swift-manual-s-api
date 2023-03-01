@@ -218,6 +218,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .target(
       name: "CliMiddlewareLive",
       dependencies: [
+        "ApiClient",
         "ClientConfig",
         "CliMiddleware",
         "FileClient",
