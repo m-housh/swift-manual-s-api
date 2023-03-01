@@ -61,7 +61,7 @@ extension CliMiddleware.ConfigContext {
     static func show() async throws {
       @Dependency(\.configClient) var cliConfigClient
       @Dependency(\.logger) var logger
-      @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
+      @Dependency(\.json.jsonEncoder) var jsonEncoder
 
       let config = await cliConfigClient.config()
       let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!

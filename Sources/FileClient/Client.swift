@@ -109,11 +109,19 @@ extension FileClient: DependencyKey {
     read: { _ in Data() },
     write: { _, _ in }
   )
+  
+  public static func mock(readData: Data) -> Self {
+    .init(
+      createDirectory: { _ in },
+      read: { _ in readData },
+      write: { _, _ in }
+    )
+  }
 
   /// An unimplemented ``FileClient``.
   public static let testValue: FileClient = .init(
     createDirectory: unimplemented("\(Self.self).createDirectory"),
-    read: unimplemented("\(Self.self).read"),
+    read: unimplemented("\(Self.self).read", placeholder: Data()),
     write: unimplemented("\(Self.self).write")
   )
 

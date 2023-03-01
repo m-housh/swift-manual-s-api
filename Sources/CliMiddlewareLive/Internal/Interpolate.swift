@@ -21,8 +21,8 @@ extension CliMiddleware.InterpolationContext {
     @Dependency(\.configClient) var configClient
     @Dependency(\.fileClient) var fileClient
     @Dependency(\.logger) var logger: Logger
-    @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
-    @Dependency(\.jsonCoders.jsonDecoder) var jsonDecoder
+    @Dependency(\.json.jsonEncoder) var jsonEncoder
+    @Dependency(\.json.jsonDecoder) var jsonDecoder
     
     let context: CliMiddleware.InterpolationContext
     

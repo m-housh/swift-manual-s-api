@@ -78,7 +78,7 @@ extension EquipmentSelection.Template {
     func run() async throws {
       try await CliContext(globalOptions: globalOptions) {
         try await withDependencies {
-          $0.templateClient = .live(jsonEncoder: .cliEncoder(.prettyPrinted))
+          $0.json.jsonEncoder = .cliEncoder(.prettyPrinted)
         } operation: {
           @Dependency(\.cliMiddleware.templates) var templates
           try await templates(

@@ -3,6 +3,7 @@ import ConcurrencyHelpers
 import Dependencies
 import FileClient
 import Foundation
+import JsonDependency
 import Logging
 import LoggingDependency
 import Models
@@ -16,7 +17,6 @@ import UserDefaultsClient
 extension TemplateClient: DependencyKey {
 
   public static func live(
-    jsonEncoder: JSONEncoder = .init(),
     templateDirectory defaultTemplateDirectory: URL = .defaultTemplateDirectory
   ) -> Self {
     @Dependency(\.userDefaults) var userDefaults
@@ -25,16 +25,14 @@ extension TemplateClient: DependencyKey {
       @Dependency(\.logger) var logger
       @Dependency(\.configClient) var configClient
       @Dependency(\.fileClient) var fileClient
-
-      private let jsonEncoder: JSONEncoder
+      @Dependency(\.json.jsonEncoder) var jsonEncoder
+      
       nonisolated let templateDirectory: Isolated<URL>
 
       init(
-        jsonEncoder: JSONEncoder,
         templateDirectory: URL,
         userDefaults: UserDefaultsClient
       ) {
-        self.jsonEncoder = jsonEncoder
         self.templateDirectory = .init(
           templateDirectory,
           didSet: { _, newValue in
@@ -137,7 +135,6 @@ extension TemplateClient: DependencyKey {
       ?? defaultTemplateDirectory
 
     let session = Session(
-      jsonEncoder: jsonEncoder,
       templateDirectory: templateDirectory,
       userDefaults: userDefaults
     )

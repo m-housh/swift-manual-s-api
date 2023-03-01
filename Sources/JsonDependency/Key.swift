@@ -37,7 +37,7 @@ public struct JSONCoders: DependencyKey {
 }
 
 extension DependencyValues {
-  public var jsonCoders: JSONCoders {
+  public var json: JSONCoders {
     get { self[JSONCoders.self] }
     set { self[JSONCoders.self] = newValue }
   }

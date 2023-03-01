@@ -24,7 +24,7 @@ extension CliMiddleware.ValidationContext {
   fileprivate struct Run {
     @Dependency(\.configClient) var configClient
     @Dependency(\.fileClient) var fileClient
-    @Dependency(\.jsonCoders.jsonDecoder) var jsonDecoder
+    @Dependency(\.json.jsonDecoder) var jsonDecoder
     @Dependency(\.logger) var logger
     @Dependency(\.validationMiddleware) var validationMiddleware
 

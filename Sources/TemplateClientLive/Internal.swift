@@ -1,5 +1,7 @@
+import Dependencies
 import FirstPartyMocks
 import Foundation
+import JsonDependency
 import Models
 
 extension Template.PathKey {
@@ -47,8 +49,8 @@ extension Template.PathKey {
 extension Template.EmbeddableKey {
 
   func embedInRoute(_ data: Data) throws -> ServerRoute.Api.Route.Interpolation.Route {
+    @Dependency(\.json.jsonDecoder) var decoder
     let route: ServerRoute.Api.Route.Interpolation.Route
-    let decoder = JSONDecoder()
     switch self {
     case .boiler:
       let type = ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler.self

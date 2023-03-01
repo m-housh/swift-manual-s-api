@@ -73,7 +73,7 @@ extension CliMiddleware.TemplateContext {
   fileprivate static func template(context: Template) async throws {
     @Dependency(\.configClient) var configClient
     @Dependency(\.fileClient) var fileClient
-    @Dependency(\.jsonCoders.jsonEncoder) var jsonEncoder
+    @Dependency(\.json.jsonEncoder) var jsonEncoder
     @Dependency(\.logger) var logger
     @Dependency(\.templateClient) var templateClient
 

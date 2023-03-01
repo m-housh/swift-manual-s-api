@@ -3,7 +3,7 @@ import ClientConfigLive
 import Dependencies
 import FileClient
 import FirstPartyMocks
-import Logging
+import JsonDependency
 import LoggingDependency
 import Models
 import TemplateClient
@@ -17,6 +17,7 @@ final class TemplateClientTests: XCTestCase {
     let (configClient, templateClient) = withDependencies {
       $0.fileClient = .liveValue
       $0.userDefaults = .temporary
+      $0.json.jsonEncoder = .cliEncoder
     } operation: {
       return (
         ConfigClient.liveValue,

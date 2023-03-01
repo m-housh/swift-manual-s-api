@@ -37,8 +37,8 @@ struct CliContext {
         $0.logger.logLevel = .debug
       }
       $0.configClient = .liveValue
-      $0.templateClient = .live(jsonEncoder: .cliEncoder)
-      $0.jsonCoders = .liveValue
+      $0.templateClient = .liveValue
+      $0.json = .liveValue
       $0.apiClient = .liveValue
       $0.validationMiddleware = .liveValue
       $0.cliMiddleware = .liveValue

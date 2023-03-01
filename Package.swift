@@ -229,6 +229,15 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         "ValidationMiddleware",
       ]
     ),
+    .testTarget(
+      name: "CliMiddlewareTests",
+      dependencies: [
+        "ClientConfigLive",
+        "CliMiddlewareLive",
+        "TemplateClientLive",
+        "ValidationMiddlewareLive",
+      ]
+    ),
     .executableTarget(
       name: "equipment-selection",
       dependencies: [
@@ -274,9 +283,10 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "TemplateClientLive",
       dependencies: [
         "ClientConfig",
-        "LoggingDependency",
         "FileClient",
         "FirstPartyMocks",
+        "JsonDependency",
+        "LoggingDependency",
         "TemplateClient",
         "UserDefaultsClient",
       ]
