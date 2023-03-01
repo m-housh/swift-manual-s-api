@@ -89,7 +89,7 @@ var package = Package(
     .testTarget(
       name: "UserDefaultsClientTests",
       dependencies: [
-        "UserDefaultsClient",
+        "UserDefaultsClient"
       ]
     ),
     .target(
@@ -304,7 +304,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "ClientConfigLive",
         "TemplateClientLive",
-        .product(name: "CustomDump", package: "swift-custom-dump")
+        .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
   ])

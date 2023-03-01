@@ -19,7 +19,7 @@ extension TemplateClient: DependencyKey {
   public static func live(
     templateDirectory defaultTemplateDirectory: URL? = nil
   ) -> Self {
-    
+
     @Dependency(\.fileClient.configDirectory) var configDirectory
     @Dependency(\.userDefaults) var userDefaults
 
@@ -131,7 +131,7 @@ extension TemplateClient: DependencyKey {
         )
       }
     }
-    
+
     let session = Session(
       templateDirectory: parseTemplateDirectory(defaultTemplateDirectory: defaultTemplateDirectory),
       userDefaults: userDefaults
@@ -161,7 +161,7 @@ extension TemplateClient: DependencyKey {
       inInterpolation: inInterpolation
     )
   }
-  
+
   fileprivate static let TEMPLATE_DIRECTORY_KEY = "templates"
 }
 
@@ -227,12 +227,12 @@ private func templateData(
   return routeData
 }
 
-fileprivate func parseTemplateDirectory(
+private func parseTemplateDirectory(
   defaultTemplateDirectory: URL?
 ) -> URL {
   @Dependency(\.fileClient.configDirectory) var configDirectory
   @Dependency(\.userDefaults) var userDefaults
-  
+
   // Check user defaults first.
   if let defaultDirectory = userDefaults.url(forKey: .templateDirectory) {
     return defaultDirectory

@@ -11,7 +11,7 @@ import Tagged
 /// Represents configuration / overrides for the command line tool.
 ///
 public struct ClientConfig: Codable, Equatable, Sendable {
-  
+
   /// The API key for generating pdf's.
   ///
   /// This can also be set by an environment variable `ANVIL_API_KEY`.
@@ -85,7 +85,7 @@ public struct ClientConfig: Codable, Equatable, Sendable {
     URL(fileURLWithPath: configDirectory)
       .appendingPathComponent(ClientConfig.CONFIG_FILENAME_KEY)
   }
-  
+
   public static let CONFIG_DIRECTORY_KEY = "equipment-selection"
   fileprivate static let CONFIG_FILENAME_KEY = "config.json"
 }
@@ -129,7 +129,7 @@ public let defaultConfigDirectory: String = {
   return configDirectory()
     .appendingPathComponent(ClientConfig.CONFIG_DIRECTORY_KEY)
     .absoluteString
- }()
+}()
 
 extension ClientConfig {
 

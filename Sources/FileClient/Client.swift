@@ -11,13 +11,13 @@ import XCTestDynamicOverlay
 /// Represents interactions with the file system and constructing common URL's needed throughout the application.
 ///
 public struct FileClient {
-  
+
   /// Retrieve the configuration directory.
   public var configDirectory: () -> URL
- 
+
   /// Create a directory at the given url.
   public var createDirectory: (URL) async throws -> Void
- 
+
   /// Retrieve the home directory, either the current user's home directory or application home directory depending on the platform.
   public var homeDirectory: () -> URL
 
@@ -111,7 +111,7 @@ public struct FileClient {
     let url = URL(fileURLWithPath: path)
     try await self.write(data, url)
   }
-  
+
   public static let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
 }
 
@@ -138,9 +138,11 @@ extension FileClient: DependencyKey {
 
   /// An unimplemented ``FileClient``.
   public static let testValue: FileClient = .init(
-    configDirectory: unimplemented("\(Self.self).configDirectory", placeholder: URL(fileURLWithPath: "unimplemented")),
+    configDirectory: unimplemented(
+      "\(Self.self).configDirectory", placeholder: URL(fileURLWithPath: "unimplemented")),
     createDirectory: unimplemented("\(Self.self).createDirectory"),
-    homeDirectory: unimplemented("\(Self.self).homeDirectory", placeholder: URL(fileURLWithPath: "unimplemented")),
+    homeDirectory: unimplemented(
+      "\(Self.self).homeDirectory", placeholder: URL(fileURLWithPath: "unimplemented")),
     read: unimplemented("\(Self.self).read", placeholder: Data()),
     write: unimplemented("\(Self.self).write")
   )
@@ -174,12 +176,12 @@ extension FileClient: DependencyKey {
   }
 }
 
-fileprivate extension URL {
-  static var homeDirectory: Self {
+extension URL {
+  fileprivate static var homeDirectory: Self {
     URL(fileURLWithPath: NSHomeDirectory())
   }
-  
-  static var configDirectory: Self {
+
+  fileprivate static var configDirectory: Self {
     guard let xdgHome = ProcessInfo.processInfo.environment[FileClient.XDG_CONFIG_HOME_KEY] else {
       return homeDirectory.appendingPathComponent(".config")
     }
