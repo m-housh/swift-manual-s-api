@@ -98,23 +98,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ValidationMiddlewareTests"
-               BuildableName = "ValidationMiddlewareTests"
-               BlueprintName = "ValidationMiddlewareTests"
+               BlueprintIdentifier = "TemplateClientTests"
+               BuildableName = "TemplateClientTests"
+               BlueprintName = "TemplateClientTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ApiClientLive"
-               BuildableName = "ApiClientLive"
-               BlueprintName = "ApiClientLive"
+               BlueprintIdentifier = "ValidationMiddlewareTests"
+               BuildableName = "ValidationMiddlewareTests"
+               BlueprintName = "ValidationMiddlewareTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -140,23 +140,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ClientConfig"
-               BuildableName = "ClientConfig"
-               BlueprintName = "ClientConfig"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CliMiddleware"
-               BuildableName = "CliMiddleware"
-               BlueprintName = "CliMiddleware"
+               BlueprintIdentifier = "ApiClientLive"
+               BuildableName = "ApiClientLive"
+               BlueprintName = "ApiClientLive"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -182,9 +168,51 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ClientConfig"
+               BuildableName = "ClientConfig"
+               BlueprintName = "ClientConfig"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ConcurrencyHelpers"
+               BuildableName = "ConcurrencyHelpers"
+               BlueprintName = "ConcurrencyHelpers"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "ClientConfigLive"
                BuildableName = "ClientConfigLive"
                BlueprintName = "ClientConfigLive"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CliMiddleware"
+               BuildableName = "CliMiddleware"
+               BlueprintName = "CliMiddleware"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -210,37 +238,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FileClient"
-               BuildableName = "FileClient"
-               BlueprintName = "FileClient"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "FirstPartyMocks"
                BuildableName = "FirstPartyMocks"
                BlueprintName = "FirstPartyMocks"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "JsonDependency"
-               BuildableName = "JsonDependency"
-               BlueprintName = "JsonDependency"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -266,9 +266,51 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ValidationMiddleware"
-               BuildableName = "ValidationMiddleware"
-               BlueprintName = "ValidationMiddleware"
+               BlueprintIdentifier = "FileClient"
+               BuildableName = "FileClient"
+               BlueprintName = "FileClient"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "JsonDependency"
+               BuildableName = "JsonDependency"
+               BlueprintName = "JsonDependency"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SiteRouter"
+               BuildableName = "SiteRouter"
+               BlueprintName = "SiteRouter"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ValidationMiddlewareLive"
+               BuildableName = "ValidationMiddlewareLive"
+               BlueprintName = "ValidationMiddlewareLive"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -322,9 +364,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ValidationMiddlewareLive"
-               BuildableName = "ValidationMiddlewareLive"
-               BlueprintName = "ValidationMiddlewareLive"
+               BlueprintIdentifier = "ValidationMiddleware"
+               BuildableName = "ValidationMiddleware"
+               BlueprintName = "ValidationMiddleware"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "XCTestDebugSupport"
+               BuildableName = "XCTestDebugSupport"
+               BlueprintName = "XCTestDebugSupport"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -361,29 +417,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SiteRouterTests"
-               BuildableName = "SiteRouterTests"
-               BlueprintName = "SiteRouterTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ValidationMiddlewareTests"
-               BuildableName = "ValidationMiddlewareTests"
-               BlueprintName = "ValidationMiddlewareTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "TemplateClientTests"
-               BuildableName = "TemplateClientTests"
-               BlueprintName = "TemplateClientTests"
+               BlueprintIdentifier = "CliMiddlewareTests"
+               BuildableName = "CliMiddlewareTests"
+               BlueprintName = "CliMiddlewareTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -401,9 +437,39 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CliMiddlewareTests"
-               BuildableName = "CliMiddlewareTests"
-               BlueprintName = "CliMiddlewareTests"
+               BlueprintIdentifier = "SiteRouterTests"
+               BuildableName = "SiteRouterTests"
+               BlueprintName = "SiteRouterTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TemplateClientTests"
+               BuildableName = "TemplateClientTests"
+               BlueprintName = "TemplateClientTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ValidationMiddlewareTests"
+               BuildableName = "ValidationMiddlewareTests"
+               BlueprintName = "ValidationMiddlewareTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserDefaultsClientTests"
+               BuildableName = "UserDefaultsClientTests"
+               BlueprintName = "UserDefaultsClientTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -430,13 +496,6 @@
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "ANVIL_API_KEY"
-            value = "ArmzSwDMaPsqvYArKbecMSscAA4GHn3u"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

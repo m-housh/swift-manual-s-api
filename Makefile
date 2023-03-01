@@ -130,7 +130,7 @@ clean:
 	rm -rf .build || true
 
 build:
-	swift build -c release
+	swift build -c release --disable-sandbox
 
 install: build
 	install -d "$(BINDIR)" "$(LIBDIR)"
