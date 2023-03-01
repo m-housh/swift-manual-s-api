@@ -20,6 +20,7 @@ final class ConfigTests: XCTestCase {
       $0.configClient = configClient
       $0.userDefaults = .temporary
       $0.cliMiddleware = .liveValue
+      $0.fileClient = .noop
     } operation: {
       super.invokeTest()
     }
@@ -37,13 +38,36 @@ final class ConfigTests: XCTestCase {
   
   func test_set_and_unset() async throws {
     @Dependency(\.cliMiddleware.config) var config
+    @Dependency(\.configClient) var client
+    
     try await config(.set("blob-sr", for: .anvilApiKey))
+    var anvilKey = await client.config().anvilApiKey
+    XCTAssertEqual(anvilKey, "blob-sr")
+    
     try await config(.set("blob-jr", for: .apiBaseUrl))
+    var baseUrl = await client.config().apiBaseUrl
+    XCTAssertEqual(baseUrl, "blob-jr")
+    
     try await config(.set("foo", for: .configDirectory))
+    let directory = await client.config().configDirectory
+    XCTAssertEqual(directory, "foo")
+    
     try await config(.set("blob", for: .templatesDirectory))
+    var templates = await client.config().templateDirectoryPath
+    XCTAssertEqual(templates, "blob")
+    
     try await config(.unset(.anvilApiKey))
+    anvilKey = await client.config().anvilApiKey
+    XCTAssertNil(anvilKey)
+    
     try await config(.unset(.apiBaseUrl))
+    baseUrl = await client.config().apiBaseUrl
+    XCTAssertNil(baseUrl)
+    
     try await config(.unset(.configDirectory))
+    
     try await config(.unset(.templatesDirectory))
+    templates = await client.config().templateDirectoryPath
+    XCTAssertNil(templates)
   }
 }

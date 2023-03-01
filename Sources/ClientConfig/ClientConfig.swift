@@ -1,3 +1,5 @@
+import Dependencies
+import FileClient
 import Foundation
 import Models
 import Tagged
@@ -9,7 +11,7 @@ import Tagged
 /// Represents configuration / overrides for the command line tool.
 ///
 public struct ClientConfig: Codable, Equatable, Sendable {
-
+  
   /// The API key for generating pdf's.
   ///
   /// This can also be set by an environment variable `ANVIL_API_KEY`.
@@ -42,7 +44,7 @@ public struct ClientConfig: Codable, Equatable, Sendable {
   public init() {
     self.anvilApiKey = nil
     self.apiBaseUrl = nil
-    self.configDirectory = defaultConfigPath
+    self.configDirectory = defaultConfigDirectory
     self.templateDirectoryPath = nil
     self.templateIds = .init()
     self.templatePaths = .init()
@@ -73,32 +75,19 @@ public struct ClientConfig: Codable, Equatable, Sendable {
   ) {
     self.anvilApiKey = anvilApiKey
     self.apiBaseUrl = apiBaseUrl
-    self.configDirectory = configDirectory ?? defaultConfigPath
+    self.configDirectory = configDirectory ?? defaultConfigDirectory
     self.templateDirectoryPath = templateDirectoryPath
     self.templateIds = templateIds
     self.templatePaths = templatePaths
   }
 
   public var configPath: URL {
-    let url: URL
-    #if !os(Linux)
-      if #available(macOS 13.0, *) {
-        url = URL(fileURLWithPath: configDirectory, isDirectory: true, relativeTo: .homeDirectory)
-      } else {
-        // Fallback on earlier versions
-        url = URL(
-          fileURLWithPath: configDirectory,
-          relativeTo: FileManager.default.homeDirectoryForCurrentUser
-        )
-      }
-    #else
-      url = URL(
-        fileURLWithPath: configDirectory,
-        relativeTo: FileManager.default.homeDirectoryForCurrentUser
-      )
-    #endif
-    return url.appendingPathComponent(configFileNameKey)
+    URL(fileURLWithPath: configDirectory)
+      .appendingPathComponent(ClientConfig.CONFIG_FILENAME_KEY)
   }
+  
+  public static let CONFIG_DIRECTORY_KEY = "equipment-selection"
+  fileprivate static let CONFIG_FILENAME_KEY = "config.json"
 }
 
 extension ClientConfig {
@@ -131,14 +120,16 @@ extension ClientConfig {
   }
 }
 
-public let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
-private let defaultConfigHomeKey = ".config/equipment-selection"
-private let configFileNameKey = "config.json"
+//public let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
+//private let defaultConfigHomeKey = ".config/equipment-selection"
+//private let configFileNameKey = "config.json"
 
-public let defaultConfigPath: String = {
-  return ProcessInfo.processInfo.environment[XDG_CONFIG_HOME_KEY]
-    ?? defaultConfigHomeKey
-}()
+public let defaultConfigDirectory: String = {
+  @Dependency(\.fileClient.configDirectory) var configDirectory
+  return configDirectory()
+    .appendingPathComponent(ClientConfig.CONFIG_DIRECTORY_KEY)
+    .absoluteString
+ }()
 
 extension ClientConfig {
 

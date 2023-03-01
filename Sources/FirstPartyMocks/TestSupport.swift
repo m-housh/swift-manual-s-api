@@ -365,7 +365,7 @@ extension Template.BaseInterpolation {
 extension Template.Project.ProjectInfo {
   public static let mock = Self.init(
     name: "Blob Esquire",
-    address: "1234 Sesame Streat",
+    address: "1234 Sesame Street",
     city: "Monroe",
     state: "OH",
     zipCode: 45050

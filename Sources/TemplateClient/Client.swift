@@ -1,5 +1,6 @@
 import ConcurrencyHelpers
 import Dependencies
+import FileClient
 import Foundation
 import Models
 import XCTestDynamicOverlay
@@ -85,7 +86,7 @@ extension TemplateClient: TestDependencyKey {
     routeTemplate: { _ in try await Task.never() },
     setTemplateDirectory: { _ in },
     template: { _, _ in try await Task.never() },
-    templateDirectory: { .defaultTemplateDirectory }
+    templateDirectory: { URL(fileURLWithPath: "noop") }
   )
 
   public static var testValue: TemplateClient = .init(
@@ -95,27 +96,31 @@ extension TemplateClient: TestDependencyKey {
     setTemplateDirectory: unimplemented("\(Self.self)"),
     template: unimplemented("\(Self.self).template", placeholder: Data()),
     templateDirectory: unimplemented(
-      "\(Self.self).templateDirectory", placeholder: URL.defaultTemplateDirectory)
+      "\(Self.self).templateDirectory", placeholder: URL(fileURLWithPath: "unimplemented"))
   )
 }
 
-extension URL {
-  public static var defaultTemplateDirectory: URL {
-    let baseUrl: URL
-
-    if let xdg_home = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"] {
-      baseUrl = URL(fileURLWithPath: xdg_home)
-    } else {
-      baseUrl = FileManager.default.homeDirectoryForCurrentUser
-        .appendingPathComponent(".config")
-    }
-
-    return
-      baseUrl
-      .appendingPathComponent("equipment-selection")
-      .appendingPathComponent("templates")
-  }
-}
+//extension URL {
+//  public static var defaultTemplateDirectory: URL {
+//
+//    @Dependency(\.fileClient.configDirectory) var configDirectory
+//
+//    let baseUrl: URL
+//
+//    if let xdg_home = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"] {
+//      baseUrl = URL(fileURLWithPath: xdg_home)
+//    } else {
+////      baseUrl = URL(fileURLWithPath: NSHomeDirectory())
+//      baseUrl = homeDirectory()
+//        .appendingPathComponent(".config")
+//    }
+//
+//    return
+//      baseUrl
+//      .appendingPathComponent("equipment-selection")
+//      .appendingPathComponent("templates")
+//  }
+//}
 
 extension DependencyValues {
   public var templateClient: TemplateClient {

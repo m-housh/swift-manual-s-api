@@ -8,12 +8,18 @@ import XCTestDynamicOverlay
   import FoundationNetworking
 #endif
 
-/// Represents interactions with the file system.
+/// Represents interactions with the file system and constructing common URL's needed throughout the application.
 ///
 public struct FileClient {
-
+  
+  /// Retrieve the configuration directory.
+  public var configDirectory: () -> URL
+ 
   /// Create a directory at the given url.
   public var createDirectory: (URL) async throws -> Void
+ 
+  /// Retrieve the home directory, either the current user's home directory or application home directory depending on the platform.
+  public var homeDirectory: () -> URL
 
   /// Read the contents from the given url.
   public var read: (URL) async throws -> Data
@@ -29,15 +35,21 @@ public struct FileClient {
   /// ```
   ///
   /// - Parameters:
+  ///   - configDirectory: The configuration directory.
   ///   - createDirectory: Create a  directory at the given url.
+  ///   - homeDirectory: The home directory url.
   ///   - read: Read the contents of a file at the given url.
   ///   - write: Write the data to the given url.
   public init(
+    configDirectory: @escaping () -> URL,
     createDirectory: @escaping (URL) async throws -> Void,
+    homeDirectory: @escaping () -> URL,
     read: @escaping (URL) async throws -> Data,
     write: @escaping (Data, URL) async throws -> Void
   ) {
+    self.configDirectory = configDirectory
     self.createDirectory = createDirectory
+    self.homeDirectory = homeDirectory
     self.read = read
     self.write = write
   }
@@ -99,20 +111,26 @@ public struct FileClient {
     let url = URL(fileURLWithPath: path)
     try await self.write(data, url)
   }
+  
+  public static let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
 }
 
 extension FileClient: DependencyKey {
 
   /// A ``FileClient/FileClient`` that does not perform any actions.
   public static let noop = Self.init(
+    configDirectory: { URL(fileURLWithPath: "noop") },
     createDirectory: { _ in },
+    homeDirectory: { URL(fileURLWithPath: "noop") },
     read: { _ in Data() },
     write: { _, _ in }
   )
 
   public static func mock(readData: Data) -> Self {
     .init(
+      configDirectory: { .configDirectory },
       createDirectory: { _ in },
+      homeDirectory: { .homeDirectory },
       read: { _ in readData },
       write: { _, _ in }
     )
@@ -120,7 +138,9 @@ extension FileClient: DependencyKey {
 
   /// An unimplemented ``FileClient``.
   public static let testValue: FileClient = .init(
+    configDirectory: unimplemented("\(Self.self).configDirectory", placeholder: URL(fileURLWithPath: "unimplemented")),
     createDirectory: unimplemented("\(Self.self).createDirectory"),
+    homeDirectory: unimplemented("\(Self.self).homeDirectory", placeholder: URL(fileURLWithPath: "unimplemented")),
     read: unimplemented("\(Self.self).read", placeholder: Data()),
     write: unimplemented("\(Self.self).write")
   )
@@ -131,10 +151,16 @@ extension FileClient: DependencyKey {
     @Dependency(\.logger) var logger
 
     return .init(
+      configDirectory: {
+        .configDirectory
+      },
       createDirectory: { url in
         logger.debug("Creating directory at: \(url.absoluteString)")
         try FileManager.default
           .createDirectory(at: url, withIntermediateDirectories: true)
+      },
+      homeDirectory: {
+        .homeDirectory
       },
       read: { url in
         logger.debug("Reading contents of: \(url.absoluteString)")
@@ -145,6 +171,19 @@ extension FileClient: DependencyKey {
         try data.write(to: url, options: .atomic)
       }
     )
+  }
+}
+
+fileprivate extension URL {
+  static var homeDirectory: Self {
+    URL(fileURLWithPath: NSHomeDirectory())
+  }
+  
+  static var configDirectory: Self {
+    guard let xdgHome = ProcessInfo.processInfo.environment[FileClient.XDG_CONFIG_HOME_KEY] else {
+      return homeDirectory.appendingPathComponent(".config")
+    }
+    return URL(fileURLWithPath: xdgHome)
   }
 }
 

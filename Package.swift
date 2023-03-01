@@ -86,6 +86,12 @@ var package = Package(
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
     ),
+    .testTarget(
+      name: "UserDefaultsClientTests",
+      dependencies: [
+        "UserDefaultsClient",
+      ]
+    ),
     .target(
       name: "ValidationMiddleware",
       dependencies: [
@@ -184,6 +190,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "ClientConfig",
       dependencies: [
         "Models",
+        "FileClient",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
@@ -274,6 +281,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "TemplateClient",
       dependencies: [
         "ConcurrencyHelpers",
+        "FileClient",
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
@@ -296,6 +304,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       dependencies: [
         "ClientConfigLive",
         "TemplateClientLive",
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ]
     ),
   ])

@@ -12,19 +12,19 @@ import XCTestDynamicOverlay
 public struct UserDefaultsClient {
 
   /// Remove a value for the given key.
-  public var removeValue: (Key) -> Void
+  private var removeValue: (Key) -> Void
 
   /// Set a string value for the given key.
-  public var setString: (String, Key) -> Void
+  private var setString: (String, Key) -> Void
 
   /// Set a url value for the given key.
-  public var setUrl: (URL, Key) -> Void
+  private var setUrl: (URL, Key) -> Void
 
   /// Retrieve a string for the given key.
-  public var string: (Key) -> String?
+  private var string: (Key) -> String?
 
   /// Retrieve a url for the given key.
-  public var url: (Key) -> URL?
+  private var url: (Key) -> URL?
 
   /// Create a new ``UserDefaultsClient`` instance.
   ///
@@ -63,6 +63,7 @@ public struct UserDefaultsClient {
   }
 }
 
+// The public interface.
 extension UserDefaultsClient {
 
   /// Remove a value for the given key.
@@ -87,7 +88,14 @@ extension UserDefaultsClient {
 
   /// Retrieve a url for the given key.
   public func url(forKey key: Key) -> URL? {
-    self.url(key)
+    guard let url = self.url(key) else {
+      /// Attempt to cast a string value to a url, if it's set as a string.
+      guard let string = self.string(key) else {
+        return nil
+      }
+      return URL(string: string)
+    }
+    return url
   }
 
 }

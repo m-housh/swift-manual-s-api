@@ -11,6 +11,7 @@ import Models
 
 extension Logger {
 
+  /// A logger that only prints the messages.
   static var cliLogger: Self {
     Logger(label: "equipment-selection") { _ in
       return LoggingFormatAndPipe.Handler(
@@ -20,6 +21,7 @@ extension Logger {
     }
   }
 
+  /// Logger that prints the messages and log level.
   static var cliLoggerWithLevel: Self {
     Logger(label: "equipment-selection") { _ in
       return LoggingFormatAndPipe.Handler(

@@ -13,6 +13,7 @@ final class CliConfigTests: XCTestCase {
   override func invokeTest() {
     withDependencies {
       $0.userDefaults = .noop
+      $0.fileClient = .liveValue
     } operation: {
       super.invokeTest()
     }

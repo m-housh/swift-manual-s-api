@@ -17,8 +17,10 @@ import UserDefaultsClient
 extension TemplateClient: DependencyKey {
 
   public static func live(
-    templateDirectory defaultTemplateDirectory: URL = .defaultTemplateDirectory
+    templateDirectory defaultTemplateDirectory: URL? = nil
   ) -> Self {
+    
+    @Dependency(\.fileClient.configDirectory) var configDirectory
     @Dependency(\.userDefaults) var userDefaults
 
     actor Session {
@@ -129,13 +131,9 @@ extension TemplateClient: DependencyKey {
         )
       }
     }
-
-    let templateDirectory =
-      userDefaults.url(forKey: .templateDirectory)
-      ?? defaultTemplateDirectory
-
+    
     let session = Session(
-      templateDirectory: templateDirectory,
+      templateDirectory: parseTemplateDirectory(defaultTemplateDirectory: defaultTemplateDirectory),
       userDefaults: userDefaults
     )
 
@@ -163,6 +161,8 @@ extension TemplateClient: DependencyKey {
       inInterpolation: inInterpolation
     )
   }
+  
+  fileprivate static let TEMPLATE_DIRECTORY_KEY = "templates"
 }
 
 extension FileClient {
@@ -225,4 +225,23 @@ private func templateData(
   }
 
   return routeData
+}
+
+fileprivate func parseTemplateDirectory(
+  defaultTemplateDirectory: URL?
+) -> URL {
+  @Dependency(\.fileClient.configDirectory) var configDirectory
+  @Dependency(\.userDefaults) var userDefaults
+  
+  // Check user defaults first.
+  if let defaultDirectory = userDefaults.url(forKey: .templateDirectory) {
+    return defaultDirectory
+  }
+  // If no default directory, then default to config directory.
+  guard let defaultTemplateDirectory else {
+    return configDirectory()
+      .appendingPathComponent(ClientConfig.CONFIG_DIRECTORY_KEY)
+      .appendingPathComponent(TemplateClient.TEMPLATE_DIRECTORY_KEY)
+  }
+  return defaultTemplateDirectory
 }

@@ -8,9 +8,8 @@ import XCTestDynamicOverlay
   import FoundationNetworking
 #endif
 
-/// Represents commands for the ``equipment-selection`` command line tool.
+/// Represents commands for the `equipment-selection` command line tool.
 ///
-///  The
 public struct CliMiddleware {
 
   /// Runs configuration commands.

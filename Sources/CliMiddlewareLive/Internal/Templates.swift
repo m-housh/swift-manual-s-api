@@ -127,7 +127,7 @@ extension CliMiddleware.TemplateContext {
 
       if context.outputContext == .copy {
         // Copy to the clip board if the platform supports it.
-        #if canImport(AppKit)
+        #if canImport(AppKit) && !targetEnvironment(macCatalyst)
           NSPasteboard.general.clearContents()
           NSPasteboard.general.setString(templateString, forType: .string)
           logger.info("Copied template to pasteboard.")

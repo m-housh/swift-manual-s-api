@@ -1,5 +1,6 @@
 import XCTest
 import ClientConfigLive
+import CustomDump
 import Dependencies
 import FileClient
 import FirstPartyMocks
@@ -26,6 +27,7 @@ final class TemplateClientTests: XCTestCase {
     }
     
     withDependencies {
+      $0.logger.logLevel = .debug
       $0.configClient = configClient
       $0.templateClient = templateClient
     } operation: {
@@ -36,6 +38,11 @@ final class TemplateClientTests: XCTestCase {
   func test_loading_templates_when_not_on_file() async throws {
     @Dependency(\.templateClient) var templateClient
     let decoder = JSONDecoder()
+    
+    // change template directory to a place where templates do not exist.
+    let tmp = FileManager.default.temporaryDirectory
+      .appendingPathComponent("template-test")
+    await templateClient.setTemplateDirectory(tmp)
     
     for key in Template.PathKey.allCases {
       let data = try await templateClient.template(for: key)
@@ -87,7 +94,7 @@ final class TemplateClientTests: XCTestCase {
         typealias type = Template.Project
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
-        XCTAssertEqual(decoded, mock)
+        XCTAssertNoDifference(decoded, mock)
       case .twoWay:
         typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
         let decoded = try decoder.decode(type.self, from: data)

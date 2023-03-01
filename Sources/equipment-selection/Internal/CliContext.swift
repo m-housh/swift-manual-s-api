@@ -30,6 +30,9 @@ struct CliContext {
     self._run = run
   }
 
+  // These overrides, except for log leve, are unnecessary when built for release,
+  // however they're needed when invoking with `swift run equipment-selection ...`
+  // which builds and runs in debug mode.
   func run() async throws {
     try await withDependencies {
       $0.logger = .cliLogger
