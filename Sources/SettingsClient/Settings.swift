@@ -15,10 +15,10 @@ public struct Settings: Codable, Equatable, Sendable {
   /// The string to use for configuration and templates folder inside the global configuration folder.
   ///
   public static let CONFIG_DIRECTORY_KEY = "equipment-selection"
-  
+
   /// Represents the file name to search for inside the configuration directory.
   fileprivate static let CONFIG_FILENAME_KEY = "config.json"
-  
+
   /// The API key for generating pdf's.
   ///
   /// This can also be set by an environment variable `ANVIL_API_KEY`.
@@ -126,7 +126,7 @@ extension Settings {
   }
 }
 
-fileprivate let defaultConfigDirectory: String = {
+private let defaultConfigDirectory: String = {
   @Dependency(\.fileClient.configDirectory) var configDirectory
   return configDirectory()
     .appendingPathComponent(Settings.CONFIG_DIRECTORY_KEY)

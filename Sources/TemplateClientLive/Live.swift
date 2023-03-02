@@ -1,4 +1,3 @@
-import SettingsClient
 import ConcurrencyHelpers
 import Dependencies
 import FileClient
@@ -7,6 +6,7 @@ import JsonDependency
 import Logging
 import LoggingDependency
 import Models
+import SettingsClient
 @_exported import TemplateClient
 import UserDefaultsClient
 

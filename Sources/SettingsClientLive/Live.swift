@@ -1,9 +1,9 @@
-@_exported import SettingsClient
 import ConcurrencyHelpers
 import Dependencies
 import FileClient
 import Foundation
 import Models
+@_exported import SettingsClient
 import UserDefaultsClient
 
 extension SettingsClient: DependencyKey {
@@ -87,7 +87,7 @@ extension SettingsClient: DependencyKey {
 /// - `environment`
 ///
 /// Merging the results together.
-fileprivate func bootstrap(environment: [String: String]) -> Settings {
+private func bootstrap(environment: [String: String]) -> Settings {
   @Dependency(\.userDefaults) var userDefaults
 
   var config = Settings()
@@ -204,9 +204,10 @@ extension Settings {
       return
     case .configDirectory:
       // set the config directory back to a default value.
-      self.configDirectory = bootstrap(
-        environment: ProcessInfo.processInfo.environment
-      ).configDirectory
+      self.configDirectory =
+        bootstrap(
+          environment: ProcessInfo.processInfo.environment
+        ).configDirectory
     case .templateDirectory:
       self.templateDirectoryPath = nil
     }
