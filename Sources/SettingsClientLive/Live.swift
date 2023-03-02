@@ -79,6 +79,8 @@ extension SettingsClient: DependencyKey {
   }
 }
 
+// MARK: - Helpers
+
 /// Loads the configuration in order.
 ///
 /// - `defaults`
@@ -87,7 +89,7 @@ extension SettingsClient: DependencyKey {
 /// - `environment`
 ///
 /// Merging the results together.
-private func bootstrap(environment: [String: String]) -> Settings {
+fileprivate func bootstrap(environment: [String: String]) -> Settings {
   @Dependency(\.userDefaults) var userDefaults
 
   var config = Settings()
@@ -111,6 +113,10 @@ private func bootstrap(environment: [String: String]) -> Settings {
 
   return config
 }
+
+fileprivate let defaultConfigDirectory: String = {
+  bootstrap(environment: ProcessInfo.processInfo.environment).configDirectory
+}()
 
 extension Settings.Environment {
 
@@ -140,7 +146,7 @@ extension UserDefaultsClient {
 // This allows the config value used by the application to have a value
 // for where the configuration files live, but it can't be overwritten in a
 // file.  It can however be overwritten by the environment variables or user defaults.
-private struct LocalConfig: Codable {
+fileprivate struct LocalConfig: Codable {
   var anvilApiKey: String?
   var apiBaseUrl: String?
   var templateDirectoryPath: String?
@@ -201,13 +207,11 @@ extension Settings {
     case .apiBaseUrl:
       self.apiBaseUrl = nil
     case .anvilBaseUrl:
+      #warning("Remove or fix")
       return
     case .configDirectory:
       // set the config directory back to a default value.
-      self.configDirectory =
-        bootstrap(
-          environment: ProcessInfo.processInfo.environment
-        ).configDirectory
+      self.configDirectory = defaultConfigDirectory
     case .templateDirectory:
       self.templateDirectoryPath = nil
     }

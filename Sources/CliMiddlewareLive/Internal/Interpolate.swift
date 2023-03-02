@@ -16,7 +16,7 @@ extension CliMiddleware.InterpolationContext {
 }
 
 extension CliMiddleware.InterpolationContext {
-  fileprivate struct Run {
+  public struct Run {
     @Dependency(\.apiClient) var apiClient
     @Dependency(\.settingsClient) var configClient
     @Dependency(\.fileClient) var fileClient
@@ -25,6 +25,10 @@ extension CliMiddleware.InterpolationContext {
     @Dependency(\.json.jsonDecoder) var jsonDecoder
 
     let context: CliMiddleware.InterpolationContext
+
+    public init(context: CliMiddleware.InterpolationContext) {
+      self.context = context
+    }
 
     func run() async throws {
 
@@ -52,7 +56,8 @@ extension CliMiddleware.InterpolationContext {
       // log the results to the console.
       if !context.writeJson && !context.generatePdf {
         let jsonString =
-          try String(data: jsonEncoder.encode(response.result), encoding: .utf8) ?? ""
+          try String(data: jsonEncoder.encode(response.result), encoding: .utf8)
+          ?? "Failed to encode as string."
         logger.info("\(jsonString)")
         return
       }
@@ -79,7 +84,7 @@ extension CliMiddleware.InterpolationContext {
     }
 
     // TODO: Fix for projects
-    private func interpolate(inputPath: URL)
+    public func interpolate(inputPath: URL)
       async throws -> (
         ServerRoute.Api.Route.Interpolation, InterpolationResponse
       )
@@ -95,19 +100,15 @@ extension CliMiddleware.InterpolationContext {
         } else {
           // TODO: Need to also return the project here.
           logger.debug("Decoding as project.")
-          let project = try jsonDecoder.decode(Template.Project.self, from: data)
-          interpolation = .init(
-            designInfo: project.designInfo,
-            houseLoad: project.houseLoad,
-            systemType: project.systemType,
-            route: project.route
-          )
+          let project = try jsonDecoder.decode(Project.self, from: data)
+          interpolation = project.interpolation
         }
       } catch {
         logger.info("Invalid json.")
         throw error
       }
-      logger.debug("Read interpolation file at: \(inputPath.absoluteString)")
+      logger.debug("Loaded interpolation file at: \(inputPath.absoluteString)")
+      logger.debug("Sending api request.")
       let response = try await apiClient.interpolate(interpolation)
       return (interpolation, response)
 

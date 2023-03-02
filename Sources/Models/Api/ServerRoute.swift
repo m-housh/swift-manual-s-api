@@ -218,8 +218,6 @@ extension ServerRoute {
         }
       }
 
-      // TODO: Allow an indirect case that interpolates a heating & cooling type during a single request.
-      // TODO: Model interpolations differently, so that designInfo, systemType, and houseLoad are held differently.
       /// Represents the different interpolation requests that can be performed.
       ///
       public typealias Interpolation = Models.Interpolation
@@ -491,6 +489,7 @@ public struct Interpolation: Codable, Equatable, Sendable {
       }
     }
 
+    #warning("Rename / use inside a project context instead.")
     public struct Keyed: Codable, Equatable, Sendable {
       public var name: String
       public var systemId: String
@@ -560,17 +559,6 @@ extension Interpolation.Route {
     }
   }
 }
-
-//extension Interpolation.Route.Keyed {
-//
-//  public func encode(to encoder: Encoder) throws {
-//    var container = encoder.container(keyedBy: CodingKeys.self)
-//    try container.encode(name, forKey: .name)
-//    try container.encode(systemType, forKey: .systemType)
-//    try container.encode(cooling, forKey: .cooling)
-//    try container.encode(heating, forKey: .heating)
-//  }
-//}
 
 extension Interpolation.Route.Cooling {
 

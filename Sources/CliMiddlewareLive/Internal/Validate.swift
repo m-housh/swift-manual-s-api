@@ -46,7 +46,7 @@ extension CliMiddleware.ValidationContext {
           _ = try jsonDecoder.decode(Models.Template.BaseInterpolation.self, from: data)
           break
         case .project:
-          let project = try jsonDecoder.decode(Models.Template.Project.self, from: data)
+          let project = try jsonDecoder.decode(Project.self, from: data)
           try await validate(interpolation: project.interpolation)
           break
         // Keep here encase other path keys are added, they must be handled.

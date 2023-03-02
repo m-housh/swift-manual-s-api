@@ -362,7 +362,7 @@ extension Template.BaseInterpolation {
   )
 }
 
-extension Template.Project.ProjectInfo {
+extension Project.ProjectInfo {
   public static let mock = Self.init(
     name: "Blob Esquire",
     address: "1234 Sesame Street",
@@ -372,11 +372,20 @@ extension Template.Project.ProjectInfo {
   )
 }
 
-extension Template.Project {
+extension Project {
   public static let mock = Self.init(
     projectInfo: .mock,
     designInfo: .mock,
     houseLoad: .mock,
-    route: .keyed(.mocks)
+    systems: .mocks
   )
+}
+
+extension Array where Element == Project.System {
+  public static var mocks: Self {
+    [ServerRoute.Api.Route.Interpolation.Route.Keyed].mocks.map(\.system)
+  }
+  public static var zeros: Self {
+    [ServerRoute.Api.Route.Interpolation.Route.Keyed].zeros.map(\.system)
+  }
 }

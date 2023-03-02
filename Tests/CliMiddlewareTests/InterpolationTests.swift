@@ -1,4 +1,5 @@
 import ApiClient
+import ApiClientTestSupport
 import CasePaths
 import CliMiddleware
 import Dependencies
@@ -11,11 +12,12 @@ import TemplateClientLive
 import UserDefaultsClient
 import XCTest
 
-
+/// This uses some internal helpers, so it will fail when built in release mode.
+/// 
 final class InterpolationTests: XCTestCase {
   
   override func invokeTest() {
-    let projectData = try! JSONEncoder().encode(Template.Project.mock)
+    let projectData = try! JSONEncoder().encode(Project.mock)
     let fileClient = FileClient.mock(readData: projectData)
     
     let (configClient, templateClient) = withDependencies {
@@ -64,13 +66,20 @@ final class InterpolationTests: XCTestCase {
       .appendingPathComponent("interpolation-test")
     defer { try? FileManager.default.removeItem(at: tmp) }
     
-    try await cliMiddleware.interpolate(.init(
+    let context = CliMiddleware.InterpolationContext(
       key: .project,
       generatePdf: false,
       inputFile: tmp,
       outputPath: tmp,
       writeJson: true
-    ))
+    )
+    
+    try await cliMiddleware.interpolate(context)
+    
+    let runner = CliMiddleware.InterpolationContext.Run(context: context)
+    
+    let _ = try await runner.interpolate(inputPath: tmp)
+    
   }
   
   func test_interpolation_no_urls() async throws {

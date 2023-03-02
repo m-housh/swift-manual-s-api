@@ -5,18 +5,7 @@ import Models
 
 public struct SiteRouter: ParserPrinter {
 
-  //  @Dependency(\.baseURL) var baseURL
-
-  public var encoder: JSONEncoder
-  public var decoder: JSONDecoder
-
-  public init(
-    decoder: JSONDecoder,
-    encoder: JSONEncoder
-  ) {
-    self.encoder = encoder
-    self.decoder = decoder
-  }
+  public init() {}
 
   @ParserBuilder
   public var body: AnyParserPrinter<URLRequestData, ServerRoute> {
@@ -39,23 +28,6 @@ public struct SiteRouter: ParserPrinter {
         Path { "site.webmanifest" }
       }
 
-      //      let imagesRouter = Route(.case(ServerRoute.public)) {
-      //        Path { "public" }
-      //        Route(.case(ServerRoute.Public.images(file:))) {
-      //          Path { "images" }
-      //          OneOf {
-      //            Path { "android-chrome-192x192.png" }
-      //            Path { "android-chrome-512x512.png" }
-      //            Path { "apple-touch-icon.png" }
-      //            Path { "favicon-16x16.png" }
-      //            Path { "favicon-32x32.png" }
-      //            Path { "favicon" }
-      //            Path { "mstile-150x150.png" }
-      //            Path { "safari-pinned-tab.svg" }
-      //          }
-      //        }
-      //      }
-
       Route(.case(ServerRoute.documentation)) {
         Path { ServerRoute.Key.documentation.key }
         DocumentRouter()
@@ -70,20 +42,9 @@ public struct SiteRouter: ParserPrinter {
 
           Route(.case(ServerRoute.Public.images(file:))) {
             Path { "images" }
-
             Query {
               Field("file")
             }
-            //            OneOf {
-            //              Path { "android-chrome-192x192.png" }
-            //              Path { "android-chrome-512x512.png" }
-            //              Path { "apple-touch-icon.png" }
-            //              Path { "favicon-16x16.png" }
-            //              Path { "favicon-32x32.png" }
-            //              Path { "favicon" }
-            //              Path { "mstile-150x150.png" }
-            //              Path { "safari-pinned-tab.svg" }
-            //            }
           }
 
           Route(.case(ServerRoute.Public.tools(file:))) {
@@ -105,11 +66,10 @@ public struct SiteRouter: ParserPrinter {
           Headers {
             Field("X-DEBUG", default: false) { Bool.parser() }
           }
-          ApiRouter(decoder: self.decoder, encoder: self.encoder)
+          ApiRouter()
         }
       }
     }
-    //    .baseURL(baseURL)
     .eraseToAnyParserPrinter()
 
   }
@@ -131,18 +91,16 @@ public struct SiteRouter: ParserPrinter {
 public enum SiteRouterKey: DependencyKey {
 
   public static var testValue: AnyParserPrinter<URLRequestData, ServerRoute> {
-    return SiteRouter(decoder: .init(), encoder: jsonEncoder)
-      .eraseToAnyParserPrinter()
+    return Self.liveValue
   }
 
   public static var liveValue: AnyParserPrinter<URLRequestData, ServerRoute> {
-
-    return SiteRouter(decoder: .init(), encoder: jsonEncoder)
-      .eraseToAnyParserPrinter()
+    return SiteRouter().eraseToAnyParserPrinter()
   }
 }
 
 // TODO: BaseURL needs to be more robust so that it can use `staging`, `production`, etc.
+#warning("Use userDefaults instead.")
 private enum BaseUrlKey: DependencyKey {
 
   private static let key = "BASE_URL"
@@ -169,12 +127,6 @@ extension DependencyValues {
     set { self[BaseUrlKey.self] = newValue }
   }
 }
-
-private let jsonEncoder: JSONEncoder = {
-  var encoder = JSONEncoder()
-  encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-  return encoder
-}()
 
 // MARK: - Internal Typealias
 typealias CoolingKey = ServerRoute.Documentation.Route.Interpolation.Cooling

@@ -13,7 +13,7 @@ import XCTest
 final class ValidationTests: XCTestCase {
   
   override func invokeTest() {
-    let projectData = try! JSONEncoder().encode(Template.Project.mock)
+    let projectData = try! JSONEncoder().encode(Project.mock)
     let fileClient = FileClient.mock(readData: projectData)
 
     let configClient = withDependencies {

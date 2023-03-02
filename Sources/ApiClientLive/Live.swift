@@ -26,10 +26,10 @@ extension ApiClient: DependencyKey {
     #if DEBUG
       let baseUrl = userDefaults.url(forKey: .apiBaseUrl) ?? defaultBaseUrl
     #else
-      let baseUrl = URL(string: "https://hvacmath.com")!
+      let baseUrl = userDefaults.url(forKey: .apiBaseUrl) ?? URL(string: "https://hvacmath.com")!
     #endif
 
-    let router = SiteRouter(decoder: jsonDecoder, encoder: jsonEncoder)
+    let router = SiteRouter()
 
     actor Session {
 
@@ -77,10 +77,6 @@ extension ApiClient: DependencyKey {
     )
   }
 }
-
-private let baseUrlKey = "com.hvacmath.swiftManualS.apiClient.baseUrl"
-private let jsonEncoder = JSONEncoder()
-private let jsonDecoder = JSONDecoder()
 
 #if DEBUG
   private let isDebug = true

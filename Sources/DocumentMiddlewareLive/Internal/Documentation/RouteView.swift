@@ -5,6 +5,7 @@ import LoggingDependency
 import Models
 import ValidationMiddleware
 
+#warning("use userDefaults for baseURL")
 struct RouteView {
   @Dependency(\.apiMiddleware) var apiMiddleware
   @Dependency(\.baseURL) var baseURL

@@ -1,9 +1,11 @@
-import XCTest
-import URLRouting
 import CustomDump
+import Dependencies
+import JsonDependency
 import Models
 import FirstPartyMocks
 import SiteRouter
+import URLRouting
+import XCTest
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
@@ -12,9 +14,24 @@ import SiteRouter
 // TODO: Add heating interpolation routes.
 final class RouterTests: XCTestCase {
   
-  let router = SiteRouterKey.testValue
+  override func invokeTest() {
+    let router = withDependencies {
+      $0.json = .liveValue
+    } operation: {
+      SiteRouter()
+    }
+    
+    withDependencies {
+      $0.json = .liveValue
+      $0.siteRouter = router.eraseToAnyParserPrinter()
+    } operation: {
+      super.invokeTest()
+    }
+  }
   
   func test_balance_point() throws {
+    @Dependency(\.siteRouter) var router
+    
     let json = """
     {
       "designTemperature": 5,
@@ -44,6 +61,7 @@ final class RouterTests: XCTestCase {
   }
   
   func test_requiredkw() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "capacityAtDesign": 0,
@@ -68,6 +86,7 @@ final class RouterTests: XCTestCase {
   }
   
   func test_derating() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "elevation": 0,
@@ -104,6 +123,7 @@ final class RouterTests: XCTestCase {
   }
   
   func test_sizingLimits() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "houseLoad": {
@@ -141,6 +161,7 @@ final class RouterTests: XCTestCase {
   }
   
   func test_noInterpolationRoute() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -219,6 +240,7 @@ final class RouterTests: XCTestCase {
   }
   
   func test_oneWayIndoor() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -325,6 +347,7 @@ final class RouterTests: XCTestCase {
     }
 
   func test_oneWayOutdoor() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -429,6 +452,7 @@ final class RouterTests: XCTestCase {
   }
 
   func test_twoWay() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -572,6 +596,7 @@ final class RouterTests: XCTestCase {
   }
 
   func test_boiler() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -630,6 +655,7 @@ final class RouterTests: XCTestCase {
   }
 
   func test_furnace() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -689,6 +715,8 @@ final class RouterTests: XCTestCase {
 
   func test_electric() throws {
 
+    @Dependency(\.siteRouter) var router
+    
     let json = """
     {
       "designInfo" : {
@@ -747,6 +775,7 @@ final class RouterTests: XCTestCase {
   }
 
   func test_heat_pump() throws {
+    @Dependency(\.siteRouter) var router
     let json = """
     {
       "designInfo" : {
@@ -810,6 +839,7 @@ final class RouterTests: XCTestCase {
   }
   
     func test_keyed_interpolation() throws {
+    @Dependency(\.siteRouter) var router
       let json = """
     {
       "designInfo" : {

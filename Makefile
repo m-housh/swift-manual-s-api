@@ -45,7 +45,7 @@ test-library:
 
 # Runs a server in docker, then test's the
 # live api client.
-test-client: remove-client-test-container
+test-client: remove-client-test-container build-docker-image
 	docker run \
 		--name "api-client-test" \
 		--detach \
@@ -95,8 +95,7 @@ push-docker-dev-image:
 	$(MAKE) DOCKER_TAG="dev" push-docker-image
 
 remove-client-test-container:
-	docker container kill $(shell docker container ls --all --quiet --filter name=^/api-client-test$) || true
-	docker container rm $(shell docker container ls --all --quiet --filter name=^/api-client-test$)	|| true
+	Bootstrap/kill-test-container.sh
 
 run-server:
 	LOG_LEVEL=$(LOG_LEVEL) swift run server
@@ -138,7 +137,9 @@ install: build
 
 install-completions:
 	install -d "$(COMPLETIONDIR)"
-	"$(BINDIR)/equipment-selection" --generate-completion-script zsh > "$(COMPLETIONDIR)/_equipment-selection"
+	"$(BINDIR)/equipment-selection" \
+		--generate-completion-script zsh \
+		> "$(COMPLETIONDIR)/_equipment-selection"
 
 uninstall:
 	rm "$(BINDIR)/equipment-selection" || true

@@ -35,19 +35,20 @@ var package = Package(
     .package(url: "https://github.com/pointfreeco/swift-tagged.git", from: "0.10.0"),
   ],
   targets: [
-    //    .target(
-    //      name: "AnvilClient",
-    //      dependencies: [
-    //        "Models",
-    //        .product(name: "Dependencies", package: "swift-dependencies"),
-    //        .product(name: "URLRouting", package: "swift-url-routing"),
-    //      ]
-    //    ),
-    .target(name: "ConcurrencyHelpers"),
+    .target(
+      name: "ConcurrencyHelpers",
+      dependencies: []
+    ),
     .target(
       name: "FirstPartyMocks",
       dependencies: [
         "Models"
+      ]
+    ),
+    .target(
+      name: "JsonDependency",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies")
       ]
     ),
     .target(
@@ -66,6 +67,7 @@ var package = Package(
     .target(
       name: "SiteRouter",
       dependencies: [
+        "JsonDependency",
         "Models",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "URLRouting", package: "swift-url-routing"),
@@ -139,6 +141,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .target(
       name: "ApiClient",
       dependencies: [
+        "ConcurrencyHelpers",
         "LoggingDependency",
         "Models",
         "XCTestDebugSupport",
@@ -151,11 +154,13 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "ApiClientLive",
       dependencies: [
         "ApiClient",
-        "ConcurrencyHelpers",
-        "Models",
         "SiteRouter",
         "UserDefaultsClient",
       ]
+    ),
+    .target(
+      name: "ApiClientTestSupport",
+      dependencies: []
     ),
     .testTarget(
       name: "ApiClientLiveTests",
@@ -239,6 +244,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .testTarget(
       name: "CliMiddlewareTests",
       dependencies: [
+        "ApiClientTestSupport",
         "SettingsClientLive",
         "CliMiddlewareLive",
         "TemplateClientLive",
@@ -269,12 +275,6 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
         .product(name: "Logging", package: "swift-log"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
-      ]
-    ),
-    .target(
-      name: "JsonDependency",
-      dependencies: [
-        .product(name: "Dependencies", package: "swift-dependencies")
       ]
     ),
     .target(

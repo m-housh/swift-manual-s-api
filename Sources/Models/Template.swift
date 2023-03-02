@@ -1,3 +1,4 @@
+#warning("Change keyed to systems")
 /// Represents common template values that are used in client applications.
 ///
 public enum Template {
@@ -112,90 +113,6 @@ public enum Template {
     }
   }
 
-  /// Represents values for a project template.
-  ///
-  public struct Project: Codable, Equatable, Sendable {
-
-    /// The default project information to use in templates.
-    public var projectInfo: ProjectInfo
-
-    /// The default design information to use in templates.
-    public var designInfo: DesignInfo
-
-    /// The default house load information to use in templates.
-    public var houseLoad: HouseLoad
-
-    /// The default system type to use in templates when applicable.
-    public var systemType: SystemType?
-
-    /// The default route to use in project templates.
-    public var route: ServerRoute.Api.Route.Interpolation.Route
-
-    /// Create a new ``Template/Project`` instance.
-    ///
-    /// - Parameters:
-    ///   - projectInfo: The default project information.
-    ///   - designInfo: The default design information.
-    ///   - houseLoad: The default house load.
-    ///   - systemType: The default system type information.
-    ///   - route: The default route to use in projects.
-    public init(
-      projectInfo: ProjectInfo,
-      designInfo: DesignInfo,
-      houseLoad: HouseLoad,
-      systemType: SystemType? = nil,
-      route: ServerRoute.Api.Route.Interpolation.Route
-    ) {
-      self.projectInfo = projectInfo
-      self.designInfo = designInfo
-      self.houseLoad = houseLoad
-      self.systemType = systemType
-      self.route = route
-    }
-
-    /// Represents the customer / project data.
-    ///
-    public struct ProjectInfo: Codable, Equatable, Sendable {
-
-      /// The customer's name.
-      public var name: String
-
-      /// The customer address.
-      public var address: String
-
-      /// The customer city.
-      public var city: String
-
-      /// The customer state.
-      public var state: String
-
-      /// The customer zip code.
-      public var zipCode: Int
-
-      /// Create a new ``Template/Project/ProjectInfo-swift.struct`` instance.
-      ///
-      /// - Parameters:
-      ///   - name: The customer name.
-      ///   - address: The customer address.
-      ///   - city: The customer city.
-      ///   - state: The customer state.
-      ///   - zipCode: The customer zip code.
-      public init(
-        name: String,
-        address: String,
-        city: String,
-        state: String,
-        zipCode: Int
-      ) {
-        self.name = name
-        self.address = address
-        self.city = city
-        self.state = state
-        self.zipCode = zipCode
-      }
-    }
-  }
-
   /// Represents key's used to access / set template path values in ``Template/Path``.
   ///
   ///
@@ -283,18 +200,5 @@ extension Template.Path {
   /// Return the value for the given ``Template/PathKey``.
   public func fileName(for pathKey: Template.PathKey) -> String {
     self[keyPath: pathKey.templateKeyPath]
-  }
-}
-
-extension Template.Project {
-
-  /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
-  public var interpolation: ServerRoute.Api.Route.Interpolation {
-    .init(
-      designInfo: self.designInfo,
-      houseLoad: self.houseLoad,
-      systemType: self.systemType,
-      route: self.route
-    )
   }
 }

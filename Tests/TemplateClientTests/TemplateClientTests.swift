@@ -91,7 +91,7 @@ final class TemplateClientTests: XCTestCase {
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .project:
-        typealias type = Template.Project
+        typealias type = Project
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertNoDifference(decoded, mock)
@@ -179,7 +179,7 @@ final class TemplateClientTests: XCTestCase {
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .project:
-        typealias type = Template.Project
+        typealias type = Project
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)

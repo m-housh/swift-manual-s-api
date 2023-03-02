@@ -2,7 +2,8 @@ import Dependencies
 import Foundation
 
 extension JSONEncoder: DependencyKey {
-  public static func cliEncoder(
+
+  public static func factory(
     _ formatting: JSONEncoder.OutputFormatting
   ) -> JSONEncoder {
     let encoder = JSONEncoder()
@@ -11,7 +12,7 @@ extension JSONEncoder: DependencyKey {
   }
 
   public static var cliEncoder: JSONEncoder {
-    self.cliEncoder([.prettyPrinted, .sortedKeys])
+    self.factory([.prettyPrinted, .sortedKeys])
   }
 
   public static let liveValue: JSONEncoder = .cliEncoder

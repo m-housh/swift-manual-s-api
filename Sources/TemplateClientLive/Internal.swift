@@ -38,7 +38,7 @@ extension Template.PathKey {
     case .oneWayOutdoor:
       return ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.outdoorMock
     case .project:
-      return Template.Project.mock
+      return Project.mock
     case .twoWay:
       return ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.mock
     }

@@ -2,6 +2,7 @@ import ArgumentParser
 import CliMiddleware
 import Dependencies
 import Foundation
+import JsonDependency
 import Models
 
 extension EquipmentSelection {
@@ -48,6 +49,7 @@ extension EquipmentSelection {
         try await interpolate(self.interpolationContext)
       }
       .run()
+
     }
 
     private var interpolationContext: CliMiddleware.InterpolationContext {
