@@ -12,7 +12,7 @@ extension EquipmentSelection {
     )
 
     @Flag(help: "The interpolation to run.")
-    var interpolation: Models.Template.PathKey = .keyed
+    var interpolation: Models.Template.PathKey = .project
 
     @Option(
       name: .shortAndLong,

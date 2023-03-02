@@ -1,9 +1,9 @@
 import CliMiddleware
-import ClientConfig
 import Dependencies
 import Foundation
 import JsonDependency
 import LoggingDependency
+import SettingsClient
 
 extension CliMiddleware.ConfigContext {
 
@@ -26,19 +26,19 @@ extension CliMiddleware.ConfigContext {
   fileprivate enum Run {
 
     static func generate() async throws {
-      @Dependency(\.configClient) var configClient
+      @Dependency(\.settingsClient) var configClient
       @Dependency(\.logger) var logger
 
-      let config = await configClient.config()
+      let config = await configClient.settings()
       try await configClient.generateConfig()
 
       logger.info(
-        "Wrote config to path: \(config.configPath.absoluteString)"
+        "Wrote config to path: \(config.configFileUrl.absoluteString)"
       )
     }
 
     static func set(string: String, forKey key: Key) async throws {
-      @Dependency(\.configClient) var configClient
+      @Dependency(\.settingsClient) var configClient
       @Dependency(\.logger) var logger
 
       switch key {
@@ -59,17 +59,17 @@ extension CliMiddleware.ConfigContext {
     }
 
     static func show() async throws {
-      @Dependency(\.configClient) var cliConfigClient
+      @Dependency(\.settingsClient) var cliConfigClient
       @Dependency(\.logger) var logger
       @Dependency(\.json.jsonEncoder) var jsonEncoder
 
-      let config = await cliConfigClient.config()
+      let config = await cliConfigClient.settings()
       let string = try String(data: jsonEncoder.encode(config), encoding: .utf8)!
       logger.info("\(string)")
     }
 
     static func unset(key: Key) async throws {
-      @Dependency(\.configClient) var configClient
+      @Dependency(\.settingsClient) var configClient
       @Dependency(\.logger) var logger
       switch key {
       case .anvilApiKey:

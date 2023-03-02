@@ -1,11 +1,11 @@
 import CliMiddleware
-import ClientConfig
 import Dependencies
 import FileClient
 import FirstPartyMocks
 import Foundation
 import JsonDependency
 import Models
+import SettingsClient
 import ValidationMiddleware
 
 #if canImport(FoundationNetworking)
@@ -22,7 +22,7 @@ extension CliMiddleware.ValidationContext {
 
 extension CliMiddleware.ValidationContext {
   fileprivate struct Run {
-    @Dependency(\.configClient) var configClient
+    @Dependency(\.settingsClient) var configClient
     @Dependency(\.fileClient) var fileClient
     @Dependency(\.json.jsonDecoder) var jsonDecoder
     @Dependency(\.logger) var logger
@@ -31,7 +31,7 @@ extension CliMiddleware.ValidationContext {
     let context: CliMiddleware.ValidationContext
 
     func run() async throws {
-      let config = await configClient.config()
+      let config = await configClient.settings()
       let url = config.templatePaths.parseUrl(
         url: context.inputFile,
         with: context.key

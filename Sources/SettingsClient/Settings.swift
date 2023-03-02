@@ -10,8 +10,15 @@ import Tagged
 
 /// Represents configuration / overrides for the command line tool.
 ///
-public struct ClientConfig: Codable, Equatable, Sendable {
+public struct Settings: Codable, Equatable, Sendable {
 
+  /// The string to use for configuration and templates folder inside the global configuration folder.
+  ///
+  public static let CONFIG_DIRECTORY_KEY = "equipment-selection"
+  
+  /// Represents the file name to search for inside the configuration directory.
+  fileprivate static let CONFIG_FILENAME_KEY = "config.json"
+  
   /// The API key for generating pdf's.
   ///
   /// This can also be set by an environment variable `ANVIL_API_KEY`.
@@ -81,16 +88,15 @@ public struct ClientConfig: Codable, Equatable, Sendable {
     self.templatePaths = templatePaths
   }
 
-  public var configPath: URL {
-    URL(fileURLWithPath: configDirectory)
-      .appendingPathComponent(ClientConfig.CONFIG_FILENAME_KEY)
+  public var configFileUrl: URL {
+    configDirectory
+      .fileUrl()
+      .appendingPathComponent(Settings.CONFIG_FILENAME_KEY)
   }
 
-  public static let CONFIG_DIRECTORY_KEY = "equipment-selection"
-  fileprivate static let CONFIG_FILENAME_KEY = "config.json"
 }
 
-extension ClientConfig {
+extension Settings {
   /// Represents the values that can be read from the process environment.
   ///
   public struct Environment: Codable, Equatable, Sendable {
@@ -120,18 +126,14 @@ extension ClientConfig {
   }
 }
 
-//public let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
-//private let defaultConfigHomeKey = ".config/equipment-selection"
-//private let configFileNameKey = "config.json"
-
-public let defaultConfigDirectory: String = {
+fileprivate let defaultConfigDirectory: String = {
   @Dependency(\.fileClient.configDirectory) var configDirectory
   return configDirectory()
-    .appendingPathComponent(ClientConfig.CONFIG_DIRECTORY_KEY)
+    .appendingPathComponent(Settings.CONFIG_DIRECTORY_KEY)
     .absoluteString
 }()
 
-extension ClientConfig {
+extension Settings {
 
   // TODO: Move to AnvilClient.
   public struct TemplateIds: Codable, Equatable, Sendable {

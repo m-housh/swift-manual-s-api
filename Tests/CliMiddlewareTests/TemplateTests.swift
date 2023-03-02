@@ -1,9 +1,9 @@
-import ClientConfigLive
 import CliMiddleware
 import Dependencies
 import FileClient
 import JsonDependency
 import LoggingDependency
+import SettingsClientLive
 import TemplateClientLive
 import XCTest
 
@@ -14,12 +14,12 @@ final class TemplateTests: XCTestCase {
       $0.userDefaults = .temporary
       $0.fileClient = .liveValue
     } operation: {
-      (ConfigClient.liveValue, TemplateClient.liveValue)
+      (SettingsClient.liveValue, TemplateClient.liveValue)
     }
     
     withDependencies {
       $0.cliMiddleware = .liveValue
-      $0.configClient = clientConfig
+      $0.settingsClient = clientConfig
       $0.fileClient = .liveValue
       $0.json = .liveValue
       $0.templateClient = templateClient

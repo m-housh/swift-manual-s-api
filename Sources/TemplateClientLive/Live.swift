@@ -1,4 +1,4 @@
-import ClientConfig
+import SettingsClient
 import ConcurrencyHelpers
 import Dependencies
 import FileClient
@@ -25,7 +25,7 @@ extension TemplateClient: DependencyKey {
 
     actor Session {
       @Dependency(\.logger) var logger
-      @Dependency(\.configClient) var configClient
+      @Dependency(\.settingsClient) var configClient
       @Dependency(\.fileClient) var fileClient
       @Dependency(\.json.jsonEncoder) var jsonEncoder
 
@@ -44,7 +44,7 @@ extension TemplateClient: DependencyKey {
       }
 
       func generateTemplates() async throws {
-        let config = await configClient.config()
+        let config = await configClient.settings()
         try await fileClient.createDirectory(at: templateDirectory.value)
         logger.debug("Generating templates at: \(templateDirectory.value.absoluteURL)")
         for key in Template.PathKey.allCases {
@@ -66,7 +66,7 @@ extension TemplateClient: DependencyKey {
       func routeTemplate(
         for key: Template.EmbeddableKey
       ) async throws -> ServerRoute.Api.Route.Interpolation.Route {
-        let config = await configClient.config()
+        let config = await configClient.settings()
         let keyPath = key.templateKeyPath
 
         let routeData = try await templateData(
@@ -95,7 +95,7 @@ extension TemplateClient: DependencyKey {
         inInterpolation: Bool
       ) async throws -> Data {
 
-        let config = await configClient.config()
+        let config = await configClient.settings()
 
         let routeData = try await templateData(
           jsonEncoder: jsonEncoder,
@@ -240,7 +240,7 @@ private func parseTemplateDirectory(
   // If no default directory, then default to config directory.
   guard let defaultTemplateDirectory else {
     return configDirectory()
-      .appendingPathComponent(ClientConfig.CONFIG_DIRECTORY_KEY)
+      .appendingPathComponent(Settings.CONFIG_DIRECTORY_KEY)
       .appendingPathComponent(TemplateClient.TEMPLATE_DIRECTORY_KEY)
   }
   return defaultTemplateDirectory

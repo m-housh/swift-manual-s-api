@@ -1,10 +1,10 @@
-import ClientConfigLive
 import CliMiddlewareLive
 import Dependencies
 import FileClient
 import FirstPartyMocks
 import JsonDependency
 import Models
+import SettingsClientLive
 import TemplateClientLive
 import UserDefaultsClient
 import ValidationMiddlewareLive
@@ -20,11 +20,11 @@ final class ValidationTests: XCTestCase {
       $0.fileClient = fileClient
       $0.userDefaults = .temporary
     } operation: {
-      ConfigClient.liveValue
+      SettingsClient.liveValue
     }
 
     withDependencies {
-      $0.configClient = configClient
+      $0.settingsClient = configClient
       $0.json = .liveValue
       $0.fileClient = fileClient
     } operation: {

@@ -71,7 +71,7 @@ extension CliMiddleware.TemplateContext {
   }
 
   fileprivate static func template(context: Template) async throws {
-    @Dependency(\.configClient) var configClient
+    @Dependency(\.settingsClient) var configClient
     @Dependency(\.fileClient) var fileClient
     @Dependency(\.json.jsonEncoder) var jsonEncoder
     @Dependency(\.logger) var logger
@@ -106,7 +106,7 @@ extension CliMiddleware.TemplateContext {
       }
     }
 
-    let config = await configClient.config()
+    let config = await configClient.settings()
 
     // Check if the caller wants a file to be written.
     if case let .write(to: outputPath) = context.outputContext {

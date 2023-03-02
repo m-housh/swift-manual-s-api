@@ -6,7 +6,7 @@ import Foundation
 extension EquipmentSelection {
   struct Config: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
-      abstract: "Configure defaults.",
+      abstract: "Configure settings / defaults.",
       subcommands: [
         GenerateConfigCommand.self,
         SetCommand.self,

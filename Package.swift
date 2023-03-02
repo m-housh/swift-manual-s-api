@@ -176,8 +176,8 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
   ])
   package.products.append(contentsOf: [
     .executable(name: "equipment-selection", targets: ["equipment-selection"]),
-    .library(name: "ClientConfig", targets: ["ClientConfig"]),
-    .library(name: "ClientConfigLive", targets: ["ClientConfigLive"]),
+    .library(name: "SettingsClient", targets: ["SettingsClient"]),
+    .library(name: "SettingsClientLive", targets: ["SettingsClientLive"]),
     .library(name: "CliMiddleware", targets: ["CliMiddleware"]),
     .library(name: "CliMiddlewareLive", targets: ["CliMiddlewareLive"]),
     .library(name: "FileClient", targets: ["FileClient"]),
@@ -187,7 +187,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
   ])
   package.targets.append(contentsOf: [
     .target(
-      name: "ClientConfig",
+      name: "SettingsClient",
       dependencies: [
         "Models",
         "FileClient",
@@ -197,19 +197,19 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       ]
     ),
     .target(
-      name: "ClientConfigLive",
+      name: "SettingsClientLive",
       dependencies: [
-        "ClientConfig",
+        "SettingsClient",
         "ConcurrencyHelpers",
         "FileClient",
         "UserDefaultsClient",
       ]
     ),
     .testTarget(
-      name: "ClientConfigTests",
+      name: "SettingsClientTests",
       dependencies: [
-        "ClientConfig",
-        "ClientConfigLive",
+        "SettingsClient",
+        "SettingsClientLive",
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
@@ -226,7 +226,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "CliMiddlewareLive",
       dependencies: [
         "ApiClient",
-        "ClientConfig",
+        "SettingsClient",
         "CliMiddleware",
         "FileClient",
         "FirstPartyMocks",
@@ -239,7 +239,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .testTarget(
       name: "CliMiddlewareTests",
       dependencies: [
-        "ClientConfigLive",
+        "SettingsClientLive",
         "CliMiddlewareLive",
         "TemplateClientLive",
         "ValidationMiddlewareLive",
@@ -249,7 +249,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "equipment-selection",
       dependencies: [
         "ApiClientLive",
-        "ClientConfigLive",
+        "SettingsClientLive",
         "CliMiddlewareLive",
         "ConcurrencyHelpers",
         "FirstPartyMocks",
@@ -290,7 +290,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .target(
       name: "TemplateClientLive",
       dependencies: [
-        "ClientConfig",
+        "SettingsClient",
         "FileClient",
         "FirstPartyMocks",
         "JsonDependency",
@@ -302,7 +302,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
     .testTarget(
       name: "TemplateClientTests",
       dependencies: [
-        "ClientConfigLive",
+        "SettingsClientLive",
         "TemplateClientLive",
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]

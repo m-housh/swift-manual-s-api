@@ -1,12 +1,12 @@
 import ApiClient
 import CliMiddleware
-import ClientConfig
 import Dependencies
 import FileClient
 import Foundation
 import JsonDependency
 import LoggingDependency
 import Models
+import SettingsClient
 
 extension CliMiddleware.InterpolationContext {
   @Sendable
@@ -18,7 +18,7 @@ extension CliMiddleware.InterpolationContext {
 extension CliMiddleware.InterpolationContext {
   fileprivate struct Run {
     @Dependency(\.apiClient) var apiClient
-    @Dependency(\.configClient) var configClient
+    @Dependency(\.settingsClient) var configClient
     @Dependency(\.fileClient) var fileClient
     @Dependency(\.logger) var logger: Logger
     @Dependency(\.json.jsonEncoder) var jsonEncoder
@@ -28,7 +28,7 @@ extension CliMiddleware.InterpolationContext {
 
     func run() async throws {
 
-      let config = await configClient.config()
+      let config = await configClient.settings()
       let path =
         context.inputFile
         ?? URL(fileURLWithPath: config.templatePaths.fileName(for: context.key))
@@ -93,6 +93,7 @@ extension CliMiddleware.InterpolationContext {
             from: data
           )
         } else {
+          // TODO: Need to also return the project here.
           logger.debug("Decoding as project.")
           let project = try jsonDecoder.decode(Template.Project.self, from: data)
           interpolation = .init(

@@ -67,7 +67,7 @@ public struct FileClient {
   /// - Parameters:
   ///   - path: The path to create the directory at.
   public func createDirectory(at path: String) async throws {
-    try await self.createDirectory(URL(fileURLWithPath: path))
+    try await self.createDirectory(path.fileUrl())
   }
 
   /// Read the contents of a file from the given url.
@@ -85,8 +85,7 @@ public struct FileClient {
   public func read(
     from path: String
   ) async throws -> Data {
-    let url = URL(fileURLWithPath: path)
-    return try await self.read(url)
+    try await self.read(path.fileUrl())
   }
 
   /// Write the data to a file at the given url.
@@ -108,8 +107,7 @@ public struct FileClient {
     data: Data,
     to path: String
   ) async throws {
-    let url = URL(fileURLWithPath: path)
-    try await self.write(data, url)
+    try await self.write(data, path.fileUrl())
   }
 
   public static let XDG_CONFIG_HOME_KEY = "XDG_CONFIG_HOME"
@@ -185,7 +183,7 @@ extension URL {
     guard let xdgHome = ProcessInfo.processInfo.environment[FileClient.XDG_CONFIG_HOME_KEY] else {
       return homeDirectory.appendingPathComponent(".config")
     }
-    return URL(fileURLWithPath: xdgHome)
+    return xdgHome.fileUrl()
   }
 }
 
@@ -195,5 +193,11 @@ extension DependencyValues {
   public var fileClient: FileClient {
     get { self[FileClient.self] }
     set { self[FileClient.self] = newValue }
+  }
+}
+
+extension String {
+  public func fileUrl() -> URL {
+    URL(fileURLWithPath: self)
   }
 }

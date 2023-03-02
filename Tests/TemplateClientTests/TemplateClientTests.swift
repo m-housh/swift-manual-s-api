@@ -1,5 +1,5 @@
 import XCTest
-import ClientConfigLive
+import SettingsClientLive
 import CustomDump
 import Dependencies
 import FileClient
@@ -21,14 +21,14 @@ final class TemplateClientTests: XCTestCase {
       $0.json.jsonEncoder = .cliEncoder
     } operation: {
       return (
-        ConfigClient.liveValue,
+        SettingsClient.liveValue,
         TemplateClient.liveValue
       )
     }
     
     withDependencies {
       $0.logger.logLevel = .debug
-      $0.configClient = configClient
+      $0.settingsClient = configClient
       $0.templateClient = templateClient
     } operation: {
       super.invokeTest()
@@ -106,7 +106,7 @@ final class TemplateClientTests: XCTestCase {
   
   func test_generating_templates() async throws {
     
-    @Dependency(\.configClient) var configClient
+    @Dependency(\.settingsClient) var configClient
     
     let tempDirectory = FileManager.default.temporaryDirectory
       .appendingPathComponent("generate-templates-test")
@@ -116,7 +116,7 @@ final class TemplateClientTests: XCTestCase {
     }
     
     let templateClient = withDependencies {
-      $0.configClient = configClient
+      $0.settingsClient = configClient
       $0.fileClient = .liveValue
       $0.logger.logLevel = .debug
       $0.userDefaults = .noop

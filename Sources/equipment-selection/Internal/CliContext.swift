@@ -1,11 +1,11 @@
 import ApiClientLive
 import ArgumentParser
 import CliMiddlewareLive
-import ClientConfigLive
 import Dependencies
 import Foundation
 import LoggingDependency
 import Models
+import SettingsClientLive
 import TemplateClientLive
 import ValidationMiddlewareLive
 
@@ -30,7 +30,7 @@ struct CliContext {
     self._run = run
   }
 
-  // These overrides, except for log leve, are unnecessary when built for release,
+  // These overrides, except for log level, are unnecessary when built for release,
   // however they're needed when invoking with `swift run equipment-selection ...`
   // which builds and runs in debug mode.
   func run() async throws {
@@ -39,7 +39,7 @@ struct CliContext {
       if globalOptions.verbose {
         $0.logger.logLevel = .debug
       }
-      $0.configClient = .liveValue
+      $0.settingsClient = .liveValue
       $0.templateClient = .liveValue
       $0.json = .liveValue
       $0.apiClient = .liveValue

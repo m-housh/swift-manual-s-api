@@ -7,19 +7,19 @@ import XCTestDynamicOverlay
   import FoundationNetworking
 #endif
 
-/// Represents the interactions with the ``CliConfig`` for configuring the command line tool.
+/// Represents the interactions with the ``Settings`` for configuring the command line tool.
 ///
 ///
-public struct ConfigClient {
+public struct SettingsClient {
 
   /// Return the current configuration being used.
-  public var config: () async -> ClientConfig
+  public var settings: () async -> Settings
 
   /// Generate the default configuration and write it at the url.
   public var generateConfig: (URL?) async throws -> Void
 
   /// Save / update the command line configuration.
-  public var save: (ClientConfig) async throws -> Void
+  public var save: (Settings) async throws -> Void
 
   public var setApiBaseUrl: (String?) async -> Void
   public var setAnvilApiKey: (String?) async -> Void
@@ -38,15 +38,15 @@ public struct ConfigClient {
   ///   - generateConfig: Generate the default configuration and write it to disk.
   ///   - save: Save the config to disk.
   public init(
-    config: @escaping () async -> ClientConfig,
+    settings: @escaping () async -> Settings,
     generateConfig: @escaping (URL?) async throws -> Void,
-    save: @escaping (ClientConfig) async throws -> Void,
+    save: @escaping (Settings) async throws -> Void,
     setApiBaseUrl: @escaping (String?) async -> Void,
     setAnvilApiKey: @escaping (String?) async -> Void,
     setConfigDirectory: @escaping (String?) async -> Void,
     setTemplateDirectoryPath: @escaping (String?) async -> Void
   ) {
-    self.config = config
+    self.settings = settings
     self.generateConfig = generateConfig
     self.save = save
     self.setApiBaseUrl = setApiBaseUrl
@@ -69,11 +69,11 @@ public struct ConfigClient {
 
 }
 
-extension ConfigClient: TestDependencyKey {
+extension SettingsClient: TestDependencyKey {
 
-  public static var noop: ConfigClient {
+  public static var noop: SettingsClient {
     .init(
-      config: { .init() },
+      settings: { .init() },
       generateConfig: { _ in try await Task.never() },
       save: { _ in try await Task.never() },
       setApiBaseUrl: { _ in },
@@ -83,8 +83,8 @@ extension ConfigClient: TestDependencyKey {
     )
   }
 
-  public static let testValue: ConfigClient = .init(
-    config: unimplemented("\(Self.self).config"),
+  public static let testValue: SettingsClient = .init(
+    settings: unimplemented("\(Self.self).config"),
     generateConfig: unimplemented("\(Self.self).generateConfig"),
     save: unimplemented("\(Self.self).save"),
     setApiBaseUrl: unimplemented("\(Self.self).setApiBaseUrl"),
@@ -95,8 +95,8 @@ extension ConfigClient: TestDependencyKey {
 }
 
 extension DependencyValues {
-  public var configClient: ConfigClient {
-    get { self[ConfigClient.self] }
-    set { self[ConfigClient.self] = newValue }
+  public var settingsClient: SettingsClient {
+    get { self[SettingsClient.self] }
+    set { self[SettingsClient.self] = newValue }
   }
 }
