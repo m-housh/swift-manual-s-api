@@ -213,13 +213,13 @@ final class TemplateClientTests: XCTestCase {
     )
     
     let decodedValue = try JSONDecoder().decode(
-      ServerRoute.Api.Route.Interpolation.self,
+      ServerRoute.Api.Route.Interpolation.SingleInterpolation.self,
       from: value
     )
     
     XCTAssertEqual(
       decodedValue,
-      ServerRoute.Api.Route.Interpolation(
+      ServerRoute.Api.Route.Interpolation.SingleInterpolation(
         designInfo: .mock,
         houseLoad: .mock,
         route: .heating(route: .furnace(.mock))

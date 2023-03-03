@@ -1,6 +1,19 @@
 import Models
 import Validations
 
+extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
+  
+  public func validate(_ value: _Interpolation) async throws {
+    switch value {
+    case let .single(single):
+      try await single.validate()
+    case let .project(project):
+      #warning("Fix when systems are removed from interpolation route.")
+      try await project.interpolation.validate()
+    }
+  }
+}
+
 extension ServerRoute.Api.Route.Interpolation.SingleInterpolation: AsyncValidatable {
 
   @inlinable

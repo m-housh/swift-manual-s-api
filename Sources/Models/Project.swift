@@ -104,7 +104,7 @@ public struct Project: Codable, Equatable, Sendable {
 extension Project {
 
   /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
-  public var interpolation: ServerRoute.Api.Route.Interpolation {
+  public var interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation {
     .init(
       designInfo: self.designInfo,
       houseLoad: self.houseLoad,

@@ -43,13 +43,26 @@ struct ApiRouter: ParserPrinter {
       Route(.case(ServerRoute.Api.Route.interpolate)) {
         Method.post
         Path { RouteKey.interpolate.key }
-        Body(
-          .json(
-            ServerRoute.Api.Route.Interpolation.self,
-            decoder: self.decoder,
-            encoder: self.encoder
-          )
-        )
+        OneOf {
+          Route(.case(ServerRoute.Api.Route.Interpolation.single)) {
+            Body(
+              .json(
+                ServerRoute.Api.Route.Interpolation.SingleInterpolation.self,
+                decoder: self.decoder,
+                encoder: self.encoder
+              )
+            )
+          }
+          Route(.case(ServerRoute.Api.Route.Interpolation.project)) {
+            Body(
+              .json(
+                Project.self,
+                decoder: self.decoder,
+                encoder: self.encoder
+              )
+            )
+          }
+        }
       }
 
       Route(.case(ServerRoute.Api.Route.requiredKW)) {

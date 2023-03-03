@@ -99,9 +99,10 @@ extension CliMiddleware.InterpolationContext {
           )
         } else {
           // TODO: Need to also return the project here.
+          #warning("Fix to use project")
           logger.debug("Decoding as project.")
           let project = try jsonDecoder.decode(Project.self, from: data)
-          interpolation = project.interpolation
+          interpolation = .single(project.interpolation)
         }
       } catch {
         logger.info("Invalid json.")
