@@ -216,12 +216,13 @@ final class TemplateClientTests: XCTestCase {
       ServerRoute.Api.Route.Interpolation.self,
       from: value
     )
-    
-    XCTAssertEqual(
+
+    XCTAssertNoDifference(
       decodedValue,
       ServerRoute.Api.Route.Interpolation(
         designInfo: .mock,
         houseLoad: .mock,
+        systemType: .default,
         route: .heating(route: .furnace(.mock))
       )
     )

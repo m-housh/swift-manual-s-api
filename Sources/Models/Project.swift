@@ -102,6 +102,29 @@ public struct Project: Codable, Equatable, Sendable {
 }
 
 extension Project {
+  
+  /// Returns the project as an array of single interpolation values.
+  public var interpolations: [ServerRoute.Api.Route.Interpolation.Single] {
+    systems.reduce(into: [ServerRoute.Api.Route.Interpolation.Single]()) { result, system in
+      result.append(.init(
+        designInfo: self.designInfo,
+        houseLoad: self.houseLoad,
+        systemType: system.systemType,
+        route: .cooling(route: system.cooling)
+      ))
+      
+      let heating = system.heating.reduce(into: [ServerRoute.Api.Route.Interpolation.Single]()) { result, heating in
+        result.append(.init(
+          designInfo: self.designInfo,
+          houseLoad: self.houseLoad,
+          systemType: system.systemType,
+          route: .heating(route: heating)
+        ))
+      }
+      
+      result += heating
+    }
+  }
 
   /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
   public var interpolation: ServerRoute.Api.Route.Interpolation.Single {

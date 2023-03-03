@@ -41,10 +41,10 @@ struct ApiRouter: ParserPrinter {
       }
 
       Route(.case(ServerRoute.Api.Route.interpolate)) {
-        Method.post
         Path { RouteKey.interpolate.key }
         OneOf {
           Route(.case(ServerRoute.Api.Route.Interpolation.single)) {
+            Method.post
             Body(
               .json(
                 ServerRoute.Api.Route.Interpolation.Single.self,
@@ -54,6 +54,7 @@ struct ApiRouter: ParserPrinter {
             )
           }
           Route(.case(ServerRoute.Api.Route.Interpolation.project)) {
+            Method.post
             Body(
               .json(
                 Project.self,

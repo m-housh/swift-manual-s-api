@@ -247,13 +247,11 @@ extension ServerRoute.Api.Route {
       )
     }
     
-    // TODO: - Need cooling and heating interpolations to hold onto optional systemType
-    //        if they are called stand-alone and not embedded in a keyed interpolation.
     public struct Single: Codable, Equatable, Sendable {
       
       public var designInfo: DesignInfo
       public var houseLoad: HouseLoad
-      public var systemType: SystemType?
+      public var systemType: SystemType
       public var route: Route
       
       public init(
@@ -264,7 +262,7 @@ extension ServerRoute.Api.Route {
       ) {
         self.designInfo = designInfo
         self.houseLoad = houseLoad
-        self.systemType = systemType
+        self.systemType = systemType ?? .default
         self.route = route
       }
       
@@ -492,7 +490,36 @@ extension ServerRoute {
   }
 }
 
-// MARK: Coding
+// MARK: - Tags
+public enum AboveTag {}
+public enum BelowTag {}
+public enum IndoorTag {}
+public enum OutdoorTag {}
+
+
+// MARK: - Coding
+extension ServerRoute.Api.Route.Interpolation {
+  // don't use an key's for encoding values.
+  public func encode(to encoder: Encoder) throws {
+    switch self {
+    case let .single(single):
+      try single.encode(to: encoder)
+    case let .project(project):
+      try project.encode(to: encoder)
+    }
+  }
+  
+  // don't use any key's for decoding values, defer to the embedded types.
+  public init(from decoder: Decoder) throws {
+    if let single = try? Single(from: decoder) {
+      self = .single(single)
+    } else if let project = try? Project(from: decoder) {
+      self = .project(project)
+    } else {
+      throw DecodingError()
+    }
+  }
+}
 
 extension ServerRoute.Api.Route.BalancePoint {
 
@@ -509,14 +536,6 @@ extension ServerRoute.Api.Route.BalancePoint {
   }
 }
 
-// MARK: - Tags
-public enum AboveTag {}
-public enum BelowTag {}
-public enum IndoorTag {}
-public enum OutdoorTag {}
-
-
-// MARK: - Coding
 extension ServerRoute.Api.Route.Interpolation.Single {
 
   // Encode in specific order.
@@ -524,6 +543,7 @@ extension ServerRoute.Api.Route.Interpolation.Single {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(houseLoad, forKey: .houseLoad)
     try container.encode(designInfo, forKey: .designInfo)
+    try container.encode(systemType, forKey: .systemType)
     try container.encode(route, forKey: .route)
   }
 }
