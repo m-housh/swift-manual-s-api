@@ -31,10 +31,7 @@ public enum Template {
 
     /// The file path in the templates folder to find project overrides.
     public var project: String
-
-    /// The file path in the templates folder to find systems interpolation overrides.
-    public var systems: String
-
+    
     /// The file path in the templates folder to find two-way interpolation overrides.
     public var twoWay: String
 
@@ -63,7 +60,6 @@ public enum Template {
       oneWayIndoor: String = "oneWayIndoor.json",
       oneWayOutdoor: String = "oneWayOutdoor.json",
       project: String = "project.json",
-      systems: String = "systems.json",
       twoWay: String = "twoWay.json"
     ) {
       self.baseInterpolation = baseInterpolation
@@ -75,7 +71,6 @@ public enum Template {
       self.oneWayIndoor = oneWayIndoor
       self.oneWayOutdoor = oneWayOutdoor
       self.project = project
-      self.systems = systems
       self.twoWay = twoWay
     }
   }
@@ -121,7 +116,6 @@ public enum Template {
     case electric
     case furnace
     case heatPump
-    case systems
     case noInterpolation
     case oneWayIndoor
     case oneWayOutdoor
@@ -158,8 +152,6 @@ extension Template.PathKey {
       return \Template.Path.furnace
     case .heatPump:
       return \Template.Path.heatPump
-    case .systems:
-      return \Template.Path.systems
     case .noInterpolation:
       return \Template.Path.noInterpolation
     case .oneWayIndoor:

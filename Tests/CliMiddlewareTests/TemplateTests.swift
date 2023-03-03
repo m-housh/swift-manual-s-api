@@ -37,7 +37,6 @@ final class TemplateTests: XCTestCase {
     defer { try? FileManager.default.removeItem(at: tmp) }
     
     try await cliMiddleware.config(.set(tmp.absoluteString, for: .templatesDirectory))
-    
     try await cliMiddleware.templates(.generate)
     try await cliMiddleware.templates(.remove(force: true))
   }
@@ -53,6 +52,7 @@ final class TemplateTests: XCTestCase {
     try await cliMiddleware.templates(.template(key: .project, outputContext: .copy))
     try await cliMiddleware.templates(.template(key: .project, outputContext: .echo))
     try await cliMiddleware.templates(.template(key: .boiler, embedIn: .interpolation, outputContext: .write(to: tmp)))
-    try await cliMiddleware.templates(.template(key: .furnace, embedIn: .route, outputContext: .write(to: tmp)))
+    try await cliMiddleware.templates(.template(key: .furnace, embedIn: .route, outputContext: .echo))
+    try await cliMiddleware.templates(.template(key: .noInterpolation, outputContext: .echo))
   }
 }

@@ -54,7 +54,6 @@ extension CliMiddleware.ValidationContext {
           .electric,
           .furnace,
           .heatPump,
-          .systems,
           .noInterpolation,
           .oneWayIndoor,
           .oneWayOutdoor,

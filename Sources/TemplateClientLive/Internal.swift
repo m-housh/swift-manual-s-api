@@ -29,8 +29,6 @@ extension Template.PathKey {
       return ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace.mock
     case .heatPump:
       return ServerRoute.Api.Route.Interpolation.Single.Route.Heating.HeatPump.mock
-    case .systems:
-      return [Project.System].mocks
     case .noInterpolation:
       return ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.NoInterpolation
         .mock

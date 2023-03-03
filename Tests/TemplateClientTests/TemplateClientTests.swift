@@ -70,11 +70,6 @@ final class TemplateClientTests: XCTestCase {
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
-      case .systems:
-        typealias type = Project.System
-        let decoded = try decoder.decode([type].self, from: data)
-        let mock = key.mock as! [type]
-        XCTAssertEqual(decoded, mock)
       case .noInterpolation:
         typealias type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.NoInterpolation
         let decoded = try decoder.decode(type.self, from: data)
@@ -157,11 +152,6 @@ final class TemplateClientTests: XCTestCase {
         typealias type = ServerRoute.Api.Route.Interpolation.Single.Route.Heating.HeatPump
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
-        XCTAssertEqual(decoded, mock)
-      case .systems:
-        typealias type = Project.System
-        let decoded = try decoder.decode([type].self, from: data)
-        let mock = key.mock as! [type]
         XCTAssertEqual(decoded, mock)
       case .noInterpolation:
         typealias type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.NoInterpolation
