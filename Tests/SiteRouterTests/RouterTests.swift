@@ -595,65 +595,64 @@ final class RouterTests: XCTestCase {
     )
   }
 
-  #warning("Fix me.")
-//  func test_boiler() throws {
-//    @Dependency(\.siteRouter) var router
-//    let json = """
-//    {
-//      "designInfo" : {
-//        "elevation" : 0,
-//        "summer" : {
-//          "indoorHumidity" : 50,
-//          "indoorTemperature" : 75,
-//          "outdoorTemperature" : 90
-//        },
-//        "winter" : {
-//          "outdoorTemperature" : 5
-//        }
-//      },
-//      "houseLoad": {
-//        "cooling": {
-//          "total": 17872,
-//          "sensible": 13894
-//        },
-//        "heating": 49667
-//      },
-//      "systemType": {
-//        "heatingOnly": "boiler"
-//      },
-//      "route": {
-//        "heating": {
-//          "boiler": {
-//            "input": 100000,
-//            "afue": 96.5
-//          }
-//        }
-//      }
-//    }
-//    """
-//    var request = URLRequest(url: URL(string: "/api/v1/interpolate")!)
-//    request.httpMethod = "POST"
-//    request.httpBody = Data(json.utf8)
-//
-//    let route = try router.match(request: request)
-//
-//    XCTAssertNoDifference(
-//      route,
-//      .api(.init(
-//        isDebug: false,
-//        route: .interpolate(.single(.init(
-//          designInfo: .init(),
-//          houseLoad: .mock,
-//          systemType: .heatingOnly(.boiler),
-//          route: .heating(
-//            route: .boiler(.init(
-//              input: 100_000,
-//              afue: 96.5
-//            )))))
-//        ))
-//      )
-//    )
-//  }
+  func test_boiler() throws {
+    @Dependency(\.siteRouter) var router
+    let json = """
+    {
+      "designInfo" : {
+        "elevation" : 0,
+        "summer" : {
+          "indoorHumidity" : 50,
+          "indoorTemperature" : 75,
+          "outdoorTemperature" : 90
+        },
+        "winter" : {
+          "outdoorTemperature" : 5
+        }
+      },
+      "houseLoad": {
+        "cooling": {
+          "total": 17872,
+          "sensible": 13894
+        },
+        "heating": 49667
+      },
+      "systemType": {
+        "heatingOnly": "boiler"
+      },
+      "route": {
+        "heating": {
+          "boiler": {
+            "input": 100000,
+            "afue": 96.5
+          }
+        }
+      }
+    }
+    """
+    var request = URLRequest(url: URL(string: "/api/v1/interpolate")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+
+    let route = try router.match(request: request)
+
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.single(.init(
+          designInfo: .init(),
+          houseLoad: .mock,
+          systemType: .heatingOnly(.boiler),
+          route: .heating(
+            route: .boiler(.init(
+              input: 100_000,
+              afue: 96.5
+            )))))
+        ))
+      )
+    )
+  }
 
   func test_furnace() throws {
     @Dependency(\.siteRouter) var router
@@ -838,230 +837,235 @@ final class RouterTests: XCTestCase {
       ))
     )
   }
-  #warning("Fix for projects.")
-//  func test_systems_interpolation() throws {
-//    @Dependency(\.siteRouter) var router
-//    let json = """
-//    {
-//      "designInfo" : {
-//        "elevation" : 0,
-//        "summer" : {
-//          "indoorHumidity" : 50,
-//          "indoorTemperature" : 75,
-//          "outdoorTemperature" : 90
-//        },
-//        "winter" : {
-//          "outdoorTemperature" : 5
-//        }
-//      },
-//      "houseLoad" : {
-//        "cooling" : {
-//          "sensible" : 13894,
-//          "total" : 17872
-//        },
-//        "heating" : 49667
-//      },
-//      "route" : {
-//        "systems" : [
-//          {
-//            "cooling" : {
-//              "noInterpolation" : {
-//                "capacity" : {
-//                  "capacity" : {
-//                    "sensible" : 16600,
-//                    "total" : 22000
-//                  },
-//                  "cfm" : 800,
-//                  "indoorTemperature" : 75,
-//                  "indoorWetBulb" : 63,
-//                  "outdoorTemperature" : 90
-//                },
-//                "manufacturerAdjustments" : {
-//                  "airToAir" : {
-//                    "heating" : 1,
-//                    "sensible" : 1,
-//                    "total" : 1
-//                  }
-//                }
-//              }
-//            },
-//            "heating" : [
-//              {
-//                "furnace" : {
-//                  "afue" : 96.5,
-//                  "input" : 60000
-//                }
-//              }
-//            ],
-//            "name" : "bronze",
-//            "systemId": "bronze-id",
-//          "systemType" : {
-//            "airToAir" : {
-//              "climate" : "mildWinterOrLatentLoad",
-//              "compressor" : "singleSpeed",
-//              "type" : "airConditioner"
-//            }
-//          }
-//          },
-//          {
-//            "cooling" : {
-//              "oneWayIndoor" : {
-//                "aboveDesign" : {
-//                  "capacity" : {
-//                    "sensible" : 15937,
-//                    "total" : 24828
-//                  },
-//                  "cfm" : 800,
-//                  "indoorTemperature" : 75,
-//                  "indoorWetBulb" : 67,
-//                  "outdoorTemperature" : 95
-//                },
-//                "belowDesign" : {
-//                  "capacity" : {
-//                    "sensible" : 19078,
-//                    "total" : 23046
-//                  },
-//                  "cfm" : 800,
-//                  "indoorTemperature" : 75,
-//                  "indoorWetBulb" : 62,
-//                  "outdoorTemperature" : 95
-//                },
-//                "manufacturerAdjustments" : {
-//                  "airToAir" : {
-//                    "heating" : 1,
-//                    "sensible" : 0.94999999999999996,
-//                    "total" : 0.97999999999999998
-//                  }
-//                }
-//              }
-//            },
-//            "heating" : [
-//              {
-//                "heatPump" : {
-//                  "capacity" : {
-//                    "at17" : 15100,
-//                    "at47" : 24600
-//                  }
-//                }
-//              },
-//              {
-//                "furnace" : {
-//                  "afue" : 96.5,
-//                  "input" : 60000
-//                }
-//              }
-//            ],
-//            "name" : "silver",
-//            "systemId": "silver-id",
-//          "systemType" : {
-//            "airToAir" : {
-//              "climate" : "mildWinterOrLatentLoad",
-//              "compressor" : "variableSpeed",
-//              "type" : "heatPump"
-//            }
-//          }
-//          },
-//          {
-//            "cooling" : {
-//              "twoWay" : {
-//                "aboveDesign" : {
-//                  "aboveWetBulb" : {
-//                    "capacity" : {
-//                      "sensible" : 15937,
-//                      "total" : 24828
-//                    },
-//                    "cfm" : 800,
-//                    "indoorTemperature" : 75,
-//                    "indoorWetBulb" : 67,
-//                    "outdoorTemperature" : 95
-//                  },
-//                  "belowWetBulb" : {
-//                    "capacity" : {
-//                      "sensible" : 19078,
-//                      "total" : 23046
-//                    },
-//                    "cfm" : 800,
-//                    "indoorTemperature" : 75,
-//                    "indoorWetBulb" : 62,
-//                    "outdoorTemperature" : 95
-//                  }
-//                },
-//                "belowDesign" : {
-//                  "aboveWetBulb" : {
-//                    "capacity" : {
-//                      "sensible" : 16330,
-//                      "total" : 25986
-//                    },
-//                    "cfm" : 800,
-//                    "indoorTemperature" : 75,
-//                    "indoorWetBulb" : 67,
-//                    "outdoorTemperature" : 85
-//                  },
-//                  "belowWetBulb" : {
-//                    "capacity" : {
-//                      "sensible" : 19605,
-//                      "total" : 24029
-//                    },
-//                    "cfm" : 800,
-//                    "indoorTemperature" : 75,
-//                    "indoorWetBulb" : 62,
-//                    "outdoorTemperature" : 85
-//                  }
-//                },
-//                "manufacturerAdjustments" : {
-//                  "airToAir" : {
-//                    "heating" : 1,
-//                    "sensible" : 1,
-//                    "total" : 1
-//                  }
-//                }
-//              }
-//            },
-//            "heating" : [
-//              {
-//                "heatPump" : {
-//                  "capacity" : {
-//                    "at17" : 15100,
-//                    "at47" : 24600
-//                  }
-//                }
-//              },
-//              {
-//                "furnace" : {
-//                  "afue" : 96.5,
-//                  "input" : 60000
-//                }
-//              }
-//            ],
-//            "name" : "gold",
-//            "systemId": "gold-id",
-//          "systemType" : {
-//            "airToAir" : {
-//              "climate" : "mildWinterOrLatentLoad",
-//              "compressor" : "variableSpeed",
-//              "type" : "heatPump"
-//            }
-//          }
-//          }
-//        ]
-//      }
-//    }
-//    """
-//    var request = URLRequest(url: URL(string: "http://localhost:8080/api/v1/interpolate")!)
-//    request.httpMethod = "POST"
-//    request.httpBody = Data(json.utf8)
-//
-//    let route = try router.match(request: request)
-//
-//    XCTAssertNoDifference(
-//      route,
-//      .api(.init(
-//        isDebug: false,
-//        route: .interpolate(.mock(route: .systems(.mocks)))
-//      ))
-//    )
-//
-//  }
+  
+  func test_systems_interpolation() throws {
+    @Dependency(\.siteRouter) var router
+    let json = """
+    {
+      "designInfo" : {
+        "elevation" : 0,
+        "summer" : {
+          "indoorHumidity" : 50,
+          "indoorTemperature" : 75,
+          "outdoorTemperature" : 90
+        },
+        "winter" : {
+          "outdoorTemperature" : 5
+        }
+      },
+      "houseLoad" : {
+        "cooling" : {
+          "sensible" : 13894,
+          "total" : 17872
+        },
+        "heating" : 49667
+      },
+      "projectInfo" : {
+        "address" : "1234 Sesame Street",
+        "city" : "Monroe",
+        "name" : "Blob Esquire",
+        "state" : "OH",
+        "zipCode" : 45050
+      },
+      "systems" : [
+        {
+          "cooling" : {
+            "noInterpolation" : {
+              "capacity" : {
+                "capacity" : {
+                  "sensible" : 16600,
+                  "total" : 22000
+                },
+                "cfm" : 800,
+                "indoorTemperature" : 75,
+                "indoorWetBulb" : 63,
+                "outdoorTemperature" : 90
+              },
+              "manufacturerAdjustments" : {
+                "airToAir" : {
+                  "heating" : 1,
+                  "sensible" : 1,
+                  "total" : 1
+                }
+              }
+            }
+          },
+          "heating" : [
+            {
+              "furnace" : {
+                "afue" : 96.5,
+                "input" : 60000
+              }
+            }
+          ],
+          "name" : "bronze",
+          "systemId" : "bronze-id",
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "singleSpeed",
+              "type" : "airConditioner"
+            }
+          }
+        },
+        {
+          "cooling" : {
+            "oneWayIndoor" : {
+              "aboveDesign" : {
+                "capacity" : {
+                  "sensible" : 15937,
+                  "total" : 24828
+                },
+                "cfm" : 800,
+                "indoorTemperature" : 75,
+                "indoorWetBulb" : 67,
+                "outdoorTemperature" : 95
+              },
+              "belowDesign" : {
+                "capacity" : {
+                  "sensible" : 19078,
+                  "total" : 23046
+                },
+                "cfm" : 800,
+                "indoorTemperature" : 75,
+                "indoorWetBulb" : 62,
+                "outdoorTemperature" : 95
+              },
+              "manufacturerAdjustments" : {
+                "airToAir" : {
+                  "heating" : 1,
+                  "sensible" : 0.94999999999999996,
+                  "total" : 0.97999999999999998
+                }
+              }
+            }
+          },
+          "heating" : [
+            {
+              "heatPump" : {
+                "capacity" : {
+                  "at17" : 15100,
+                  "at47" : 24600
+                }
+              }
+            },
+            {
+              "furnace" : {
+                "afue" : 96.5,
+                "input" : 60000
+              }
+            }
+          ],
+          "name" : "silver",
+          "systemId" : "silver-id",
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
+          }
+        },
+        {
+          "cooling" : {
+            "twoWay" : {
+              "aboveDesign" : {
+                "aboveWetBulb" : {
+                  "capacity" : {
+                    "sensible" : 15937,
+                    "total" : 24828
+                  },
+                  "cfm" : 800,
+                  "indoorTemperature" : 75,
+                  "indoorWetBulb" : 67,
+                  "outdoorTemperature" : 95
+                },
+                "belowWetBulb" : {
+                  "capacity" : {
+                    "sensible" : 19078,
+                    "total" : 23046
+                  },
+                  "cfm" : 800,
+                  "indoorTemperature" : 75,
+                  "indoorWetBulb" : 62,
+                  "outdoorTemperature" : 95
+                }
+              },
+              "belowDesign" : {
+                "aboveWetBulb" : {
+                  "capacity" : {
+                    "sensible" : 16330,
+                    "total" : 25986
+                  },
+                  "cfm" : 800,
+                  "indoorTemperature" : 75,
+                  "indoorWetBulb" : 67,
+                  "outdoorTemperature" : 85
+                },
+                "belowWetBulb" : {
+                  "capacity" : {
+                    "sensible" : 19605,
+                    "total" : 24029
+                  },
+                  "cfm" : 800,
+                  "indoorTemperature" : 75,
+                  "indoorWetBulb" : 62,
+                  "outdoorTemperature" : 85
+                }
+              },
+              "manufacturerAdjustments" : {
+                "airToAir" : {
+                  "heating" : 1,
+                  "sensible" : 1,
+                  "total" : 1
+                }
+              }
+            }
+          },
+          "heating" : [
+            {
+              "heatPump" : {
+                "capacity" : {
+                  "at17" : 15100,
+                  "at47" : 24600
+                }
+              }
+            },
+            {
+              "furnace" : {
+                "afue" : 96.5,
+                "input" : 60000
+              }
+            }
+          ],
+          "name" : "gold",
+          "systemId" : "gold-id",
+          "systemType" : {
+            "airToAir" : {
+              "climate" : "mildWinterOrLatentLoad",
+              "compressor" : "variableSpeed",
+              "type" : "heatPump"
+            }
+          }
+        }
+      ]
+    }
+    """
+    var request = URLRequest(url: URL(string: "http://localhost:8080/api/v1/interpolate")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+
+    let route = try router.match(request: request)
+
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.project(.mock))
+      ))
+    )
+
+  }
   
 }
 
