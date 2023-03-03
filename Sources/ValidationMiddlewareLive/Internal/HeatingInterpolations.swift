@@ -5,7 +5,7 @@ import Validations
 struct HeatingValidation<I: AsyncValidatable>: AsyncValidatable {
 
   @usableFromInline
-  let request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+  let request: ServerRoute.Api.Route.Interpolation.Single
 
   @usableFromInline
   let interpolation: I
@@ -15,7 +15,7 @@ struct HeatingValidation<I: AsyncValidatable>: AsyncValidatable {
 
   @usableFromInline
   init(
-    request: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
+    request: ServerRoute.Api.Route.Interpolation.Single,
     interpolation: I,
     errorLabel: String
   ) {
@@ -37,7 +37,7 @@ struct HeatingValidation<I: AsyncValidatable>: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler:
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Boiler:
   AsyncValidatable
 {
 
@@ -62,7 +62,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace:
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace:
   AsyncValidatable
 {
 
@@ -87,7 +87,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric:
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Electric:
   AsyncValidatable
 {
 
@@ -112,7 +112,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.HeatPump:
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.HeatPump:
   AsyncValidatable
 {
 

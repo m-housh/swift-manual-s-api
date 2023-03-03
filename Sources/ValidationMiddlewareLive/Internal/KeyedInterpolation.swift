@@ -6,7 +6,7 @@ import Validations
 extension Project.System {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
 
     try await AsyncValidator.accumulating {
       AnyAsyncValidator {
@@ -23,7 +23,7 @@ extension Project.System {
 extension Array where Element == Project.System {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
     for system in self {
       try await system.validate(request: request)
     }
@@ -31,10 +31,10 @@ extension Array where Element == Project.System {
 }
 
 extension Array
-where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
+where Element == ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
     for heating in self {
       try await heating.validate(request: request)
     }

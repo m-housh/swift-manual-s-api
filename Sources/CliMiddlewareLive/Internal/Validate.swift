@@ -74,27 +74,27 @@ extension CliMiddleware.ValidationContext {
     func decodeEmbeddableKey(
       key: Models.Template.EmbeddableKey,
       from data: Data
-    ) throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation {
+    ) throws -> ServerRoute.Api.Route.Interpolation.Single {
       do {
-        let route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route
+        let route: ServerRoute.Api.Route.Interpolation.Single.Route
         switch key {
         case .boiler:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Boiler
             .self
           let boiler = try jsonDecoder.decode(type, from: data)
           route = .heating(route: .boiler(boiler))
         case .electric:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Electric
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .heating(route: .electric(model))
         case .furnace:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .heating(route: .furnace(model))
         case .heatPump:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.HeatPump
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Heating.HeatPump
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .heating(route: .heatPump(model))
@@ -103,22 +103,22 @@ extension CliMiddleware.ValidationContext {
           let model = try jsonDecoder.decode(type, from: data)
           route = .systems(model)
         case .noInterpolation:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling
             .NoInterpolation.self
           let model = try jsonDecoder.decode(type, from: data)
           route = .cooling(route: .noInterpolation(model))
         case .oneWayIndoor:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .cooling(route: .oneWayIndoor(.init(model)))
         case .oneWayOutdoor:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .cooling(route: .oneWayOutdoor(.init(model)))
         case .twoWay:
-          let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay
+          let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.TwoWay
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .cooling(route: .twoWay(model))
@@ -135,7 +135,7 @@ extension CliMiddleware.ValidationContext {
       }
     }
 
-    func validate(interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation)
+    func validate(interpolation: ServerRoute.Api.Route.Interpolation.Single)
       async throws
     {
       do {

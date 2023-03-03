@@ -33,7 +33,7 @@ func withLiveSiteHandler(
 
 extension ServerRoute.Api.Route.Interpolation {
   
-  static func mock(route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route) -> Self {
+  static func mock(route: ServerRoute.Api.Route.Interpolation.Single.Route) -> Self {
     .init(
       designInfo: .mock,
       houseLoad: .mock,

@@ -65,7 +65,7 @@ extension HouseLoad.CoolingLoad {
 
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.NoInterpolation {
   public static let zero = Self.init(
     capacity: .zero,
     manufacturerAdjustments: nil
@@ -77,7 +77,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay {
 
   public static let zero = Self.init(
     aboveDesign: .zero,
@@ -120,7 +120,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.
 
 extension Tagged
 where
-  RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay,
+  RawValue == ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay,
   Tag == IndoorTag
 {
   public static var mock: Self { .init(.indoorMock) }
@@ -128,18 +128,18 @@ where
 
 extension Tagged
 where
-  RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay,
+  RawValue == ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay,
   Tag == OutdoorTag
 {
   public static var mock: Self { .init(.outdoorMock) }
 }
 
 extension Tagged
-where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
+where RawValue == ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay {
   public static var zero: Self { .init(.zero) }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.TwoWay {
   public static let zero = Self.init(
     aboveDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero),
     belowDesign: .init(aboveWetBulb: .zero, belowWetBulb: .zero)
@@ -182,7 +182,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Boiler {
 
   public static let zero = Self.init(
     input: 0,
@@ -195,7 +195,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace {
 
   public static let zero = Self.init(
     input: 0,
@@ -208,7 +208,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Electric {
 
   public static let zero = Self.init(
     heatPumpCapacity: nil,
@@ -221,7 +221,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.
   )
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.HeatPump {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.HeatPump {
 
   public static let zero = Self.init(
     capacity: .zero
@@ -284,7 +284,7 @@ extension SystemType {
 
 extension ServerRoute.Api.Route.Interpolation {
 
-  public static func mock(route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route)
+  public static func mock(route: ServerRoute.Api.Route.Interpolation.Single.Route)
     -> Self
   {
     .init(designInfo: .mock, houseLoad: .mock, route: route)

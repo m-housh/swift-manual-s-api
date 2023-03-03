@@ -1,7 +1,7 @@
 import Models
 
 extension Project.System {
-  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws
+  func respond(request: ServerRoute.Api.Route.Interpolation.Single) async throws
     -> InterpolationResponse.Result.System
   {
     async let coolingResponse = cooling.respond(request: request)
@@ -12,7 +12,7 @@ extension Project.System {
 }
 
 extension Array where Element == Project.System {
-  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws
+  func respond(request: ServerRoute.Api.Route.Interpolation.Single) async throws
     -> InterpolationResponse
   {
     var responses: [InterpolationResponse.Result.System] = []
@@ -25,8 +25,8 @@ extension Array where Element == Project.System {
 }
 
 extension Array
-where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
-  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws
+where Element == ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
+  func respond(request: ServerRoute.Api.Route.Interpolation.Single) async throws
     -> [InterpolationResponse]
   {
     var responses: [InterpolationResponse] = []

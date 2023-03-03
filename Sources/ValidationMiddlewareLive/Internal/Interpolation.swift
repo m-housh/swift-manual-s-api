@@ -3,7 +3,7 @@ import Validations
 
 extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
   
-  public func validate(_ value: _Interpolation) async throws {
+  public func validate(_ value: Self) async throws {
     switch value {
     case let .single(single):
       try await single.validate()
@@ -14,10 +14,10 @@ extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.Single: AsyncValidatable {
 
   @inlinable
-  public func validate(_ value: ServerRoute.Api.Route.Interpolation.SingleInterpolation)
+  public func validate(_ value: ServerRoute.Api.Route.Interpolation.Single)
     async throws
   {
     switch value.route {
@@ -35,14 +35,14 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation: AsyncValidata
 struct SystemEnvelope: AsyncValidatable {
 
   @usableFromInline
-  let interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+  let interpolation: ServerRoute.Api.Route.Interpolation.Single
 
   @usableFromInline
   let systems: [Project.System]
 
   @usableFromInline
   init(
-    interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
+    interpolation: ServerRoute.Api.Route.Interpolation.Single,
     systems: [Project.System]
   ) {
     self.interpolation = interpolation
@@ -63,10 +63,10 @@ struct SystemEnvelope: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Cooling {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
     switch self {
     case let .noInterpolation(noInterpolation):
       try await NoInterpolationValidator(request: request, noInterpolation: noInterpolation)
@@ -82,13 +82,13 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling 
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
     switch self {
     case let .boiler(boiler):
       try await HeatingValidation<
-        ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler
+        ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Boiler
       >(
         request: request, interpolation: boiler, errorLabel: "Boiler Request Errors"
       ).validate()

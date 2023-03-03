@@ -65,7 +65,7 @@ extension TemplateClient: DependencyKey {
 
       func routeTemplate(
         for key: Template.EmbeddableKey
-      ) async throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route {
+      ) async throws -> ServerRoute.Api.Route.Interpolation.Single.Route {
         let config = await configClient.settings()
         let keyPath = key.templateKeyPath
 

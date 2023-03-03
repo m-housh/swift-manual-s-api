@@ -47,7 +47,7 @@ struct ApiRouter: ParserPrinter {
           Route(.case(ServerRoute.Api.Route.Interpolation.single)) {
             Body(
               .json(
-                ServerRoute.Api.Route.Interpolation.SingleInterpolation.self,
+                ServerRoute.Api.Route.Interpolation.Single.self,
                 decoder: self.decoder,
                 encoder: self.encoder
               )

@@ -82,15 +82,15 @@ public struct Project: Codable, Equatable, Sendable {
     public var name: String
     public var systemId: String
     public var systemType: SystemType
-    public var cooling: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling
-    public var heating: [ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating]
+    public var cooling: ServerRoute.Api.Route.Interpolation.Single.Route.Cooling
+    public var heating: [ServerRoute.Api.Route.Interpolation.Single.Route.Heating]
 
     public init(
       name: String,
       systemId: String = "systemId",
       systemType: SystemType = .default,
-      cooling: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling,
-      heating: [ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating] = []
+      cooling: ServerRoute.Api.Route.Interpolation.Single.Route.Cooling,
+      heating: [ServerRoute.Api.Route.Interpolation.Single.Route.Heating] = []
     ) {
       self.name = name
       self.systemType = systemType
@@ -104,7 +104,7 @@ public struct Project: Codable, Equatable, Sendable {
 extension Project {
 
   /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
-  public var interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation {
+  public var interpolation: ServerRoute.Api.Route.Interpolation.Single {
     .init(
       designInfo: self.designInfo,
       houseLoad: self.houseLoad,

@@ -22,7 +22,7 @@ public struct TemplateClient {
 
   /// Return a template embedded in an interpolation route.
   public var routeTemplate:
-    (Template.EmbeddableKey) async throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation
+    (Template.EmbeddableKey) async throws -> ServerRoute.Api.Route.Interpolation.Single
       .Route
 
   /// Update the template directory where we search for templates.
@@ -53,7 +53,7 @@ public struct TemplateClient {
     generateTemplates: @escaping () async throws -> Void,
     removeTemplateDirectory: @escaping () async throws -> Void,
     routeTemplate: @escaping (Template.EmbeddableKey) async throws -> ServerRoute.Api.Route
-      .Interpolation.SingleInterpolation.Route,
+      .Interpolation.Single.Route,
     setTemplateDirectory: @escaping (URL) async -> Void,
     template: @escaping (KeyPath<Template.Path, String>, Bool) async throws -> Data,
     templateDirectory: @escaping () -> URL
@@ -75,7 +75,7 @@ public struct TemplateClient {
 
   public func routeTemplate(
     for key: Template.EmbeddableKey
-  ) async throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route {
+  ) async throws -> ServerRoute.Api.Route.Interpolation.Single.Route {
     try await self.routeTemplate(key)
   }
 }

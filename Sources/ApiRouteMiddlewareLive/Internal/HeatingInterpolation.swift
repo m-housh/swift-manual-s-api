@@ -1,10 +1,10 @@
 import Foundation
 import Models
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
 
   func respond(
-    request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+    request: ServerRoute.Api.Route.Interpolation.Single
   ) async throws -> InterpolationResponse {
     let result: InterpolationResponse.Result.Heating.Result
     switch self {
@@ -34,10 +34,10 @@ extension InterpolationResponse {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
 
   fileprivate func interpolate(
-    furnace: Furnace, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+    furnace: Furnace, request: ServerRoute.Api.Route.Interpolation.Single
   )
     async throws
     -> InterpolationResponse.Result.Heating.Result
@@ -67,7 +67,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating 
   }
 
   fileprivate func interpolate(
-    electric: Electric, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+    electric: Electric, request: ServerRoute.Api.Route.Interpolation.Single
   )
     async throws
     -> InterpolationResponse.Result.Heating.Result
@@ -91,7 +91,7 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating 
 
   // TODO: FIX DERATINGS.
   fileprivate func interpolate(
-    heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+    heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation.Single
   )
     async throws
     -> InterpolationResponse.Result.Heating.Result
@@ -151,9 +151,9 @@ extension HeatPumpCapacity {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler {
+extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Boiler {
   fileprivate var furnaceRequest:
-    ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace
+    ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace
   {
     .init(
       input: self.input,
