@@ -324,7 +324,8 @@ package.products.append(contentsOf: [
   .library(name: "DocumentMiddleware", targets: ["DocumentMiddleware"]),
   .library(name: "DocumentMiddlewareLive", targets: ["DocumentMiddlewareLive"]),
   .executable(name: "server", targets: ["server"]),
-  .library(name: "ServerConfig", targets: ["ServerConfig"]),
+  .library(name: "ServerBootstrap", targets: ["ServerBootstrap"]),
+  .library(name: "ServerEnvironment", targets: ["ServerEnvironment"]),
   .library(name: "SiteMiddleware", targets: ["SiteMiddleware"]),
   .library(name: "SiteMiddlewareLive", targets: ["SiteMiddlewareLive"]),
   .library(name: "Stylesheet", targets: ["Stylesheet"]),
@@ -370,6 +371,7 @@ package.targets.append(contentsOf: [
       "FirstPartyMocks",
       "LoggingDependency",
       "Models",
+      "ServerEnvironment",
       "SiteRouter",
       "Stylesheet",
       "ValidationMiddlewareLive",
@@ -377,15 +379,16 @@ package.targets.append(contentsOf: [
   ),
   .executableTarget(
     name: "server",
-    dependencies: ["ServerConfig"]
+    dependencies: ["ServerBootstrap"]
   ),
   .target(
-    name: "ServerConfig",
+    name: "ServerBootstrap",
     dependencies: [
       "ApiRouteMiddlewareLive",
       "DocumentMiddlewareLive",
       "LoggingDependency",
       "Models",
+      "ServerEnvironment",
       "SiteMiddlewareLive",
       "SiteRouter",
       "ValidationMiddlewareLive",
@@ -398,6 +401,12 @@ package.targets.append(contentsOf: [
       // the `.unsafeFlags` construct required by SwiftPM, this flag is recommended for Release
       // builds. See <https://github.com/swift-server/guides/blob/main/docs/building.md#building-for-production> for details.
       .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
+    ]
+  ),
+  .target(
+    name: "ServerEnvironment",
+    dependencies: [
+      .product(name: "Dependencies", package: "swift-dependencies"),
     ]
   ),
   .target(

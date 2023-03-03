@@ -99,32 +99,11 @@ public enum SiteRouterKey: DependencyKey {
   }
 }
 
-// TODO: BaseURL needs to be more robust so that it can use `staging`, `production`, etc.
-#warning("Use userDefaults instead.")
-private enum BaseUrlKey: DependencyKey {
-
-  private static let key = "BASE_URL"
-
-  static var testValue: String {
-    "http://localhost:8080"
-  }
-
-  static var liveValue: String {
-    ProcessInfo.processInfo.environment[key]
-      ?? "http://localhost:8080"
-  }
-}
-
 extension DependencyValues {
 
   public var siteRouter: AnyParserPrinter<URLRequestData, ServerRoute> {
     get { self[SiteRouterKey.self].eraseToAnyParserPrinter() }
     set { self[SiteRouterKey.self] = .init(newValue) }
-  }
-
-  public var baseURL: String {
-    get { self[BaseUrlKey.self] }
-    set { self[BaseUrlKey.self] = newValue }
   }
 }
 

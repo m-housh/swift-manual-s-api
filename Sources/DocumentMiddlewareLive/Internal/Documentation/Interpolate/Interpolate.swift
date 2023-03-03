@@ -16,6 +16,7 @@ func renderInterpolateRoute(_ route: ServerRoute.Documentation.Route.Interpolati
   }
 }
 
+#warning("Add project routes.")
 struct InterpolateHome: Renderable {
 
   @Dependency(\.siteRouter) var siteRouter

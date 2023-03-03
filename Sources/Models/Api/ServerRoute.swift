@@ -218,9 +218,10 @@ extension ServerRoute {
         }
       }
 
+      #warning("Create enum for single interpolation vs. project.")
       /// Represents the different interpolation requests that can be performed.
       ///
-      public typealias Interpolation = Models.Interpolation
+      public typealias Interpolation = Models._Interpolation
     }
   }
 }
@@ -322,6 +323,31 @@ public enum BelowTag {}
 public enum IndoorTag {}
 public enum OutdoorTag {}
 
+public enum _Interpolation: Codable, Equatable, Sendable {
+  // remove system type from being optional on single types.
+  case single(Interpolation)
+  case project(Project)
+  
+  // Create a single instance, convenience.
+  public init(
+    designInfo: DesignInfo,
+    houseLoad: HouseLoad,
+    systemType: SystemType? = nil,
+    route: Interpolation.Route
+  ) {
+    self = .single(
+      .init(
+        designInfo: designInfo,
+        houseLoad: houseLoad,
+        systemType: systemType,
+        route: route
+      )
+    )
+  }
+  
+  // FIX.
+  public typealias SingleInterpolation = Models.Interpolation
+}
 // TODO: - Need cooling and heating interpolations to hold onto optional systemType
 //        if they are called stand-alone and not embedded in a keyed interpolation.
 public struct Interpolation: Codable, Equatable, Sendable {
@@ -346,7 +372,8 @@ public struct Interpolation: Codable, Equatable, Sendable {
   public enum Route: Codable, Equatable, Sendable {
     case cooling(route: Cooling)
     case heating(route: Heating)
-    case keyed([Keyed])
+    // remove.
+    case systems([Project.System])
 
     /// Represents the cooling interpolations that can be performed.
     public enum Cooling: Codable, Equatable, Sendable {
@@ -488,29 +515,6 @@ public struct Interpolation: Codable, Equatable, Sendable {
         }
       }
     }
-
-    #warning("Rename / use inside a project context instead.")
-    public struct Keyed: Codable, Equatable, Sendable {
-      public var name: String
-      public var systemId: String
-      public var systemType: SystemType
-      public var cooling: Cooling
-      public var heating: [Heating]
-
-      public init(
-        name: String,
-        systemId: String = "systemId",
-        systemType: SystemType = .default,
-        cooling: Cooling,
-        heating: [Heating] = []
-      ) {
-        self.name = name
-        self.systemType = systemType
-        self.systemId = systemId
-        self.cooling = cooling
-        self.heating = heating
-      }
-    }
   }
 }
 
@@ -530,7 +534,7 @@ extension Interpolation.Route {
   private enum CodingKeys: CodingKey {
     case cooling
     case heating
-    case keyed
+    case systems
   }
 
   public func encode(to encoder: Encoder) throws {
@@ -540,8 +544,8 @@ extension Interpolation.Route {
       try container.encode(cooling, forKey: .cooling)
     case let .heating(heating):
       try container.encode(heating, forKey: .heating)
-    case let .keyed(keyed):
-      try container.encode(keyed, forKey: .keyed)
+    case let .systems(systems):
+      try container.encode(systems, forKey: .systems)
     }
   }
 
@@ -552,8 +556,8 @@ extension Interpolation.Route {
       self = .cooling(route: cooling)
     } else if let heating = try? container.decode(Heating.self, forKey: .heating) {
       self = .heating(route: heating)
-    } else if let keyed = try? container.decode([Keyed].self, forKey: .keyed) {
-      self = .keyed(keyed)
+    } else if let systems = try? container.decode([Project.System].self, forKey: .systems) {
+      self = .systems(systems)
     } else {
       throw DecodingError()
     }
@@ -642,7 +646,7 @@ extension Interpolation.Route.Heating {
 }
 
 // MARK: - Tagged Extensions
-extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay {
+extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
   public init(
     aboveDesign: ManufactuerCoolingCapacity,
     belowDesign: ManufactuerCoolingCapacity,
@@ -659,7 +663,7 @@ extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.Route.Coo
 }
 
 extension Tagged
-where RawValue == ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.CapacityEnvelope {
+where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay.CapacityEnvelope {
   public init(
     aboveWetBulb: ManufactuerCoolingCapacity,
     belowWetBulb: ManufactuerCoolingCapacity

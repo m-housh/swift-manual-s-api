@@ -13,7 +13,7 @@ final class CoolingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.cooling(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.cooling(
         route: .noInterpolation(.init(
           capacity: .init(
             cfm: 800,
@@ -54,7 +54,7 @@ final class CoolingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.Interpolation.Route.cooling(
+      let route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.cooling(
         route: .oneWayOutdoor(.init(.init(
           aboveDesign: .init(
             cfm: 800,
@@ -97,7 +97,7 @@ final class CoolingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.cooling(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.cooling(
         route: .oneWayIndoor(.init(.init(
           aboveDesign: .init(
             cfm: 800,
@@ -143,7 +143,7 @@ final class CoolingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.cooling(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.cooling(
         route: .twoWay(.init(
           aboveDesign: .init(.init(
             aboveWetBulb: .init(

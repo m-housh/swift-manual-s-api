@@ -1,11 +1,12 @@
 import Models
 import Validations
 
+#warning("Need a project validation.")
 // TODO: Need to validate houseLoad, designInfo, seperate of the cooling validations.
-extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
+extension Project.System {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
 
     try await AsyncValidator.accumulating {
       AnyAsyncValidator {
@@ -19,20 +20,20 @@ extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
   }
 }
 
-extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Keyed {
+extension Array where Element == Project.System {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
-    for keyed in self {
-      try await keyed.validate(request: request)
+  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+    for system in self {
+      try await system.validate(request: request)
     }
   }
 }
 
-extension Array where Element == ServerRoute.Api.Route.Interpolation.Route.Heating {
+extension Array where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
 
   @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation) async throws {
+  func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
     for heating in self {
       try await heating.validate(request: request)
     }

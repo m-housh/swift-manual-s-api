@@ -82,15 +82,15 @@ public struct Project: Codable, Equatable, Sendable {
     public var name: String
     public var systemId: String
     public var systemType: SystemType
-    public var cooling: ServerRoute.Api.Route.Interpolation.Route.Cooling
-    public var heating: [ServerRoute.Api.Route.Interpolation.Route.Heating]
+    public var cooling: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling
+    public var heating: [ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating]
 
     public init(
       name: String,
       systemId: String = "systemId",
       systemType: SystemType = .default,
-      cooling: ServerRoute.Api.Route.Interpolation.Route.Cooling,
-      heating: [ServerRoute.Api.Route.Interpolation.Route.Heating] = []
+      cooling: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling,
+      heating: [ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating] = []
     ) {
       self.name = name
       self.systemType = systemType
@@ -101,18 +101,6 @@ public struct Project: Codable, Equatable, Sendable {
   }
 }
 
-#warning("Remove these and handle a project as an interpolation type.")
-extension Project.System {
-  public var keyedInterpolation: ServerRoute.Api.Route.Interpolation.Route.Keyed {
-    .init(
-      name: self.name,
-      systemId: self.systemId,
-      systemType: self.systemType,
-      cooling: self.cooling,
-      heating: self.heating
-    )
-  }
-}
 extension Project {
 
   /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
@@ -120,19 +108,7 @@ extension Project {
     .init(
       designInfo: self.designInfo,
       houseLoad: self.houseLoad,
-      route: .keyed(systems.map(\.keyedInterpolation))
-    )
-  }
-}
-
-extension ServerRoute.Api.Route.Interpolation.Route.Keyed {
-  public var system: Project.System {
-    .init(
-      name: self.name,
-      systemId: self.systemId,
-      systemType: self.systemType,
-      cooling: self.cooling,
-      heating: self.heating
+      route: .systems(self.systems)
     )
   }
 }

@@ -24,7 +24,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
   public enum Result: Codable, Equatable, Sendable {
     case cooling(Cooling)
     case heating(Heating)
-    case keyed([Keyed])
+    case systems([System])
 
     public struct Cooling: Codable, Equatable, Sendable {
       public let result: Result
@@ -154,7 +154,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
       }
     }
 
-    public struct Keyed: Codable, Equatable, Sendable {
+    public struct System: Codable, Equatable, Sendable {
       public let key: String
       public let systemId: String
       public let cooling: InterpolationResponse
@@ -181,7 +181,7 @@ extension InterpolationResponse.Result {
   private enum CodingKeys: CodingKey {
     case cooling
     case heating
-    case keyed
+    case systems
   }
 
   public func encode(to encoder: Encoder) throws {
@@ -191,8 +191,8 @@ extension InterpolationResponse.Result {
       try container.encode(cooling.result, forKey: .cooling)
     case let .heating(heating):
       try container.encode(heating.result, forKey: .heating)
-    case let .keyed(keyed):
-      try container.encode(keyed, forKey: .keyed)
+    case let .systems(systems):
+      try container.encode(systems, forKey: .systems)
     }
   }
 
@@ -208,10 +208,10 @@ extension InterpolationResponse.Result {
     {
       self = .heating(.init(result: heating))
       return
-    } else if let keyed = try? container.decode(
-      [InterpolationResponse.Result.Keyed].self, forKey: .keyed)
+    } else if let systems = try? container.decode(
+      [InterpolationResponse.Result.System].self, forKey: .systems)
     {
-      self = .keyed(keyed)
+      self = .systems(systems)
       return
     }
     struct DecodingError: Error {}

@@ -5,15 +5,15 @@ import Validations
 struct NoInterpolationValidator: AsyncValidatable {
 
   @usableFromInline
-  let request: ServerRoute.Api.Route.Interpolation
+  let request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
 
   @usableFromInline
-  let noInterpolation: ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation
+  let noInterpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
 
   @usableFromInline
   init(
-    request: ServerRoute.Api.Route.Interpolation,
-    noInterpolation: ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation
+    request: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
+    noInterpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
   ) {
     self.request = request
     self.noInterpolation = noInterpolation

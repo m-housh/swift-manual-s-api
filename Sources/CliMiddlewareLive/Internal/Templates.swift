@@ -93,7 +93,7 @@ extension CliMiddleware.TemplateContext {
       }
 
       // Don't include the route name for certain templates that are generally embedded inside
-      // a keyed interpolation.  This allows for using the templated value inside of a vim
+      // a systems interpolation.  This allows for using the templated value inside of a vim
       // buffer more easily.
       let route = try await templateClient.routeTemplate(for: embeddableKey)
       switch route {
@@ -101,7 +101,7 @@ extension CliMiddleware.TemplateContext {
         templateData = try jsonEncoder.encode(cooling)
       case .heating(route: let heating):
         templateData = try jsonEncoder.encode(heating)
-      case .keyed(_):
+      case .systems(_):
         templateData = try jsonEncoder.encode(route)
       }
     }

@@ -37,7 +37,7 @@ extension EquipmentSelection.Template {
     )
 
     @Flag(help: "The template to generate.")
-    var templateKey: Template.PathKey = .keyed
+    var templateKey: Template.PathKey = .systems
 
     @Flag(
       inversion: .prefixedNo,

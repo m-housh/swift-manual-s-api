@@ -16,17 +16,17 @@ final class KeyedInterpolationTests: XCTestCase {
     }
   }
   
-  func test_keyed_interpolation() async throws {
+  func test_systems_interpolation() async throws {
     @Dependency(\.apiMiddleware) var client
     
-    let mock = [Array<ServerRoute.Api.Route.Interpolation.Route.Keyed>.mocks.first!]
-    let route = ServerRoute.Api.Route.interpolate(.mock(route: .keyed(mock)))
+    let mock = [Array<Project.System>.mocks.first!]
+    let route = ServerRoute.Api.Route.interpolate(.mock(route: .systems(mock)))
     let serverRoute = ServerRoute.Api(isDebug: false, route: route)
     let sut = try await client.respond(serverRoute).value as? InterpolationResponse
     XCTAssertNotNil(sut)
     XCTAssertNoDifference(
       sut,
-      .init(result: .keyed([
+      .init(result: .systems([
         .init(
           key: "bronze",
           systemId: "bronze-id",

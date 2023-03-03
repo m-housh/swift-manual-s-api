@@ -1,4 +1,3 @@
-#warning("Change keyed to systems")
 /// Represents common template values that are used in client applications.
 ///
 public enum Template {
@@ -21,9 +20,6 @@ public enum Template {
     /// The file path in the templates folder to find heat-pump interpolation overrides.
     public var heatPump: String
 
-    /// The file path in the templates folder to find keyed interpolation overrides.
-    public var keyed: String
-
     /// The file path in the templates folder to find no-interpolation interpolation overrides.
     public var noInterpolation: String
 
@@ -35,6 +31,9 @@ public enum Template {
 
     /// The file path in the templates folder to find project overrides.
     public var project: String
+    
+    /// The file path in the templates folder to find systems interpolation overrides.
+    public var systems: String
 
     /// The file path in the templates folder to find two-way interpolation overrides.
     public var twoWay: String
@@ -47,11 +46,11 @@ public enum Template {
     ///   - electric: The path to find electric overrides.
     ///   - furnace: The path to find furnace overrides.
     ///   - heatPump: The path  to find heat pump overrides.
-    ///   - keyed: The path to find keyed overrides.
     ///   - noInterpolation: The path to find the no-interpolation overrides.
     ///   - oneWayIndoor: The path to find the one way indoor overrides.
     ///   - oneWayOutdoor: The path to find the one way outdoor overrides.
     ///   - project: The path to find project overrides.
+    ///   - systems: The path to find systems overrides.
     ///   - twoWay: The path to find the two way overrides.
     @inlinable
     public init(
@@ -60,11 +59,11 @@ public enum Template {
       electric: String = "electric.json",
       furnace: String = "furnace.json",
       heatPump: String = "heatPump.json",
-      keyed: String = "keyed.json",
       noInterpolation: String = "noInterpolation.json",
       oneWayIndoor: String = "oneWayIndoor.json",
       oneWayOutdoor: String = "oneWayOutdoor.json",
       project: String = "project.json",
+      systems: String = "systems.json",
       twoWay: String = "twoWay.json"
     ) {
       self.baseInterpolation = baseInterpolation
@@ -72,11 +71,11 @@ public enum Template {
       self.electric = electric
       self.furnace = furnace
       self.heatPump = heatPump
-      self.keyed = keyed
       self.noInterpolation = noInterpolation
       self.oneWayIndoor = oneWayIndoor
       self.oneWayOutdoor = oneWayOutdoor
       self.project = project
+      self.systems = systems
       self.twoWay = twoWay
     }
   }
@@ -122,7 +121,7 @@ public enum Template {
     case electric
     case furnace
     case heatPump
-    case keyed
+    case systems
     case noInterpolation
     case oneWayIndoor
     case oneWayOutdoor
@@ -137,7 +136,7 @@ public enum Template {
     case electric
     case furnace
     case heatPump
-    case keyed
+    case systems
     case noInterpolation
     case oneWayIndoor
     case oneWayOutdoor
@@ -160,8 +159,8 @@ extension Template.PathKey {
       return \Template.Path.furnace
     case .heatPump:
       return \Template.Path.heatPump
-    case .keyed:
-      return \Template.Path.keyed
+    case .systems:
+      return \Template.Path.systems
     case .noInterpolation:
       return \Template.Path.noInterpolation
     case .oneWayIndoor:

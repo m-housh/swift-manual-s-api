@@ -5,7 +5,7 @@ import Validations
 struct HeatingValidation<I: AsyncValidatable>: AsyncValidatable {
 
   @usableFromInline
-  let request: ServerRoute.Api.Route.Interpolation
+  let request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
 
   @usableFromInline
   let interpolation: I
@@ -15,7 +15,7 @@ struct HeatingValidation<I: AsyncValidatable>: AsyncValidatable {
 
   @usableFromInline
   init(
-    request: ServerRoute.Api.Route.Interpolation,
+    request: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
     interpolation: I,
     errorLabel: String
   ) {
@@ -37,7 +37,7 @@ struct HeatingValidation<I: AsyncValidatable>: AsyncValidatable {
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -60,7 +60,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler: AsyncValidat
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -83,7 +83,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace: AsyncValida
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Route.Heating.Electric: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {
@@ -106,7 +106,7 @@ extension ServerRoute.Api.Route.Interpolation.Route.Heating.Electric: AsyncValid
   }
 }
 
-extension ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump: AsyncValidatable {
+extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.HeatPump: AsyncValidatable {
 
   @inlinable
   public var body: some AsyncValidation<Self> {

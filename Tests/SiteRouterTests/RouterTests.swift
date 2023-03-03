@@ -838,9 +838,9 @@ final class RouterTests: XCTestCase {
     )
   }
   
-    func test_keyed_interpolation() throws {
+  func test_systems_interpolation() throws {
     @Dependency(\.siteRouter) var router
-      let json = """
+    let json = """
     {
       "designInfo" : {
         "elevation" : 0,
@@ -861,7 +861,7 @@ final class RouterTests: XCTestCase {
         "heating" : 49667
       },
       "route" : {
-        "keyed" : [
+        "systems" : [
           {
             "cooling" : {
               "noInterpolation" : {
@@ -1046,20 +1046,20 @@ final class RouterTests: XCTestCase {
       }
     }
     """
-      var request = URLRequest(url: URL(string: "http://localhost:8080/api/v1/interpolate")!)
-      request.httpMethod = "POST"
-      request.httpBody = Data(json.utf8)
-      
-      let route = try router.match(request: request)
-      
-      XCTAssertNoDifference(
-        route,
-        .api(.init(
-          isDebug: false,
-          route: .interpolate(.mock(route: .keyed(.mocks)))
-        ))
-      )
-      
+    var request = URLRequest(url: URL(string: "http://localhost:8080/api/v1/interpolate")!)
+    request.httpMethod = "POST"
+    request.httpBody = Data(json.utf8)
+    
+    let route = try router.match(request: request)
+    
+    XCTAssertNoDifference(
+      route,
+      .api(.init(
+        isDebug: false,
+        route: .interpolate(.mock(route: .systems(.mocks)))
+      ))
+    )
+    
   }
   
 }

@@ -51,42 +51,42 @@ final class TemplateClientTests: XCTestCase {
         let decoded = try decoder.decode(Template.BaseInterpolation.self, from: data)
         XCTAssertEqual(decoded, key.mock as! Template.BaseInterpolation)
       case .boiler:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .electric:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.Electric
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .furnace:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .heatPump:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.HeatPump
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
-      case .keyed:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Keyed
+      case .systems:
+        typealias type = Project.System
         let decoded = try decoder.decode([type].self, from: data)
         let mock = key.mock as! [type]
         XCTAssertEqual(decoded, mock)
       case .noInterpolation:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .oneWayIndoor:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .oneWayOutdoor:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
@@ -96,7 +96,7 @@ final class TemplateClientTests: XCTestCase {
         let mock = key.mock as! type
         XCTAssertNoDifference(decoded, mock)
       case .twoWay:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
@@ -139,42 +139,42 @@ final class TemplateClientTests: XCTestCase {
         let decoded = try decoder.decode(Template.BaseInterpolation.self, from: data)
         XCTAssertEqual(decoded, key.mock as! Template.BaseInterpolation)
       case .boiler:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .electric:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.Electric
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .furnace:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .heatPump:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Heating.HeatPump
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.HeatPump
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
-      case .keyed:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Keyed
+      case .systems:
+        typealias type = Project.System
         let decoded = try decoder.decode([type].self, from: data)
         let mock = key.mock as! [type]
         XCTAssertEqual(decoded, mock)
       case .noInterpolation:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .oneWayIndoor:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .oneWayOutdoor:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
@@ -184,7 +184,7 @@ final class TemplateClientTests: XCTestCase {
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
       case .twoWay:
-        typealias type = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay
+        typealias type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay
         let decoded = try decoder.decode(type.self, from: data)
         let mock = key.mock as! type
         XCTAssertEqual(decoded, mock)
@@ -241,8 +241,8 @@ final class TemplateClientTests: XCTestCase {
         XCTAssertEqual(value, .heating(route: .furnace(.mock)))
       case .heatPump:
         XCTAssertEqual(value, .heating(route: .heatPump(.mock)))
-      case .keyed:
-        XCTAssertEqual(value, .keyed(.mocks))
+      case .systems:
+        XCTAssertEqual(value, .systems(.mocks))
       case .noInterpolation:
         XCTAssertEqual(value, .cooling(route: .noInterpolation(.mock)))
       case .oneWayIndoor:

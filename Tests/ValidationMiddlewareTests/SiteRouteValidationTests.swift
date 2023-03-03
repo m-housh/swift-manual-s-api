@@ -11,7 +11,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_twoWay_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var twoWay = ServerRoute.Api.Route.Interpolation.Route.Cooling.TwoWay.zero
+      var twoWay = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay.zero
       twoWay.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
@@ -70,7 +70,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_oneWay_indoor_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var route = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.zero
+      var route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay.zero
       
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
@@ -158,7 +158,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_oneWay_outdoor_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var route = ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay.zero
+      var route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay.zero
       route.manufacturerAdjustments = .airToAir(total: 0, sensible: 0, heating: 0)
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
@@ -208,7 +208,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_noInterpolation_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var route = ServerRoute.Api.Route.Interpolation.Route.Cooling.NoInterpolation.zero
+      var route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation.zero
       let request = ServerRoute.Api.Route.Interpolation(
         designInfo: .zero,
         houseLoad: .zero,
@@ -331,7 +331,7 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_electric_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      var route = ServerRoute.Api.Route.Interpolation.Route.Heating.Electric.zero
+      var route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Electric.zero
       route.heatPumpCapacity = 0
       let request = ServerRoute.Api.Route.Interpolation.zero(route: .heating(route: .electric(route)))
       let expected1 = """
@@ -448,15 +448,20 @@ final class SiteRouteValidationTests: XCTestCase {
     }
   }
   
-  func test_keyed_validations() async throws {
+  func test_system_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
       let request = ServerRoute.Api.Route.Interpolation.init(
         designInfo: .zero,
         houseLoad: .zero,
-        route: .keyed([.zeros.first!])
+        route: .systems([.zeros.first!])
       )
       let expected = """
+      House Load:
+      houseLoad.total: Total cooling load should be greater than 0.
+      houseLoad.sensible: Sensible cooling load should be greater than 0.
+      
+      Systems:
       No Interpolation Request Errors:
       Capacity:
       capacity.cfm: Cfm should be greater than 0.
@@ -473,6 +478,7 @@ final class SiteRouteValidationTests: XCTestCase {
       houseLoad.heating: Heating load should be greater than 0.
       afue: Afue should be greater than 0 or less than 100.
       input: Input should be greater than 0.
+      
       
       
       """
@@ -492,7 +498,7 @@ final class SiteRouteValidationTests: XCTestCase {
 
 extension ServerRoute.Api.Route.Interpolation {
   
-  static func zero(route: ServerRoute.Api.Route.Interpolation.Route) -> Self {
+  static func zero(route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route) -> Self {
     .init(
       designInfo: .zero,
       houseLoad: .zero,

@@ -3,12 +3,12 @@ import Dependencies
 import Html
 import LoggingDependency
 import Models
+import ServerEnvironment
 import ValidationMiddleware
 
-#warning("use userDefaults for baseURL")
 struct RouteView {
   @Dependency(\.apiMiddleware) var apiMiddleware
-  @Dependency(\.baseURL) var baseURL
+  @Dependency(\.serverEnvironment.baseUrl) var baseURL
   @Dependency(\.logger) var logger
   @Dependency(\.siteRouter) var siteRouter
   @Dependency(\.validationMiddleware) var validationMiddleware

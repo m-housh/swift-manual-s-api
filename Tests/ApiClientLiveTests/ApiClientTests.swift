@@ -101,10 +101,10 @@ class ApiClientLiveTests: XCTestCase {
     XCTAssertFalse(response.isFailed)
   }
 
-  func test_interpolate_keyed() async throws {
+  func test_interpolate_systems() async throws {
     @Dependency(\.apiClient) var client
     let response = try await client.interpolate(
-      .mock(route: .keyed(.mocks))
+      .mock(route: .systems(.mocks))
     )
     XCTAssertFalse(response.isFailed)
   }

@@ -5,15 +5,15 @@ import Validations
 struct OneWayIndoorValidation: AsyncValidatable {
 
   @usableFromInline
-  let request: ServerRoute.Api.Route.Interpolation
+  let request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
 
   @usableFromInline
-  let oneWayIndoor: ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+  let oneWayIndoor: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
 
   @usableFromInline
   init(
-    request: ServerRoute.Api.Route.Interpolation,
-    oneWayIndoor: ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+    request: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
+    oneWayIndoor: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
   ) {
     self.request = request
     self.oneWayIndoor = oneWayIndoor
@@ -98,15 +98,15 @@ struct OneWayIndoorValidation: AsyncValidatable {
 struct OneWayOutdoorValidation: AsyncValidatable {
 
   @usableFromInline
-  let request: ServerRoute.Api.Route.Interpolation
+  let request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
 
   @usableFromInline
-  let oneWayOutdoor: ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+  let oneWayOutdoor: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
 
   @usableFromInline
   init(
-    request: ServerRoute.Api.Route.Interpolation,
-    oneWayOutdoor: ServerRoute.Api.Route.Interpolation.Route.Cooling.OneWay
+    request: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
+    oneWayOutdoor: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
   ) {
     self.request = request
     self.oneWayOutdoor = oneWayOutdoor

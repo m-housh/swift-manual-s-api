@@ -4,6 +4,7 @@ import DocumentMiddlewareLive
 import Logging
 import LoggingDependency
 import Models
+import ServerEnvironment
 import SiteMiddlewareLive
 import SiteRouter
 import ValidationMiddlewareLive
@@ -14,42 +15,46 @@ import VaporRouting
 ///
 /// - Parameters:
 ///    - app: The vapor application to configure.
-public func configure(_ app: Vapor.Application) async throws {
+public func bootstrap(_ app: Vapor.Application) async throws {
 
-  let baseURL = await configureBaseURL(app)
   let apiMiddleware = ApiRouteMiddleware.liveValue
+  let serverEnvironment = configureServerEnvironment(app)
+  let siteRouter = SiteRouterKey.liveValue.eraseToAnyParserPrinter()
   let validationMiddleware = ValidationMiddleware.liveValue
   configureVaporMiddleware(app)
 
-  let siteRouter = configureSiteRouter(app, baseUrl: baseURL)
   let documentMiddleware = configureDocumentMiddleware(
     apiMiddleware: apiMiddleware,
+    serverEnvironment: serverEnvironment,
     siteRouter: siteRouter,
     validationMiddleware: validationMiddleware
   )
+  
   let siteHandler = siteHandler(
-    baseURL: baseURL,
-    siteRouter: siteRouter,
     apiMiddleware: apiMiddleware,
-    validationMiddleware: validationMiddleware,
-    documentMiddleware: documentMiddleware
+    documentMiddleware: documentMiddleware,
+    serverEnvironment: serverEnvironment,
+    siteRouter: siteRouter,
+    validationMiddleware: validationMiddleware
   )
   app.mount(siteRouter, use: siteHandler)
 }
 
-// Configure the base url for the application / router.
-private func configureBaseURL(_ app: Vapor.Application) async -> String {
+// Configure the server environment for the application / router.
+private func configureServerEnvironment(_ app: Vapor.Application) -> ServerEnvironment {
   @Dependency(\.logger) var logger
 
-  let baseURL: String =
-    Environment.get("BASE_URL")
-    ?? (app.environment == .production
-      ? "http://localhost:8080"
-      : "http://localhost:8080")
+  var environment = ServerEnvironment.liveValue
+  switch app.environment {
+  case .production:
+    environment.baseUrl = URL(string: "https://hvacmath.com")!
+  default:
+    break
+  }
+  
+  logger.debug("Base URL: \(environment.baseUrl)")
 
-  logger.debug("Base URL: \(baseURL)")
-
-  return baseURL
+  return environment
 }
 
 // Configure the vapor middleware.
@@ -75,28 +80,27 @@ private func configureVaporMiddleware(_ app: Vapor.Application) {
 }
 
 // Register the site router with the vapor application.
-private func configureSiteRouter(
-  _ app: Vapor.Application,
-  baseUrl: String
-) -> AnyParserPrinter<URLRequestData, ServerRoute> {
-
-  @Dependency(\.logger) var logger: Logger
-
-  logger.info("Bootstrapping site router.")
-  return withDependencies {
-    $0.baseURL = baseUrl
-  } operation: {
-    return SiteRouterKey.liveValue
-  }
-}
+//private func configureSiteRouter(
+//  _ app: Vapor.Application,
+//  baseUrl: String
+//) -> AnyParserPrinter<URLRequestData, ServerRoute> {
+//
+//  @Dependency(\.logger) var logger: Logger
+//
+//  logger.info("Bootstrapping site router.")
+//
+//
+//}
 
 private func configureDocumentMiddleware(
   apiMiddleware: ApiRouteMiddleware,
+  serverEnvironment: ServerEnvironment,
   siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>,
   validationMiddleware: ValidationMiddleware
 ) -> DocumentMiddleware {
   withDependencies {
     $0.apiMiddleware = apiMiddleware
+    $0.serverEnvironment = serverEnvironment
     $0.siteRouter = siteRouter
     $0.validationMiddleware = validationMiddleware
   } operation: {
@@ -105,15 +109,15 @@ private func configureDocumentMiddleware(
 }
 
 private func siteHandler(
-  baseURL: String,
-  siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>,
   apiMiddleware: ApiRouteMiddleware,
-  validationMiddleware: ValidationMiddleware,
-  documentMiddleware: DocumentMiddleware
+  documentMiddleware: DocumentMiddleware,
+  serverEnvironment: ServerEnvironment,
+  siteRouter: AnyParserPrinter<URLRequestData, ServerRoute>,
+  validationMiddleware: ValidationMiddleware
 ) -> (Request, ServerRoute) async throws -> AsyncResponseEncodable {
   return { request, route in
     try await withDependencies { dependencies in
-      dependencies.baseURL = baseURL
+      dependencies.serverEnvironment = serverEnvironment
       dependencies.siteRouter = siteRouter
       dependencies.apiMiddleware = apiMiddleware
       dependencies.validationMiddleware = validationMiddleware

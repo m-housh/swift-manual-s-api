@@ -13,7 +13,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace(
+      let route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace(
         input: 60_000,
         afue: 96
       )
@@ -48,7 +48,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.Interpolation.Route.Heating.Furnace(
+      let route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace(
         input: 160_000,
         afue: 96
       )
@@ -86,7 +86,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.Heating.Boiler(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler(
         input: 60_000,
         afue: 96
       )
@@ -117,7 +117,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let route = ServerRoute.Api.Route.Interpolation.Route.heating(
+      let route = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.heating(
         route: .boiler(.init(
           input: 160_000,
           afue: 96
@@ -149,7 +149,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.heating(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.heating(
         route: .electric(.init(
         inputKW: 15
       )))
@@ -172,7 +172,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.heating(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.heating(
         route: .electric(.init(
           inputKW: 115
         ))
@@ -198,7 +198,7 @@ final class HeatingInterpolationTests: XCTestCase {
       
       @Dependency(\.apiMiddleware) var client
       
-      let request = ServerRoute.Api.Route.Interpolation.Route.heating(
+      let request = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.heating(
         route: .heatPump(.init(
           capacity: .mock
         ))

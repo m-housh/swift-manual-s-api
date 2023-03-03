@@ -50,7 +50,9 @@ extension ApiRouteValidator {
       // no validations required.
       return
     case let .interpolate(interpolate):
-      return try await interpolate.validate()
+      #warning("Fix me.")
+      fatalError()
+//      return try await interpolate.validate()
     case let .requiredKW(requiredKW):
       return try await requiredKW.validate()
     case let .sizingLimits(sizingLimits):
