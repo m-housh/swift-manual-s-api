@@ -20,15 +20,19 @@ final class HeatingInterpolationTests: XCTestCase {
       
       let apiRequest = ServerRoute.Api(
         isDebug: true,
-        route: .interpolate(.init(
+        route: .interpolate(.single(.init(
           designInfo: .mock,
           houseLoad: .mock,
+          systemType: .heatingOnly(.furnace),
           route: .heating(route: .furnace(route))
-        ))
+        )))
       )
-      let sut = try await client.respond(apiRequest).value as! InterpolationResponse
+      let sut = try! await client.respond(apiRequest).value
+      print("\(sut)")
+      
+      XCTAssertNotNil(sut as? InterpolationResponse)
       XCTAssertNoDifference(
-        sut,
+        sut as? InterpolationResponse,
         .init(result: .heating(
           .init(
             result: .furnace(.init(

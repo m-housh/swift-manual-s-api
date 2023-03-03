@@ -62,6 +62,9 @@ public struct ApiRouteMiddleware {
     file: StaticString = #file,
     line: UInt = #line
   ) async throws -> AnyEncodable {
+    #if DEBUG
+    print("Respond for: \(request)")
+    #endif
 
     do {
       switch request.route {

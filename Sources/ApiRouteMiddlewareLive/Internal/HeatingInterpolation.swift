@@ -27,6 +27,9 @@ extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
 extension InterpolationResponse {
 
   init(result: InterpolationResponse.Result.Heating.Result) {
+    #if DEBUG
+    print("Result: \(result)")
+    #endif
     self.init(
       failures: result.validateSizingLimits(),
       result: .heating(.init(result: result))

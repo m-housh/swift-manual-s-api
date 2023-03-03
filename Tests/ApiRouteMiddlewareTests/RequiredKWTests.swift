@@ -13,16 +13,16 @@ final class RequiredKWTests: XCTestCase {
       let sut = try await client.respond(.init(
         isDebug: true,
         route: .requiredKW(.init(capacityAtDesign: 0, heatLoss: Double(HouseLoad.mock.heating)))
-      )).value as! RequiredKWResponse
+      )).value
       
-      XCTAssertEqual(sut, .init(requiredKW: 14.55))
+      XCTAssertEqual(sut as? RequiredKWResponse, .init(requiredKW: 14.55))
       
       let sut2 = try await client.respond(.init(
         isDebug: true,
         route: .requiredKW(.init(capacityAtDesign: 11_300, heatLoss: Double(HouseLoad.mock.heating)))
-      )).value as! RequiredKWResponse
+      )).value as? RequiredKWResponse
       
-      XCTAssertEqual(sut2.requiredKW, 11.24)
+      XCTAssertEqual(sut2?.requiredKW, 11.24)
     }
   }
   

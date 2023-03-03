@@ -128,13 +128,4 @@ extension Project {
       result += heating
     }
   }
-
-  /// Return the project as an ``ServerRoute/Api/Route-swift.enum/Interpolation``.
-  public var interpolation: ServerRoute.Api.Route.Interpolation.Single {
-    .init(
-      designInfo: self.designInfo,
-      houseLoad: self.houseLoad,
-      route: .systems(self.systems)
-    )
-  }
 }

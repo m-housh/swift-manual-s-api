@@ -451,10 +451,13 @@ final class SiteRouteValidationTests: XCTestCase {
   func test_system_validations() async throws {
     try await withLiveSiteValidator {
       @Dependency(\.validationMiddleware) var validator
-      let request = ServerRoute.Api.Route.Interpolation.init(
-        designInfo: .zero,
-        houseLoad: .zero,
-        route: .systems([.zeros.first!])
+      let request = ServerRoute.Api.Route.Interpolation.project(
+        .init(
+          projectInfo: .mock,
+          designInfo: .zero,
+          houseLoad: .zero,
+          systems: [Project.System.zeros.first!]
+        )
       )
       let expected = """
       House Load:
@@ -478,7 +481,6 @@ final class SiteRouteValidationTests: XCTestCase {
       houseLoad.heating: Heating load should be greater than 0.
       afue: Afue should be greater than 0 or less than 100.
       input: Input should be greater than 0.
-      
       
       
       """

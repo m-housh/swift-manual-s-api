@@ -47,9 +47,7 @@ extension CliMiddleware.ValidationContext {
           break
         case .project:
           let project = try jsonDecoder.decode(Project.self, from: data)
-          //          #warning("Fix me")
-          //          fatalError()
-          try await validate(interpolation: project.interpolation)
+          try await validate(project: project)
           break
         // Keep here encase other path keys are added, they must be handled.
         case .boiler,
@@ -99,9 +97,11 @@ extension CliMiddleware.ValidationContext {
           let model = try jsonDecoder.decode(type, from: data)
           route = .heating(route: .heatPump(model))
         case .systems:
-          let type = [Project.System].self
-          let model = try jsonDecoder.decode(type, from: data)
-          route = .systems(model)
+          #warning("Fix me.")
+          fatalError()
+//          let type = [Project.System].self
+//          let model = try jsonDecoder.decode(type, from: data)
+//          route = .systems(model)
         case .noInterpolation:
           let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling
             .NoInterpolation.self
@@ -134,10 +134,21 @@ extension CliMiddleware.ValidationContext {
         throw error
       }
     }
-
-    func validate(interpolation: ServerRoute.Api.Route.Interpolation.Single)
-      async throws
-    {
+    
+    func validate(project: Project) async throws {
+      do {
+        try await validationMiddleware.validate(
+          .api(.init(isDebug: true, route: .interpolate(.project(project))))
+        )
+        logger.info("Valid")
+      } catch {
+        logger.info("Failed:")
+        logger.info("\(error)")
+        throw error
+      }
+    }
+    
+    func validate(interpolation: ServerRoute.Api.Route.Interpolation.Single) async throws {
       do {
         try await validationMiddleware.validate(
           .api(.init(isDebug: true, route: .interpolate(.single(interpolation))))

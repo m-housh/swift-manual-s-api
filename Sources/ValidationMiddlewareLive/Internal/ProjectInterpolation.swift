@@ -1,42 +1,46 @@
 import Models
 import Validations
 
-#warning("Remove, handled in Interpolation file.")
-// TODO: Need to validate houseLoad, designInfo, seperate of the cooling validations.
-extension Project.System {
-
-  @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
-
-    try await AsyncValidator.accumulating {
-      AnyAsyncValidator {
-        try await self.cooling.validate(request: request)
-      }
-      AnyAsyncValidator {
-        try await heating.validate(request: request)
-      }
-    }
-    .validate(())
-  }
-}
-
-extension Array where Element == Project.System {
-
-  @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
-    for system in self {
-      try await system.validate(request: request)
+extension Project: AsyncValidatable {
+  
+  public var body: some AsyncValidation<Self> {
+    AsyncValidator.accumulating {
+      AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .cooling))
+        .errorLabel("House Load")
+      
+      AsyncValidator.validate(\.interpolations)
+        .errorLabel("Systems")
     }
   }
 }
 
-extension Array
-where Element == ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
-
-  @usableFromInline
-  func validate(request: ServerRoute.Api.Route.Interpolation.Single) async throws {
-    for heating in self {
-      try await heating.validate(request: request)
+extension Array: AsyncValidation where Element: AsyncValidation, Element.Value == Element {
+ 
+  public func validate(_ value: Self) async throws {
+    var errors: [Error] = []
+    for element in value {
+      do {
+        try await element.validate(element)
+      } catch  {
+        errors.append(error)
+      }
     }
+    guard errors.isEmpty else {
+      throw AccumulatedError(errors: errors)
+    }
+  }
+}
+
+extension Array: AsyncValidatable where Element: AsyncValidatable {
+  public func validate() async throws {
+    try await self.validate(self)
+  }
+}
+
+fileprivate struct AccumulatedError: Error, CustomDebugStringConvertible {
+  let errors: [Error]
+  
+  var debugDescription: String {
+    String(errors.map({ "\($0)" }).joined(separator: "\n"))
   }
 }

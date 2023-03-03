@@ -9,16 +9,16 @@ extension ApiRouteMiddleware: DependencyKey {
       balancePoint: { try await $0.respond() },
       derating: { try await $0.respond() },
       interpolate: { request in
+//        print("interpolate: \(request)")
         switch request {
         case let .single(single):
+//          print("single: \(single)")
           switch single.route {
           case let .cooling(coolingRequest):
             return try await coolingRequest.respond(request: single)
           case let .heating(heatingRequest):
+            print("Heating request: \(heatingRequest)")
             return try await heatingRequest.respond(request: single)
-          case let .systems(systems):
-            #warning("Remove me.")
-            return try await systems.respond(request: single)
           }
         case .project:
           #warning("Fix me.")

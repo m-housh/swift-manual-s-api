@@ -1,3 +1,4 @@
+import Foundation
 import Models
 import Validations
 
@@ -8,35 +9,8 @@ extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
     case let .single(single):
       try await single.validate()
     case let .project(project):
-      try await project.interpolations.validate()
+      try await project.validate()
     }
-  }
-}
-
-fileprivate struct AccumulatedError: Error {
-  let errors: [Error]
-}
-
-extension Array: AsyncValidation where Element: AsyncValidation, Element.Value == Element {
- 
-  public func validate(_ value: Self) async throws {
-    var errors: [Error] = []
-    for element in value {
-      do {
-        try await element.validate(element)
-      } catch  {
-        errors.append(error)
-      }
-    }
-    guard errors.isEmpty else {
-      throw AccumulatedError(errors: errors)
-    }
-  }
-}
-
-extension Array: AsyncValidatable where Element: AsyncValidatable {
-  public func validate() async throws {
-    try await self.validate(self)
   }
 }
 
@@ -51,40 +25,6 @@ extension ServerRoute.Api.Route.Interpolation.Single: AsyncValidatable {
       try await cooling.validate(request: self)
     case let .heating(route: heating):
       try await heating.validate(request: self)
-    case let .systems(systems):
-      try await SystemEnvelope(interpolation: self, systems: systems).validate()
-    }
-  }
-}
-
-@usableFromInline
-struct SystemEnvelope: AsyncValidatable {
-
-  @usableFromInline
-  let interpolation: ServerRoute.Api.Route.Interpolation.Single
-
-  @usableFromInline
-  let systems: [Project.System]
-
-  @usableFromInline
-  init(
-    interpolation: ServerRoute.Api.Route.Interpolation.Single,
-    systems: [Project.System]
-  ) {
-    self.interpolation = interpolation
-    self.systems = systems
-  }
-
-  @usableFromInline
-  var body: some AsyncValidation<Self> {
-    AsyncValidator.accumulating {
-      AsyncValidator.validate(\.interpolation.houseLoad, with: HouseLoadValidator(style: .cooling))
-        .errorLabel("House Load")
-
-      AnyAsyncValidator<Self> { envelope in
-        try await envelope.systems.validate(request: envelope.interpolation)
-      }
-      .errorLabel("Systems")
     }
   }
 }

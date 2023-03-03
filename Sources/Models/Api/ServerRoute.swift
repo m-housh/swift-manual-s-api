@@ -269,8 +269,6 @@ extension ServerRoute.Api.Route {
       public enum Route: Codable, Equatable, Sendable {
         case cooling(route: Cooling)
         case heating(route: Heating)
-        // remove.
-        case systems([Project.System])
 
         /// Represents the cooling interpolations that can be performed.
         public enum Cooling: Codable, Equatable, Sendable {
@@ -561,8 +559,6 @@ extension ServerRoute.Api.Route.Interpolation.Single.Route {
       try container.encode(cooling, forKey: .cooling)
     case let .heating(heating):
       try container.encode(heating, forKey: .heating)
-    case let .systems(systems):
-      try container.encode(systems, forKey: .systems)
     }
   }
 
@@ -573,8 +569,6 @@ extension ServerRoute.Api.Route.Interpolation.Single.Route {
       self = .cooling(route: cooling)
     } else if let heating = try? container.decode(Heating.self, forKey: .heating) {
       self = .heating(route: heating)
-    } else if let systems = try? container.decode([Project.System].self, forKey: .systems) {
-      self = .systems(systems)
     } else {
       throw DecodingError()
     }

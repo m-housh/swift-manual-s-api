@@ -116,7 +116,7 @@ final class SizingLimitTests: XCTestCase {
     try await withLiveSiteHandler {
       @Dependency(\.apiMiddleware) var client
       let apiRequest = ServerRoute.Api(isDebug: true, route: .sizingLimits(.init(systemType: .boilerOnly)))
-      let sut = try await client.respond(apiRequest).value as! SizingLimits
+      let sut = try await client.respond(apiRequest).value as? SizingLimits
       XCTAssertEqual(sut, .init(oversizing: .boiler(140), undersizing: .boiler(90)))
     }
   }

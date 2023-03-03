@@ -155,8 +155,10 @@ final class DeratingClientTests: XCTestCase {
       )
       let expected = AdjustmentMultiplier.airToAir(total: 1, sensible: 1, heating: 1)
       
-      let sut = try await client.respond(request).value as! AdjustmentMultiplier
-      XCTAssertEqual(sut, expected)
+      let sut = try await client.respond(request).value
+      print("\(sut)")
+      XCTAssertNotNil(sut as? AdjustmentMultiplier)
+      XCTAssertEqual(sut as? AdjustmentMultiplier, expected)
     }
   }
   

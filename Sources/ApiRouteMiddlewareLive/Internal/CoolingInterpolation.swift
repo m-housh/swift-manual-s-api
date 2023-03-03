@@ -119,8 +119,6 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Single {
       }
     case .heating:
       return nil
-    case .systems:
-      return nil
     }
   }
 }
@@ -180,16 +178,10 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Single {
 
 fileprivate extension ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.TwoWay.CapacityEnvelope {
   
-  func oneWayIndoorRequest(
-//    _ request: any CoolingInterpolationRequest
-  ) -> ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay {
+  func oneWayIndoorRequest() -> ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.OneWay {
     .init(
       aboveDesign: aboveWetBulb,
       belowDesign: belowWetBulb
-//      ,
-//      designInfo: request.designInfo,
-//      houseLoad: request.houseLoad,
-//      systemType: request.systemType
     )
   }
 }
@@ -214,10 +206,6 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.T
         outdoorTemperature: belowDesign.belowWetBulb.outdoorTemperature,
         capacity: below.interpolatedCapacity
       )
-//      ,
-//      designInfo: designInfo,
-//      houseLoad: houseLoad,
-//      systemType: systemType
     )
   }
 }

@@ -37,6 +37,7 @@ extension ServerRoute.Api.Route.Interpolation {
     .init(
       designInfo: .mock,
       houseLoad: .mock,
+      systemType: .mock,
       route: route
     )
   }

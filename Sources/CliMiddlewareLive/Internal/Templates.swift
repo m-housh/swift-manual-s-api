@@ -101,8 +101,6 @@ extension CliMiddleware.TemplateContext {
         templateData = try jsonEncoder.encode(cooling)
       case .heating(route: let heating):
         templateData = try jsonEncoder.encode(heating)
-      case .systems(_):
-        templateData = try jsonEncoder.encode(route)
       }
     }
 
