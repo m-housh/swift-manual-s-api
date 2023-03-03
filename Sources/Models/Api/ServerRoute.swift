@@ -217,7 +217,7 @@ extension ServerRoute {
           self.houseLoad = houseLoad
         }
       }
-      
+
     }
   }
 }
@@ -229,7 +229,7 @@ extension ServerRoute.Api.Route {
     // remove system type from being optional on single types.
     case single(Single)
     case project(Project)
-    
+
     // Create a single instance, convenience.
     public init(
       designInfo: DesignInfo,
@@ -246,14 +246,14 @@ extension ServerRoute.Api.Route {
         )
       )
     }
-    
+
     public struct Single: Codable, Equatable, Sendable {
-      
+
       public var designInfo: DesignInfo
       public var houseLoad: HouseLoad
       public var systemType: SystemType
       public var route: Route
-      
+
       public init(
         designInfo: DesignInfo,
         houseLoad: HouseLoad,
@@ -265,36 +265,36 @@ extension ServerRoute.Api.Route {
         self.systemType = systemType ?? .default
         self.route = route
       }
-      
+
       public enum Route: Codable, Equatable, Sendable {
         case cooling(route: Cooling)
         case heating(route: Heating)
         // remove.
         case systems([Project.System])
-        
+
         /// Represents the cooling interpolations that can be performed.
         public enum Cooling: Codable, Equatable, Sendable {
-          
+
           /// Used when there is no interpolation of the manufacturer's data required.
           ///
           /// This is equivalent to `Form S-1d`.
           case noInterpolation(NoInterpolation)
-          
+
           /// Used when there is a one way interpolation of the manufacturer's cooling capacity at indoor design conditions.
           ///
           /// This is equivalent to `Form S-1b`
           case oneWayIndoor(Tagged<IndoorTag, OneWay>)
-          
+
           /// Used when there is a one way interpolation of the manufacturer's cooling capacity at outdoor design conditions.
           ///
           /// This is equivalent to `Form S-1b`
           case oneWayOutdoor(Tagged<OutdoorTag, OneWay>)
-          
+
           /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
           ///
           /// This is equivalent to `Form S-1a`
           case twoWay(TwoWay)
-          
+
           /// Used when there is two way interpolation of the manufacturer's cooling capacity at outdoor and indoor design conditions.
           ///
           /// This is equivalent to `Form S-1a`
@@ -302,7 +302,7 @@ extension ServerRoute.Api.Route {
             public var aboveDesign: Tagged<AboveTag, CapacityEnvelope>
             public var belowDesign: Tagged<BelowTag, CapacityEnvelope>
             public var manufacturerAdjustments: AdjustmentMultiplier?
-            
+
             public init(
               aboveDesign: Tagged<AboveTag, CapacityEnvelope>,
               belowDesign: Tagged<BelowTag, CapacityEnvelope>,
@@ -312,11 +312,11 @@ extension ServerRoute.Api.Route {
               self.belowDesign = belowDesign
               self.manufacturerAdjustments = manufacturerAdjustments
             }
-            
+
             public struct CapacityEnvelope: Codable, Equatable, Sendable {
               public var aboveWetBulb: ManufactuerCoolingCapacity
               public var belowWetBulb: ManufactuerCoolingCapacity
-              
+
               public init(
                 aboveWetBulb: ManufactuerCoolingCapacity, belowWetBulb: ManufactuerCoolingCapacity
               ) {
@@ -325,12 +325,12 @@ extension ServerRoute.Api.Route {
               }
             }
           }
-          
+
           public struct OneWay: Codable, Equatable, Sendable {
             public var aboveDesign: ManufactuerCoolingCapacity
             public var belowDesign: ManufactuerCoolingCapacity
             public var manufacturerAdjustments: AdjustmentMultiplier?
-            
+
             public init(
               aboveDesign: ManufactuerCoolingCapacity,
               belowDesign: ManufactuerCoolingCapacity,
@@ -341,11 +341,11 @@ extension ServerRoute.Api.Route {
               self.manufacturerAdjustments = manufacturerAdjustments
             }
           }
-          
+
           public struct NoInterpolation: Codable, Equatable, Sendable {
             public var capacity: ManufactuerCoolingCapacity
             public var manufacturerAdjustments: AdjustmentMultiplier?
-            
+
             public init(
               capacity: ManufactuerCoolingCapacity,
               manufacturerAdjustments: AdjustmentMultiplier?
@@ -355,18 +355,18 @@ extension ServerRoute.Api.Route {
             }
           }
         }
-        
+
         public enum Heating: Codable, Equatable, Sendable {
-          
+
           case boiler(Boiler)
           case electric(Electric)
           case furnace(Furnace)
           case heatPump(HeatPump)
-          
+
           public struct Boiler: Codable, Equatable, Sendable {
             public var input: Int
             public var afue: Double
-            
+
             public init(
               input: Int,
               afue: Double
@@ -375,11 +375,11 @@ extension ServerRoute.Api.Route {
               self.afue = afue
             }
           }
-          
+
           public struct Electric: Codable, Equatable, Sendable {
             public var heatPumpCapacity: Int?
             public var inputKW: Double
-            
+
             public init(
               heatPumpCapacity: Int? = nil,
               inputKW: Double
@@ -388,11 +388,11 @@ extension ServerRoute.Api.Route {
               self.inputKW = inputKW
             }
           }
-          
+
           public struct Furnace: Codable, Equatable, Sendable {
             public var input: Int
             public var afue: Double
-            
+
             public init(
               input: Int,
               afue: Double
@@ -401,10 +401,10 @@ extension ServerRoute.Api.Route {
               self.afue = afue
             }
           }
-          
+
           public struct HeatPump: Codable, Equatable, Sendable {
             public var capacity: HeatPumpCapacity
-            
+
             public init(
               capacity: HeatPumpCapacity
             ) {
@@ -496,7 +496,6 @@ public enum BelowTag {}
 public enum IndoorTag {}
 public enum OutdoorTag {}
 
-
 // MARK: - Coding
 extension ServerRoute.Api.Route.Interpolation {
   // don't use an key's for encoding values.
@@ -508,7 +507,7 @@ extension ServerRoute.Api.Route.Interpolation {
       try project.encode(to: encoder)
     }
   }
-  
+
   // don't use any key's for decoding values, defer to the embedded types.
   public init(from decoder: Decoder) throws {
     if let single = try? Single(from: decoder) {

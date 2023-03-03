@@ -8,8 +8,7 @@ struct NoInterpolationValidator: AsyncValidatable {
   let request: ServerRoute.Api.Route.Interpolation.Single
 
   @usableFromInline
-  let noInterpolation:
-    ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.NoInterpolation
+  let noInterpolation: ServerRoute.Api.Route.Interpolation.Single.Route.Cooling.NoInterpolation
 
   @usableFromInline
   init(

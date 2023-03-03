@@ -152,9 +152,7 @@ extension HeatPumpCapacity {
 }
 
 extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Boiler {
-  fileprivate var furnaceRequest:
-    ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace
-  {
+  fileprivate var furnaceRequest: ServerRoute.Api.Route.Interpolation.Single.Route.Heating.Furnace {
     .init(
       input: self.input,
       afue: self.afue

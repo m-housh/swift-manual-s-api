@@ -47,8 +47,8 @@ extension CliMiddleware.ValidationContext {
           break
         case .project:
           let project = try jsonDecoder.decode(Project.self, from: data)
-//          #warning("Fix me")
-//          fatalError()
+          //          #warning("Fix me")
+          //          fatalError()
           try await validate(interpolation: project.interpolation)
           break
         // Keep here encase other path keys are added, they must be handled.

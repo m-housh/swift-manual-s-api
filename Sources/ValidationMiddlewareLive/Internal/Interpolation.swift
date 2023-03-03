@@ -2,7 +2,7 @@ import Models
 import Validations
 
 extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
-  
+
   public func validate(_ value: Self) async throws {
     switch value {
     case let .single(single):
