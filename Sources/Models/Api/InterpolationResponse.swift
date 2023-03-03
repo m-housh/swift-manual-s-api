@@ -16,7 +16,7 @@ public struct InterpolationResponse: Codable, Equatable, Sendable {
     if case let .systems(systems) = result {
       parsedFailures = parseFailures(systems: systems)
     }
-    
+
     self.failures = parsedFailures
     self.result = result
     if let parsedFailures {
@@ -278,7 +278,7 @@ extension InterpolationResponse.Result.Heating.Result {
   }
 }
 
-fileprivate func parseFailures(systems: [InterpolationResponse.Result.System]) -> [String]? {
+private func parseFailures(systems: [InterpolationResponse.Result.System]) -> [String]? {
   let failures = systems.reduce(into: [String]()) { result, system in
     result += system.cooling.failures ?? []
     let heatingFailures = system.heating.reduce(into: [String]()) { heatingResult, heating in
