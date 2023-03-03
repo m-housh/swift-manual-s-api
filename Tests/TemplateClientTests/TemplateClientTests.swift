@@ -232,8 +232,6 @@ final class TemplateClientTests: XCTestCase {
     @Dependency(\.templateClient) var templateClient
     
     for key in Template.EmbeddableKey.allCases {
-      #warning("Fix me.")
-      if key != .systems {
         let value = try await templateClient.routeTemplate(for: key)
         switch key {
         case .boiler:
@@ -244,9 +242,6 @@ final class TemplateClientTests: XCTestCase {
           XCTAssertEqual(value, .heating(route: .furnace(.mock)))
         case .heatPump:
           XCTAssertEqual(value, .heating(route: .heatPump(.mock)))
-        case .systems:
-          break
-          //        XCTAssertEqual(value, .systems(.mocks))
         case .noInterpolation:
           XCTAssertEqual(value, .cooling(route: .noInterpolation(.mock)))
         case .oneWayIndoor:
@@ -256,7 +251,6 @@ final class TemplateClientTests: XCTestCase {
         case .twoWay:
           XCTAssertEqual(value, .cooling(route: .twoWay(.mock)))
         }
-      }
     }
   }
 

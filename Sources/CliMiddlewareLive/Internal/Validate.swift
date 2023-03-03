@@ -96,12 +96,6 @@ extension CliMiddleware.ValidationContext {
             .self
           let model = try jsonDecoder.decode(type, from: data)
           route = .heating(route: .heatPump(model))
-        case .systems:
-          #warning("Fix me.")
-          fatalError()
-        //          let type = [Project.System].self
-        //          let model = try jsonDecoder.decode(type, from: data)
-        //          route = .systems(model)
         case .noInterpolation:
           let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling
             .NoInterpolation.self

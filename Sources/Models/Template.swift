@@ -136,7 +136,6 @@ public enum Template {
     case electric
     case furnace
     case heatPump
-    case systems
     case noInterpolation
     case oneWayIndoor
     case oneWayOutdoor

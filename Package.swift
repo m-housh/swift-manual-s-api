@@ -64,6 +64,12 @@ var package = Package(
         .product(name: "Tagged", package: "swift-tagged")
       ]
     ),
+    .testTarget(
+      name: "ModelTests",
+      dependencies: [
+        "Models"
+      ]
+    ),
     .target(
       name: "SiteRouter",
       dependencies: [

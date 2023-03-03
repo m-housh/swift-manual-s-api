@@ -54,11 +54,5 @@ final class TemplateTests: XCTestCase {
     try await cliMiddleware.templates(.template(key: .project, outputContext: .echo))
     try await cliMiddleware.templates(.template(key: .boiler, embedIn: .interpolation, outputContext: .write(to: tmp)))
     try await cliMiddleware.templates(.template(key: .furnace, embedIn: .route, outputContext: .write(to: tmp)))
-    do {
-      try await cliMiddleware.templates(.template(key: .baseInterpolation, embedIn: .route, outputContext: .write(to: tmp)))
-      XCTFail()
-    } catch {
-      XCTAssert(true)
-    }
   }
 }

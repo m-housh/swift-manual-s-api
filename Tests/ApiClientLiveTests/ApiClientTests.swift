@@ -22,12 +22,14 @@ class ApiClientLiveTests: XCTestCase {
   
   override func invokeTest() {
     let apiClient = withDependencies {
+      $0.json = .liveValue
       $0.userDefaults = .temporary
     } operation: {
       return ApiClient.live(baseUrl: baseUrl)
     }
     
     withDependencies {
+      $0.json = .liveValue
       $0.apiClient = apiClient
     } operation: {
       super.invokeTest()
@@ -101,12 +103,13 @@ class ApiClientLiveTests: XCTestCase {
     XCTAssertFalse(response.isFailed)
   }
 
-  #warning("Fix me.")
-//  func test_interpolate_systems() async throws {
-//    @Dependency(\.apiClient) var client
-//    let response = try await client.interpolate(
-//      .mock(route: .systems(.mocks))
-//    )
-//    XCTAssertFalse(response.isFailed)
-//  }
+  func test_interpolate_systems() async throws {
+    @Dependency(\.apiClient) var client
+    let response = try await client.interpolate(
+      .project(.mock)
+    )
+    // Bronze system has data that fails interpolations, which is why
+    // we chack for failed status.
+    XCTAssertTrue(response.isFailed)
+  }
 }
