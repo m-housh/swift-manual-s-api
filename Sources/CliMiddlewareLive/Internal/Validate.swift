@@ -99,9 +99,9 @@ extension CliMiddleware.ValidationContext {
         case .systems:
           #warning("Fix me.")
           fatalError()
-//          let type = [Project.System].self
-//          let model = try jsonDecoder.decode(type, from: data)
-//          route = .systems(model)
+        //          let type = [Project.System].self
+        //          let model = try jsonDecoder.decode(type, from: data)
+        //          route = .systems(model)
         case .noInterpolation:
           let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling
             .NoInterpolation.self
@@ -134,7 +134,7 @@ extension CliMiddleware.ValidationContext {
         throw error
       }
     }
-    
+
     func validate(project: Project) async throws {
       do {
         try await validationMiddleware.validate(
@@ -147,7 +147,7 @@ extension CliMiddleware.ValidationContext {
         throw error
       }
     }
-    
+
     func validate(interpolation: ServerRoute.Api.Route.Interpolation.Single) async throws {
       do {
         try await validationMiddleware.validate(

@@ -14,7 +14,7 @@ extension Project.System {
       systemType: self.systemType,
       route: .cooling(route: self.cooling)
     )
-    
+
     async let coolingResponse = cooling.respond(request: coolingRequest)
     async let heatingResponse = heating.respond(request: request, systemType: self.systemType)
     return try await .init(
@@ -45,7 +45,7 @@ where Element == ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
       let heatingRequest = ServerRoute.Api.Route.Interpolation.Single(
         designInfo: request.designInfo,
         houseLoad: request.houseLoad,
-        systemType: systemType, // fix
+        systemType: systemType,  // fix
         route: .heating(route: item)
       )
       let value = try await item.respond(request: heatingRequest)

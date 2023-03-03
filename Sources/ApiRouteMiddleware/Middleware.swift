@@ -63,7 +63,7 @@ public struct ApiRouteMiddleware {
     line: UInt = #line
   ) async throws -> AnyEncodable {
     #if DEBUG
-    print("Respond for: \(request)")
+      print("Respond for: \(request)")
     #endif
 
     do {

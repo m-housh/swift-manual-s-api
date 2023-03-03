@@ -47,7 +47,7 @@ extension Template.PathKey {
   }
 
 }
-fileprivate struct FixMeError: Error { }
+private struct FixMeError: Error {}
 extension Template.EmbeddableKey {
 
   func embedInRoute(_ data: Data) throws
@@ -71,8 +71,8 @@ extension Template.EmbeddableKey {
     case .systems:
       #warning("Fix me")
       throw FixMeError()
-//      let type = [Project.System].self
-//      route = try .systems(decoder.decode(type, from: data))
+    //      let type = [Project.System].self
+    //      route = try .systems(decoder.decode(type, from: data))
     case .noInterpolation:
       let type = ServerRoute.Api.Route.Interpolation.Single.Route.Cooling
         .NoInterpolation.self

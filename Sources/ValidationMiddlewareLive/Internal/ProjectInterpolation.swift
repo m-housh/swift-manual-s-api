@@ -2,12 +2,12 @@ import Models
 import Validations
 
 extension Project: AsyncValidatable {
-  
+
   public var body: some AsyncValidation<Self> {
     AsyncValidator.accumulating {
       AsyncValidator.validate(\.houseLoad, with: HouseLoadValidator(style: .cooling))
         .errorLabel("House Load")
-      
+
       AsyncValidator.validate(\.interpolations)
         .errorLabel("Systems")
     }
@@ -15,13 +15,13 @@ extension Project: AsyncValidatable {
 }
 
 extension Array: AsyncValidation where Element: AsyncValidation, Element.Value == Element {
- 
+
   public func validate(_ value: Self) async throws {
     var errors: [Error] = []
     for element in value {
       do {
         try await element.validate(element)
-      } catch  {
+      } catch {
         errors.append(error)
       }
     }
@@ -37,9 +37,9 @@ extension Array: AsyncValidatable where Element: AsyncValidatable {
   }
 }
 
-fileprivate struct AccumulatedError: Error, CustomDebugStringConvertible {
+private struct AccumulatedError: Error, CustomDebugStringConvertible {
   let errors: [Error]
-  
+
   var debugDescription: String {
     String(errors.map({ "\($0)" }).joined(separator: "\n"))
   }
