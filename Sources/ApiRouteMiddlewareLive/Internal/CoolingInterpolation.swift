@@ -150,7 +150,7 @@ fileprivate struct CoolingInterpolationEnvelope {
     await finalCapacity.apply(multiplier: altitudeDeratings)
     
     // TODO: Check
-    let systemType = request.systemType ?? .default
+    let systemType = request.systemType
     
     self.interpolatedCapacity = interpolatedCapacity
     self.excessLatent = excessLatent
@@ -172,7 +172,7 @@ fileprivate extension ServerRoute.Api.Route.Interpolation.Single {
   func altitudeDerating() async throws -> AdjustmentMultiplier {
     let deratingRequest = ServerRoute.Api.Route.Derating(
       elevation: designInfo.elevation,
-      systemType: systemType ?? .default
+      systemType: systemType
     )
     return try await deratingRequest.respond()
   }

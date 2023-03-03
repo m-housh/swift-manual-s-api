@@ -1,7 +1,7 @@
 import Models
 import Validations
 
-#warning("Need a project validation.")
+#warning("Remove, handled in Interpolation file.")
 // TODO: Need to validate houseLoad, designInfo, seperate of the cooling validations.
 extension Project.System {
 

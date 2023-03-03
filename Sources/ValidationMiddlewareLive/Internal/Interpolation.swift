@@ -8,9 +8,35 @@ extension ServerRoute.Api.Route.Interpolation: AsyncValidatable {
     case let .single(single):
       try await single.validate()
     case let .project(project):
-      #warning("Fix when systems are removed from interpolation route.")
-      try await project.interpolation.validate()
+      try await project.interpolations.validate()
     }
+  }
+}
+
+fileprivate struct AccumulatedError: Error {
+  let errors: [Error]
+}
+
+extension Array: AsyncValidation where Element: AsyncValidation, Element.Value == Element {
+ 
+  public func validate(_ value: Self) async throws {
+    var errors: [Error] = []
+    for element in value {
+      do {
+        try await element.validate(element)
+      } catch  {
+        errors.append(error)
+      }
+    }
+    guard errors.isEmpty else {
+      throw AccumulatedError(errors: errors)
+    }
+  }
+}
+
+extension Array: AsyncValidatable where Element: AsyncValidatable {
+  public func validate() async throws {
+    try await self.validate(self)
   }
 }
 

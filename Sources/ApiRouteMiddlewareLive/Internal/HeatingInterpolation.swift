@@ -72,7 +72,6 @@ extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
     async throws
     -> InterpolationResponse.Result.Heating.Result
   {
-    //    try await electric.validate()
     let requredKWRequest = ServerRoute.Api.Route.RequiredKW(
       capacityAtDesign: Double(electric.heatPumpCapacity ?? 0),
       heatLoss: Double(request.houseLoad.heating)
@@ -80,7 +79,6 @@ extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
     let requiredKW = try await requredKWRequest.respond().requiredKW
 
     let percentOfLoad = electric.inputKW / requiredKW
-    //    let sizingLimits =
 
     return .electric(
       .init(
@@ -101,7 +99,7 @@ extension ServerRoute.Api.Route.Interpolation.Single.Route.Heating {
 
     let altitudeDeratings = try await ServerRoute.Api.Route.Derating(
       elevation: request.designInfo.elevation,
-      systemType: request.systemType ?? .default
+      systemType: request.systemType
     ).respond()
 
     if case let .airToAir(total: _, sensible: _, heating: derating) = altitudeDeratings {
