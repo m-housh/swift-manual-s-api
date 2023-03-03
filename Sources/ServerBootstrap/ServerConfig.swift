@@ -29,7 +29,7 @@ public func bootstrap(_ app: Vapor.Application) async throws {
     siteRouter: siteRouter,
     validationMiddleware: validationMiddleware
   )
-  
+
   let siteHandler = siteHandler(
     apiMiddleware: apiMiddleware,
     documentMiddleware: documentMiddleware,
@@ -51,7 +51,7 @@ private func configureServerEnvironment(_ app: Vapor.Application) -> ServerEnvir
   default:
     break
   }
-  
+
   logger.debug("Base URL: \(environment.baseUrl)")
 
   return environment

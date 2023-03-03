@@ -31,7 +31,7 @@ public enum Template {
 
     /// The file path in the templates folder to find project overrides.
     public var project: String
-    
+
     /// The file path in the templates folder to find systems interpolation overrides.
     public var systems: String
 

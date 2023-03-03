@@ -32,11 +32,13 @@ extension Template.PathKey {
     case .systems:
       return [Project.System].mocks
     case .noInterpolation:
-      return ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation.mock
+      return ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
+        .mock
     case .oneWayIndoor:
       return ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay.indoorMock
     case .oneWayOutdoor:
-      return ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay.outdoorMock
+      return ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay
+        .outdoorMock
     case .project:
       return Project.mock
     case .twoWay:
@@ -48,7 +50,9 @@ extension Template.PathKey {
 
 extension Template.EmbeddableKey {
 
-  func embedInRoute(_ data: Data) throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route {
+  func embedInRoute(_ data: Data) throws
+    -> ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route
+  {
     @Dependency(\.json.jsonDecoder) var decoder
     let route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route
     switch self {
@@ -68,7 +72,8 @@ extension Template.EmbeddableKey {
       let type = [Project.System].self
       route = try .systems(decoder.decode(type, from: data))
     case .noInterpolation:
-      let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation.self
+      let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling
+        .NoInterpolation.self
       route = try .cooling(route: .noInterpolation(decoder.decode(type, from: data)))
     case .oneWayIndoor:
       let type = ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay.self

@@ -327,7 +327,7 @@ public enum _Interpolation: Codable, Equatable, Sendable {
   // remove system type from being optional on single types.
   case single(Interpolation)
   case project(Project)
-  
+
   // Create a single instance, convenience.
   public init(
     designInfo: DesignInfo,
@@ -344,7 +344,7 @@ public enum _Interpolation: Codable, Equatable, Sendable {
       )
     )
   }
-  
+
   // FIX.
   public typealias SingleInterpolation = Models.Interpolation
 }
@@ -646,7 +646,8 @@ extension Interpolation.Route.Heating {
 }
 
 // MARK: - Tagged Extensions
-extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
+extension Tagged
+where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
   public init(
     aboveDesign: ManufactuerCoolingCapacity,
     belowDesign: ManufactuerCoolingCapacity,
@@ -663,7 +664,10 @@ extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.SingleInt
 }
 
 extension Tagged
-where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay.CapacityEnvelope {
+where
+  RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.TwoWay
+    .CapacityEnvelope
+{
   public init(
     aboveWetBulb: ManufactuerCoolingCapacity,
     belowWetBulb: ManufactuerCoolingCapacity

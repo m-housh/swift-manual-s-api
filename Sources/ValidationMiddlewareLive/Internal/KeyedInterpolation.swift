@@ -30,7 +30,8 @@ extension Array where Element == Project.System {
   }
 }
 
-extension Array where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
+extension Array
+where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
 
   @usableFromInline
   func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {

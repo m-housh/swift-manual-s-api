@@ -22,7 +22,8 @@ public struct TemplateClient {
 
   /// Return a template embedded in an interpolation route.
   public var routeTemplate:
-  (Template.EmbeddableKey) async throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route
+    (Template.EmbeddableKey) async throws -> ServerRoute.Api.Route.Interpolation.SingleInterpolation
+      .Route
 
   /// Update the template directory where we search for templates.
   public var setTemplateDirectory: (URL) async -> Void

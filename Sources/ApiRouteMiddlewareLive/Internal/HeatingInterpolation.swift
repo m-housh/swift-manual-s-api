@@ -36,7 +36,9 @@ extension InterpolationResponse {
 
 extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
 
-  fileprivate func interpolate(furnace: Furnace, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation)
+  fileprivate func interpolate(
+    furnace: Furnace, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+  )
     async throws
     -> InterpolationResponse.Result.Heating.Result
   {
@@ -64,7 +66,9 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating 
       ))
   }
 
-  fileprivate func interpolate(electric: Electric, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation)
+  fileprivate func interpolate(
+    electric: Electric, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+  )
     async throws
     -> InterpolationResponse.Result.Heating.Result
   {
@@ -86,7 +90,9 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating 
   }
 
   // TODO: FIX DERATINGS.
-  fileprivate func interpolate(heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation)
+  fileprivate func interpolate(
+    heatPump: HeatPump, request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
+  )
     async throws
     -> InterpolationResponse.Result.Heating.Result
   {
@@ -146,7 +152,9 @@ extension HeatPumpCapacity {
 }
 
 extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler {
-  fileprivate var furnaceRequest: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace {
+  fileprivate var furnaceRequest:
+    ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Furnace
+  {
     .init(
       input: self.input,
       afue: self.afue

@@ -12,7 +12,9 @@ extension Project.System {
 }
 
 extension Array where Element == Project.System {
-  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws -> InterpolationResponse {
+  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws
+    -> InterpolationResponse
+  {
     var responses: [InterpolationResponse.Result.System] = []
     for item in self {
       let value = try await item.respond(request: request)
@@ -22,8 +24,10 @@ extension Array where Element == Project.System {
   }
 }
 
-extension Array where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
-  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws -> [InterpolationResponse]
+extension Array
+where Element == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating {
+  func respond(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws
+    -> [InterpolationResponse]
   {
     var responses: [InterpolationResponse] = []
     for item in self {

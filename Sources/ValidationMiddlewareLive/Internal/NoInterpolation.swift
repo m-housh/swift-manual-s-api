@@ -8,12 +8,14 @@ struct NoInterpolationValidator: AsyncValidatable {
   let request: ServerRoute.Api.Route.Interpolation.SingleInterpolation
 
   @usableFromInline
-  let noInterpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
+  let noInterpolation:
+    ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
 
   @usableFromInline
   init(
     request: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
-    noInterpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.NoInterpolation
+    noInterpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling
+      .NoInterpolation
   ) {
     self.request = request
     self.noInterpolation = noInterpolation

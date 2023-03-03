@@ -4,7 +4,9 @@ import Validations
 extension ServerRoute.Api.Route.Interpolation.SingleInterpolation: AsyncValidatable {
 
   @inlinable
-  public func validate(_ value: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
+  public func validate(_ value: ServerRoute.Api.Route.Interpolation.SingleInterpolation)
+    async throws
+  {
     switch value.route {
     case let .cooling(route: cooling):
       try await cooling.validate(request: self)
@@ -18,13 +20,13 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation: AsyncValidata
 
 @usableFromInline
 struct SystemEnvelope: AsyncValidatable {
-  
+
   @usableFromInline
   let interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation
-  
+
   @usableFromInline
   let systems: [Project.System]
-  
+
   @usableFromInline
   init(
     interpolation: ServerRoute.Api.Route.Interpolation.SingleInterpolation,
@@ -33,13 +35,13 @@ struct SystemEnvelope: AsyncValidatable {
     self.interpolation = interpolation
     self.systems = systems
   }
-  
+
   @usableFromInline
   var body: some AsyncValidation<Self> {
     AsyncValidator.accumulating {
       AsyncValidator.validate(\.interpolation.houseLoad, with: HouseLoadValidator(style: .cooling))
         .errorLabel("House Load")
-      
+
       AnyAsyncValidator<Self> { envelope in
         try await envelope.systems.validate(request: envelope.interpolation)
       }
@@ -72,7 +74,9 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating 
   func validate(request: ServerRoute.Api.Route.Interpolation.SingleInterpolation) async throws {
     switch self {
     case let .boiler(boiler):
-      try await HeatingValidation<ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler>(
+      try await HeatingValidation<
+        ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Heating.Boiler
+      >(
         request: request, interpolation: boiler, errorLabel: "Boiler Request Errors"
       ).validate()
     case let .electric(electric):

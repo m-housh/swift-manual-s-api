@@ -119,16 +119,23 @@ extension ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.
 }
 
 extension Tagged
-where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay, Tag == IndoorTag {
+where
+  RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay,
+  Tag == IndoorTag
+{
   public static var mock: Self { .init(.indoorMock) }
 }
 
 extension Tagged
-where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay, Tag == OutdoorTag {
+where
+  RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay,
+  Tag == OutdoorTag
+{
   public static var mock: Self { .init(.outdoorMock) }
 }
 
-extension Tagged where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
+extension Tagged
+where RawValue == ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route.Cooling.OneWay {
   public static var zero: Self { .init(.zero) }
 }
 
@@ -277,7 +284,9 @@ extension SystemType {
 
 extension ServerRoute.Api.Route.Interpolation {
 
-  public static func mock(route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route) -> Self {
+  public static func mock(route: ServerRoute.Api.Route.Interpolation.SingleInterpolation.Route)
+    -> Self
+  {
     .init(designInfo: .mock, houseLoad: .mock, route: route)
   }
 }
