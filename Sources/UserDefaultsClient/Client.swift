@@ -70,7 +70,7 @@ extension UserDefaultsClient {
   public func removeValue(forKey key: Key) {
     self.removeValue(key)
   }
-  
+
   /// Remove all the keys that have been set.
   public func reset() {
     for key in Key.allCases {

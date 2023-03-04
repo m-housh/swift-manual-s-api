@@ -27,11 +27,11 @@ extension CliMiddleware.ConfigContext {
 
 extension CliMiddleware.ConfigContext {
   fileprivate enum Run {
-    
+
     static func reset() async throws {
       @Dependency(\.logger) var logger: Logger
       @Dependency(\.userDefaults) var userDefaults: UserDefaultsClient
-      
+
       userDefaults.reset()
       logger.info("Reset user defaults.")
     }

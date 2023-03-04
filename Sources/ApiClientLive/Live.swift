@@ -91,11 +91,11 @@ private func request(
   router: SiteRouter
 ) async throws -> (Data, URLResponse) {
   @Dependency(\.logger) var logger
-  
+
   guard let request = try? router.baseURL(baseUrl.absoluteString).request(for: route) else {
     throw URLError(.badURL)
   }
-  
+
   logger.debug("Sending request to: \(request.url?.absoluteString ?? "Bad Url")")
   #if os(Linux)
     return try await URLSession.shared.asyncData(for: request)

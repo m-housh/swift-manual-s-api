@@ -31,7 +31,7 @@ public enum Template {
 
     /// The file path in the templates folder to find project overrides.
     public var project: String
-    
+
     /// The file path in the templates folder to find two-way interpolation overrides.
     public var twoWay: String
 

@@ -37,7 +37,7 @@ extension EquipmentSelection.Config {
       .run()
     }
   }
-  
+
   struct ResetCommand: AsyncParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "reset",
