@@ -54,6 +54,8 @@ public struct CliMiddleware {
 
     /// Generate a local configuration.
     case generate
+    
+    case reset
 
     /// Set a configuration value.
     case set(String, for: Key)

@@ -160,6 +160,7 @@ if ProcessInfo.processInfo.environment["TEST_SERVER"] == nil {
       name: "ApiClientLive",
       dependencies: [
         "ApiClient",
+        "LoggingDependency",
         "SiteRouter",
         "UserDefaultsClient",
       ]

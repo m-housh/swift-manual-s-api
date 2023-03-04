@@ -70,6 +70,13 @@ extension UserDefaultsClient {
   public func removeValue(forKey key: Key) {
     self.removeValue(key)
   }
+  
+  /// Remove all the keys that have been set.
+  public func reset() {
+    for key in Key.allCases {
+      removeValue(forKey: key)
+    }
+  }
 
   /// Set a string value for the given key.
   public func setString(_ string: String, forKey key: Key) {
@@ -90,7 +97,7 @@ extension UserDefaultsClient {
   public func url(forKey key: Key) -> URL? {
     guard let url = self.url(key) else {
       /// Attempt to cast a string value to a url, if it's set as a string.
-      guard let string = self.string(key) else {
+      guard let string = self.string(key), string != "unset" else {
         return nil
       }
       return URL(string: string)

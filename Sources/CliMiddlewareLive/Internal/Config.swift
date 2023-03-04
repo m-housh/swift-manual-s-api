@@ -4,6 +4,7 @@ import Foundation
 import JsonDependency
 import LoggingDependency
 import SettingsClient
+import UserDefaultsClient
 
 extension CliMiddleware.ConfigContext {
 
@@ -12,6 +13,8 @@ extension CliMiddleware.ConfigContext {
     switch context {
     case .generate:
       try await Run.generate()
+    case .reset:
+      try await Run.reset()
     case let .set(string, for: key):
       try await Run.set(string: string, forKey: key)
     case .show:
@@ -24,6 +27,14 @@ extension CliMiddleware.ConfigContext {
 
 extension CliMiddleware.ConfigContext {
   fileprivate enum Run {
+    
+    static func reset() async throws {
+      @Dependency(\.logger) var logger: Logger
+      @Dependency(\.userDefaults) var userDefaults: UserDefaultsClient
+      
+      userDefaults.reset()
+      logger.info("Reset user defaults.")
+    }
 
     static func generate() async throws {
       @Dependency(\.settingsClient) var configClient

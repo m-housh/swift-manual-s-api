@@ -9,6 +9,7 @@ extension EquipmentSelection {
       abstract: "Configure settings / defaults.",
       subcommands: [
         GenerateConfigCommand.self,
+        ResetCommand.self,
         SetCommand.self,
         ShowCommand.self,
         UnSetCommand.self,
@@ -32,6 +33,23 @@ extension EquipmentSelection.Config {
       try await CliContext(globalOptions: globalOptions) {
         @Dependency(\.cliMiddleware.config) var config
         try await config(.generate)
+      }
+      .run()
+    }
+  }
+  
+  struct ResetCommand: AsyncParsableCommand {
+    static var configuration: CommandConfiguration = .init(
+      commandName: "reset",
+      abstract: "Reset values that may have been set in user-defaults"
+    )
+
+    @OptionGroup var globalOptions: GlobalOptions
+
+    func run() async throws {
+      try await CliContext(globalOptions: globalOptions) {
+        @Dependency(\.cliMiddleware.config) var config
+        try await config(.reset)
       }
       .run()
     }
